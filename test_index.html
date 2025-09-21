@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dibujo y Representación del Cuerpo Humano - LMS UAH</title>
+    
+    <!-- ================== CSS INTEGRADO ================== -->
+    <style>
+        /* --- VARIABLES GLOBALES Y RESET --- */
+        :root {
+            --color-petroleo: #2c5f66;
+            --color-rosado: #e8a2b8;
+            --color-negro: #1a1a1a;
+            --color-blanco: #ffffff;
+            --color-gris-claro: #f5f5f5;
+            --color-gris-medio: #666666;
+            --font-principal: 'Arial', sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font-principal);
+            line-height: 1.6;
+            color: var(--color-negro);
+            background: linear-gradient(135deg, var(--color-gris-claro) 0%, var(--color-blanco) 100%);
+            min-height: 100vh;
+        }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+
+        /* --- ESTILOS COMUNES (HEADER, BOTONES, ETC) --- */
+        .header { background: linear-gradient(135deg, var(--color-petroleo) 0%, var(--color-negro) 100%); color: var(--color-blanco); padding: 1rem 0; box-shadow: 0 4px 20px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: bold; color: var(--color-rosado); text-decoration: none; }
+        .user-info { display: flex; align-items: center; gap: 1rem; }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--color-rosado); object-fit: cover; }
+        .user-details { display: flex; flex-direction: column; }
+        .user-name { font-weight: bold; font-size: 0.9rem; }
+        .user-role { font-size: 0.8rem; color: var(--color-rosado); }
+        .nav-btn { background: rgba(255,255,255,0.2); color: var(--color-blanco); padding: 0.5rem 1rem; border: none; border-radius: 20px; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-block; font-size: 0.9rem; }
+        .nav-btn:hover { background: var(--color-rosado); color: var(--color-negro); }
+        .btn { background: linear-gradient(135deg, var(--color-petroleo), var(--color-negro)); color: var(--color-blanco); padding: 1rem 2rem; border: none; border-radius: 25px; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-block; font-weight: bold; text-align: center; width: 100%; font-size: 1rem; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .btn.completed { background: linear-gradient(135deg, var(--color-rosado), var(--color-petroleo)); }
+        .btn.visitor-demo { background: linear-gradient(135deg, var(--color-gris-medio), var(--color-negro)); }
+        .btn:focus-visible, .nav-btn:focus-visible { outline: 2px solid var(--color-rosado); outline-offset: 2px; }
+        .section-title { font-size: 1.8rem; color: var(--color-petroleo); margin-bottom: 2rem; text-align: center; font-weight: 700; }
+        .hero { text-align: center; padding: 3rem 1rem; background: var(--color-blanco); border-radius: 20px; margin-bottom: 2rem; box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+        .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; color: var(--color-petroleo); }
+        .hero p { font-size: 1.2rem; color: var(--color-gris-medio); max-width: 600px; margin: 0 auto; }
+        .welcome-message { background: linear-gradient(135deg, var(--color-petroleo), var(--color-rosado)); color: var(--color-blanco); padding: 1rem 2rem; border-radius: 15px; margin-bottom: 2rem; display: inline-block; }
+        .access-notification { background: linear-gradient(135deg, var(--color-rosado), var(--color-petroleo)); color: var(--color-blanco); padding: 1rem; border-radius: 10px; margin-bottom: 2rem; text-align: center; font-weight: 500; }
+
+        /* --- ESTILOS DE INDEX.HTML --- */
+        .progress-container { background: var(--color-blanco); border-radius: 20px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+        .progress-stats { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; }
+        .progress-percentage { font-size: 3rem; font-weight: 800; color: var(--color-petroleo); }
+        .progress-text-summary { text-align: right; font-weight: bold; color: var(--color-petroleo); }
+        .progress-bar { background: var(--color-gris-claro); border-radius: 25px; height: 20px; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); width: 100%; margin-top: 1rem; }
+        .progress-fill { background: linear-gradient(90deg, var(--color-petroleo), var(--color-rosado)); height: 100%; width: 0%; transition: width 0.8s ease; border-radius: 25px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1.5rem; margin-top: 2rem; width: 100%; }
+        .stat-item { text-align: center; padding: 1.5rem; background: var(--color-gris-claro); border-radius: 15px; transition: transform 0.3s ease; }
+        .stat-item:hover { transform: translateY(-5px); }
+        .stat-number { font-size: 2.5rem; font-weight: bold; color: var(--color-petroleo); margin-bottom: 0.5rem; }
+        .stat-label { color: var(--color-gris-medio); font-size: 1rem; font-weight: 500; }
+        .modules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; }
+        .module-card { background: var(--color-blanco); border-radius: 20px; padding: 2rem; box-shadow: 0 8px 30px rgba(0,0,0,0.1); transition: all 0.4s ease; border-left: 5px solid; position: relative; opacity: 0; animation: fadeInUp 0.6s ease forwards; }
+        .module-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+        .module-card.status-completed { border-left-color: var(--color-rosado); }
+        .module-card.status-in-progress { border-left-color: var(--color-petroleo); }
+        .module-card.status-pending { border-left-color: var(--color-gris-medio); }
+        .module-number { width: 60px; height: 60px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; color: var(--color-blanco); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .module-card.status-completed .module-number, .module-card.status-in-progress .module-number { background: linear-gradient(135deg, var(--color-petroleo), var(--color-rosado)); }
+        .module-card.status-pending .module-number { background: var(--color-gris-medio); }
+        .module-title { font-size: 1.4rem; margin: 1.5rem 0 1rem; font-weight: 700; }
+        .module-description { color: var(--color-gris-medio); margin-bottom: 1.5rem; line-height: 1.6; }
+        .module-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding: 1rem; background: var(--color-gris-claro); border-radius: 10px; }
+        .circular-progress { position: relative; width: 50px; height: 50px; }
+        .circular-progress svg { transform: rotate(-90deg); width: 100%; height: 100%; }
+        .circular-progress-bg { fill: none; stroke: #e6e6e6; stroke-width: 3; }
+        .circular-progress-fill { fill: none; stroke-width: 4; stroke-linecap: round; transition: stroke-dashoffset 0.5s ease; stroke-dasharray: 100; }
+        .module-card.status-completed .circular-progress-fill { stroke: var(--color-rosado); }
+        .module-card.status-in-progress .circular-progress-fill { stroke: var(--color-petroleo); }
+        .module-card.status-pending .circular-progress-fill { stroke: var(--color-gris-medio); }
+        .circular-progress .progress-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.8rem; font-weight: 600; }
+        .status-badge { padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem; font-weight: bold; margin-bottom: 1rem; display: inline-block; }
+        .status-pending { background: #e2e3e5; color: #495057; }
+        .status-completed { background: rgba(232, 162, 184, 0.2); color: #b33e64; }
+        .status-in-progress { background: rgba(44, 95, 102, 0.1); color: var(--color-petroleo); }
+        
+        /* --- ANIMACIONES Y RESPONSIVE --- */
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0; }
+        @media (max-width: 768px) {
+            .nav-container { flex-direction: column; gap: 1rem; }
+            .hero h1 { font-size: 2rem; }
+            .modules-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .progress-stats { flex-direction: column; gap: 1rem; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <a href="#" class="logo">🎨 Arte & Anatomía</a>
+            <div class="user-info">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23e0e0e0'/%3E%3Cpath d='M50 58c-11 0-20 9-20 20v2h40v-2c0-11-9-20-20-20zM50 28c-6.6 0-12 5.4-12 12s5.4 12 12 12 12-5.4 12-12-5.4-12-12-12z' fill='%23a0a0a0'/%3E%3C/svg%3E" alt="Avatar del usuario" class="user-avatar" id="userAvatar">
+                <div class="user-details">
+                    <span class="user-name" id="userName">Cargando...</span>
+                    <span class="user-role" id="userRole"></span>
+                </div>
+                <a href="#" class="nav-btn" data-role-visibility="instructor" style="display: none;">📊 Dashboard</a>
+                <a href="#" class="nav-btn" id="logoutBtn">Salir</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <div class="welcome-message" id="welcomeMessage">¡Bienvenido al curso!</div>
+            <h1>Dibujo y Representación del Cuerpo Humano</h1>
+            <p>Desarrolla competencias técnicas en dibujo anatómico a través de módulos independientes y progresivos.</p>
+        </section>
+
+        <div class="access-notification" id="accessNotification" style="display: none;">
+            👁️ <strong>Vista de Demostración:</strong> Estás navegando como visitante. Puedes explorar el contenido pero no guardar progreso.
+        </div>
+
+        <section class="progress-container" data-role-visibility="estudiante" style="display: none;">
+            <h2 class="section-title">Tu Progreso General</h2>
+            <div class="progress-stats">
+                <div class="progress-percentage" id="progressPercentage">0%</div>
+                <div class="progress-text-summary" id="progressTextSummary">0 de 4 módulos completados</div>
+            </div>
+            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-labelledby="progress-label">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <span id="progress-label" class="sr-only">Progreso general del curso</span>
+            <div class="stats-grid">
+                <div class="stat-item"><div class="stat-number" id="completedModules">0</div><div class="stat-label">Completados</div></div>
+                <div class="stat-item"><div class="stat-number" id="timeSpent">0h</div><div class="stat-label">Tiempo Total</div></div>
+                <div class="stat-item"><div class="stat-number" id="currentStreak">0</div><div class="stat-label">Días Seguidos</div></div>
+                <div class="stat-item"><div class="stat-number" id="achievements">0</div><div class="stat-label">Logros</div></div>
+            </div>
+        </section>
+
+        <section class="modules-section">
+            <h2 class="section-title">Módulos del Curso</h2>
+            <div class="modules-grid" id="modulesGrid">
+                <!-- Las tarjetas se generan aquí con JavaScript -->
+            </div>
+        </section>
+    </main>
+
+    <!-- ================== JAVASCRIPT INTEGRADO ================== -->
+    <script>
+        // --- FUNCIONES SIMULADAS DE AUTH.JS (para que el ejemplo funcione solo) ---
+        function isAuthenticated() { return true; }
+        function getCurrentUser() {
+            return { 
+                id: '123', name: 'Ana Rivas', role: 'estudiante', // Cambia a 'instructor' o 'visitante' para probar
+                picture: 'https://i.pravatar.cc/150?u=anarivas' 
+            };
+        }
+        function getStudentProgress(userId) {
+            return {
+                1: { status: 'completed', percent: 100 }, 2: { status: 'in-progress', percent: 60 },
+                3: { status: 'pending', percent: 0 }, 4: { status: 'pending', percent: 0 }
+            };
+        }
+        function logout() { console.log('Cerrando sesión...'); alert('Cerrando sesión...'); }
+        function logUserActivity(event, user, data) { console.log(`Actividad: ${event}`, { user, data }); }
+        
+        // --- CÓDIGO DE APP.JS ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const ui = {
+                userAvatar: document.getElementById('userAvatar'), userName: document.getElementById('userName'),
+                userRole: document.getElementById('userRole'), welcomeMessage: document.getElementById('welcomeMessage'),
+                logoutBtn: document.getElementById('logoutBtn'), accessNotification: document.getElementById('accessNotification'),
+                progressContainer: document.querySelector('[data-role-visibility="estudiante"]'),
+                progressPercentage: document.getElementById('progressPercentage'),
+                progressTextSummary: document.getElementById('progressTextSummary'),
+                progressFill: document.getElementById('progressFill'),
+                completedModules: document.getElementById('completedModules'), timeSpent: document.getElementById('timeSpent'),
+                currentStreak: document.getElementById('currentStreak'), achievements: document.getElementById('achievements'),
+                modulesGrid: document.getElementById('modulesGrid'),
+                instructorDashboardBtn: document.querySelector('[data-role-visibility="instructor"]')
+            };
+            const moduleData = {
+                1: { title: "Fundamentos y Proporción", description: "Domina las bases del dibujo anatómico con el canon de 8 cabezas.", duration: "2-3 horas" },
+                2: { title: "Anatomía Facial", description: "Explora las proporciones faciales, expresiones y detalles.", duration: "2-3 horas" },
+                3: { title: "Torso y Extremidades", description: "Biomecánica del cuerpo humano. Músculos, articulaciones y movimiento.", duration: "3-4 horas" },
+                4: { title: "Figura Completa", description: "Integración de todos los elementos. Poses dinámicas y narrativa visual.", duration: "3-4 horas" }
+            };
+            
+            function initializeApp() {
+                if (!isAuthenticated()) { window.location.href = 'login.html'; return; }
+                const currentUser = getCurrentUser();
+                updateUserUI(currentUser);
+                renderModules(currentUser);
+                setupEventListeners();
+                logUserActivity('page_view', currentUser.id, { page: 'home' });
+            }
+
+            function updateUserUI(user) {
+                ui.userName.textContent = user.name;
+                ui.userRole.textContent = getRoleDisplayName(user.role);
+                if (user.picture) ui.userAvatar.src = user.picture;
+                ui.welcomeMessage.textContent = `¡Hola, ${user.name.split(' ')[0]}!`;
+                document.querySelectorAll('[data-role-visibility]').forEach(el => {
+                    if (el.dataset.roleVisibility === user.role) {
+                        el.style.display = 'block';
+                    } else {
+                        el.style.display = 'none';
+                    }
+                });
+                if(user.role === 'estudiante') ui.progressContainer.style.display = 'block';
+                if (user.role === 'visitante') ui.accessNotification.style.display = 'block';
+            }
+
+            function renderModules(user) {
+                const progress = (user.role === 'estudiante') ? getStudentProgress(user.id) : {};
+                ui.modulesGrid.innerHTML = '';
+                Object.keys(moduleData).forEach((id, index) => {
+                    const module = moduleData[id];
+                    const moduleProgress = progress[id] || { status: 'pending', percent: 0 };
+                    const card = createModuleCard(id, module, moduleProgress, user.role);
+                    card.style.animationDelay = `${index * 0.1}s`;
+                    ui.modulesGrid.appendChild(card);
+                });
+                if (user.role === 'estudiante') updateOverallProgress(progress);
+            }
+
+            function createModuleCard(id, module, progress, role) {
+                const card = document.createElement('div');
+                card.className = `module-card status-${progress.status}`;
+                card.dataset.moduleId = id;
+                const statusInfo = {
+                    pending: { text: 'No Iniciado', class: 'status-pending' },
+                    'in-progress': { text: 'En Progreso', class: 'status-in-progress' },
+                    completed: { text: 'Completado', class: 'status-completed' }
+                };
+                const buttonText = (role === 'visitante') ? '👁️ Ver Demo' : (progress.status === 'completed' ? 'Revisar Módulo' : 'Comenzar Módulo');
+                const buttonClass = (role === 'visitante') ? 'visitor-demo' : (progress.status === 'completed' ? 'completed' : '');
+                card.innerHTML = `
+                    <div class="module-number">${id}</div><h3 class="module-title">${module.title}</h3>
+                    <p class="module-description">${module.description}</p>
+                    <div class="module-meta"><span>⏱️ ${module.duration}</span>
+                    ${role === 'estudiante' ? `
+                    <div class="circular-progress" role="progressbar" aria-valuenow="${progress.percent}">
+                        <svg viewBox="0 0 36 36"><path class="circular-progress-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path><path class="circular-progress-fill" style="stroke-dashoffset: ${100 - progress.percent};" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path></svg>
+                        <div class="progress-text">${progress.percent}%</div>
+                    </div>` : ''}</div>
+                    <div><span class="status-badge ${statusInfo[progress.status].class}">${statusInfo[progress.status].text}</span></div>
+                    <button class="btn ${buttonClass}" data-module-id="${id}">${buttonText}</button>`;
+                return card;
+            }
+
+            function updateOverallProgress(progress) {
+                const totalModules = Object.keys(moduleData).length;
+                const completedCount = Object.values(progress).filter(p => p.status === 'completed').length;
+                const overallPercent = Math.round((completedCount / totalModules) * 100);
+                ui.progressPercentage.textContent = `${overallPercent}%`;
+                ui.progressFill.style.width = `${overallPercent}%`;
+                ui.progressTextSummary.textContent = `${completedCount} de ${totalModules} módulos completados`;
+                ui.completedModules.textContent = completedCount;
+                ui.progressContainer.querySelector('.progress-bar').setAttribute('aria-valuenow', overallPercent);
+            }
+            
+            function getRoleDisplayName(role) { return { 'instructor': 'Instructor', 'estudiante': 'Estudiante', 'visitante': 'Visitante' }[role] || 'Usuario'; }
+            
+            function setupEventListeners() {
+                ui.logoutBtn.addEventListener('click', (e) => { e.preventDefault(); logout(); });
+                ui.modulesGrid.addEventListener('click', (event) => {
+                    const button = event.target.closest('.btn[data-module-id]');
+                    if (button) { openModule(button.dataset.moduleId); }
+                });
+            }
+            function openModule(moduleId) { console.log(`Abriendo módulo ${moduleId}`); alert(`Abriendo módulo ${moduleId}`); }
+            
+            initializeApp();
+        });
+    </script>
+</body>
+</html>
