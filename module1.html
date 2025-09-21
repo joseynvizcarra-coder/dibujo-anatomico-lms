@@ -18,6 +18,8 @@
             --warning: #FFC107;
             --danger: #f44336;
             --info: #2196F3;
+            --purple: #9c27b0;
+            --orange: #ff9800;
         }
 
         * {
@@ -28,9 +30,43 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: var(--gray-light);
+            background: #f8f9fa;
             color: var(--dark);
             line-height: 1.6;
+        }
+
+        /* Loader */
+        .loader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s;
+        }
+
+        .loader-container.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--gray-light);
+            border-top: 5px solid var(--primary-dark);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* Header */
@@ -51,6 +87,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         .back-btn {
@@ -60,27 +98,45 @@
             color: white;
             text-decoration: none;
             padding: 0.5rem 1rem;
-            border-radius: 8px;
-            transition: background 0.3s;
+            border-radius: 10px;
+            transition: all 0.3s;
+            background: rgba(255,255,255,0.1);
         }
 
         .back-btn:hover {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.2);
+            transform: translateX(-5px);
         }
 
         .module-title {
             font-size: 1.5rem;
+            flex: 1;
+            text-align: center;
         }
 
-        .module-progress {
+        .module-stats {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 2rem;
         }
 
-        .progress-text {
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .stat-value {
             font-size: 1.2rem;
             font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            opacity: 0.8;
         }
 
         /* Layout */
@@ -89,19 +145,46 @@
             margin: 0 auto;
             padding: 2rem;
             display: grid;
-            grid-template-columns: 300px 1fr;
+            grid-template-columns: 320px 1fr;
             gap: 2rem;
         }
 
         /* Sidebar */
         .sidebar {
             background: white;
-            border-radius: 12px;
+            border-radius: 15px;
             padding: 1.5rem;
             height: fit-content;
             position: sticky;
             top: 100px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--gray-light);
+        }
+
+        .sidebar-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .collapse-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--gray-medium);
+            transition: transform 0.3s;
+        }
+
+        .collapse-btn:hover {
+            color: var(--primary-dark);
         }
 
         .lesson-list {
@@ -117,25 +200,44 @@
             align-items: center;
             gap: 1rem;
             padding: 1rem;
-            border-radius: 8px;
+            border-radius: 10px;
             text-decoration: none;
             color: var(--dark);
             transition: all 0.3s;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lesson-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-light));
+            transition: width 0.3s;
+            opacity: 0.1;
+        }
+
+        .lesson-link:hover::before {
+            width: 100%;
         }
 
         .lesson-link:hover {
-            background: var(--gray-light);
+            transform: translateX(5px);
         }
 
         .lesson-link.active {
             background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
             color: white;
+            box-shadow: 0 5px 15px rgba(44, 95, 102, 0.3);
         }
 
         .lesson-number {
-            width: 30px;
-            height: 30px;
+            width: 35px;
+            height: 35px;
             background: var(--gray-light);
             border-radius: 50%;
             display: flex;
@@ -143,6 +245,8 @@
             justify-content: center;
             font-weight: bold;
             font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
         }
 
         .lesson-link.active .lesson-number {
@@ -154,12 +258,103 @@
             color: white;
         }
 
+        .lesson-link.completed .lesson-number::after {
+            content: '✓';
+            position: absolute;
+            font-size: 1.2rem;
+        }
+
+        .lesson-info {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .lesson-name {
+            font-weight: 500;
+            margin-bottom: 0.2rem;
+        }
+
+        .lesson-duration {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        /* Progress Overview */
+        .progress-overview {
+            background: var(--gray-light);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+        }
+
+        .progress-title {
+            font-size: 0.9rem;
+            color: var(--gray-medium);
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: white;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-light));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,0.3),
+                transparent
+            );
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-text {
+            font-size: 0.85rem;
+            color: var(--dark);
+            font-weight: 500;
+        }
+
         /* Main Content */
         .content {
             background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-radius: 15px;
+            padding: 2.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-light));
         }
 
         .content-header {
@@ -169,9 +364,10 @@
         }
 
         .lesson-title {
-            font-size: 2rem;
+            font-size: 2.2rem;
             margin-bottom: 0.5rem;
             color: var(--dark);
+            line-height: 1.2;
         }
 
         .lesson-meta {
@@ -179,6 +375,13 @@
             gap: 2rem;
             color: var(--gray-medium);
             font-size: 0.9rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .lesson-content {
@@ -186,30 +389,46 @@
         }
 
         .lesson-content h2 {
-            font-size: 1.5rem;
-            margin: 2rem 0 1rem;
+            font-size: 1.6rem;
+            margin: 2.5rem 0 1rem;
             color: var(--primary-dark);
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        .lesson-content h2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 70%;
+            background: linear-gradient(180deg, var(--primary-dark), var(--primary-light));
+            border-radius: 2px;
         }
 
         .lesson-content h3 {
-            font-size: 1.2rem;
-            margin: 1.5rem 0 0.8rem;
+            font-size: 1.3rem;
+            margin: 2rem 0 1rem;
             color: var(--dark);
         }
 
         .lesson-content p {
-            margin-bottom: 1rem;
+            margin-bottom: 1.2rem;
             line-height: 1.8;
+            color: #333;
         }
 
         .lesson-content ul,
         .lesson-content ol {
             margin-left: 2rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1.2rem;
         }
 
         .lesson-content li {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.6rem;
+            line-height: 1.8;
         }
 
         /* Interactive Elements */
@@ -217,8 +436,20 @@
             background: linear-gradient(135deg, #f0f4ff, #fef0f5);
             border-left: 4px solid var(--primary-dark);
             padding: 1.5rem;
-            border-radius: 8px;
+            border-radius: 10px;
             margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .exercise-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(44,95,102,0.05) 0%, transparent 70%);
         }
 
         .exercise-title {
@@ -226,52 +457,67 @@
             color: var(--primary-dark);
             margin-bottom: 1rem;
             font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .tip-box {
-            background: #fff9e6;
+            background: linear-gradient(135deg, #fff9e6, #fff5e1);
             border-left: 4px solid var(--warning);
-            padding: 1rem;
-            border-radius: 8px;
+            padding: 1.2rem;
+            border-radius: 10px;
             margin: 1.5rem 0;
+            position: relative;
         }
 
         .tip-box::before {
-            content: '💡 ';
-            font-size: 1.2rem;
+            content: '💡';
+            font-size: 1.5rem;
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+        }
+
+        .tip-box p {
+            margin-left: 2rem;
+            margin-bottom: 0;
         }
 
         /* Image Gallery */
         .image-gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
             margin: 2rem 0;
         }
 
         .gallery-item {
             background: var(--gray-light);
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
             cursor: pointer;
-            transition: transform 0.3s;
+            transition: all 0.3s;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
         .gallery-item:hover {
-            transform: scale(1.05);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
 
         .gallery-item img {
             width: 100%;
-            height: 200px;
+            height: 220px;
             object-fit: cover;
         }
 
         .gallery-caption {
-            padding: 0.8rem;
+            padding: 1rem;
             font-size: 0.9rem;
             text-align: center;
             color: var(--gray-medium);
+            background: white;
         }
 
         /* Video Player */
@@ -281,552 +527,11 @@
             height: 0;
             margin: 2rem 0;
             background: var(--gray-light);
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
         }
 
         .video-placeholder {
             position: absolute;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: var(--gray-medium);
-        }
-
-        .play-button {
-            width: 80px;
-            height: 80px;
-            background: var(--primary-dark);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 2rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-bottom: 1rem;
-        }
-
-        .play-button:hover {
-            background: var(--primary-light);
-            transform: scale(1.1);
-        }
-
-        /* Quiz Section */
-        .quiz-container {
-            background: var(--gray-light);
-            padding: 2rem;
-            border-radius: 12px;
-            margin: 2rem 0;
-        }
-
-        .quiz-question {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            color: var(--dark);
-        }
-
-        .quiz-options {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .quiz-option {
-            padding: 1rem;
-            background: white;
-            border: 2px solid transparent;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .quiz-option:hover {
-            border-color: var(--primary-light);
-        }
-
-        .quiz-option.selected {
-            border-color: var(--primary-dark);
-            background: rgba(44, 95, 102, 0.1);
-        }
-
-        .quiz-option.correct {
-            border-color: var(--success);
-            background: rgba(76, 175, 80, 0.1);
-        }
-
-        .quiz-option.incorrect {
-            border-color: var(--danger);
-            background: rgba(244, 67, 54, 0.1);
-        }
-
-        /* Navigation Buttons */
-        .lesson-navigation {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 2rem 0;
-            border-top: 2px solid var(--gray-light);
-            margin-top: 3rem;
-        }
-
-        .nav-button {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.8rem 1.5rem;
-            background: var(--primary-dark);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .nav-button:hover {
-            background: var(--primary-light);
-            transform: translateY(-2px);
-        }
-
-        .nav-button:disabled {
-            background: var(--gray-medium);
-            cursor: not-allowed;
-            opacity: 0.5;
-        }
-
-        .complete-button {
-            padding: 1rem 2rem;
-            background: var(--success);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .complete-button:hover {
-            background: #45a049;
-            transform: translateY(-2px);
-        }
-
-        /* Progress Bar */
-        .module-progress-bar {
-            height: 30px;
-            background: var(--gray-light);
-            border-radius: 15px;
-            overflow: hidden;
-            margin-bottom: 2rem;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary-dark), var(--primary-light));
-            border-radius: 15px;
-            transition: width 0.5s ease;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding-right: 1rem;
-            color: white;
-            font-weight: bold;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-
-            .sidebar {
-                position: static;
-            }
-
-            .lesson-title {
-                font-size: 1.5rem;
-            }
-
-            .image-gallery {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.5s ease;
-        }
-    </style>
-</head>
-<body>
-    <!-- Header -->
-    <header class="header">
-        <div class="header-content">
-            <a href="index.html" class="back-btn">
-                <span>←</span>
-                <span>Volver al Curso</span>
-            </a>
-            
-            <h1 class="module-title">Módulo 1: Fundamentos y Proporción</h1>
-            
-            <div class="module-progress">
-                <span class="progress-text" id="progressText">0% Completado</span>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Container -->
-    <div class="container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <h3 style="margin-bottom: 1.5rem;">Lecciones</h3>
-            <ul class="lesson-list">
-                <li class="lesson-item">
-                    <a class="lesson-link active" onclick="loadLesson(1)">
-                        <span class="lesson-number">1</span>
-                        <span>Introducción al Canon</span>
-                    </a>
-                </li>
-                <li class="lesson-item">
-                    <a class="lesson-link" onclick="loadLesson(2)">
-                        <span class="lesson-number">2</span>
-                        <span>Las 8 Cabezas</span>
-                    </a>
-                </li>
-                <li class="lesson-item">
-                    <a class="lesson-link" onclick="loadLesson(3)">
-                        <span class="lesson-number">3</span>
-                        <span>Proporciones Básicas</span>
-                    </a>
-                </li>
-                <li class="lesson-item">
-                    <a class="lesson-link" onclick="loadLesson(4)">
-                        <span class="lesson-number">4</span>
-                        <span>Estructura Esquelética</span>
-                    </a>
-                </li>
-                <li class="lesson-item">
-                    <a class="lesson-link" onclick="loadLesson(5)">
-                        <span class="lesson-number">5</span>
-                        <span>Ejercicios Prácticos</span>
-                    </a>
-                </li>
-                <li class="lesson-item">
-                    <a class="lesson-link" onclick="loadLesson(6)">
-                        <span class="lesson-number">6</span>
-                        <span>Evaluación Final</span>
-                    </a>
-                </li>
-            </ul>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="content fade-in" id="mainContent">
-            <div class="module-progress-bar">
-                <div class="progress-fill" id="moduleProgress" style="width: 0%">
-                    <span>0%</span>
-                </div>
-            </div>
-
-            <div class="content-header">
-                <h2 class="lesson-title">Lección 1: Introducción al Canon de 8 Cabezas</h2>
-                <div class="lesson-meta">
-                    <span>⏱️ 30 minutos</span>
-                    <span>📚 Fundamentos</span>
-                    <span>🎯 Nivel: Básico</span>
-                </div>
-            </div>
-
-            <div class="lesson-content">
-                <p>
-                    El canon de 8 cabezas es un sistema de proporciones utilizado desde el Renacimiento 
-                    para representar la figura humana ideal. Este sistema divide el cuerpo en ocho segmentos 
-                    iguales, cada uno del tamaño de la cabeza.
-                </p>
-
-                <h2>¿Por qué 8 cabezas?</h2>
-                <p>
-                    Esta proporción se considera ideal para representar figuras heroicas y estilizadas. 
-                    En la realidad, la mayoría de las personas miden entre 7 y 7.5 cabezas de altura, 
-                    pero el canon de 8 cabezas crea una figura más elegante y proporcionada.
-                </p>
-
-                <div class="tip-box">
-                    <strong>Consejo:</strong> Aunque el canon de 8 cabezas es ideal para comenzar, 
-                    recuerda que las proporciones reales varían según la edad, género y características individuales.
-                </div>
-
-                <h2>División del Cuerpo</h2>
-                <p>Las 8 divisiones principales son:</p>
-                <ol>
-                    <li><strong>Cabeza:</strong> Desde la coronilla hasta el mentón</li>
-                    <li><strong>Mentón a pecho:</strong> Incluye el cuello y parte superior del torso</li>
-                    <li><strong>Pecho a ombligo:</strong> Zona del torso medio</li>
-                    <li><strong>Ombligo a pubis:</strong> Parte baja del torso</li>
-                    <li><strong>Pubis a mitad del muslo:</strong> Parte superior de las piernas</li>
-                    <li><strong>Mitad del muslo a rodillas:</strong> Zona de las rodillas</li>
-                    <li><strong>Rodillas a mitad de pantorrilla:</strong> Parte inferior de las piernas</li>
-                    <li><strong>Mitad de pantorrilla a pies:</strong> Tobillos y pies</li>
-                </ol>
-
-                <div class="exercise-box">
-                    <div class="exercise-title">📝 Ejercicio 1: Primera Práctica</div>
-                    <p>
-                        Dibuja una línea vertical y divídela en 8 partes iguales. 
-                        Marca cada división con una línea horizontal suave. 
-                        Esta será tu guía base para construir la figura.
-                    </p>
-                </div>
-
-                <h2>Puntos de Referencia Importantes</h2>
-                <div class="image-gallery">
-                    <div class="gallery-item">
-                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 600'%3E%3Crect fill='%23f5f5f5' width='400' height='600'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' font-size='20' fill='%23666'%3ECanon Frontal%3C/text%3E%3C/svg%3E" alt="Canon Frontal">
-                        <div class="gallery-caption">Vista Frontal</div>
-                    </div>
-                    <div class="gallery-item">
-                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 600'%3E%3Crect fill='%23f5f5f5' width='400' height='600'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' font-size='20' fill='%23666'%3ECanon Lateral%3C/text%3E%3C/svg%3E" alt="Canon Lateral">
-                        <div class="gallery-caption">Vista Lateral</div>
-                    </div>
-                    <div class="gallery-item">
-                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 600'%3E%3Crect fill='%23f5f5f5' width='400' height='600'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' font-size='20' fill='%23666'%3EProporciones%3C/text%3E%3C/svg%3E" alt="Proporciones">
-                        <div class="gallery-caption">Proporciones Detalladas</div>
-                    </div>
-                </div>
-
-                <h2>Video Tutorial</h2>
-                <div class="video-container">
-                    <div class="video-placeholder">
-                        <div class="play-button" onclick="playVideo()">▶</div>
-                        <p>Video: Introducción al Canon de 8 Cabezas</p>
-                        <small>Duración: 10:25</small>
-                    </div>
-                </div>
-
-                <h2>Autoevaluación</h2>
-                <div class="quiz-container">
-                    <div class="quiz-question">
-                        ¿Cuántas divisiones tiene el canon clásico de proporciones humanas?
-                    </div>
-                    <div class="quiz-options">
-                        <div class="quiz-option" onclick="selectAnswer(this, false)">6 cabezas</div>
-                        <div class="quiz-option" onclick="selectAnswer(this, false)">7 cabezas</div>
-                        <div class="quiz-option" onclick="selectAnswer(this, true)">8 cabezas</div>
-                        <div class="quiz-option" onclick="selectAnswer(this, false)">9 cabezas</div>
-                    </div>
-                </div>
-
-                <div class="exercise-box">
-                    <div class="exercise-title">📝 Tarea para Casa</div>
-                    <p>
-                        Practica dibujando 5 figuras usando el canon de 8 cabezas:
-                    </p>
-                    <ul>
-                        <li>2 figuras masculinas (frontal y perfil)</li>
-                        <li>2 figuras femeninas (frontal y perfil)</li>
-                        <li>1 figura infantil (nota las diferencias de proporción)</li>
-                    </ul>
-                    <p>
-                        Sube tus dibujos en la sección de tareas antes de la próxima clase.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Navigation -->
-            <div class="lesson-navigation">
-                <button class="nav-button" disabled>
-                    <span>←</span>
-                    <span>Lección Anterior</span>
-                </button>
-
-                <button class="complete-button" onclick="completeLesson()">
-                    Marcar como Completada
-                </button>
-
-                <button class="nav-button" onclick="loadLesson(2)">
-                    <span>Siguiente Lección</span>
-                    <span>→</span>
-                </button>
-            </div>
-        </main>
-    </div>
-
-    <!-- Scripts -->
-    <script src="auth.js"></script>
-    <script>
-        let currentLesson = 1;
-        let moduleProgress = 0;
-        let completedLessons = [];
-
-        // Check authentication
-        document.addEventListener('DOMContentLoaded', function() {
-            if (!AuthSystem.checkSession()) {
-                window.location.href = 'login.html';
-                return;
-            }
-
-            const user = AuthSystem.getCurrentUser();
-            if (user.role === 'guest') {
-                showGuestNotice();
-            }
-
-            loadProgress();
-        });
-
-        // Load saved progress
-        function loadProgress() {
-            const user = AuthSystem.getCurrentUser();
-            const progress = AuthSystem.getUserProgress(user.id);
-            
-            if (progress && progress.modules[1]) {
-                moduleProgress = progress.modules[1].percentage;
-                updateProgressDisplay();
-            }
-        }
-
-        // Update progress display
-        function updateProgressDisplay() {
-            document.getElementById('progressText').textContent = moduleProgress + '% Completado';
-            document.getElementById('moduleProgress').style.width = moduleProgress + '%';
-            document.getElementById('moduleProgress').querySelector('span').textContent = moduleProgress + '%';
-        }
-
-        // Load lesson
-        function loadLesson(lessonNumber) {
-            currentLesson = lessonNumber;
-            
-            // Update sidebar
-            document.querySelectorAll('.lesson-link').forEach((link, index) => {
-                link.classList.remove('active');
-                if (index + 1 === lessonNumber) {
-                    link.classList.add('active');
-                }
-                if (completedLessons.includes(index + 1)) {
-                    link.classList.add('completed');
-                }
-            });
-
-            // Animate content change
-            const content = document.getElementById('mainContent');
-            content.classList.remove('fade-in');
-            setTimeout(() => {
-                content.classList.add('fade-in');
-            }, 100);
-
-            // Update content (simplified for demo)
-            document.querySelector('.lesson-title').textContent = `Lección ${lessonNumber}: ${getLessonTitle(lessonNumber)}`;
-        }
-
-        // Get lesson title
-        function getLessonTitle(num) {
-            const titles = {
-                1: 'Introducción al Canon de 8 Cabezas',
-                2: 'Las 8 Divisiones del Cuerpo',
-                3: 'Proporciones Básicas y Medidas',
-                4: 'Estructura Esquelética Fundamental',
-                5: 'Ejercicios Prácticos de Proporción',
-                6: 'Evaluación Final del Módulo'
-            };
-            return titles[num] || 'Lección';
-        }
-
-        // Complete lesson
-        function completeLesson() {
-            if (!completedLessons.includes(currentLesson)) {
-                completedLessons.push(currentLesson);
-                
-                // Update progress
-                moduleProgress = Math.min(100, Math.round((completedLessons.length / 6) * 100));
-                updateProgressDisplay();
-
-                // Save progress
-                const user = AuthSystem.getCurrentUser();
-                AuthSystem.updateProgress(user.id, 1, {
-                    percentage: moduleProgress,
-                    timeSpent: 30
-                });
-
-                // Update UI
-                document.querySelector('.lesson-link.active').classList.add('completed');
-                
-                // Show notification
-                showNotification('¡Lección completada!');
-                
-                // Auto advance after 2 seconds
-                if (currentLesson < 6) {
-                    setTimeout(() => {
-                        loadLesson(currentLesson + 1);
-                    }, 2000);
-                }
-            }
-        }
-
-        // Quiz functions
-        function selectAnswer(element, isCorrect) {
-            // Reset all options
-            document.querySelectorAll('.quiz-option').forEach(opt => {
-                opt.classList.remove('selected', 'correct', 'incorrect');
-            });
-
-            // Mark selected
-            element.classList.add('selected');
-            
-            // Show result after delay
-            setTimeout(() => {
-                if (isCorrect) {
-                    element.classList.add('correct');
-                    showNotification('¡Correcto!', 'success');
-                } else {
-                    element.classList.add('incorrect');
-                    showNotification('Intenta de nuevo', 'error');
-                }
-            }, 500);
-        }
-
-        // Play video
-        function playVideo() {
-            alert('Video player: En una implementación real, aquí se reproduciría el video educativo.');
-        }
-
-        // Show notification
-        function showNotification(message, type = 'success') {
-            // Create notification element
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                bottom: 2rem;
-                right: 2rem;
-                background: ${type === 'success' ? 'var(--success)' : 'var(--danger)'};
-                color: white;
-                padding: 1rem 2rem;
-                border-radius: 8px;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-                z-index: 1000;
-                animation: slideIn 0.3s ease;
-            `;
-            notification.textContent = message;
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.remove();
-            }, 
