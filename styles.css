@@ -1,0 +1,41 @@
+/* styles.css - Estilos adicionales LMS Dibujo Anatómico UAH */
+/* Este archivo es OPCIONAL ya que todos los estilos están integrados en cada HTML */
+
+:root {
+    --color-petroleo: #2c5f66;
+    --color-rosado: #e8a2b8;
+    --color-negro: #1a1a1a;
+    --color-blanco: #ffffff;
+    --color-gris-claro: #f5f5f5;
+    --color-gris-medio: #666666;
+    --color-verde: #4CAF50;
+    --color-amarillo: #FFC107;
+    --color-rojo: #f44336;
+}
+
+/* Solo incluye estilos adicionales si los necesitas */
+/* Todos los estilos principales ya están en cada archivo HTML */
+
+/* Ejemplo de estilos globales opcionales */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.loading-spinner {
+    border: 2px solid var(--color-gris-claro);
+    border-top: 2px solid var(--color-petroleo);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
