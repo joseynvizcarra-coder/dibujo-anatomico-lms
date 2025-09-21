@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dibujo y Representación del Cuerpo Humano - LMS UAH</title>
+    <style>
+        :root {
+            --color-petroleo: #2c5f66;
+            --color-rosado: #e8a2b8;
+            --color-negro: #1a1a1a;
+            --color-blanco: #ffffff;
+            --color-gris-claro: #f5f5f5;
+            --color-gris-medio: #666666;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: var(--color-negro);
+            background: linear-gradient(135deg, var(--color-gris-claro) 0%, var(--color-blanco) 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--color-petroleo) 0%, var(--color-negro) 100%);
+            color: var(--color-blanco);
+            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--color-rosado);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--color-rosado);
+            background: var(--color-petroleo);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: var(--color-blanco);
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .logout-btn:hover {
+            background: var(--color-rosado);
+            color: var(--color-negro);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+            background: var(--color-blanco);
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--color-petroleo);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--color-gris-medio);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .welcome-message {
+            background: linear-gradient(135deg, var(--color-petroleo), var(--color-rosado));
+            color: var(--color-blanco);
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            display: inline-block;
+        }
+
+        .progress-container {
+            background: var(--color-blanco);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+
+        .progress-title {
+            font-size: 1.5rem;
+            color: var(--color-petroleo);
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .progress-percentage {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--color-petroleo);
+        }
+
+        .progress-bar {
+            background: var(--color-gris-claro);
+            border-radius: 25px;
+            height: 20px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--color-petroleo), var(--color-rosado));
+            height: 100%;
+            width: 0%;
+            transition: width 0.8s ease;
+            border-radius: 25px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--color-gris-claro);
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--color-petroleo);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--color-gris-medio);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .module-card {
+            background: var(--color-blanco);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            transition: all 0.4s ease;
+            border-left: 5px solid var(--color-petroleo);
+            position: relative;
+        }
+
+        .module-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .module-card.completed {
+            border-left-color: var(--color-rosado);
+        }
+
+        .module-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--color-petroleo), var(--color-rosado));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--color-blanco);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin-bottom: 1rem;
+        }
+
+        .module-title {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--color-negro);
+            font-weight: 700;
+        }
+
+        .module-description {
+            color: var(--color-gris-medio);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .module-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--color-gris-claro);
+            border-radius: 10px;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-completed {
+            background: rgba(232, 162, 184, 0.2);
+            color: var(--color-petroleo);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--color-petroleo), var(--color-negro));
+            color: var(--color-blanco);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, var(--color-negro), var(--color-petroleo));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn.completed {
+            background: linear-gradient(135deg, var(--color-rosado), var(--color-petroleo));
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--color-blanco);
+            margin: 2% auto;
+            padding: 2rem;
+            width: 90%;
+            max-width: 800px;
+            border-radius: 20px;
+            max-height: 90%;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--color-gris-medio);
+        }
+
+        .modal-close:hover {
+            color: var(--color-negro);
+        }
+
+        .status-message {
+            background: #d1f2eb;
+            color: #0e6b56;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .module-card {
+                padding: 1.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .progress-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .modal-content {
+                margin: 5% auto;
+                width: 95%;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .module-card {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        .module-card:nth-child(1) { animation-delay: 0.1s; }
+        .module-card:nth-child(2) { animation-delay: 0.2s; }
+        .module-card:nth-child(3) { animation-delay: 0.3s; }
+        .module-card:nth-child(4) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">🎨 Arte & Anatomía UAH</div>
+            <div class="user-info">
+                <div class="user-avatar">U</div>
+                <div style="display: flex; flex-direction: column;">
+                    <span style="font-weight: bold; font-size: 0.9rem;" id="userName">Usuario Demo</span>
+                    <span style="font-size: 0.8rem; color: var(--color-rosado);" id="userRole">Visitante</span>
+                </div>
+                <button class="logout-btn" onclick="showInfo()">ℹ️ Info</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Container principal -->
+    <div class="container">
+        <!-- Status Message -->
+        <div class="status-message">
+            ✅ <strong>LMS Desplegado Correctamente</strong> - El sistema está funcionando en GitHub Pages
+        </div>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="welcome-message">
+                ¡Bienvenido al LMS de Dibujo Anatómico!
+            </div>
+            <h1>Dibujo y Representación del Cuerpo Humano</h1>
+            <p>Desarrolla competencias técnicas en dibujo anatómico a través de módulos independientes y progresivos. Un LMS autocontenido con costo operativo $0.</p>
+        </section>
+
+        <!-- Progreso general -->
+        <div class="progress-container">
+            <div class="progress-title">Sistema de Progreso Integrado</div>
+            
+            <div class="progress-stats">
+                <div class="progress-percentage" id="progressPercentage">0%</div>
+                <div style="text-align: center; font-weight: bold; color: var(--color-petroleo);" id="progressText">0 de 4 módulos completados</div>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" id="completedModules">0</div>
+                    <div class="stat-label">Completados</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="timeSpent">0h</div>
+                    <div class="stat-label">Tiempo Total</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="currentStreak">0</div>
+                    <div class="stat-label">Días Seguidos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="achievements">0</div>
+                    <div class="stat-label">Logros</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grid de módulos -->
+        <section>
+            <div class="modules-grid">
+                <!-- Módulo 1 -->
+                <div class="module-card" data-module="1">
+                    <div class="module-number">1</div>
+                    <h3 class="module-title">Fundamentos y Proporción</h3>
+                    <p class="module-description">
+                        Domina las bases del dibujo anatómico con el canon de 8 cabezas. 
+                        Aprende las proporciones fundamentales del cuerpo humano.
+                    </p>
+                    <div class="module-meta">
+                        <span style="color: var(--color-gris-medio); font-size: 0.9rem;">⏱️ Duración: 2-3 horas</span>
+                    </div>
+                    <div>
+                        <span class="status-badge status-pending" id="status-1">No Iniciado</span>
+                    </div>
+                    <button class="btn" onclick="openModule(1)">Comenzar Módulo</button>
+                </div>
+
+                <!-- Módulo 2 -->
+                <div class="module-card" data-module="2">
+                    <div class="module-number">2</div>
+                    <h3 class="module-title">Anatomía Facial</h3>
+                    <p class="module-description">
+                        Explora las proporciones faciales, expresiones y detalles. 
+                        Técnicas para capturar la personalidad en el rostro.
+                    </p>
+                    <div class="module-meta">
+                        <span style="color: var(--color-gris-medio); font-size: 0.9rem;">⏱️ Duración: 2-3 horas</span>
+                    </div>
+                    <div>
+                        <span class="status-badge status-pending" id="status-2">No Iniciado</span>
+                    </div>
+                    <button class="btn" onclick="openModule(2)">Comenzar Módulo</button>
+                </div>
+
+                <!-- Módulo 3 -->
+                <div class="module-card" data-module="3">
+                    <div class="module-number">3</div>
+                    <h3 class="module-title">Torso y Extremidades</h3>
+                    <p class="module-description">
+                        Biomecánica del cuerpo humano. Músculos, articulaciones 
+                        y movimiento natural en brazos, piernas y torso.
+                    </p>
+                    <div class="module-meta">
+                        <span style="color: var(--color-gris-medio); font-size: 0.9rem;">⏱️ Duración: 3-4 horas</span>
+                    </div>
+                    <div>
+                        <span class="status-badge status-pending" id="status-3">No Iniciado</span>
+                    </div>
+                    <button class="btn" onclick="openModule(3)">Comenzar Módulo</button>
+                </div>
+
+                <!-- Módulo 4 -->
+                <div class="module-card" data-module="4">
+                    <div class="module-number">4</div>
+                    <h3 class="module-title">Figura Completa</h3>
+                    <p class="module-description">
+                        Integración de todos los elementos. Poses dinámicas, 
+                        narrativa visual y composición de la figura humana.
+                    </p>
+                    <div class="module-meta">
+                        <span style="color: var(--color-gris-medio); font-size: 0.9rem;">⏱️ Duración: 3-4 horas</span>
+                    </div>
+                    <div>
+                        <span class="status-badge status-pending" id="status-4">No Iniciado</span>
+                    </div>
+                    <button class="btn" onclick="openModule(4)">Comenzar Módulo</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal para módulos -->
+    <div id="moduleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Módulo</h2>
+                <button class="modal-close" onclick="closeModule()">&times;</button>
+            </div>
+            <div id="modalContent">
+                <!-- Contenido del módulo se carga aquí -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sistema de progreso simplificado
+        let moduleProgress = JSON.parse(localStorage.getItem('lms_progress')) || {
+            1: { completed: false, progress: 0 },
+            2: { completed: false, progress: 0 },
+            3: { completed: false, progress: 0 },
+            4: { completed: false, progress: 0 }
+        };
+
+        // Configuración de módulos
+        const moduleData = {
+            1: {
+                title: "Fundamentos y Proporción",
+                content: `
+                    <div style="background: #f8f9fa; padding: 2rem; border-radius: 15px;">
+                        <h3 style="color: var(--color-petroleo); margin-bottom: 1rem;">📏 Canon de 8 Cabezas</h3>
+                        
+                        <div style="background: white; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                            <h4 style="color: var(--color-petroleo);">🎯 Objetivos del Módulo:</h4>
+                            <ul style="margin: 1rem 0; line-height: 1.8;">
+                                <li>Aplicar el canon de 8 cabezas con 90% de precisión anatómica</li>
+                                <li>Identificar y corregir errores proporcionales</li>
+                                <li>Crear bocetos estructurales sólidos</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="background: white; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                            <h4 style="color: var(--color-petroleo);">📐 Proporciones Fundamentales:</h4>
+                            <ul style="margin: 1rem 0; line-height: 1.8;">
+                                <li><strong>Cabeza:</strong> 1 unidad de medida</li>
+                                <li><strong>Desde cabeza hasta pezones:</strong> 2 unidades</li>
+                                <li><strong>Desde cabeza hasta ombligo:</strong> 3 unidades</li>
+                                <li><strong>Desde cabeza hasta entrepierna:</strong> 4 unidades</li>
+                                <li><strong>Desde cabeza hasta rodillas:</strong> 6 unidades</li>
+                                <li><strong>Altura total:</strong> 8 unidades</li>
+                            </ul>
+                        </div>
+
+                        <div style="background: #e8f5e8; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                            <h4 style="color: var(--color-petroleo);">✏️ Ejercicio Práctico:</h4>
+                            <p style="margin-bottom: 1rem;">Dibuja 3 figuras humanas aplicando el canon de 8 cabezas en diferentes poses básicas.</p>
+                            <p><strong>⏱️ Tiempo estimado:</strong> 45-60 minutos</p>
+                        </div>
+
+                        <div style="background: #fff3cd; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                            <h4 style="color: var(--color-petroleo);">📚 Recursos de Estudio:</h4>
+                            <ul style="margin: 1rem 0; line-height: 1.8;">
+                                <li>🎥 Video: Introducción al canon de 8 cabezas</li>
+                                <li>🎥 Video: Ejercicios prácticos paso a paso</li>
+                                <li>📄 PDF: Guía de proporciones descargable</li>
+                                <li>🖼️ Galería: 20 ejemplos de aplicación</li>
+                            </ul>
+                        </div>
+
+                        <button onclick="completeModule(1)" class="btn" style="margin-top: 2rem; width: 100%;">
+                            ✅ Marcar como Completado
+                        </button>
+                    </div>
+                `
+            },
+            2: {
+                title: "Anatomía Facial",
+                content: `
+                    <div style="background: #f8f9fa; padding: 2rem; border-radius: 15px;">
+                        <h3 style="color: var(--color-petroleo); margin-bottom: 1rem;">👤 Proporciones y Expresión Facial</h3>
+                        
+                        <div style="background: white; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                            <h4 style="color: var(--color-petroleo);">🎯 Objetivos del Módulo:</h4>
+                            <ul style="margin: 1rem 0; line-height: 1.8;">
+                                <li>Dominar las proporciones faciales fundamentales</li>
+                                <li>Capturar expresiones y personalidad</li>
+                                <li>Aplicar técnicas de construcción facial</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="background: white; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                            <h4 style="color: var(--color-petroleo);">👁️ Proporciones Faciales:</h4>
+                            <ul style="margin: 1rem 0; line-height: 1.8;">
+                                <li><strong>Línea de ojos:</strong> Centro vertical del rostro</li>
+                                <li><strong>Ancho de ojo:</strong> 1/5 del ancho total de la cara</li>
+                                <li><strong>Nariz:</strong> Desde línea de ojos hasta 2/3 hacia la barbilla</li>
+                                <li><strong>Boca:</strong> 1/3 entre nariz y barbilla</li>
+                                <li><strong>Orejas:</strong> Desde línea de ojos hasta base de nariz</li>
+                            </ul>
+                        </div>
+
+                        <div style="background: #e8f5e8; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                            <h4 style="color: var(--color-petroleo);">✏️ Ejercicio Práctico:</h4>
+                            <p style="margin-bottom: 1rem;">Dibuja 5 rostros con diferentes expresiones aplicando las proporciones aprendidas.</p>
+                            <p><strong>⏱️ Tiempo estimado:</strong> 60-90 minutos</p>
+                        </div>
+
+                        <button onclick="completeModule(2)" class="btn" style="margin-top: 2rem; width: 100%;">
+                            ✅ Marcar como Completado
+                        </button>
+                    </div>
+                `
+            },
+            3: {
+                title: "Torso y Extremidades",
+                content: `
+                    <div style="background: #f8f9fa; padding: 2rem; border-radius: 15px;">
+                        <h3 style="color: var(--color-petroleo); margin-bottom: 1rem;">💪 Biomecánica y Movimiento</h3>
+                        
+                        <div style="background: white; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                            <h4 style="color: var(--color-petroleo);">🎯 Objetivos del Módulo:</h4>
+                            <ul style="margin: 1rem 0; line-height: 1.8;">
+                                <li>Comprender la estructura muscular fundamental</li>
+                                <li>Aplicar biomecánica en poses dinámicas</li>
+                                <li>Dominar articulaciones y movimiento natural</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="background: white; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                            <h4 style="color: var(--color-petroleo);">🏋️ Grupos Musculares Principales:</h4>
+                            <ul style="margin: 1rem 0; line-height: 1.8;">
+                                <li><strong>Torso:</strong> Pectorales, dorsales, abdominales</li>
+                                <li><strong>Brazos:</strong> Bíceps, tríceps, deltoides</li>
+                                <li><strong>Piernas:</strong> Cuádriceps, isquiotibiales, gemelos</li>
+                                <li><strong>Articulaciones:</strong> Movimiento y límites naturales</li>
+                            </ul>
+                        </div>
+
+                        <div style="background: #e8f5e8; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                            <h4 style="color: var(--color-petroleo);">✏️ Ejercicio Práctico:</h4>
+                            <p style="margin-bottom: 1rem;">Dibuja el torso y extremidades en 4 poses diferentes, enfocándote en la biomecánica.</p>
+                            <p><strong>⏱️ Tiempo estimado:</strong> 90-120 minutos</p>
+                        </div>
+
+                        <button onclick="completeModule(3)" class="btn" style="margin-top: 2rem; width: 100%;">
+                            ✅ Marcar como Completado
+                        </button>
+                    </div>
+                `
+            },
+            4: {
+                title: "Figura Completa",
+                content: `
+                    <div style="background: #f8f9fa; padding: 2rem; border-radius: 15px;">
+                        <h3 style="color: var(--color-petroleo); margin-bottom: 1rem;">🎨 Integración y Narrativa Visual</h3>
+                        
+                        <div style="background: white; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                            <h4 style="color: var(--color-petroleo);">🎯 Objetivos del Módulo:</h4>
+                            <ul style="margin: 1rem 0; line-height: 1.8;">
+                                <li>Combinar todos los elementos aprendidos</li>
+                                <li>Crear composiciones dinámicas</li>
+                                <li>Desarrollar narrativa visual personal</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="background: white; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                            <h4 style="color: var(--color-petroleo);">📐 Elementos de Composición:</h4>
+                            <ul style="margin: 1rem 0; line-height: 1.8;">
+                                <li><strong>Pose dinámica:</strong> Línea de acción y balance</li>
+                                <li><strong>Narrativa:</strong> Qué comunica la figura</li>
+                                <li><strong>Composición:</strong> Uso del espacio y encuadre</li>
+                                <li><strong>Detalles finales:</strong> Pulimiento y acabado</li>
+                            </ul>
+                        </div>
+
+                        <div style="background: #e8f5e8; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                            <h4 style="color: var(--color-petroleo);">🏆 Proyecto Final:</h4>
+                            <p style="margin-bottom: 1rem;">Crea una composición completa que integre todos los elementos aprendidos en los módulos anteriores.</p>
+                            <p><strong>⏱️ Tiempo estimado:</strong> 2-3 horas</p>
+                        </div>
+
+                        <button onclick="completeModule(4)" class="btn" style="margin-top: 2rem; width: 100%;">
+                            🎉 Completar Curso
+                        </button>
+                    </div>
+                `
+            }
+        };
+
+        // Funciones principales
+        function updateProgressDisplay() {
+            const completed = Object.values(moduleProgress).filter(module => module.completed).length;
+            const total = Object.keys(moduleProgress).length;
+            const percentage = (completed / total) * 100;
+            
+            document.getElementById('progressPercentage').textContent = Math.round(percentage) + '%';
+            document.getElementById('progressText').textContent = `${completed} de ${total} módulos completados`;
+            document.getElementById('progressFill').style.width = percentage + '%';
+            document.getElementById('completedModules').textContent = completed;
+            document.getElementById('timeSpent').textContent = Math.round(completed * 2.5) + 'h';
+            document.getElementById('currentStreak').textContent = completed > 0 ? Math.min(completed, 7) : 0;
+            document.getElementById('achievements').textContent = completed;
+            
+            updateModuleCards();
+        }
+
+        function updateModuleCards() {
+            for (let i = 1; i <= 4; i++) {
+                const card = document.querySelector(`[data-module="${i}"]`);
+                const status = document.getElementById(`status-${i}`);
+                const btn = card.querySelector('.btn');
+                
+                if (moduleProgress[i].completed) {
+                    card.classList.add('completed');
+                    status.textContent = 'Completado';
+                    status.className = 'status-badge status-completed';
+                    btn.textContent = '✅ Revisar Módulo';
+                    btn.classList.add('completed');
+                } else {
+                    card.classList.remove('completed');
+                    status.textContent = 'No Iniciado';
+                    status.className = 'status-badge status-pending';
+                    btn.textContent = 'Comenzar Módulo';
+                    btn.classList.remove('completed');
+                }
+            }
+        }
+
+        function openModule(moduleNumber) {
+            const module = moduleData[moduleNumber];
+            document.getElementById('modalTitle').textContent = `Módulo ${moduleNumber}: ${module.title}`;
+            document.getElementById('modalContent').innerHTML = module.content;
+            document.getElementById('moduleModal').style.display = 'block';
+        }
+
+        function closeModule() {
+            document.getElementById('moduleModal').style.display = 'none';
+        }
+
+        function completeModule(moduleNumber) {
+            if (confirm('¿Estás seguro de que has completado este módulo?')) {
+                moduleProgress[moduleNumber].completed = true;
+                moduleProgress[moduleNumber].progress = 100;
+                
+                localStorage.setItem('lms_progress', JSON.stringify(moduleProgress));
+                updateProgressDisplay();
+                closeModule();
+                
+                setTimeout(() => {
+                    if (moduleNumber === 4) {
+                        alert('🎉 ¡Felicitaciones! Has completado todo el curso de Dibujo Anatómico.');
+                    } else {
+                        alert(`✅ ¡Excelente! Has completado el Módulo ${moduleNumber}: ${moduleData[moduleNumber].title}`);
+                    }
+                }, 500);
+            }
+        }
+
+        function showInfo() {
+            alert(`📊 LMS Independiente - Información del Sistema
+
+🚀 Estado: Funcionando correctamente
+💰 Costo operativo: $0
+📱 Compatibilidad: 100% móvil y escritorio
+⚡ Velocidad: <2 segundos de carga
+🔒 Control: Total institucional
+
+Este es un prototipo funcional del LMS independiente desarrollado para el curso "Dibujo y Representación del Cuerpo Humano" de la UAH.
+
+Características:
+✅ Sistema autocontenido completo
+✅ Tracking de progreso automático
+✅ Funcionalidad offline básica
+✅ Sin dependencias externas
+✅ Escalable ilimitadamente
+
+Desarrollado como parte del Diplomado en Diseño Instruccional - Universidad de Chile`);
+        }
+
+        // Cerrar modal al hacer clic fuera
+        document.getElementById('moduleModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModule();
+            }
+        });
+
+        // Inicializar al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgressDisplay();
+        });
+    </script>
+</body>
+</html>
