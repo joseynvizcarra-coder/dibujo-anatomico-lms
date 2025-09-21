@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dashboard del Instructor - LMS Dibujo Anatómico UAH">
+    <title>Dashboard Instructor - LMS UAH</title>
+    
+    <style>
+        :root {
+            --primary-dark: #2c5f66;
+            --primary-light: #e8a2b8;
+            --dark: #1a1a1a;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+            --gray-medium: #666666;
+            --success: #4CAF50;
+            --warning: #FFC107;
+            --danger: #f44336;
+            --info: #2196F3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--gray-light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--dark) 100%);
+            color: white;
+            overflow-y: auto;
+            transition: transform 0.3s;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .logo-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .user-info {
+            margin-top: 1rem;
+        }
+
+        .user-name {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .user-role {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        /* Navigation */
+        .nav-menu {
+            padding: 1rem 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .nav-item.active {
+            background: rgba(255,255,255,0.15);
+            border-left: 4px solid var(--primary-light);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            color: var(--dark);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.5rem 1.2rem;
+            background: var(--primary-dark);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-dark);
+            color: var(--primary-dark);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-dark);
+            color: white;
+        }
+
+        /* Dashboard Content */
+        .dashboard-content {
+            padding: 2rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+
+        .stat-icon.primary {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            color: white;
+        }
+
+        .stat-icon.success {
+            background: linear-gradient(135deg, var(--success), #66BB6A);
+            color: white;
+        }
+
+        .stat-icon.warning {
+            background: linear-gradient(135deg, var(--warning), #FFA726);
+            color: white;
+        }
+
+        .stat-icon.info {
+            background: linear-gradient(135deg, var(--info), #42A5F5);
+            color: white;
+        }
+
+        .stat-details {
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--dark);
+        }
+
+        .stat-label {
+            color: var(--gray-medium);
+            font-size: 0.9rem;
+        }
+
+        .stat-change {
+            font-size: 0.85rem;
+            margin-top: 0.3rem;
+        }
+
+        .stat-change.positive {
+            color: var(--success);
+        }
+
+        .stat-change.negative {
+            color: var(--danger);
+        }
+
+        /* Charts Section */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .chart-options {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chart-option {
+            padding: 0.3rem 0.8rem;
+            border: 1px solid var(--gray-light);
+            background: white;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .chart-option:hover,
+        .chart-option.active {
+            background: var(--primary-dark);
+            color: white;
+            border-color: var(--primary-dark);
+        }
+
+        /* Students Table */
+        .table-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-input {
+            padding: 0.5rem 1rem 0.5rem 2.5rem;
+            border: 1px solid var(--gray-light);
+            border-radius: 8px;
+            width: 250px;
+            font-size: 0.9rem;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-medium);
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: var(--gray-light);
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        tbody tr:hover {
+            background: #f9f9f9;
+        }
+
+        .student-name {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .student-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            width: 100px;
+            height: 8px;
+            background: var(--gray-light);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-light));
+            border-radius: 4px;
+            transition: width 0.5s;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--success);
+        }
+
+        .status-inactive {
+            background: rgba(255, 193, 7, 0.1);
+            color: var(--warning);
+        }
+
+        .status-completed {
+            background: rgba(33, 150, 243, 0.1);
+            color: var(--info);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--gray-light);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .btn-icon:hover {
+            background: var(--primary-dark);
+            color: white;
+        }
+
+        /* Activities Timeline */
+        .timeline {
+            padding: 1.5rem;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .timeline-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gray-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .timeline-description {
+            color: var(--gray-medium);
+            font-size: 0.9rem;
+        }
+
+        .timeline-time {
+            color: var(--gray-medium);
+            font-size: 0.85rem;
+            margin-top: 0.3rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-medium);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--gray-light);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-dark);
+        }
+
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+            background: var(--primary-dark);
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-input {
+                width: 150px;
+            }
+
+            .table-wrapper {
+                overflow-x: scroll;
+            }
+        }
+
+        /* Charts Placeholder */
+        .chart-placeholder {
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-light);
+            border-radius: 8px;
+            color: var(--gray-medium);
+        }
+
+        /* Tab System */
+        .tabs {
+            border-bottom: 2px solid var(--gray-light);
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 2rem;
+        }
+
+        .tab {
+            padding: 1rem 0;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: var(--gray-medium);
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .tab:hover {
+            color: var(--dark);
+        }
+
+        .tab.active {
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary-dark);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Menu Toggle -->
+    <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <div class="logo-icon">🎨</div>
+                <div class="logo-text">LMS UAH</div>
+            </div>
+            <div class="user-info">
+                <div class="user-name" id="userName">Cargando...</div>
+                <div class="user-role">Administrador</div>
+            </div>
+        </div>
+        
+        <nav class="nav-menu">
+            <button class="nav-item active" onclick="switchTab('overview')">
+                <span>📊</span>
+                <span>Vista General</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('students')">
+                <span>👥</span>
+                <span>Estudiantes</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('modules')">
+                <span>📚</span>
+                <span>Módulos</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('analytics')">
+                <span>📈</span>
+                <span>Analíticas</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('messages')">
+                <span>💬</span>
+                <span>Mensajes</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('settings')">
+                <span>⚙️</span>
+                <span>Configuración</span>
+            </button>
+            <a href="index.html" class="nav-item">
+                <span>🏠</span>
+                <span>Ir al Curso</span>
+            </a>
+            <button class="nav-item" onclick="logout()">
+                <span>🚪</span>
+                <span>Cerrar Sesión</span>
+            </button>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="header-title" id="pageTitle">Vista General</h1>
+            <div class="header-actions">
+                <button class="btn btn-outline" onclick="refreshData()">
+                    🔄 Actualizar
+                </button>
+                <button class="btn" onclick="showAddStudentModal()">
+                    ➕ Agregar Estudiante
+                </button>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            <!-- Overview Tab -->
+            <div class="tab-content active" id="overview-tab">
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon primary">👥</div>
+                        <div class="stat-details">
+                            <div class="stat-value" id="totalStudents">45</div>
+                            <div class="stat-label">Total Estudiantes</div>
+                            <div class="stat-change positive">↑ 5% este mes</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon success">✅</div>
+                        <div class="stat-details">
+                            <div class="stat-value" id="activeStudents">38</div>
+                            <div class="stat-label">Estudiantes Activos</div>
+                            <div class="stat-change positive">↑ 12% esta semana</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon warning">📚</div>
+                        <div class="stat-details">
+                            <div class="stat-value" id="completedModules">120</div>
+                            <div class="stat-label">Módulos Completados</div>
+                            <div class="stat-change positive">↑ 8% este mes</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon info">🏆</div>
+                        <div class="stat-details">
+                            <div class="stat-value" id="avgProgress">67%</div>
+                            <div class="stat-label">Progreso Promedio</div>
+                            <div class="stat-change positive">↑ 3% esta semana</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Progreso por Módulo</h3>
+                            <div class="chart-options">
+                                <button class="chart-option active">Semana</button>
+                                <button class="chart-option">Mes</button>
+                                <button class="chart-option">Año</button>
+                            </div>
+                        </div>
+                        <div class="chart-placeholder">
+                            📊 Gráfico de Progreso
+                        </div>
+                    </div>
+                    
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Actividad Diaria</h3>
+                            <div class="chart-options">
+                                <button class="chart-option active">7 días</button>
+                                <button class="chart-option">30 días</button>
+                            </div>
+                        </div>
+                        <div class="chart-placeholder">
+                            📈 Gráfico de Actividad
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3 class="table-title">Actividad Reciente</h3>
+                    </div>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-icon">📚</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">María González completó el Módulo 2</div>
+                                <div class="timeline-description">Anatomía Facial - 100% completado</div>
+                                <div class="timeline-time">Hace 2 horas</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-icon">👤</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">Carlos Rodríguez se unió al curso</div>
+                                <div class="timeline-description">Nuevo estudiante registrado</div>
+                                <div class="timeline-time">Hace 5 horas</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-icon">✅</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">Ana Martínez envió tarea</div>
+                                <div class="timeline-description">Ejercicio de proporciones - Módulo 1</div>
+                                <div class="timeline-time">Hace 1 día</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Students Tab -->
+            <div class="tab-content" id="students-tab">
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3 class="table-title">Lista de Estudiantes</h3>
+                        <div class="search-box">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" class="search-input" placeholder="Buscar estudiante..." onkeyup="searchStudents(this.value)">
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Estudiante</th>
+                                    <th>Email</th>
+                                    <th>Progreso</th>
+                                    <th>Módulos</th>
+                                    <th>Estado</th>
+                                    <th>Último Acceso</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentsTable">
+                                <!-- Se llenará dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modules Tab -->
+            <div class="tab-content" id="modules-tab">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon primary">1️⃣</div>
+                        <div class="stat-details">
+                            <div class="stat-value">35</div>
+                            <div class="stat-label">Módulo 1: Fundamentos</div>
+                            <div class="stat-change">Estudiantes completados</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon success">2️⃣</div>
+                        <div class="stat-details">
+                            <div class="stat-value">28</div>
+                            <div class="stat-label">Módulo 2: Anatomía Facial</div>
+                            <div class="stat-change">Estudiantes completados</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon warning">3️⃣</div>
+                        <div class="stat-details">
+                            <div class="stat-value">22</div>
+                            <div class="stat-label">Módulo 3: Torso</div>
+                            <div class="stat-change">Estudiantes completados</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon info">4️⃣</div>
+                        <div class="stat-details">
+                            <div class="stat-value">15</div>
+                            <div class="stat-label">Módulo 4: Figura Completa</div>
+                            <div class="stat-change">Estudiantes completados</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div class="tab-content" id="analytics-tab">
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Tasa de Completación</h3>
+                        </div>
+                        <div class="chart-placeholder">
+                            📊 Análisis de Completación
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Tiempo Promedio por Módulo</h3>
+                        </div>
+                        <div class="chart-placeholder">
+                            ⏱️ Análisis de Tiempo
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages Tab -->
+            <div class="tab-content" id="messages-tab">
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3 class="table-title">Mensajes y Solicitudes</h3>
+                    </div>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-icon">📧</div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">Nueva solicitud de acceso</div>
+                                <div class="timeline-description">Pedro Silva solicita acceso como estudiante</div>
+                                <div class="timeline-time">Hace 1 hora</div>
+                                <button class="btn" style="margin-top: 0.5rem;">Revisar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div class="tab-content" id="settings-tab">
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3 class="table-title">Configuración del Curso</h3>
+                    </div>
+                    <div style="padding: 2rem;">
+                        <div class="form-group">
+                            <label class="form-label">Nombre del Curso</label>
+                            <input type="text" class="form-input" value="Dibujo y Representación del Cuerpo Humano">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Semestre</label>
+                            <input type="text" class="form-input" value="2024-1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Notificaciones por Email</label>
+                            <select class="form-input">
+                                <option>Activadas</option>
+                                <option>Desactivadas</option>
+                            </select>
+                        </div>
+                        <button class="btn">Guardar Cambios</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Student Modal -->
+    <div class="modal" id="addStudentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Agregar Nuevo Estudiante</h2>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <form onsubmit="addStudent(event)">
+                <div class="form-group">
+                    <label class="form-label">Nombre Completo</label>
+                    <input type="text" class="form-input" id="studentName" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" id="studentEmail" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Contraseña Temporal</label>
+                    <input type="text" class="form-input" id="studentPassword" value="uah2024" required>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" class="btn btn-outline" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn">Agregar Estudiante</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Sample student data
+        const studentsData = [
+            {
+                name: 'María González',
+                email: 'maria.gonzalez@uah.cl',
+                progress: 75,
+                modules: '3/4',
+                status: 'active',
+                lastAccess: '2024-01-15'
+            },
+            {
+                name: 'Carlos Rodríguez',
+                email: 'carlos.rodriguez@uah.cl',
+                progress: 60,
+                modules: '2/4',
+                status: 'active',
+                lastAccess: '2024-01-14'
+            },
+            {
+                name: 'Ana Martínez',
+                email: 'ana.martinez@uah.cl',
+                progress: 90,
+                modules: '4/4',
+                status: 'completed',
+                lastAccess: '2024-01-15'
+            },
+            {
+                name: 'Pedro Silva',
+                email: 'pedro.silva@uah.cl',
+                progress: 45,
+                modules: '2/4',
+                status: 'inactive',
+                lastAccess: '2024-01-10'
+            },
+            {
+                name: 'Laura Torres',
+                email: 'laura.torres@uah.cl',
+                progress: 100,
+                modules: '4/4',
+                status: 'completed',
+                lastAccess: '2024-01-15'
+            }
+        ];
+
+        // Check authentication
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            loadDashboard();
+        });
+
+        // Check if user is authorized
+        function checkAuth() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Only admin can access dashboard
+            if (user.role !== 'admin') {
+                alert('No tienes permisos para acceder al dashboard');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Update user name
+            document.getElementById('userName').textContent = user.name;
+        }
+
+        // Load dashboard data
+        function loadDashboard() {
+            loadStudentsTable();
+            updateStats();
+        }
+
+        // Load students table
+        function loadStudentsTable() {
+            const tbody = document.getElementById('studentsTable');
+            tbody.innerHTML = '';
+            
+            studentsData.forEach(student => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div class="student-name">
+                            <div class="student-avatar">${student.name.charAt(0)}</div>
+                            <span>${student.name}</span>
+                        </div>
+                    </td>
+                    <td>${student.email}</td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${student.progress}%"></div>
+                            </div>
+                            <span>${student.progress}%</span>
+                        </div>
+                    </td>
+                    <td>${student.modules}</td>
+                    <td>
+                        <span class="status-badge status-${student.status}">
+                            ${getStatusText(student.status)}
+                        </span>
+                    </td>
+                    <td>${formatDate(student.lastAccess)}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-icon" title="Ver detalles" onclick="viewStudent('${student.email}')">👁️</button>
+                            <button class="btn-icon" title="Enviar mensaje" onclick="sendMessage('${student.email}')">📧</button>
+                            <button class="btn-icon" title="Eliminar" onclick="removeStudent('${student.email}')">🗑️</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Update statistics
+        function updateStats() {
+            // Calculate stats from data
+            const totalStudents = studentsData.length;
+            const activeStudents = studentsData.filter(s => s.status === 'active').length;
+            const completedCount = studentsData.filter(s => s.status === 'completed').length;
+            const avgProgress = Math.round(studentsData.reduce((acc, s) => acc + s.progress, 0) / totalStudents);
+            
+            // Update UI
+            document.getElementById('totalStudents').textContent = totalStudents;
+            document.getElementById('activeStudents').textContent = activeStudents;
+            document.getElementById('completedModules').textContent = completedCount * 4;
+            document.getElementById('avgProgress').textContent = avgProgress + '%';
+        }
+
+        // Get status text
+        function getStatusText(status) {
+            const texts = {
+                'active': 'Activo',
+                'inactive': 'Inactivo',
+                'completed': 'Completado'
+            };
+            return texts[status] || status;
+        }
+
+        // Format date
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const today = new Date();
+            const diff = Math.floor((today - date) / (1000 * 60 * 60 * 24));
+            
+            if (diff === 0) return 'Hoy';
+            if (diff === 1) return 'Ayer';
+            if (diff < 7) return `Hace ${diff} días`;
+            
+            return date.toLocaleDateString('es-ES');
+        }
+
+        // Search students
+        function searchStudents(query) {
+            const rows = document.querySelectorAll('#studentsTable tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(query.toLowerCase())) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // View student details
+        function viewStudent(email) {
+            const student = studentsData.find(s => s.email === email);
+            if (student) {
+                alert(`Detalles del estudiante:\n\nNombre: ${student.name}\nEmail: ${student.email}\nProgreso: ${student.progress}%\nMódulos: ${student.modules}`);
+            }
+        }
+
+        // Send message to student
+        function sendMessage(email) {
+            const message = prompt(`Enviar mensaje a ${email}:`);
+            if (message) {
+                alert('Mensaje enviado exitosamente');
+            }
+        }
+
+        // Remove student
+        function removeStudent(email) {
+            if (confirm(`¿Estás seguro de eliminar al estudiante ${email}?`)) {
+                const index = studentsData.findIndex(s => s.email === email);
+                if (index > -1) {
+                    studentsData.splice(index, 1);
+                    loadStudentsTable();
+                    updateStats();
+                    alert('Estudiante eliminado');
+                }
+            }
+        }
+
+        // Switch tabs
+        function switchTab(tabName) {
+            // Update nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.closest('.nav-item').classList.add('active');
+            
+            // Update content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            
+            // Update page title
+            const titles = {
+                'overview': 'Vista General',
+                'students': 'Estudiantes',
+                'modules': 'Módulos',
+                'analytics': 'Analíticas',
+                'messages': 'Mensajes',
+                'settings': 'Configuración'
+            };
+            document.getElementById('pageTitle').textContent = titles[tabName];
+        }
+
+        // Show add student modal
+        function showAddStudentModal() {
+            document.getElementById('addStudentModal').classList.add('active');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('addStudentModal').classList.remove('active');
+        }
+
+        // Add student
+        function addStudent(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('studentName').value;
+            const email = document.getElementById('studentEmail').value;
+            const password = document.getElementById('studentPassword').value;
+            
+            // Add to data
+            studentsData.push({
+                name: name,
+                email: email,
+                progress: 0,
+                modules: '0/4',
+                status: 'active',
+                lastAccess: new Date().toISOString().split('T')[0]
+            });
+            
+            // Reload table
+            loadStudentsTable();
+            updateStats();
+            
+            // Close modal
+            closeModal();
+            
+            // Show success message
+            alert(`Estudiante agregado exitosamente\n\nEmail: ${email}\nContraseña: ${password}`);
+            
+            // Reset form
+            event.target.reset();
+        }
+
+        // Refresh data
+        function refreshData() {
+            loadDashboard();
+            alert('Datos actualizados');
+        }
+
+        // Toggle sidebar (mobile)
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Logout
+        function logout() {
+            if (confirm('¿Cerrar sesión?')) {
+                localStorage.removeItem('currentUser');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Auto refresh every 30 seconds
+        setInterval(() => {
+            updateStats();
+        }, 30000);
+    </script>
+</body>
+</html>
