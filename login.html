@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Acceso al Sistema LMS - Dibujo Anatómico UAH">
+    <title>Acceso - LMS Dibujo Anatómico UAH</title>
+    
+    <style>
+        :root {
+            --color-petroleo: #2c5f66;
+            --color-rosado: #e8a2b8;
+            --color-negro: #1a1a1a;
+            --color-blanco: #ffffff;
+            --color-gris-claro: #f5f5f5;
+            --color-gris-medio: #666666;
+            --color-verde: #4CAF50;
+            --color-amarillo: #FFC107;
+            --color-rojo: #f44336;
+            --color-azul: #2196F3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, var(--color-petroleo) 0%, var(--color-negro) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .logo-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--color-petroleo), var(--color-rosado));
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin: 0 auto 1.5rem;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .logo-title {
+            font-size: 2rem;
+            color: var(--color-negro);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-subtitle {
+            color: var(--color-gris-medio);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .divider {
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-petroleo), var(--color-rosado));
+            margin: 2rem auto;
+            border-radius: 2px;
+        }
+
+        .access-title {
+            text-align: center;
+            color: var(--color-petroleo);
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+
+        .access-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .access-card {
+            background: linear-gradient(135deg, #f8f9fa, white);
+            border: 2px solid transparent;
+            border-radius: 15px;
+            padding: 2rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .access-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-petroleo), var(--color-rosado));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .access-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border-color: var(--color-petroleo);
+        }
+
+        .access-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .access-card.instructor {
+            background: linear-gradient(135deg, #e3f2fd, white);
+        }
+
+        .access-card.profesor {
+            background: linear-gradient(135deg, #f3e5f5, white);
+        }
+
+        .access-card.estudiante {
+            background: linear-gradient(135deg, #e8f5e9, white);
+        }
+
+        .access-card.visitante {
+            background: linear-gradient(135deg, #fff3e0, white);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            color: var(--color-negro);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-description {
+            font-size: 0.9rem;
+            color: var(--color-gris-medio);
+            line-height: 1.4;
+        }
+
+        .card-badge {
+            display: inline-block;
+            background: var(--color-petroleo);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            margin-top: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-section {
+            background: var(--color-gris-claro);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .info-title {
+            font-size: 1rem;
+            color: var(--color-petroleo);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .info-list {
+            list-style: none;
+        }
+
+        .info-list li {
+            padding: 0.5rem 0;
+            color: var(--color-gris-medio);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-list li::before {
+            content: '✓';
+            color: var(--color-verde);
+            font-weight: bold;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid var(--color-gris-claro);
+            border-top: 3px solid var(--color-petroleo);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .footer-text {
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--color-gris-medio);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 2rem 1.5rem;
+            }
+
+            .access-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .logo-title {
+                font-size: 1.5rem;
+            }
+
+            .card-icon {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transform: translateX(400px);
+            transition: transform 0.3s;
+            z-index: 1000;
+            max-width: 350px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left: 4px solid var(--color-verde);
+        }
+
+        .notification.info {
+            border-left: 4px solid var(--color-azul);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Logo Section -->
+        <div class="logo-section">
+            <div class="logo-icon">🎨</div>
+            <h1 class="logo-title">Arte & Anatomía</h1>
+            <p class="logo-subtitle">Universidad Alberto Hurtado</p>
+            <p class="logo-subtitle">Sistema de Gestión de Aprendizaje</p>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Access Title -->
+        <h2 class="access-title">Selecciona tu Rol de Acceso</h2>
+
+        <!-- Loading State -->
+        <div class="loading" id="loadingState">
+            <div class="spinner"></div>
+            <p>Iniciando sesión...</p>
+        </div>
+
+        <!-- Access Cards Grid -->
+        <div class="access-grid" id="accessGrid">
+            <!-- Instructor Card -->
+            <div class="access-card instructor" onclick="login('instructor')">
+                <span class="card-icon">👩‍🏫</span>
+                <h3 class="card-title">Instructor</h3>
+                <p class="card-description">
+                    Acceso completo al LMS y Dashboard de administración
+                </p>
+                <span class="card-badge">Acceso Total</span>
+            </div>
+
+            <!-- Profesor Card -->
+            <div class="access-card profesor" onclick="login('profesor')">
+                <span class="card-icon">👨‍🏫</span>
+                <h3 class="card-title">Profesor</h3>
+                <p class="card-description">
+                    Visualización completa de módulos y contenidos del curso
+                </p>
+                <span class="card-badge">Contenido Completo</span>
+            </div>
+
+            <!-- Estudiante Card -->
+            <div class="access-card estudiante" onclick="login('estudiante')">
+                <span class="card-icon">👨‍🎓</span>
+                <h3 class="card-title">Estudiante</h3>
+                <p class="card-description">
+                    Acceso a módulos, seguimiento de progreso y evaluaciones
+                </p>
+                <span class="card-badge">Progreso Personal</span>
+            </div>
+
+            <!-- Visitante Card -->
+            <div class="access-card visitante" onclick="login('visitante')">
+                <span class="card-icon">👤</span>
+                <h3 class="card-title">Visitante</h3>
+                <p class="card-description">
+                    Vista previa limitada del curso sin acceso a contenidos
+                </p>
+                <span class="card-badge">Vista Previa</span>
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <div class="info-section">
+            <h3 class="info-title">📋 Permisos por Rol:</h3>
+            <ul class="info-list">
+                <li><strong>Instructor:</strong> Dashboard + Todo el contenido + Gestión de estudiantes</li>
+                <li><strong>Profesor:</strong> Todo el contenido del curso + Evaluaciones</li>
+                <li><strong>Estudiante:</strong> Módulos + Progreso personal + Evaluaciones</li>
+                <li><strong>Visitante:</strong> Solo página principal (sin contenidos)</li>
+            </ul>
+        </div>
+
+        <!-- Footer -->
+        <p class="footer-text">
+            © 2024 Universidad Alberto Hurtado<br>
+            Desarrollado por Joselyn Vizcarra
+        </p>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <span id="notificationText"></span>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Datos de usuarios predefinidos para cada rol
+        const usersData = {
+            instructor: {
+                email: 'joselyn.vizcarra@uah.cl',
+                name: 'Joselyn Vizcarra',
+                role: 'instructor',
+                picture: null
+            },
+            profesor: {
+                email: 'profesor@uah.cl',
+                name: 'Profesor Demo',
+                role: 'profesor',
+                picture: null
+            },
+            estudiante: {
+                email: 'estudiante@uah.cl',
+                name: 'Estudiante Demo',
+                role: 'estudiante',
+                picture: null
+            },
+            visitante: {
+                email: 'visitante@demo.com',
+                name: 'Usuario Visitante',
+                role: 'visitante',
+                picture: null
+            }
+        };
+
+        // Verificar si ya hay una sesión activa
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (currentUser) {
+                const userData = JSON.parse(currentUser);
+                showNotification(`Ya tienes una sesión activa como ${userData.name}`, 'info');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+            }
+        });
+
+        // Función de login
+        function login(role) {
+            // Mostrar loading
+            document.getElementById('accessGrid').style.display = 'none';
+            document.getElementById('loadingState').classList.add('active');
+
+            // Obtener datos del usuario según el rol
+            const userData = usersData[role];
+            
+            // Simular delay de autenticación
+            setTimeout(() => {
+                // Guardar datos del usuario
+                userData.loginTime = new Date().toISOString();
+                userData.sessionId = generateSessionId();
+                
+                localStorage.setItem('currentUser', JSON.stringify(userData));
+                localStorage.setItem('isAuthenticated', 'true');
+                localStorage.setItem('sessionStart', userData.loginTime);
+
+                // Inicializar progreso si es estudiante
+                if (role === 'estudiante') {
+                    initializeStudentProgress(userData.email);
+                }
+
+                // Registrar actividad
+                logActivity('login', userData);
+
+                // Mostrar notificación
+                showNotification(`¡Bienvenido ${userData.name}!`, 'success');
+
+                // Redirigir después de un momento
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
+
+            }, 800);
+        }
+
+        // Generar ID de sesión único
+        function generateSessionId() {
+            return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        // Inicializar progreso del estudiante
+        function initializeStudentProgress(email) {
+            const progressKey = `progress_${email}`;
+            
+            if (!localStorage.getItem(progressKey)) {
+                const initialProgress = {
+                    modules: {
+                        1: { completed: false, progress: 0, timeSpent: 0, startTime: null },
+                        2: { completed: false, progress: 0, timeSpent: 0, startTime: null },
+                        3: { completed: false, progress: 0, timeSpent: 0, startTime: null },
+                        4: { completed: false, progress: 0, timeSpent: 0, startTime: null }
+                    },
+                    overallProgress: 0,
+                    totalTimeSpent: 0,
+                    achievements: [],
+                    lastActivity: new Date().toISOString()
+                };
+                
+                localStorage.setItem(progressKey, JSON.stringify(initialProgress));
+            }
+        }
+
+        // Registrar actividad
+        function logActivity(action, userData) {
+            try {
+                const activities = JSON.parse(localStorage.getItem('userActivities') || '[]');
+                
+                const activity = {
+                    timestamp: new Date().toISOString(),
+                    sessionId: userData.sessionId,
+                    action: action,
+                    userEmail: userData.email,
+                    userName: userData.name,
+                    userRole: userData.role,
+                    userAgent: navigator.userAgent,
+                    url: window.location.href
+                };
+
+                activities.push(activity);
+                
+                // Mantener solo las últimas 100 actividades
+                if (activities.length > 100) {
+                    activities.splice(0, activities.length - 100);
+                }
+                
+                localStorage.setItem('userActivities', JSON.stringify(activities));
+            } catch (error) {
+                console.error('Error logging activity:', error);
+            }
+        }
+
+        // Mostrar notificación
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notification.className = `notification ${type}`;
+            notificationText.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
