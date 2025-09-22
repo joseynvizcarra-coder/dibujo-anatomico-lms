@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Curso de Dibujo y Representación del Cuerpo Humano - Universidad Alberto Hurtado">
+  <meta name="author" content="Joselyn Vizcarra">
+  <title>Curso de Dibujo Anatómico - LMS UAH</title>
+  <style>
+    :root {--primary-dark:#2c5f66;--primary-light:#e8a2b8;--dark:#1a1a1a;--gray-light:#f5f5f5;--gray-medium:#666;--success:#4CAF50;--danger:#f44336;--warning:#FFC107;}
+    body {font-family:Arial, sans-serif;margin:0;background:#f5f7fa;color:var(--dark);} 
+    header {background:linear-gradient(135deg,var(--primary-dark),var(--dark));color:white;padding:1rem;position:sticky;top:0;z-index:100;}
+    .header-content {max-width:1200px;margin:auto;display:flex;justify-content:space-between;align-items:center;}
+    .logo {display:flex;align-items:center;font-weight:bold;font-size:1.2rem;gap:.5rem;}
+    .user-widget {display:flex;align-items:center;gap:.5rem;background:rgba(255,255,255,0.1);padding:.3rem .7rem;border-radius:20px;}
+    .user-avatar {width:30px;height:30px;border-radius:50%;background:var(--primary-light);display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;}
+    .btn {border:none;padding:.4rem 1rem;border-radius:20px;cursor:pointer;color:white;}
+    .btn-danger{background:var(--danger);} .btn-success{background:var(--success);} .btn-dashboard{background:var(--primary-dark);}
+    main {max-width:1200px;margin:2rem auto;padding:0 1rem;}
+    .welcome-section {text-align:center;background:white;padding:2rem;border-radius:15px;box-shadow:0 5px 15px rgba(0,0,0,0.1);}
+    .modules-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin-top:2rem;}
+    .module-card {background:white;padding:1.5rem;border-radius:15px;box-shadow:0 4px 12px rgba(0,0,0,0.1);display:flex;flex-direction:column;justify-content:space-between;}
+    .module-card h3 {margin:0 0 .5rem;}
+    .module-card p {flex:1;color:var(--gray-medium);}
+    .module-actions {margin-top:1rem;display:flex;gap:.5rem;flex-wrap:wrap;}
+    .footer {background:var(--dark);color:white;text-align:center;padding:1.5rem;margin-top:3rem;}
+    .guest-banner{background:linear-gradient(135deg,var(--warning),var(--primary-light));color:white;padding:1rem;text-align:center;border-radius:10px;}
+    .progress-section {background:white;padding:1rem 1.5rem;border-radius:15px;box-shadow:0 4px 12px rgba(0,0,0,0.1);margin-top:2rem;}
+    .progress-bar {height:20px;background:var(--gray-light);border-radius:10px;overflow:hidden;}
+    .progress-fill {height:100%;background:linear-gradient(90deg,var(--primary-dark),var(--primary-light));width:0;transition:width .5s;}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div class="logo">🎨 Arte & Anatomía UAH</div>
+      <div class="user-widget"><div class="user-avatar" id="userAvatar">U</div><div><span id="userName">Invitado</span><br><small id="userRole">guest</small></div></div>
+      <div>
+        <button class="btn btn-dashboard" id="dashboardBtn" style="display:none;" onclick="goToDashboard()">Dashboard</button>
+        <button class="btn btn-danger" onclick="logout()">Cerrar Sesión</button>
+      </div>
+    </div>
+  </header>
+  <main>
+    <div class="guest-banner" id="guestBanner" style="display:none;">Estás en modo invitado. <a href="login.html" style="color:white;text-decoration:underline;">Inicia sesión</a> para acceso completo.</div>
+    <section class="welcome-section">
+      <h1>Dibujo y Representación del Cuerpo Humano</h1>
+      <p>Desarrolla tus habilidades artísticas desde fundamentos hasta técnicas avanzadas de dibujo anatómico.</p>
+    </section>
+
+    <!-- Progreso Estudiante -->
+    <section class="progress-section" id="progressSection" style="display:none;">
+      <h3>Tu Progreso General</h3>
+      <div class="progress-bar"><div class="progress-fill" id="progressBar"></div></div>
+      <p><span id="progressPercent">0%</span> completado</p>
+    </section>
+
+    <section>
+      <h2 style="margin-top:2rem;">Módulos del Curso</h2>
+      <div class="modules-grid" id="modulesGrid"></div>
+    </section>
+  </main>
+  <footer class="footer">
+    <p>&copy; 2024 Universidad Alberto Hurtado - Pedagogía en Artes Visuales</p>
+    <p>Desarrollado por Joselyn Vizcarra</p>
+  </footer>
+  <script>
+    const modulesData = [
+      {id:1,title:"Fundamentos y Proporción",description:"Domina las bases del dibujo anatómico con proporciones del cuerpo humano.",url:"module1.html"},
+      {id:2,title:"Anatomía Facial",description:"Explora proporciones faciales y expresiones.",url:"#"},
+      {id:3,title:"Torso y Extremidades",description:"Biomecánica: músculos y articulaciones.",url:"#"},
+      {id:4,title:"Figura Completa",description:"Integra todos los elementos en poses dinámicas.",url:"#"}
+    ];
+
+    document.addEventListener("DOMContentLoaded",()=>{
+      checkAuth();
+      loadModules();
+      updateProgress();
+    });
+
+    function checkAuth(){
+      let user=JSON.parse(localStorage.getItem('currentUser'));
+      if(!user){user={name:'Invitado',role:'guest'};localStorage.setItem('currentUser',JSON.stringify(user));}
+      document.getElementById('userName').textContent=user.name;
+      document.getElementById('userRole').textContent=user.role;
+      document.getElementById('userAvatar').textContent=user.name.charAt(0).toUpperCase();
+      if(user.role==='guest'){document.getElementById('guestBanner').style.display='block';}
+      if(user.role==='student'){document.getElementById('progressSection').style.display='block';}
+      if(user.role==='instructor'){document.getElementById('dashboardBtn').style.display='inline-block';}
+      if(user.role==='admin'){document.getElementById('dashboardBtn').style.display='inline-block';}
+    }
+
+    function loadModules(){
+      const grid=document.getElementById("modulesGrid");grid.innerHTML="";
+      const user=JSON.parse(localStorage.getItem('currentUser'));
+      modulesData.forEach(m=>{
+        const card=document.createElement("div");card.className="module-card";
+        let actions="";
+        if(m.url==="#"){actions=`<button class='btn btn-success' disabled>Próximamente</button>`;} 
+        else if(user.role==='guest' && m.id>1){actions=`<button class='btn btn-success' disabled>Solo estudiantes</button>`;} 
+        else {actions=`<a class='btn btn-success' href='${m.url}' onclick='markCompleted(${m.id})'>Ir al módulo</a>`;}
+        card.innerHTML=`<h3>${m.title}</h3><p>${m.description}</p><div class='module-actions'>${actions}</div>`;
+        grid.appendChild(card);
+      });
+    }
+
+    function markCompleted(id){
+      let progress=JSON.parse(localStorage.getItem('progress'))||{};
+      progress[id]=true;
+      localStorage.setItem('progress',JSON.stringify(progress));
+      updateProgress();
+    }
+
+    function updateProgress(){
+      let progress=JSON.parse(localStorage.getItem('progress'))||{};
+      let completed=Object.values(progress).filter(v=>v).length;
+      let percent=Math.round((completed/modulesData.length)*100);
+      document.getElementById('progressBar').style.width=percent+"%";
+      document.getElementById('progressPercent').textContent=percent+"%";
+    }
+
+    function goToDashboard(){location.href='dashboard.html';}
+
+    function logout(){localStorage.removeItem('currentUser');location.href='login.html';}
+  </script>
+</body>
+</html>
