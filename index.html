@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dibujo y Representación del Cuerpo Humano - LMS UAH</title>
+    <style>
+        :root {
+            --color-petroleo: #2c5f66;
+            --color-rosado: #e8a2b8;
+            --color-negro: #1a1a1a;
+            --color-blanco: #ffffff;
+            --color-gris-claro: #f5f5f5;
+            --color-gris-medio: #666666;
+            --color-verde: #4CAF50;
+            --color-amarillo: #FFC107;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: var(--color-negro);
+            background: linear-gradient(135deg, var(--color-gris-claro) 0%, var(--color-blanco) 100%);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--color-petroleo) 0%, var(--color-negro) 100%);
+            color: var(--color-blanco);
+            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--color-rosado);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--color-rosado);
+            object-fit: cover;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .user-role {
+            font-size: 0.8rem;
+            color: var(--color-rosado);
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: var(--color-blanco);
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: var(--color-rosado);
+            color: var(--color-negro);
+        }
+
+        /* Container principal */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+            background: var(--color-blanco);
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--color-petroleo);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--color-gris-medio);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .welcome-message {
+            background: linear-gradient(135deg, var(--color-petroleo), var(--color-rosado));
+            color: var(--color-blanco);
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            display: inline-block;
+        }
+
+        /* Notificación de acceso */
+        .access-notification {
+            background: var(--color-amarillo);
+            color: var(--color-negro);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+        }
+
+        .access-notification.visitor {
+            display: block;
+        }
+
+        /* Progreso general */
+        .progress-container {
+            background: var(--color-gris-claro);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .progress-title {
+            font-size: 1.2rem;
+            color: var(--color-petroleo);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .progress-bar {
+            background: #e0e0e0;
+            border-radius: 20px;
+            height: 20px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--color-petroleo), var(--color-rosado));
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 20px;
+        }
+
+        .progress-text {
+            text-align: center;
+            font-weight: bold;
+            color: var(--color-petroleo);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: var(--color-blanco);
+            border-radius: 10px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--color-petroleo);
+        }
+
+        .stat-label {
+            color: var(--color-gris-medio);
+            font-size: 0.9rem;
+        }
+
+        /* Grid de módulos */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .module-card {
+            background: var(--color-blanco);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid var(--color-petroleo);
+            position: relative;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .module-card.completed {
+            border-left-color: var(--color-verde);
+        }
+
+        .module-card.in-progress {
+            border-left-color: var(--color-amarillo);
+        }
+
+        .module-number {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: var(--color-petroleo);
+            color: var(--color-blanco);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .module-card.completed .module-number {
+            background: var(--color-verde);
+        }
+
+        .module-card.in-progress .module-number {
+            background: var(--color-amarillo);
+            color: var(--color-negro);
+        }
+
+        .module-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--color-petroleo);
+        }
+
+        .module-description {
+            color: var(--color-gris-medio);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .module-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--color-gris-medio);
+        }
+
+        .module-progress {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .module-progress-bar {
+            width: 60px;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .module-progress-fill {
+            height: 100%;
+            background: var(--color-verde);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--color-petroleo), var(--color-negro));
+            color: var(--color-blanco);
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, var(--color-negro), var(--color-petroleo));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn.completed {
+            background: linear-gradient(135deg, var(--color-verde), var(--color-petroleo));
+        }
+
+        .btn.visitor-demo {
+            background: linear-gradient(135deg, var(--color-gris-medio), var(--color-negro));
+            position: relative;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-completed {
+            background: #d1f2eb;
+            color: #0e6b56;
+        }
+
+        .status-in-progress {
+            background: #fff8dc;
+            color: #b8860b;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .module-card {
+                padding: 1.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Animaciones */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .module-card {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        .module-card:nth-child(2) { animation-delay: 0.1s; }
+        .module-card:nth-child(3) { animation-delay: 0.2s; }
+        .module-card:nth-child(4) { animation-delay: 0.3s; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">🎨 Arte & Anatomía</div>
+            <div class="user-info">
+                <img src="" alt="Avatar" class="user-avatar" id="userAvatar">
+                <div class="user-details">
+                    <span class="user-name" id="userName">Usuario</span>
+                    <span class="user-role" id="userRole">Cargando...</span>
+                </div>
+                <button class="logout-btn" onclick="logout()">Salir</button>
+                <button class="logout-btn" data-role="instructor" onclick="window.location.href='dashboard.html'" style="margin-left: 0.5rem;">📊 Dashboard</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Container principal -->
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="welcome-message" id="welcomeMessage">
+                ¡Bienvenido al curso!
+            </div>
+            <h1>Dibujo y Representación del Cuerpo Humano</h1>
+            <p>Desarrolla competencias técnicas en dibujo anatómico a través de módulos independientes y progresivos.</p>
+        </section>
+
+        <!-- Notificación de acceso -->
+        <div class="access-notification" id="accessNotification">
+            👁️ <strong>Vista de Demostración:</strong> Estás navegando como visitante. Puedes explorar el contenido pero no guardar progreso.
+        </div>
+
+        <!-- Progreso general -->
+        <div class="progress-container" data-role="estudiante">
+            <div class="progress-title">Tu Progreso General</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">0% Completado (0 de 4 módulos)</div>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" id="completedModules">0</div>
+                    <div class="stat-label">Completados</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="timeSpent">0h</div>
+                    <div class="stat-label">Tiempo Total</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="currentStreak">0</div>
+                    <div class="stat-label">Días Seguidos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="achievements">0</div>
+                    <div class="stat-label">Logros</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grid de módulos -->
+        <section>
+            <div class="modules-grid">
+                <!-- Módulo 1 -->
+                <div class="module-card" data-module="1">
+                    <div class="module-number">1</div>
+                    <h3 class="module-title">Fundamentos y Proporción</h3>
+                    <p class="module-description">
+                        Domina las bases del dibujo anatómico con el canon de 8 cabezas. 
+                        Aprende las proporciones fundamentales del cuerpo humano.
+                    </p>
+                    <div class="module-meta">
+                        <span>Duración: 3-4 horas</span>
+                        <div class="module-progress">
+                            <div class="module-progress-bar">
+                                <div class="module-progress-fill" style="width: 0%"></div>
+                            </div>
+                            <span>0%</span>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <span class="status-badge status-pending" id="status-4">No Iniciado</span>
+                    </div>
+                    <button class="btn" onclick="openModule(4)">Comenzar Módulo</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script src="auth.js"></script>
+    
+    <script>
+        // VERIFICACIÓN CRÍTICA: Proteger página y redirigir si no está autenticado
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar autenticación INMEDIATAMENTE
+            if (!isAuthenticated()) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Si está autenticado, continuar con inicialización
+            initializePage();
+        });
+
+        // Configuración de módulos
+        const moduleData = {
+            1: {
+                title: "Fundamentos y Proporción",
+                description: "Canon de 8 cabezas y proporciones básicas",
+                content: "módulo 1",
+                duration: "2-3 horas"
+            },
+            2: {
+                title: "Anatomía Facial", 
+                description: "Proporciones faciales y expresiones",
+                content: "módulo 2",
+                duration: "2-3 horas"
+            },
+            3: {
+                title: "Torso y Extremidades",
+                description: "Biomecánica y movimiento corporal", 
+                content: "módulo 3",
+                duration: "3-4 horas"
+            },
+            4: {
+                title: "Figura Completa",
+                description: "Integración y narrativa visual",
+                content: "módulo 4", 
+                duration: "3-4 horas"
+            }
+        };
+
+        // Inicializar la página
+        function initializePage() {
+            const currentUser = getCurrentUser();
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Actualizar UI con datos del usuario
+            updateUserInterface(currentUser);
+            
+            // Cargar progreso si es estudiante
+            if (currentUser.role === 'estudiante') {
+                loadStudentProgress();
+            } else if (currentUser.role === 'visitante') {
+                showVisitorMode();
+            }
+
+            // Registrar actividad de acceso
+            logUserActivity('page_view', currentUser, { page: 'dashboard' });
+        }
+
+        function updateUserInterface(user) {
+            document.getElementById('userName').textContent = user.name;
+            document.getElementById('userRole').textContent = getRoleDisplayName(user.role);
+            
+            if (user.picture) {
+                document.getElementById('userAvatar').src = user.picture;
+            }
+
+            // Personalizar mensaje de bienvenida
+            const welcomeMsg = document.getElementById('welcomeMessage');
+            welcomeMsg.textContent = `¡Bienvenido, ${user.name.split(' ')[0]}!`;
+        }
+
+        function getRoleDisplayName(role) {
+            const roleNames = {
+                'instructor': 'Instructor',
+                'estudiante': 'Estudiante',
+                'evaluador': 'Evaluador',
+                'visitante': 'Visitante'
+            };
+            return roleNames[role] || 'Usuario';
+        }
+
+        function showVisitorMode() {
+            const notification = document.getElementById('accessNotification');
+            notification.classList.add('visitor');
+            
+            // Cambiar botones a modo demostración
+            const buttons = document.querySelectorAll('.module-card .btn');
+            buttons.forEach(btn => {
+                btn.classList.add('visitor-demo');
+                btn.innerHTML = '👁️ Ver Demo';
+            });
+        }
+
+        function loadStudentProgress() {
+            const progress = getStudentProgress();
+            if (!progress) return;
+
+            // Actualizar progreso general
+            updateProgressDisplay(progress);
+
+            // Actualizar estado de cada módulo
+            for (let i = 1; i <= 4; i++) {
+                updateModuleDisplay(i, progress.modules[i]);
+            }
+        }
+
+        function updateProgressDisplay(progress) {
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            progressFill.style.width = progress.overallProgress + '%';
+            
+            const completedCount = Object.values(progress.modules).filter(m => m.completed).length;
+            progressText.textContent = `${Math.round(progress.overallProgress)}% Completado (${completedCount} de 4 módulos)`;
+
+            // Actualizar estadísticas
+            document.getElementById('completedModules').textContent = completedCount;
+            document.getElementById('timeSpent').textContent = Math.round(progress.totalTimeSpent / 60) + 'h';
+            document.getElementById('achievements').textContent = progress.achievements?.length || 0;
+        }
+
+        function updateModuleDisplay(moduleNumber, moduleProgress) {
+            const card = document.querySelector(`[data-module="${moduleNumber}"]`);
+            const statusBadge = document.getElementById(`status-${moduleNumber}`);
+            const button = card.querySelector('.btn');
+            const progressBar = card.querySelector('.module-progress-fill');
+            const progressText = card.querySelector('.module-progress span');
+
+            if (moduleProgress.completed) {
+                card.classList.add('completed');
+                statusBadge.textContent = 'Completado';
+                statusBadge.className = 'status-badge status-completed';
+                button.textContent = 'Revisar Módulo';
+                button.classList.add('completed');
+                progressBar.style.width = '100%';
+                progressText.textContent = '100%';
+            } else if (moduleProgress.progress > 0) {
+                card.classList.add('in-progress');
+                statusBadge.textContent = 'En Progreso';
+                statusBadge.className = 'status-badge status-in-progress';
+                button.textContent = 'Continuar';
+                progressBar.style.width = moduleProgress.progress + '%';
+                progressText.textContent = Math.round(moduleProgress.progress) + '%';
+            }
+        }
+
+        function openModule(moduleNumber) {
+            const currentUser = getCurrentUser();
+            
+            // Registrar actividad
+            logUserActivity('module_access', currentUser, { 
+                module: moduleNumber,
+                moduleTitle: moduleData[moduleNumber].title 
+            });
+
+            if (currentUser.role === 'visitante') {
+                // Modo demostración para visitantes
+                showModuleDemo(moduleNumber);
+            } else {
+                // Acceso completo para estudiantes autorizados
+                showModuleContent(moduleNumber);
+            }
+        }
+
+        function showModuleDemo(moduleNumber) {
+            const module = moduleData[moduleNumber];
+            alert(`Vista de Demostración - ${module.title}\n\n${module.description}\n\nDuración estimada: ${module.duration}\n\nEsta es una vista previa del contenido. Para acceso completo con progreso guardado, necesitas estar registrado como estudiante autorizado.`);
+        }
+
+        function showModuleContent(moduleNumber) {
+            const module = moduleData[moduleNumber];
+            alert(`Módulo ${moduleNumber}: ${module.title}\n\nContenido interactivo próximamente...\n\nEsto será reemplazado por el contenido real de cada módulo.`);
+            
+            // Simular progreso para testing (solo estudiantes)
+            if (getCurrentUser()?.role === 'estudiante') {
+                const currentProgress = getStudentProgress();
+                if (currentProgress && !currentProgress.modules[moduleNumber].completed) {
+                    // Simular algo de progreso
+                    updateModuleProgress(moduleNumber, {
+                        progress: Math.min((currentProgress.modules[moduleNumber].progress || 0) + 25, 100),
+                        startTime: currentProgress.modules[moduleNumber].startTime || new Date().toISOString(),
+                        timeSpent: (currentProgress.modules[moduleNumber].timeSpent || 0) + 30 // 30 minutos simulados
+                    });
+                    
+                    // Si llegó a 100%, marcar como completado
+                    if (currentProgress.modules[moduleNumber].progress >= 75) {
+                        updateModuleProgress(moduleNumber, {
+                            completed: true,
+                            progress: 100
+                        });
+                    }
+                    
+                    setTimeout(() => {
+                        loadStudentProgress(); // Refrescar UI después de un momento
+                    }, 500);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
+                        <span>Duración: 2-3 horas</span>
+                        <div class="module-progress">
+                            <div class="module-progress-bar">
+                                <div class="module-progress-fill" style="width: 0%"></div>
+                            </div>
+                            <span>0%</span>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <span class="status-badge status-pending" id="status-1">No Iniciado</span>
+                    </div>
+                    <button class="btn" onclick="openModule(1)">Comenzar Módulo</button>
+                </div>
+
+                <!-- Módulo 2 -->
+                <div class="module-card" data-module="2">
+                    <div class="module-number">2</div>
+                    <h3 class="module-title">Anatomía Facial</h3>
+                    <p class="module-description">
+                        Explora las proporciones faciales, expresiones y detalles. 
+                        Técnicas para capturar la personalidad en el rostro.
+                    </p>
+                    <div class="module-meta">
+                        <span>Duración: 2-3 horas</span>
+                        <div class="module-progress">
+                            <div class="module-progress-bar">
+                                <div class="module-progress-fill" style="width: 0%"></div>
+                            </div>
+                            <span>0%</span>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <span class="status-badge status-pending" id="status-2">No Iniciado</span>
+                    </div>
+                    <button class="btn" onclick="openModule(2)">Comenzar Módulo</button>
+                </div>
+
+                <!-- Módulo 3 -->
+                <div class="module-card" data-module="3">
+                    <div class="module-number">3</div>
+                    <h3 class="module-title">Torso y Extremidades</h3>
+                    <p class="module-description">
+                        Biomecánica del cuerpo humano. Músculos, articulaciones 
+                        y movimiento natural en brazos, piernas y torso.
+                    </p>
+                    <div class="module-meta">
+                        <span>Duración: 3-4 horas</span>
+                        <div class="module-progress">
+                            <div class="module-progress-bar">
+                                <div class="module-progress-fill" style="width: 0%"></div>
+                            </div>
+                            <span>0%</span>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <span class="status-badge status-pending" id="status-3">No Iniciado</span>
+                    </div>
+                    <button class="btn" onclick="openModule(3)">Comenzar Módulo</button>
+                </div>
+
+                <!-- Módulo 4 -->
+                <div class="module-card" data-module="4">
+                    <div class="module-number">4</div>
+                    <h3 class="module-title">Figura Completa</h3>
+                    <p class="module-description">
+                        Integración de todos los elementos. Poses dinámicas, 
+                        narrativa visual y composición de la figura humana.
+                    </p>
+                    <div class="module-meta">
