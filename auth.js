@@ -1,40 +1,53 @@
-// auth.js - Sistema de Autenticación Simplificado LMS Dibujo Anatómico
+// auth.js - Sistema de Autenticación LMS Dibujo Anatómico
 // Universidad Alberto Hurtado - Joselyn Vizcarra
-// Versión simplificada con 4 roles principales
+// Versión conectada con Google Sheets
 
 // ========================
-// CONFIGURACIÓN DE USUARIOS
+// CONFIGURACIÓN API
 // ========================
 
-const USER_CONFIG = {
-    // Usuarios predefinidos para cada rol
-    roles: {
-        instructor: {
-            email: 'joselyn.vizcarra@uah.cl',
-            name: 'Joselyn Vizcarra',
-            permissions: ['view_all', 'edit_all', 'dashboard', 'manage_students']
-        },
-        profesor: {
-            email: 'profesor@uah.cl',
-            name: 'Profesor Demo',
-            permissions: ['view_all', 'evaluations']
-        },
-        estudiante: {
-            email: 'estudiante@uah.cl',
-            name: 'Estudiante Demo',
-            permissions: ['view_content', 'track_progress', 'evaluations']
-        },
-        visitante: {
-            email: 'visitante@demo.com',
-            name: 'Usuario Visitante',
-            permissions: ['view_preview']
-        }
-    }
-};
+const API_URL = 'https://script.google.com/macros/s/AKfycbyaDdQRw04nlNV-XyfZplHH1XcEdMSLyiocML6cLIK4kNe_ZfhO1mJKX7O_3kVDqMYKTQ/exec';
 
 // ========================
 // FUNCIONES DE AUTENTICACIÓN
 // ========================
+
+/**
+ * Autentica usuario con Google Sheets
+ */
+async function authenticateUser(username, password) {
+    try {
+        showLoading(true, 'Verificando credenciales...');
+        
+        const response = await fetch(`${API_URL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+            const userData = result.data;
+            
+            // Guardar datos del usuario en localStorage
+            localStorage.setItem('currentUser', JSON.stringify(userData));
+            localStorage.setItem('isAuthenticated', 'true');
+            localStorage.setItem('sessionStart', userData.loginTime);
+            
+            showLoading(false);
+            return { success: true, user: userData };
+        } else {
+            showLoading(false);
+            return { success: false, error: result.error };
+        }
+    } catch (error) {
+        showLoading(false);
+        console.error('Error de autenticación:', error);
+        return { success: false, error: 'Error de conexión. Verifica tu internet.' };
+    }
+}
 
 /**
  * Verifica si el usuario está autenticado
@@ -58,50 +71,6 @@ function getCurrentUser() {
 }
 
 /**
- * Obtiene el nombre de visualización del rol
- */
-function getRoleDisplayName(role) {
-    const roleNames = {
-        'instructor': 'Instructor',
-        'profesor': 'Profesor',
-        'estudiante': 'Estudiante',
-        'visitante': 'Visitante'
-    };
-    return roleNames[role] || 'Usuario';
-}
-
-/**
- * Verifica si el usuario tiene un permiso específico
- */
-function hasPermission(permission) {
-    const user = getCurrentUser();
-    if (!user) return false;
-    
-    const roleConfig = USER_CONFIG.roles[user.role];
-    if (!roleConfig) return false;
-    
-    return roleConfig.permissions.includes(permission);
-}
-
-/**
- * Verifica si el usuario puede acceder al contenido completo
- */
-function hasFullAccess() {
-    const user = getCurrentUser();
-    if (!user) return false;
-    
-    // Instructor, Profesor y Estudiante tienen acceso completo al contenido
-    return ['instructor', 'profesor', 'estudiante'].includes(user.role);
-}
-
-/**
- * Verifica si el usuario puede acceder al dashboard
- */
-function canAccessDashboard() {
-    return hasPermission('dashboard');
-}
-
-/**
  * Cierra la sesión del usuario
  */
 function logout() {
@@ -119,157 +88,10 @@ function logout() {
     window.location.href = 'login.html';
 }
 
-// ========================
-// SISTEMA DE PROGRESO (Solo Estudiantes)
-// ========================
-
 /**
- * Inicializa el progreso para un estudiante nuevo
+ * Protege una página verificando autenticación
  */
-function initializeStudentProgress(email) {
-    const progressKey = `progress_${email}`;
-    
-    if (!localStorage.getItem(progressKey)) {
-        const initialProgress = {
-            modules: {
-                1: { completed: false, progress: 0, timeSpent: 0, startTime: null },
-                2: { completed: false, progress: 0, timeSpent: 0, startTime: null },
-                3: { completed: false, progress: 0, timeSpent: 0, startTime: null },
-                4: { completed: false, progress: 0, timeSpent: 0, startTime: null }
-            },
-            overallProgress: 0,
-            totalTimeSpent: 0,
-            achievements: [],
-            lastActivity: new Date().toISOString()
-        };
-        
-        localStorage.setItem(progressKey, JSON.stringify(initialProgress));
-    }
-}
-
-/**
- * Obtiene el progreso de un estudiante
- */
-function getStudentProgress(email = null) {
-    const userEmail = email || getCurrentUser()?.email;
-    if (!userEmail) return null;
-    
-    const progressKey = `progress_${userEmail}`;
-    try {
-        return JSON.parse(localStorage.getItem(progressKey) || 'null');
-    } catch (error) {
-        console.error('Error parsing progress data:', error);
-        return null;
-    }
-}
-
-/**
- * Actualiza el progreso de un módulo
- */
-function updateModuleProgress(moduleNumber, progressData) {
-    const currentUser = getCurrentUser();
-    if (!currentUser || currentUser.role !== 'estudiante') return false;
-
-    const progressKey = `progress_${currentUser.email}`;
-    const progress = getStudentProgress();
-    
-    if (progress) {
-        progress.modules[moduleNumber] = {
-            ...progress.modules[moduleNumber],
-            ...progressData,
-            lastUpdate: new Date().toISOString()
-        };
-
-        // Calcular progreso general
-        const completedModules = Object.values(progress.modules).filter(m => m.completed).length;
-        progress.overallProgress = (completedModules / 4) * 100;
-        progress.lastActivity = new Date().toISOString();
-
-        // Calcular tiempo total
-        progress.totalTimeSpent = Object.values(progress.modules).reduce((total, module) => {
-            return total + (module.timeSpent || 0);
-        }, 0);
-
-        localStorage.setItem(progressKey, JSON.stringify(progress));
-        
-        // Registrar actividad
-        logUserActivity('progress_update', currentUser, {
-            module: moduleNumber,
-            progress: progressData
-        });
-
-        return true;
-    }
-    return false;
-}
-
-// ========================
-// SISTEMA DE ACTIVIDADES
-// ========================
-
-/**
- * Registra una actividad del usuario
- */
-function logUserActivity(action, userData, details = {}) {
-    try {
-        const activities = JSON.parse(localStorage.getItem('userActivities') || '[]');
-        
-        const activity = {
-            timestamp: new Date().toISOString(),
-            sessionId: userData.sessionId || generateSessionId(),
-            action: action,
-            userEmail: userData.email,
-            userName: userData.name,
-            userRole: userData.role,
-            details: details,
-            userAgent: navigator.userAgent,
-            url: window.location.href
-        };
-
-        activities.push(activity);
-        
-        // Mantener solo las últimas 100 actividades
-        if (activities.length > 100) {
-            activities.splice(0, activities.length - 100);
-        }
-        
-        localStorage.setItem('userActivities', JSON.stringify(activities));
-    } catch (error) {
-        console.error('Error logging activity:', error);
-    }
-}
-
-/**
- * Obtiene actividades de un usuario específico
- */
-function getStudentActivities(email) {
-    const activities = JSON.parse(localStorage.getItem('userActivities') || '[]');
-    return activities.filter(a => a.userEmail === email);
-}
-
-/**
- * Obtiene el último acceso de un usuario
- */
-function getLastAccess(email) {
-    const activities = getStudentActivities(email);
-    if (activities.length === 0) return null;
-    
-    const relevantActivities = activities.filter(a => 
-        a.action !== 'dashboard_access' || a.userRole !== 'instructor'
-    );
-    
-    if (relevantActivities.length === 0) return null;
-    return relevantActivities[relevantActivities.length - 1].timestamp;
-}
-
-// ========================
-// PROTECCIÓN DE RUTAS
-// ========================
-
-/**
- * Protege una página verificando autenticación y permisos
- */
-function protectPage(requiredPermission = null) {
+function protectPage(requiredRole = null) {
     const currentUser = getCurrentUser();
     
     if (!isAuthenticated() || !currentUser) {
@@ -278,15 +100,216 @@ function protectPage(requiredPermission = null) {
         return false;
     }
 
-    // Verificar permisos específicos si se requieren
-    if (requiredPermission && !hasPermission(requiredPermission)) {
-        // Sin permisos, redirigir a index
-        alert('No tienes permisos para acceder a esta sección');
-        window.location.href = 'index.html';
+    if (requiredRole && currentUser.role !== requiredRole) {
+        // Rol incorrecto, redirigir según el rol actual
+        switch(currentUser.role) {
+            case 'instructor':
+                if (window.location.pathname.includes('dashboard.html')) {
+                    return true;
+                }
+                window.location.href = 'dashboard.html';
+                break;
+            case 'estudiante':
+            case 'evaluador':
+            default:
+                if (window.location.pathname.includes('index.html') || 
+                    window.location.pathname === '/' || 
+                    window.location.pathname.includes('dibujo-anatomico-lms')) {
+                    return true;
+                }
+                window.location.href = 'index.html';
+                break;
+        }
         return false;
     }
 
     return true;
+}
+
+// ========================
+// SISTEMA DE PROGRESO
+// ========================
+
+/**
+ * Obtiene el progreso de un estudiante desde Google Sheets
+ */
+async function getStudentProgress(username = null) {
+    try {
+        const userToQuery = username || getCurrentUser()?.username;
+        if (!userToQuery) return null;
+
+        const response = await fetch(`${API_URL}?action=getProgress&username=${encodeURIComponent(userToQuery)}`);
+        const result = await response.json();
+
+        if (result.success) {
+            return result.data;
+        } else {
+            console.error('Error obteniendo progreso:', result.error);
+            return null;
+        }
+    } catch (error) {
+        console.error('Error de conexión al obtener progreso:', error);
+        return null;
+    }
+}
+
+/**
+ * Actualiza el progreso de un módulo en Google Sheets
+ */
+async function updateModuleProgress(moduleNumber, progressData) {
+    try {
+        const currentUser = getCurrentUser();
+        if (!currentUser || currentUser.role !== 'estudiante') return false;
+
+        // Obtener progreso actual
+        const currentProgress = await getStudentProgress();
+        if (!currentProgress) return false;
+
+        // Actualizar módulo específico
+        currentProgress.modules[moduleNumber] = {
+            ...currentProgress.modules[moduleNumber],
+            ...progressData,
+            lastUpdate: new Date().toISOString()
+        };
+
+        // Calcular progreso general
+        const completedModules = Object.values(currentProgress.modules).filter(m => m.completed).length;
+        currentProgress.overallProgress = Math.round((completedModules / 4) * 100);
+        currentProgress.lastAccess = new Date().toISOString();
+
+        // Calcular tiempo total
+        currentProgress.totalTime = Object.values(currentProgress.modules).reduce((total, module) => {
+            return total + (module.timeSpent || 0);
+        }, 0);
+
+        // Guardar en Google Sheets
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: 'saveProgress',
+                username: currentUser.username,
+                progress: currentProgress
+            })
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+            // Registrar actividad
+            logUserActivity('progress_update', currentUser, {
+                module: moduleNumber,
+                progress: progressData
+            });
+            return true;
+        } else {
+            console.error('Error guardando progreso:', result.error);
+            return false;
+        }
+    } catch (error) {
+        console.error('Error actualizando progreso:', error);
+        return false;
+    }
+}
+
+// ========================
+// SISTEMA DE ACTIVIDADES
+// ========================
+
+/**
+ * Registra una actividad del usuario en Google Sheets
+ */
+async function logUserActivity(action, userData, details = {}) {
+    try {
+        const activity = {
+            action: 'logActivity',
+            userId: userData.id || 0,
+            username: userData.username,
+            action: action,
+            moduleId: details.moduleId || details.module || '',
+            lessonId: details.lessonId || details.lesson || '',
+            details: JSON.stringify(details),
+            sessionId: userData.sessionId || generateSessionId()
+        };
+
+        // Enviar a Google Sheets (sin esperar respuesta para no bloquear UI)
+        fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(activity)
+        }).catch(error => {
+            console.error('Error logging activity:', error);
+        });
+    } catch (error) {
+        console.error('Error logging activity:', error);
+    }
+}
+
+// ========================
+// FUNCIONES PARA DASHBOARD
+// ========================
+
+/**
+ * Obtiene todos los estudiantes y su progreso (solo instructor)
+ */
+async function getAllStudentsProgress() {
+    try {
+        const currentUser = getCurrentUser();
+        if (!currentUser || currentUser.role !== 'instructor') return null;
+
+        const response = await fetch(`${API_URL}?action=getAllStudents`);
+        const result = await response.json();
+
+        if (result.success) {
+            return result.data;
+        } else {
+            console.error('Error obteniendo estudiantes:', result.error);
+            return null;
+        }
+    } catch (error) {
+        console.error('Error de conexión al obtener estudiantes:', error);
+        return null;
+    }
+}
+
+/**
+ * Obtiene actividades recientes (para dashboard)
+ */
+async function getRecentActivities(username = null, limit = 50) {
+    try {
+        let url = `${API_URL}?action=getActivities&limit=${limit}`;
+        if (username) {
+            url += `&username=${encodeURIComponent(username)}`;
+        }
+
+        const response = await fetch(url);
+        const result = await response.json();
+
+        if (result.success) {
+            return result.data;
+        } else {
+            console.error('Error obteniendo actividades:', result.error);
+            return [];
+        }
+    } catch (error) {
+        console.error('Error de conexión al obtener actividades:', error);
+        return [];
+    }
+}
+
+// ========================
+// UTILIDADES
+// ========================
+
+/**
+ * Genera un ID único de sesión
+ */
+function generateSessionId() {
+    return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 }
 
 /**
@@ -309,113 +332,73 @@ function updateUIForRole() {
 
     // Actualizar información del usuario en la UI
     const userNameElements = document.querySelectorAll('.user-name');
-    userNameElements.forEach(el => el.textContent = currentUser.name);
+    userNameElements.forEach(el => el.textContent = currentUser.fullName || currentUser.username);
 
     const userEmailElements = document.querySelectorAll('.user-email');
-    userEmailElements.forEach(el => el.textContent = currentUser.email);
+    userEmailElements.forEach(el => el.textContent = currentUser.email || '');
 
-    const userRoleElements = document.querySelectorAll('.user-role');
-    userRoleElements.forEach(el => el.textContent = getRoleDisplayName(currentUser.role));
+    // Actualizar elementos específicos por ID
+    const userName = document.getElementById('userName');
+    const userRole = document.getElementById('userRole'); 
+    const userAvatar = document.getElementById('userAvatar');
+    const instructorName = document.getElementById('instructorName');
 
-    // Actualizar elementos específicos por ID si existen
-    const updateElementById = (id, value, property = 'textContent') => {
-        const element = document.getElementById(id);
-        if (element) element[property] = value;
-    };
-
-    updateElementById('userName', currentUser.name);
-    updateElementById('userRole', getRoleDisplayName(currentUser.role));
-    updateElementById('userEmail', currentUser.email);
-    
-    if (currentUser.picture) {
-        updateElementById('userAvatar', currentUser.picture, 'src');
+    if (userName) userName.textContent = currentUser.fullName || currentUser.username;
+    if (userRole) userRole.textContent = getRoleDisplayName(currentUser.role);
+    if (userAvatar) {
+        userAvatar.textContent = (currentUser.fullName || currentUser.username).charAt(0).toUpperCase();
     }
-}
-
-// ========================
-// UTILIDADES
-// ========================
-
-/**
- * Genera un ID único de sesión
- */
-function generateSessionId() {
-    return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    if (instructorName) instructorName.textContent = currentUser.fullName || currentUser.username;
 }
 
 /**
- * Verifica la integridad de los datos
+ * Obtiene el nombre de visualización del rol
  */
-function verifyDataIntegrity() {
-    try {
-        // Verificar que los datos de usuario sean válidos
-        const user = getCurrentUser();
-        if (user && (!user.email || !user.role)) {
-            throw new Error('Invalid user data');
-        }
-        
-        // Verificar que las actividades sean válidas
-        const activities = JSON.parse(localStorage.getItem('userActivities') || '[]');
-        if (!Array.isArray(activities)) {
-            throw new Error('Invalid activities data');
-        }
-        
-        return true;
-    } catch (error) {
-        console.error('Data integrity check failed:', error);
-        return false;
-    }
-}
-
-/**
- * Obtiene estadísticas de uso (solo instructor)
- */
-function getUsageStats() {
-    const currentUser = getCurrentUser();
-    if (currentUser?.role !== 'instructor') return null;
-
-    const activities = JSON.parse(localStorage.getItem('userActivities') || '[]');
-    
-    // Contar estudiantes únicos
-    const uniqueStudents = [...new Set(
-        activities
-            .filter(a => a.userRole === 'estudiante')
-            .map(a => a.userEmail)
-    )];
-    
-    const stats = {
-        totalStudents: uniqueStudents.length,
-        activeStudents: 0,
-        completedModules: 0,
-        averageProgress: 0,
-        totalActivities: activities.length,
-        lastWeekActivities: 0
+function getRoleDisplayName(role) {
+    const roleNames = {
+        'instructor': 'Instructor',
+        'estudiante': 'Estudiante',
+        'evaluador': 'Evaluador'
     };
+    return roleNames[role] || 'Usuario';
+}
 
-    // Calcular estadísticas de progreso
-    let totalProgress = 0;
-    uniqueStudents.forEach(email => {
-        const progress = getStudentProgress(email);
-        if (progress) {
-            totalProgress += progress.overallProgress;
-            if (progress.overallProgress > 0) stats.activeStudents++;
-            
-            Object.values(progress.modules).forEach(module => {
-                if (module.completed) stats.completedModules++;
-            });
+/**
+ * Muestra/oculta indicador de carga
+ */
+function showLoading(show, message = 'Cargando...') {
+    let loader = document.getElementById('globalLoader');
+    
+    if (show) {
+        if (!loader) {
+            loader = document.createElement('div');
+            loader.id = 'globalLoader';
+            loader.innerHTML = `
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                           background: rgba(0,0,0,0.5); z-index: 9999; 
+                           display: flex; align-items: center; justify-content: center;">
+                    <div style="background: white; padding: 2rem; border-radius: 10px; text-align: center;">
+                        <div style="border: 3px solid #f3f3f3; border-top: 3px solid #2c5f66; 
+                                   border-radius: 50%; width: 30px; height: 30px; 
+                                   animation: spin 1s linear infinite; margin: 0 auto 1rem;"></div>
+                        <div>${message}</div>
+                    </div>
+                </div>
+                <style>
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                </style>
+            `;
+            document.body.appendChild(loader);
         }
-    });
-
-    stats.averageProgress = uniqueStudents.length > 0 ? totalProgress / uniqueStudents.length : 0;
-
-    // Actividades de la última semana
-    const weekAgo = new Date();
-    weekAgo.setDate(weekAgo.getDate() - 7);
-    stats.lastWeekActivities = activities.filter(
-        activity => new Date(activity.timestamp) > weekAgo
-    ).length;
-
-    return stats;
+        loader.style.display = 'block';
+    } else {
+        if (loader) {
+            loader.style.display = 'none';
+        }
+    }
 }
 
 // ========================
@@ -455,21 +438,7 @@ function initializeAuth() {
 
 // Inicializar cuando se carga el script
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-        if (verifyDataIntegrity()) {
-            initializeAuth();
-        } else {
-            // Limpiar datos corruptos y redirigir
-            console.log('Datos corruptos detectados, limpiando...');
-            localStorage.clear();
-            window.location.href = 'login.html';
-        }
-    });
+    document.addEventListener('DOMContentLoaded', initializeAuth);
 } else {
-    if (verifyDataIntegrity()) {
-        initializeAuth();
-    } else {
-        localStorage.clear();
-        window.location.href = 'login.html';
-    }
+    initializeAuth();
 }
