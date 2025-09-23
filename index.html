@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Curso de Dibujo y Representación del Cuerpo Humano - Universidad Alberto Hurtado">
+    <title>Curso de Dibujo Anatómico - LMS UAH</title>
+    
+    <style>
+        :root {
+            --primary-dark: #2c5f66;
+            --primary-light: #e8a2b8;
+            --dark: #1a1a1a;
+            --gray-light: #f5f5f5;
+            --gray-medium: #666;
+            --success: #4CAF50;
+            --danger: #f44336;
+            --warning: #FFC107;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--dark));
+            color: white;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            gap: 0.5rem;
+            color: var(--primary-light);
+        }
+
+        .user-widget {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255,255,255,0.1);
+            padding: 0.3rem 0.7rem;
+            border-radius: 20px;
+        }
+
+        .user-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            color: white;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-danger { background: var(--danger); }
+        .btn-dashboard { background: var(--primary-dark); }
+
+        /* Main Content */
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray-medium);
+        }
+
+        .spinner {
+            border: 3px solid var(--gray-light);
+            border-top: 3px solid var(--primary-dark);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            text-align: center;
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .welcome-section h1 {
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        /* Progress Section */
+        .progress-section {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .progress-section.show {
+            display: block;
+        }
+
+        .progress-section h3 {
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background: var(--gray-light);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-light));
+            width: 0;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Modules Section */
+        .modules-section {
+            margin-top: 2rem;
+        }
+
+        .modules-section h2 {
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .module-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .module-header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--dark));
+            color: white;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .module-number {
+            position: absolute;
+            top: 0.5rem;
+            right: 1rem;
+            font-size: 2.5rem;
+            opacity: 0.3;
+            font-weight: bold;
+        }
+
+        .module-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.3rem;
+            font-weight: bold;
+        }
+
+        .module-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .module-body {
+            padding: 1.5rem;
+        }
+
+        .module-description {
+            color: var(--gray-medium);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .module-info {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            color: var(--gray-medium);
+        }
+
+        .module-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-module {
+            flex: 1;
+            padding: 0.7rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary-dark);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-light);
+            color: var(--dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-disabled {
+            background: var(--gray-light);
+            color: var(--gray-medium);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome-section h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <script src="auth.js"></script>
+
+    <header>
+        <div class="header-content">
+            <div class="logo">🎨 Arte & Anatomía UAH</div>
+            <div class="user-widget">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <div>
+                    <span id="userName">Cargando...</span><br>
+                    <small id="userRole">...</small>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-dashboard" id="dashboardBtn" style="display:none;" onclick="goToDashboard()">
+                    Dashboard
+                </button>
+                <button class="btn btn-danger" onclick="logout()">
+                    Cerrar Sesión
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="loading" id="loadingState">
+            <div class="spinner"></div>
+            <p>Cargando curso...</p>
+        </div>
+
+        <div id="mainContent" style="display: none;">
+            <section class="welcome-section fade-in">
+                <h1>Dibujo y Representación del Cuerpo Humano</h1>
+                <p>Desarrolla tus habilidades artísticas desde fundamentos hasta técnicas avanzadas de dibujo anatómico.</p>
+            </section>
+
+            <section class="progress-section" id="progressSection">
+                <h3>Tu Progreso General</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar">0%</div>
+                </div>
+                <p><span id="progressPercent">0%</span> completado</p>
+            </section>
+
+            <section class="modules-section">
+                <h2>Módulos del Curso</h2>
+                <div class="modules-grid" id="modulesGrid">
+                    <!-- Módulos se cargan dinámicamente -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2024 Universidad Alberto Hurtado - Pedagogía en Artes Visuales</p>
+        <p>Desarrollado por Joselyn Vizcarra</p>
+    </footer>
+
+    <script>
+        const modulesData = [
+            {
+                id: 1,
+                number: "01",
+                title: "Fundamentos y Proporción",
+                subtitle: "Canon de 8 cabezas",
+                description: "Domina las bases del dibujo anatómico con proporciones del cuerpo humano.",
+                duration: "4 semanas",
+                lessons: 6,
+                difficulty: "Básico",
+                url: "module1.html",
+                progress: 0,
+                completed: false
+            },
+            {
+                id: 2,
+                number: "02",
+                title: "Anatomía Facial",
+                subtitle: "Rostro y expresiones",
+                description: "Explora proporciones faciales y expresiones del rostro humano.",
+                duration: "3 semanas",
+                lessons: 5,
+                difficulty: "Intermedio",
+                url: "#",
+                progress: 0,
+                completed: false
+            },
+            {
+                id: 3,
+                number: "03",
+                title: "Torso y Extremidades",
+                subtitle: "Biomecánica del cuerpo",
+                description: "Biomecánica: músculos y articulaciones del cuerpo humano.",
+                duration: "5 semanas",
+                lessons: 8,
+                difficulty: "Intermedio",
+                url: "#",
+                progress: 0,
+                completed: false
+            },
+            {
+                id: 4,
+                number: "04",
+                title: "Figura Completa",
+                subtitle: "Integración y dinamismo",
+                description: "Integra todos los elementos en poses dinámicas y expresivas.",
+                duration: "4 semanas",
+                lessons: 6,
+                difficulty: "Avanzado",
+                url: "module4.html",
+                progress: 0,
+                completed: false
+            }
+        ];
+
+        let currentUser = null;
+
+        document.addEventListener("DOMContentLoaded", function() {
+            console.log('Inicializando LMS...');
+            initializeLMS();
+        });
+
+        async function initializeLMS() {
+            try {
+                if (typeof getCurrentUser === 'undefined') {
+                    console.error('auth.js no se cargó correctamente');
+                    redirectToLogin();
+                    return;
+                }
+
+                if (!isAuthenticated()) {
+                    console.log('Usuario no autenticado');
+                    redirectToLogin();
+                    return;
+                }
+
+                currentUser = getCurrentUser();
+                if (!currentUser) {
+                    console.log('No se pudo obtener datos del usuario');
+                    redirectToLogin();
+                    return;
+                }
+
+                console.log('Usuario autenticado:', currentUser);
+
+                if (!protectPage()) {
+                    return;
+                }
+
+                await initializeInterface();
+                logUserActivity('page_access', currentUser, { page: 'index' });
+                console.log('LMS inicializado correctamente');
+
+            } catch (error) {
+                console.error('Error inicializando LMS:', error);
+                showError('Error al cargar el curso. Por favor, recarga la página.');
+            }
+        }
+
+        async function initializeInterface() {
+            updateUserInterface();
+
+            if (currentUser.role === 'estudiante') {
+                loadStudentProgress();
+                showProgressSection();
+            }
+
+            loadModules();
+            hideLoading();
+        }
+
+        function updateUserInterface() {
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userRole').textContent = getRoleDisplayName(currentUser.role);
+            
+            if (currentUser.picture) {
+                document.getElementById('userAvatar').innerHTML = `<img src="${currentUser.picture}" alt="Avatar">`;
+            } else {
+                document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+            }
+
+            if (currentUser.role === 'instructor') {
+                document.getElementById('dashboardBtn').style.display = 'inline-block';
+            }
+        }
+
+        function getRoleDisplayName(role) {
+            const roles = {
+                'instructor': 'Instructor',
+                'estudiante': 'Estudiante', 
+                'evaluador': 'Evaluador',
+                'visitante': 'Visitante'
+            };
+            return roles[role] || 'Usuario';
+        }
+
+        function showProgressSection() {
+            document.getElementById('progressSection').classList.add('show');
+        }
+
+        function loadStudentProgress() {
+            const userProgress = getStudentProgress();
+            console.log('Progreso del estudiante:', userProgress);
+            
+            if (userProgress) {
+                modulesData.forEach(module => {
+                    const moduleProgress = userProgress.modules[module.id];
+                    if (moduleProgress) {
+                        module.progress = moduleProgress.progress || 0;
+                        module.completed = moduleProgress.completed || false;
+                    }
+                });
+
+                const completedCount = Object.values(userProgress.modules).filter(m => m.completed).length;
+                const progressPercent = Math.round((completedCount / modulesData.length) * 100);
+                
+                document.getElementById('progressPercent').textContent = progressPercent + '%';
+                const progressBar = document.getElementById('progressBar');
+                progressBar.style.width = progressPercent + '%';
+                progressBar.textContent = progressPercent + '%';
+            }
+        }
+
+        function loadModules() {
+            const grid = document.getElementById("modulesGrid");
+            grid.innerHTML = "";
+
+            modulesData.forEach(module => {
+                const card = createModuleCard(module);
+                grid.appendChild(card);
+            });
+
+            console.log('Módulos cargados:', modulesData.length);
+        }
+
+        function createModuleCard(module) {
+            const card = document.createElement("div");
+            const isUnavailable = (module.url === "#");
+            const isAccessible = hasModuleAccess(module.id);
+            
+            card.className = `module-card fade-in`;
+
+            const progressBar = (currentUser.role === 'estudiante') ? `
+                <div style="margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem; font-size: 0.85rem; color: var(--gray-medium);">
+                        <span>Progreso</span>
+                        <span>${module.progress}%</span>
+                    </div>
+                    <div style="height: 6px; background: var(--gray-light); border-radius: 3px; overflow: hidden;">
+                        <div style="height: 100%; background: var(--success); border-radius: 3px; width: ${module.progress}%; transition: width 0.5s ease;"></div>
+                    </div>
+                </div>
+            ` : '';
+
+            let actionButton = getModuleActionButton(module, isUnavailable, isAccessible);
+
+            card.innerHTML = `
+                <div class="module-header">
+                    <span class="module-number">${module.number}</span>
+                    <h3 class="module-title">${module.title}</h3>
+                    <p class="module-subtitle">${module.subtitle}</p>
+                </div>
+                <div class="module-body">
+                    <p class="module-description">${module.description}</p>
+                    <div class="module-info">
+                        <span>⏱️ ${module.duration}</span>
+                        <span>📚 ${module.lessons} lecciones</span>
+                        <span>📊 ${module.difficulty}</span>
+                    </div>
+                    ${progressBar}
+                    <div class="module-actions">
+                        ${actionButton}
+                    </div>
+                </div>
+            `;
+
+            return card;
+        }
+
+        function hasModuleAccess(moduleId) {
+            if (['instructor', 'evaluador'].includes(currentUser.role)) {
+                return true;
+            }
+            if (currentUser.role === 'estudiante') {
+                return true;
+            }
+            return false;
+        }
+
+        function getModuleActionButton(module, isUnavailable, isAccessible) {
+            if (isUnavailable) {
+                return '<button class="btn-module btn-disabled" disabled>Próximamente</button>';
+            }
+            
+            if (!isAccessible) {
+                return '<button class="btn-module btn-disabled" disabled>🔒 Acceso restringido</button>';
+            }
+
+            switch(currentUser.role) {
+                case 'instructor':
+                case 'evaluador':
+                    return `<a class="btn-module btn-primary" href="${module.url}" onclick="accessModule(${module.id})">Ver Contenido</a>`;
+                
+                case 'estudiante':
+                    if (module.completed) {
+                        return `<a class="btn-module btn-primary" href="${module.url}" onclick="accessModule(${module.id})">✓ Repasar</a>`;
+                    } else if (module.progress > 0) {
+                        return `<a class="btn-module btn-primary" href="${module.url}" onclick="accessModule(${module.id})">Continuar (${module.progress}%)</a>`;
+                    } else {
+                        return `<a class="btn-module btn-primary" href="${module.url}" onclick="accessModule(${module.id})">Comenzar</a>`;
+                    }
+                
+                default:
+                    return `<a class="btn-module btn-primary" href="${module.url}" onclick="accessModule(${module.id})">Acceder</a>`;
+            }
+        }
+
+        function accessModule(moduleId) {
+            console.log('Accediendo al módulo:', moduleId);
+            logUserActivity('module_access', currentUser, { 
+                moduleId: moduleId,
+                moduleTitle: modulesData.find(m => m.id === moduleId)?.title
+            });
+        }
+
+        function goToDashboard() {
+            if (currentUser && currentUser.role === 'instructor') {
+                window.location.href = 'dashboard.html';
+            } else {
+                alert('No tienes permisos para acceder al dashboard');
+            }
+        }
+
+        function logout() {
+            logUserActivity('logout', currentUser);
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('sessionStart');
+            window.location.href = 'login.html';
+        }
+
+        function redirectToLogin() {
+            window.location.href = 'login.html';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+        }
+
+        function showError(message) {
+            document.getElementById('loadingState').innerHTML = `
+                <div style="color: var(--danger); text-align: center;">
+                    <h3>⚠️ Error</h3>
+                    <p>${message}</p>
+                    <button onclick="location.reload()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: var(--primary-dark); color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Recargar Página
+                    </button>
+                </div>
+            `;
+        }
+
+        window.addEventListener('error', function(e) {
+            console.error('Error global:', e);
+        });
+
+        setInterval(function() {
+            if (typeof isAuthenticated === 'function' && !isAuthenticated()) {
+                console.log('Sesión expirada, redirigiendo...');
+                redirectToLogin();
+            }
+        }, 60000);
+    </script>
+</body>
+</html>
