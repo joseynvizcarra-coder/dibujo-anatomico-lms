@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Módulo 4: Figura Completa - LMS Dibujo Anatómico UAH">
+    <title>Módulo 4: Figura Completa - LMS UAH</title>
+    
+    <!-- Bootstrap 5.3.2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        :root {
+            --primary-dark: #2c5f66;
+            --primary-light: #e8a2b8;
+            --dark: #1a1a1a;
+            --success: #4CAF50;
+            --warning: #FFC107;
+            --danger: #f44336;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+        }
+
+        /* Header personalizado UAH */
+        .header-uah {
+            background: linear-gradient(135deg, var(--primary-dark), var(--dark));
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .back-btn {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .back-btn:hover {
+            opacity: 0.8;
+            color: white;
+        }
+
+        /* Sidebar personalizado */
+        .sidebar-lesson {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: sticky;
+            top: 90px;
+            max-height: calc(100vh - 110px);
+            overflow-y: auto;
+        }
+
+        .lesson-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--dark);
+            transition: all 0.3s;
+            cursor: pointer;
+            margin-bottom: 0.5rem;
+            border: 2px solid transparent;
+        }
+
+        .lesson-link:hover {
+            background: #f8f9fa;
+        }
+
+        .lesson-link.active {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            color: white;
+            border-color: var(--primary-dark);
+        }
+
+        .lesson-number {
+            width: 35px;
+            height: 35px;
+            background: #e9ecef;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .lesson-link.active .lesson-number {
+            background: rgba(255,255,255,0.3);
+            color: white;
+        }
+
+        .lesson-link.completed .lesson-number {
+            background: var(--success);
+            color: white;
+        }
+
+        .lesson-link.completed::after {
+            content: '✓';
+            margin-left: auto;
+            font-weight: bold;
+        }
+
+        /* Progress bar personalizada */
+        .progress-uah {
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar-uah {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-light));
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 1rem;
+            color: white;
+            font-weight: bold;
+            transition: width 0.5s ease;
+        }
+
+        /* Cajas especiales */
+        .exercise-box {
+            background: linear-gradient(135deg, #f0f4ff, #fef0f5);
+            border-left: 4px solid var(--primary-dark);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+
+        .exercise-title {
+            font-weight: bold;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .integration-box {
+            background: linear-gradient(135deg, #f0fff4, #e6f7ff);
+            border-left: 4px solid var(--success);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+
+        .portfolio-section {
+            background: linear-gradient(135deg, #fafafa, #f0f0f0);
+            border: 2px solid var(--primary-light);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        /* Content card */
+        .content-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .lesson-content h3 {
+            color: var(--primary-dark);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .lesson-content h4 {
+            color: var(--dark);
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .lesson-content p {
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .lesson-content ul, .lesson-content ol {
+            margin-bottom: 1.5rem;
+        }
+
+        .lesson-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Botones personalizados UAH */
+        .btn-uah-primary {
+            background: var(--primary-dark);
+            border: none;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-uah-primary:hover:not(:disabled) {
+            background: var(--primary-light);
+            color: var(--dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-uah-primary:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .btn-uah-success {
+            background: var(--success);
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .btn-uah-success:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        /* Quiz styles */
+        .quiz-option {
+            padding: 1rem;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 0.5rem;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary-light);
+            background: #f8f9fa;
+        }
+
+        .quiz-option.selected {
+            border-color: var(--primary-dark);
+            background: rgba(44, 95, 102, 0.1);
+        }
+
+        .quiz-option.correct {
+            border-color: var(--success);
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .quiz-option.incorrect {
+            border-color: var(--danger);
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        /* Animación de carga */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .lesson-content {
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 991px) {
+            .sidebar-lesson {
+                position: static;
+                margin-bottom: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cargar auth.js -->
+    <script src="auth.js"></script>
+
+    <!-- Header -->
+    <header class="header-uah">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <a href="index.html" class="back-btn d-flex align-items-center gap-2">
+                        <i class="bi bi-arrow-left"></i>
+                        <span>Volver al Curso</span>
+                    </a>
+                </div>
+                <div class="col text-center">
+                    <h1 class="h4 mb-0">Módulo 4: Figura Completa</h1>
+                </div>
+                <div class="col-auto">
+                    <span class="badge bg-light text-dark" id="progressText">0% Completado</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container-fluid py-4">
+        <div class="row">
+            <!-- Sidebar -->
+            <aside class="col-lg-3">
+                <div class="sidebar-lesson">
+                    <h5 class="mb-3">
+                        <i class="bi bi-book me-2"></i>Lecciones
+                    </h5>
+                    <div class="lesson-list">
+                        <a class="lesson-link active" data-lesson="1" onclick="loadLesson(1)">
+                            <span class="lesson-number">1</span>
+                            <span class="flex-grow-1">Integración Completa</span>
+                        </a>
+                        <a class="lesson-link" data-lesson="2" onclick="loadLesson(2)">
+                            <span class="lesson-number">2</span>
+                            <span class="flex-grow-1">Poses Dinámicas</span>
+                        </a>
+                        <a class="lesson-link" data-lesson="3" onclick="loadLesson(3)">
+                            <span class="lesson-number">3</span>
+                            <span class="flex-grow-1">Composición Avanzada</span>
+                        </a>
+                        <a class="lesson-link" data-lesson="4" onclick="loadLesson(4)">
+                            <span class="lesson-number">4</span>
+                            <span class="flex-grow-1">Narrativa Visual</span>
+                        </a>
+                        <a class="lesson-link" data-lesson="5" onclick="loadLesson(5)">
+                            <span class="flex-grow-1">Desarrollo Personal</span>
+                        </a>
+                        <a class="lesson-link" data-lesson="6" onclick="loadLesson(6)">
+                            <span class="lesson-number">6</span>
+                            <span class="flex-grow-1">Portfolio Final</span>
+                        </a>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="col-lg-9">
+                <div class="content-card">
+                    <!-- Progress Bar -->
+                    <div class="progress-uah">
+                        <div class="progress-bar-uah" id="moduleProgress" style="width: 0%">
+                            <span>0%</span>
+                        </div>
+                    </div>
+
+                    <!-- Content Header -->
+                    <div class="border-bottom pb-3 mb-4">
+                        <h2 class="lesson-title h3 mb-2" id="lessonTitle">Lección 1: Integración de Conocimientos Previos</h2>
+                        <div class="d-flex gap-3 text-muted small lesson-meta" id="lessonMeta">
+                            <span><i class="bi bi-clock me-1"></i>45 minutos</span>
+                            <span><i class="bi bi-book me-1"></i>Síntesis</span>
+                            <span><i class="bi bi-bar-chart me-1"></i>Nivel: Avanzado</span>
+                        </div>
+                    </div>
+
+                    <!-- Lesson Content -->
+                    <div class="lesson-content" id="lessonContent">
+                        <p>Cargando contenido...</p>
+                    </div>
+
+                    <!-- Navigation -->
+                    <div class="d-flex justify-content-between align-items-center pt-4 mt-4 border-top flex-wrap gap-3">
+                        <button class="btn btn-uah-primary" id="prevButton" onclick="goToPreviousLesson()">
+                            <i class="bi bi-arrow-left me-2"></i>Lección Anterior
+                        </button>
+
+                        <button class="btn btn-uah-success" onclick="completeLesson()" id="completeButton">
+                            <i class="bi bi-check-circle me-2"></i>Marcar como Completada
+                        </button>
+
+                        <button class="btn btn-uah-primary" id="nextButton" onclick="goToNextLesson()">
+                            Siguiente Lección<i class="bi bi-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="notificationToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <i class="bi bi-check-circle-fill text-success me-2" id="toastIcon"></i>
+                <strong class="me-auto">Notificación</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body" id="toastBody">
+                Mensaje aquí
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // ============================================
+        // VARIABLES GLOBALES
+        // ============================================
+        let currentUser = null;
+        let currentLesson = 1;
+        let moduleProgress = 0;
+        let completedLessons = [];
+        let isOnline = navigator.onLine;
+        
+        window.currentModuleId = 4;
+
+        // ============================================
+        // CONTENIDO DE LAS LECCIONES
+        // ============================================
+        const lessonsContent = {
+            1: {
+                title: 'Integración de Conocimientos Previos',
+                meta: '<span><i class="bi bi-clock me-1"></i>45 minutos</span><span><i class="bi bi-book me-1"></i>Síntesis</span><span><i class="bi bi-bar-chart me-1"></i>Nivel: Avanzado</span>',
+                content: `
+                    <p class="lead">En este módulo final integramos todos los conocimientos adquiridos en los módulos anteriores para crear representaciones completas y expresivas del cuerpo humano.</p>
+                    
+                    <div class="integration-box">
+                        <i class="bi bi-link-45deg me-2"></i>
+                        <strong>Conexión de Módulos:</strong> Utilizarás el canon de 8 cabezas (Módulo 1), proporciones faciales (Módulo 2), y biomecánica del torso (Módulo 3) para crear figuras completas con narrativa visual personal.
+                    </div>
+                    
+                    <h3>Revisión de Fundamentos Clave</h3>
+                    <p>Antes de avanzar a composiciones complejas, repasemos los elementos fundamentales que integraremos:</p>
+                    
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <div class="card border-primary h-100">
+                                <div class="card-header bg-primary text-white">
+                                    <i class="bi bi-1-circle me-2"></i>Módulo 1
+                                </div>
+                                <div class="card-body">
+                                    <h6 class="card-title">Canon de 8 Cabezas</h6>
+                                    <ul class="small mb-0">
+                                        <li>Proporciones verticales</li>
+                                        <li>Anchuras clave</li>
+                                        <li>Puntos de referencia</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card border-info h-100">
+                                <div class="card-header bg-info text-white">
+                                    <i class="bi bi-2-circle me-2"></i>Módulo 2
+                                </div>
+                                <div class="card-body">
+                                    <h6 class="card-title">Anatomía Facial</h6>
+                                    <ul class="small mb-0">
+                                        <li>Proporciones rostro</li>
+                                        <li>Expresiones</li>
+                                        <li>Diferentes ángulos</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card border-success h-100">
+                                <div class="card-header bg-success text-white">
+                                    <i class="bi bi-3-circle me-2"></i>Módulo 3
+                                </div>
+                                <div class="card-body">
+                                    <h6 class="card-title">Torso y Extremidades</h6>
+                                    <ul class="small mb-0">
+                                        <li>Biomecánica</li>
+                                        <li>Músculos clave</li>
+                                        <li>Articulaciones</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-box">
+                        <div class="exercise-title">
+                            <i class="bi bi-pencil-square me-2"></i>Ejercicio 1: Diagnóstico de Integración
+                        </div>
+                        <p><strong>Objetivo:</strong> Evaluar tu capacidad actual de integrar conocimientos previos.</p>
+                        <ol>
+                            <li>Dibuja una figura completa en pose de pie (20 minutos)</li>
+                            <li>Incluye expresión facial específica</li>
+                            <li>Aplica proporciones del canon de 8 cabezas</li>
+                            <li>Demuestra comprensión biomecánica</li>
+                        </ol>
+                    </div>
+                `
+            },
+            2: {
+                title: 'Poses Dinámicas y Movimiento',
+                meta: '<span><i class="bi bi-clock me-1"></i>50 minutos</span><span><i class="bi bi-book me-1"></i>Movimiento</span><span><i class="bi bi-bar-chart me-1"></i>Nivel: Avanzado</span>',
+                content: `
+                    <h3>Fundamentos del Movimiento en la Figura Humana</h3>
+                    <p>Las poses dinámicas trascienden la anatomía estática para capturar la esencia del movimiento y la energía.</p>
+                    
+                    <h4>Principios del Dinamismo</h4>
+                    
+                    <div class="accordion mb-4" id="dynamicsAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#linea">
+                                    1. Línea de Acción
+                                </button>
+                            </h2>
+                            <div id="linea" class="accordion-collapse collapse show" data-bs-parent="#dynamicsAccordion">
+                                <div class="accordion-body">
+                                    <p>La línea de acción es una curva imaginaria que atraviesa toda la figura, creando unidad y dirección en el movimiento.</p>
+                                    <ul>
+                                        <li><strong>Curva principal:</strong> Define la columna vertebral en movimiento</li>
+                                        <li><strong>Ritmo secundario:</strong> Brazos y piernas siguen o contrastan</li>
+                                        <li><strong>Contrapposto:</strong> Equilibrio entre tensión y relajación</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#centro">
+                                    2. Centro de Gravedad
+                                </button>
+                            </h2>
+                            <div id="centro" class="accordion-collapse collapse" data-bs-parent="#dynamicsAccordion">
+                                <div class="accordion-body">
+                                    <p>El centro de gravedad determina el equilibrio y la credibilidad de la pose.</p>
+                                    <ul>
+                                        <li>Ubicado aproximadamente en la pelvis</li>
+                                        <li>Debe estar sobre los puntos de apoyo</li>
+                                        <li>Desplazamientos crean dinamismo</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-box">
+                        <div class="exercise-title">
+                            <i class="bi bi-pencil-square me-2"></i>Ejercicio 2: Secuencia de Movimiento
+                        </div>
+                        <p>Dibuja una secuencia de 3 poses que muestren:</p>
+                        <ol>
+                            <li><strong>Preparación:</strong> Figura preparándose para la acción</li>
+                            <li><strong>Acción:</strong> Momento de máxima energía</li>
+                            <li><strong>Resolución:</strong> Finalización del movimiento</li>
+                        </ol>
+                        <p><span class="badge bg-secondary"><i class="bi bi-clock me-1"></i>45 minutos (15 min por pose)</span></p>
+                    </div>
+                `
+            },
+            3: {
+                title: 'Composición Avanzada y Espacio',
+                meta: '<span><i class="bi bi-clock me-1"></i>55 minutos</span><span><i class="bi bi-book me-1"></i>Composición</span><span><i class="bi bi-bar-chart me-1"></i>Nivel: Avanzado</span>',
+                content: `
+                    <h3>Composición como Lenguaje Visual</h3>
+                    <p>La composición determina cómo el espectador lee e interpreta tu obra. Una composición exitosa guía la mirada y comunica jerarquías visuales.</p>
+                    
+                    <h4>Elementos Compositivos Fundamentales</h4>
+                    
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-square me-2"></i>Formatos</h5>
+                                    <ul class="mb-0">
+                                        <li><strong>Vertical:</strong> Altura, elegancia</li>
+                                        <li><strong>Horizontal:</strong> Estabilidad, calma</li>
+                                        <li><strong>Cuadrado:</strong> Equilibrio formal</li>
+                                        <li><strong>Panorámico:</strong> Narrativa temporal</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-grid-3x3 me-2"></i>Reglas Básicas</h5>
+                                    <ul class="mb-0">
+                                        <li><strong>Tercios:</strong> División armónica</li>
+                                        <li><strong>Áurea:</strong> Proporción natural</li>
+                                        <li><strong>Simetría:</strong> Formalidad</li>
+                                        <li><strong>Asimetría:</strong> Dinamismo</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-warning border-0" role="alert">
+                        <i class="bi bi-lightbulb me-2"></i>
+                        <strong>Composición Efectiva:</strong> Una buena composición es invisible - sirve al contenido sin llamar la atención sobre sí misma.
+                    </div>
+                    
+                    <div class="exercise-box">
+                        <div class="exercise-title">
+                            <i class="bi bi-pencil-square me-2"></i>Ejercicio 3: Análisis Compositivo
+                        </div>
+                        <p>Analiza 3 obras maestras del arte figurativo:</p>
+                        <ol>
+                            <li>Identifica la estructura compositiva básica</li>
+                            <li>Marca el recorrido visual principal</li>
+                            <li>Señala contrastes y énfasis</li>
+                            <li>Explica cómo la composición refuerza el contenido</li>
+                        </ol>
+                    </div>
+                `
+            },
+            4: {
+                title: 'Narrativa Visual y Expresión',
+                meta: '<span><i class="bi bi-clock me-1"></i>60 minutos</span><span><i class="bi bi-book me-1"></i>Narrativa</span><span><i class="bi bi-bar-chart me-1"></i>Nivel: Avanzado</span>',
+                content: `
+                    <h3>Del Dibujo a la Historia</h3>
+                    <p>La narrativa visual transforma el dibujo técnico en comunicación emocional. Cada elemento contribuye a una historia que el espectador completa.</p>
+                    
+                    <h4>Elementos de la Narrativa Visual</h4>
+                    
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <div class="card border-primary h-100 text-center">
+                                <div class="card-body">
+                                    <i class="bi bi-person-arms-up text-primary" style="font-size: 3rem;"></i>
+                                    <h6 class="card-title mt-2">Gestualidad</h6>
+                                    <p class="card-text small">El cuerpo comunica antes que el rostro</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card border-success h-100 text-center">
+                                <div class="card-body">
+                                    <i class="bi bi-emoji-smile text-success" style="font-size: 3rem;"></i>
+                                    <h6 class="card-title mt-2">Expresión</h6>
+                                    <p class="card-text small">Rostro complementa el mensaje corporal</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card border-info h-100 text-center">
+                                <div class="card-body">
+                                    <i class="bi bi-image text-info" style="font-size: 3rem;"></i>
+                                    <h6 class="card-title mt-2">Contexto</h6>
+                                    <p class="card-text small">Ambiente refuerza la narrativa</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info border-0" role="alert">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <strong>Narrativa Efectiva:</strong> Las mejores historias visuales plantean preguntas sin responder completamente. Permiten al espectador imaginar el "antes" y "después".
+                    </div>
+                    
+                    <div class="exercise-box">
+                        <div class="exercise-title">
+                            <i class="bi bi-pencil-square me-2"></i>Ejercicio 4: Desarrollo Narrativo
+                        </div>
+                        <p>Crea una figura que cuente una historia específica:</p>
+                        <ol>
+                            <li><strong>Elige un tema:</strong> "Esperando noticias importantes"</li>
+                            <li><strong>Define el momento:</strong> ¿Qué instante exacto captures?</li>
+                            <li><strong>Integra elementos:</strong> Postura + expresión + contexto</li>
+                            <li><strong>Refina la narrativa:</strong> ¿Qué historia cuenta sin palabras?</li>
+                        </ol>
+                        <p><span class="badge bg-secondary"><i class="bi bi-clock me-1"></i>50 minutos</span></p>
+                    </div>
+                `
+            },
+            5: {
+                title: 'Desarrollo de Estilo Personal',
+                meta: '<span><i class="bi bi-clock me-1"></i>65 minutos</span><span><i class="bi bi-book me-1"></i>Estilo</span><span><i class="bi bi-bar-chart me-1"></i>Nivel: Avanzado</span>',
+                content: `
+                    <h3>De la Técnica al Estilo Personal</h3>
+                    <p>El estilo personal no es una decoración agregada a la técnica, sino la manera única en que cada artista interpreta y comunica la realidad.</p>
+                    
+                    <h4>Componentes del Estilo Personal</h4>
+                    
+                    <div class="table-responsive mb-4">
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Aspecto</th>
+                                    <th>Opciones de Enfoque</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Línea</strong></td>
+                                    <td>Precisa vs gestual, continua vs fragmentada</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Proporción</strong></td>
+                                    <td>Realista vs estilizada, canónica vs expresiva</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Detalle</strong></td>
+                                    <td>Hiperrealista vs sintético, acabado vs sugerido</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Volumen</strong></td>
+                                    <td>Modelado vs plano, sutil vs dramático</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="alert alert-warning border-0" role="alert">
+                        <i class="bi bi-lightbulb me-2"></i>
+                        <strong>Desarrollo Auténtico:</strong> El estilo personal auténtico emerge naturalmente de la práctica constante y la reflexión honesta sobre tus intereses y fortalezas. No se puede forzar ni imitar exitosamente.
+                    </div>
+                    
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="card border-primary h-100">
+                                <div class="card-header bg-primary text-white">
+                                    <i class="bi bi-palette me-2"></i>Influencias
+                                </div>
+                                <div class="card-body">
+                                    <ul class="mb-0">
+                                        <li>Artistas que admiras</li>
+                                        <li>Corrientes artísticas</li>
+                                        <li>Experiencias personales</li>
+                                        <li>Formación técnica</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-success h-100">
+                                <div class="card-header bg-success text-white">
+                                    <i class="bi bi-star me-2"></i>Características
+                                </div>
+                                <div class="card-body">
+                                    <ul class="mb-0">
+                                        <li>Decisiones técnicas consistentes</li>
+                                        <li>Temas recurrentes</li>
+                                        <li>Enfoque compositivo</li>
+                                        <li>Tratamiento de la luz</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-box">
+                        <div class="exercise-title">
+                            <i class="bi bi-pencil-square me-2"></i>Ejercicio 5: Autorretrato Estilístico
+                        </div>
+                        <p>Crea tres versiones del mismo autorretrato usando diferentes aproximaciones:</p>
+                        <ol>
+                            <li><strong>Versión Realista:</strong> Máxima fidelidad anatómica</li>
+                            <li><strong>Versión Interpretativa:</strong> Enfatiza aspectos importantes</li>
+                            <li><strong>Versión Expresiva:</strong> Prioriza comunicar estado emocional</li>
+                        </ol>
+                        <p class="mb-0">Analiza cuál se siente más "tuyo" y por qué.</p>
+                    </div>
+                `
+            },
+            6: {
+                title: 'Portfolio Final y Evaluación Integral',
+                meta: '<span><i class="bi bi-clock me-1"></i>120 minutos</span><span><i class="bi bi-book me-1"></i>Evaluación</span><span><i class="bi bi-bar-chart me-1"></i>Nivel: Síntesis</span>',
+                content: `
+                    <h3>Proyecto Final: Portfolio Integral</h3>
+                    <p>El portfolio final representa la culminación de tu aprendizaje en los cuatro módulos. Debe demostrar competencia técnica, integración, expresión personal y aplicación pedagógica.</p>
+                    
+                    <div class="portfolio-section">
+                        <div class="text-center mb-4">
+                            <h4 class="text-primary"><i class="bi bi-folder-check me-2"></i>Requisitos del Portfolio Final</h4>
+                        </div>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="card border-primary h-100">
+                                    <div class="card-header bg-primary text-white">
+                                        <strong>1. Fundamentos (Módulo 1)</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="mb-0 small">
+                                            <li>2 figuras con canon de 8 cabezas (90% precisión)</li>
+                                            <li>1 análisis de errores corregidos</li>
+                                            <li>Demostración de construcción sistemática</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="card border-info h-100">
+                                    <div class="card-header bg-info text-white">
+                                        <strong>2. Anatomía Facial (Módulo 2)</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="mb-0 small">
+                                            <li>2 retratos con proporciones precisas</li>
+                                            <li>1 estudio de expresión emocional</li>
+                                            <li>Diferentes ángulos y perspectivas</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="card border-success h-100">
+                                    <div class="card-header bg-success text-white">
+                                        <strong>3. Torso y Extremidades (Módulo 3)</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="mb-0 small">
+                                            <li>2 estudios biomecánicos de movimiento</li>
+                                            <li>1 análisis de centro de gravedad</li>
+                                            <li>Articulaciones funcionales</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="card border-warning h-100">
+                                    <div class="card-header bg-warning text-dark">
+                                        <strong>4. Figura Completa (Módulo 4)</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="mb-0 small">
+                                            <li>3 figuras completas con narrativa</li>
+                                            <li>1 secuencia de movimiento dinámico</li>
+                                            <li>Integración de todos los elementos</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="card border-danger h-100">
+                                    <div class="card-header bg-danger text-white">
+                                        <strong>5. Desarrollo Personal</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="mb-0 small">
+                                            <li>2 obras con estilo personal emergente</li>
+                                            <li>1 autorreflexión escrita (500 palabras)</li>
+                                            <li>Evidencia de experimentación estilística</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="card border-secondary h-100">
+                                    <div class="card-header bg-secondary text-white">
+                                        <strong>6. Aplicación Pedagógica</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="mb-0 small">
+                                            <li>2 secuencias didácticas (nivel secundario)</li>
+                                            <li>Material de apoyo visual</li>
+                                            <li>Estrategias de evaluación específicas</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-box mt-4">
+                        <div class="exercise-title">
+                            <i class="bi bi-trophy me-2"></i>Proyecto Final: Tu Obra Maestra
+                        </div>
+                        <p><strong>Obra Central del Portfolio:</strong> Crea una figura completa que represente tu máximo nivel alcanzado.</p>
+                        
+                        <h6 class="mt-3">Requisitos específicos:</h6>
+                        <ol>
+                            <li>Aplicación perfecta del canon de 8 cabezas</li>
+                            <li>Expresión facial que comunique una emoción específica</li>
+                            <li>Pose dinámica que sugiera movimiento o acción</li>
+                            <li>Composición que refuerce la narrativa</li>
+                            <li>Elementos de tu estilo personal emergente</li>
+                            <li>Narrativa visual clara y comunicativa</li>
+                        </ol>
+                        
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <p><strong>Tiempo estimado:</strong></p>
+                                <div class="progress" style="height: 25px;">
+                                    <div class="progress-bar bg-info" style="width: 100%">3-4 horas de trabajo</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Formato:</strong></p>
+                                <span class="badge bg-secondary">Mínimo A4</span>
+                                <span class="badge bg-secondary">Técnica libre</span>
+                                <span class="badge bg-secondary">Digital o tradicional</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-success border-0 mt-4" role="alert">
+                        <h5 class="alert-heading"><i class="bi bi-trophy me-2"></i>¡Felicitaciones!</h5>
+                        <p>Has completado un proceso intensivo de desarrollo de competencias en dibujo anatómico. El portfolio que has creado es evidencia tangible de tu crecimiento como artista y futuro docente.</p>
+                        <hr>
+                        <p class="mb-0">Al completar este módulo habrás dominado:</p>
+                        <ul class="mt-2 mb-0">
+                            <li>✅ Integración de conocimientos de los 4 módulos</li>
+                            <li>✅ Composición y narrativa visual avanzada</li>
+                            <li>✅ Desarrollo de estilo personal auténtico</li>
+                            <li>✅ Aplicación pedagógica de competencias artísticas</li>
+                        </ul>
+                    </div>
+                `
+            }
+        };
+
+        // ============================================
+        // MONITOREO DE CONECTIVIDAD
+        // ============================================
+        window.addEventListener('online', () => {
+            isOnline = true;
+            console.log('✓ Conexión restaurada');
+            syncProgressWithSheets();
+        });
+
+        window.addEventListener('offline', () => {
+            isOnline = false;
+            console.log('⚠ Sin conexión - modo offline');
+        });
+
+        // ============================================
+        // INICIALIZACIÓN
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Inicializando Módulo 4 con Bootstrap...');
+            
+            // Verificar autenticación
+            if (typeof getCurrentUser !== 'undefined' && typeof protectPage !== 'undefined') {
+                if (!protectPage()) return;
+                currentUser = getCurrentUser();
+            } else {
+                const storedUser = localStorage.getItem('currentUser');
+                if (storedUser) {
+                    currentUser = JSON.parse(storedUser);
+                } else {
+                    console.error('❌ No hay usuario autenticado');
+                    window.location.href = 'login.html';
+                    return;
+                }
+            }
+
+            console.log('✓ Usuario autenticado:', currentUser);
+            
+            // Cargar progreso
+            loadModuleProgress();
+            
+            // Cargar primera lección
+            loadLesson(1);
+            
+            // Registrar actividad
+            if (typeof logUserActivity === 'function') {
+                logUserActivity('module_access', currentUser, { 
+                    moduleId: 4,
+                    moduleTitle: 'Figura Completa'
+                });
+            }
+        });
+
+        // ============================================
+        // CARGAR PROGRESO (HÍBRIDO)
+        // ============================================
+        async function loadModuleProgress() {
+            console.log('📊 Cargando progreso del Módulo 4...');
+            
+            try {
+                // PASO 1: Intentar Google Sheets primero
+                if (isOnline && typeof getStudentProgress === 'function') {
+                    console.log('☁️ Intentando cargar desde Google Sheets...');
+                    const sheetsProgress = await getStudentProgress(currentUser.username);
+                    
+                    if (sheetsProgress && sheetsProgress.modules && sheetsProgress.modules[4]) {
+                        moduleProgress = sheetsProgress.modules[4].progress || 0;
+                        completedLessons = sheetsProgress.modules[4].completedLessons || [];
+                        
+                        console.log('✓ Progreso cargado desde Google Sheets:', {
+                            moduleProgress,
+                            completedLessons
+                        });
+                        
+                        // Sincronizar con localStorage
+                        syncToLocalStorage(sheetsProgress.modules[4]);
+                        updateProgressDisplay();
+                        updateSidebarProgress();
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.error('❌ Error cargando desde Google Sheets:', error);
+            }
+            
+            // PASO 2: FALLBACK - localStorage
+            console.log('💾 Cargando desde localStorage (fallback)...');
+            const progressKey = `progress_${currentUser.username || currentUser.email}`;
+            const userProgress = JSON.parse(localStorage.getItem(progressKey) || 'null');
+            
+            if (userProgress && userProgress.modules && userProgress.modules[4]) {
+                moduleProgress = userProgress.modules[4].progress || 0;
+                completedLessons = userProgress.modules[4].completedLessons || [];
+                
+                console.log('✓ Progreso cargado desde localStorage:', {
+                    moduleProgress,
+                    completedLessons
+                });
+            } else {
+                console.log('ℹ️ No hay progreso previo - iniciando desde cero');
+            }
+            
+            updateProgressDisplay();
+            updateSidebarProgress();
+        }
+
+        // ============================================
+        // SINCRONIZAR CON LOCALSTORAGE
+        // ============================================
+        function syncToLocalStorage(moduleData) {
+            const progressKey = `progress_${currentUser.username || currentUser.email}`;
+            let userProgress = JSON.parse(localStorage.getItem(progressKey) || 'null');
+            
+            if (!userProgress) {
+                userProgress = initializeLocalProgress();
+            }
+            
+            userProgress.modules[4] = moduleData;
+            userProgress.lastActivity = new Date().toISOString();
+            localStorage.setItem(progressKey, JSON.stringify(userProgress));
+            
+            console.log('✓ Sincronizado con localStorage');
+        }
+
+        // ============================================
+        // INICIALIZAR PROGRESO LOCAL
+        // ============================================
+        function initializeLocalProgress() {
+            return {
+                modules: {
+                    1: { completed: false, progress: 0, timeSpent: 0, completedLessons: [] },
+                    2: { completed: false, progress: 0, timeSpent: 0, completedLessons: [] },
+                    3: { completed: false, progress: 0, timeSpent: 0, completedLessons: [] },
+                    4: { completed: false, progress: 0, timeSpent: 0, completedLessons: [] }
+                },
+                overallProgress: 0,
+                totalTimeSpent: 0,
+                lastActivity: new Date().toISOString()
+            };
+        }
+
+        // ============================================
+        // ACTUALIZAR VISUALIZACIÓN
+        // ============================================
+        function updateProgressDisplay() {
+            document.getElementById('progressText').textContent = moduleProgress + '% Completado';
+            
+            const progressBar = document.getElementById('moduleProgress');
+            progressBar.style.width = moduleProgress + '%';
+            const progressText = progressBar.querySelector('span');
+            if (progressText) {
+                progressText.textContent = moduleProgress + '%';
+            }
+        }
+
+        function updateSidebarProgress() {
+            document.querySelectorAll('.lesson-link').forEach((link) => {
+                const lessonNum = parseInt(link.getAttribute('data-lesson'));
+                link.classList.remove('completed');
+                
+                if (completedLessons.includes(lessonNum)) {
+                    link.classList.add('completed');
+                }
+            });
+        }
+
+        // ============================================
+        // CARGAR LECCIÓN
+        // ============================================
+        function loadLesson(lessonNumber) {
+            console.log('📖 Cargando lección:', lessonNumber);
+            currentLesson = lessonNumber;
+            
+            // Actualizar sidebar
+            document.querySelectorAll('.lesson-link').forEach((link) => {
+                link.classList.remove('active');
+                if (parseInt(link.getAttribute('data-lesson')) === lessonNumber) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Cargar contenido
+            const lesson = lessonsContent[lessonNumber];
+            if (lesson) {
+                document.getElementById('lessonTitle').textContent = lesson.title;
+                document.getElementById('lessonMeta').innerHTML = lesson.meta;
+                document.getElementById('lessonContent').innerHTML = lesson.content;
+            } else {
+                console.error('❌ Lección no encontrada:', lessonNumber);
+            }
+
+            // Actualizar navegación
+            updateNavigationButtons();
+
+            // Scroll al inicio
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ============================================
+        // NAVEGACIÓN
+        // ============================================
+        function updateNavigationButtons() {
+            const prevButton = document.getElementById('prevButton');
+            const nextButton = document.getElementById('nextButton');
+            const completeButton = document.getElementById('completeButton');
+
+            // Botón anterior
+            prevButton.disabled = (currentLesson <= 1);
+
+            // Botón siguiente
+            if (currentLesson >= 6) {
+                nextButton.style.display = 'none';
+            } else {
+                nextButton.style.display = 'inline-block';
+            }
+
+            // Botón completar
+            if (completedLessons.includes(currentLesson)) {
+                completeButton.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>Lección Completada';
+                completeButton.classList.add('btn', 'btn-success');
+                completeButton.classList.remove('btn-uah-success');
+                completeButton.disabled = true;
+            } else {
+                completeButton.innerHTML = '<i class="bi bi-check-circle me-2"></i>Marcar como Completada';
+                completeButton.classList.add('btn-uah-success');
+                completeButton.classList.remove('btn', 'btn-success');
+                completeButton.disabled = false;
+            }
+        }
+
+        function goToPreviousLesson() {
+            if (currentLesson > 1) {
+                loadLesson(currentLesson - 1);
+            }
+        }
+
+        function goToNextLesson() {
+            if (currentLesson < 6) {
+                loadLesson(currentLesson + 1);
+            }
+        }
+
+        // ============================================
+        // COMPLETAR LECCIÓN
+        // ============================================
+        async function completeLesson() {
+            if (completedLessons.includes(currentLesson)) {
+                console.log('ℹ️ Lección ya completada');
+                return;
+            }
+
+            completedLessons.push(currentLesson);
+            moduleProgress = Math.round((completedLessons.length / 6) * 100);
+            
+            console.log('✓ Lección completada:', currentLesson, '- Progreso:', moduleProgress + '%');
+            
+            // Guardar progreso
+            await saveProgress();
+            
+            // Actualizar UI
+            updateProgressDisplay();
+            updateSidebarProgress();
+            updateNavigationButtons();
+            
+            // Notificaciones
+            if (moduleProgress >= 100) {
+                showNotification('¡Felicitaciones! Has completado el curso completo de Dibujo Anatómico', 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 4000);
+            } else {
+                showNotification('¡Lección ' + currentLesson + ' completada!', 'success');
+                
+                if (currentLesson < 6) {
+                    setTimeout(() => {
+                        loadLesson(currentLesson + 1);
+                    }, 2000);
+                }
+            }
+        }
+
+        // ============================================
+        // GUARDAR PROGRESO (HÍBRIDO)
+        // ============================================
+        async function saveProgress() {
+            console.log('💾 Guardando progreso...');
+            
+            const progressData = {
+                progress: moduleProgress,
+                completed: moduleProgress >= 100,
+                completedLessons: completedLessons,
+                timeSpent: 0,
+                lastUpdate: new Date().toISOString()
+            };
+            
+            // PASO 1: Guardar en localStorage (inmediato)
+            const progressKey = `progress_${currentUser.username || currentUser.email}`;
+            let userProgress = JSON.parse(localStorage.getItem(progressKey) || 'null');
+            
+            if (!userProgress) {
+                userProgress = initializeLocalProgress();
+            }
+
+            userProgress.modules[4] = progressData;
+            
+            // Calcular progreso general
+            let totalProgress = 0;
+            for (let id in userProgress.modules) {
+                totalProgress += userProgress.modules[id].progress || 0;
+            }
+            userProgress.overallProgress = Math.round(totalProgress / 4);
+            userProgress.lastActivity = new Date().toISOString();
+
+            localStorage.setItem(progressKey, JSON.stringify(userProgress));
+            console.log('✓ Guardado en localStorage');
+
+            // PASO 2: Sincronizar con Google Sheets
+            try {
+                if (isOnline && typeof updateModuleProgress === 'function') {
+                    console.log('☁️ Sincronizando con Google Sheets...');
+                    const success = await updateModuleProgress(4, progressData);
+                    
+                    if (success) {
+                        console.log('✓ Sincronizado con Google Sheets');
+                    } else {
+                        console.warn('⚠ No se pudo sincronizar con Sheets');
+                    }
+                } else {
+                    console.log('📴 Modo offline - solo localStorage');
+                }
+                
+                // Registrar actividad
+                if (typeof logUserActivity === 'function') {
+                    logUserActivity('lesson_completed', currentUser, {
+                        moduleId: 4,
+                        lessonId: currentLesson,
+                        progress: moduleProgress
+                    });
+                }
+                
+            } catch (error) {
+                console.error('❌ Error sincronizando:', error);
+            }
+        }
+
+        // ============================================
+        // SINCRONIZACIÓN AUTOMÁTICA
+        // ============================================
+        async function syncProgressWithSheets() {
+            try {
+                if (!isOnline || typeof updateModuleProgress !== 'function') return;
+                
+                const progressKey = `progress_${currentUser.username || currentUser.email}`;
+                const localProgress = JSON.parse(localStorage.getItem(progressKey) || 'null');
+                
+                if (localProgress && localProgress.modules[4]) {
+                    console.log('🔄 Sincronizando progreso local...');
+                    const success = await updateModuleProgress(4, localProgress.modules[4]);
+                    
+                    if (success) {
+                        console.log('✓ Sincronización completada');
+                        showNotification('Progreso sincronizado con la nube', 'info');
+                    }
+                }
+            } catch (error) {
+                console.error('❌ Error en sincronización automática:', error);
+            }
+        }
+
+        // ============================================
+        // NOTIFICACIONES BOOTSTRAP TOAST
+        // ============================================
+        function showNotification(message, type = 'success') {
+            const toastEl = document.getElementById('notificationToast');
+            const toastBody = document.getElementById('toastBody');
+            const toastIcon = document.getElementById('toastIcon');
+            
+            // Configurar icono y color
+            const icons = {
+                success: 'bi-check-circle-fill text-success',
+                error: 'bi-x-circle-fill text-danger',
+                warning: 'bi-exclamation-triangle-fill text-warning',
+                info: 'bi-info-circle-fill text-info'
+            };
+            
+            toastIcon.className = icons[type] || icons.success;
+            toastIcon.className += ' me-2';
+            toastBody.textContent = message;
+            
+            const toast = new bootstrap.Toast(toastEl, { delay: 4000 });
+            toast.show();
+        }
+
+        // ============================================
+        // MANEJO DE ERRORES
+        // ============================================
+        window.addEventListener('error', function(e) {
+            console.error('❌ Error global:', e);
+        });
+
+        window.addEventListener('beforeunload', function() {
+            if (moduleProgress > 0 && completedLessons.length > 0) {
+                saveProgress();
+            }
+        });
+    </script>
+</body>
+</html>
