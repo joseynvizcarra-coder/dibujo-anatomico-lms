@@ -1,0 +1,1631 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 1: Observación y Gesto - LMS Dibujo Anatómico UAH</title>
+    
+    <!-- Bootstrap 5.3.2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        :root {
+            --primary-dark: #2c5f66;
+            --primary-light: #e8a2b8;
+            --dark: #1a1a1a;
+            --success: #4CAF50;
+            --warning: #FFC107;
+            --danger: #f44336;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+        }
+
+        /* Header */
+        .header-uah {
+            background: linear-gradient(135deg, var(--primary-dark), var(--dark));
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .back-btn {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .back-btn:hover {
+            opacity: 0.8;
+            color: white;
+        }
+
+        /* Sidebar */
+        .sidebar-lesson {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: sticky;
+            top: 90px;
+            max-height: calc(100vh - 110px);
+            overflow-y: auto;
+        }
+
+        .lesson-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--dark);
+            transition: all 0.3s;
+            cursor: pointer;
+            margin-bottom: 0.5rem;
+            border: 2px solid transparent;
+        }
+
+        .lesson-link:hover {
+            background: #f8f9fa;
+        }
+
+        .lesson-link.active {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            color: white;
+            border-color: var(--primary-dark);
+        }
+
+        .lesson-number {
+            width: 35px;
+            height: 35px;
+            background: #e9ecef;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .lesson-link.active .lesson-number {
+            background: rgba(255,255,255,0.3);
+            color: white;
+        }
+
+        .lesson-link.completed .lesson-number {
+            background: var(--success);
+            color: white;
+        }
+
+        .lesson-link.completed::after {
+            content: '✓';
+            margin-left: auto;
+            font-weight: bold;
+            color: var(--success);
+        }
+
+        .lesson-link.active.completed::after {
+            color: white;
+        }
+
+        /* Progress bar */
+        .progress-uah {
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar-uah {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-light));
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 1rem;
+            color: white;
+            font-weight: bold;
+            transition: width 0.5s ease;
+        }
+
+        /* Video section */
+        .video-section {
+            background: linear-gradient(135deg, #f0f4ff, #fef0f5);
+            border-left: 4px solid var(--primary-dark);
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+
+        .video-placeholder {
+            background: #000;
+            border-radius: 8px;
+            aspect-ratio: 16/9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        /* Exercise boxes */
+        .exercise-box {
+            background: linear-gradient(135deg, #e8f5e9, #fff3e0);
+            border-left: 4px solid var(--success);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+
+        .exercise-title {
+            font-weight: bold;
+            color: var(--success);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        /* Evaluation section */
+        .evaluation-section {
+            background: linear-gradient(135deg, #fff3e0, #fce4ec);
+            border: 2px solid var(--warning);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .eval-option {
+            padding: 1rem;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 0.5rem;
+        }
+
+        .eval-option:hover {
+            border-color: var(--primary-light);
+            background: #f8f9fa;
+        }
+
+        .eval-option.selected {
+            border-color: var(--primary-dark);
+            background: rgba(44, 95, 102, 0.1);
+        }
+
+        .eval-option.correct {
+            border-color: var(--success);
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .eval-option.incorrect {
+            border-color: var(--danger);
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        /* Content card */
+        .content-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .lesson-content h3 {
+            color: var(--primary-dark);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .lesson-content h4 {
+            color: var(--dark);
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .lesson-content p {
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        /* Buttons */
+        .btn-uah-primary {
+            background: var(--primary-dark);
+            border: none;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-uah-primary:hover:not(:disabled) {
+            background: var(--primary-light);
+            color: var(--dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-uah-primary:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .btn-uah-success {
+            background: var(--success);
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .btn-uah-success:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        /* Timer */
+        .timer-display {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+            text-align: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .lesson-content {
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 991px) {
+            .sidebar-lesson {
+                position: static;
+                margin-bottom: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cargar auth.js -->
+    <script src="auth.js"></script>
+
+    <!-- Header -->
+    <header class="header-uah">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <a href="index.html" class="back-btn d-flex align-items-center gap-2">
+                        <i class="bi bi-arrow-left"></i>
+                        <span>Volver al Curso</span>
+                    </a>
+                </div>
+                <div class="col text-center">
+                    <h1 class="h4 mb-0">Módulo 1: Observación y Gesto</h1>
+                </div>
+                <div class="col-auto">
+                    <span class="badge bg-light text-dark" id="progressText">0% Completado</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container-fluid py-4">
+        <div class="row">
+            <!-- Sidebar -->
+            <aside class="col-lg-3">
+                <div class="sidebar-lesson">
+                    <h5 class="mb-3">
+                        <i class="bi bi-book me-2"></i>Lecciones
+                    </h5>
+                    <div class="lesson-list">
+                        <a class="lesson-link active" data-lesson="1" onclick="loadLesson(1)">
+                            <span class="lesson-number">1</span>
+                            <span class="flex-grow-1">Fundamentos del Croquis</span>
+                        </a>
+                        <a class="lesson-link" data-lesson="2" onclick="loadLesson(2)">
+                            <span class="lesson-number">2</span>
+                            <span class="flex-grow-1">Proporciones por Observación</span>
+                        </a>
+                        <a class="lesson-link" data-lesson="3" onclick="loadLesson(3)">
+                            <span class="flex-grow-1">Composición y Balance</span>
+                        </a>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="col-lg-9">
+                <div class="content-card">
+                    <!-- Progress Bar -->
+                    <div class="progress-uah">
+                        <div class="progress-bar-uah" id="moduleProgress" style="width: 0%">
+                            <span>0%</span>
+                        </div>
+                    </div>
+
+                    <!-- Content Header -->
+                    <div class="border-bottom pb-3 mb-4">
+                        <h2 class="lesson-title h3 mb-2" id="lessonTitle">Lección 1: Fundamentos del Croquis Rápido</h2>
+                        <div class="d-flex gap-3 text-muted small lesson-meta" id="lessonMeta">
+                            <span><i class="bi bi-clock me-1"></i>45 minutos</span>
+                            <span><i class="bi bi-book me-1"></i>Observación</span>
+                            <span><i class="bi bi-bar-chart me-1"></i>Nivel: Básico</span>
+                        </div>
+                    </div>
+
+                    <!-- Lesson Content -->
+                    <div class="lesson-content" id="lessonContent">
+                        <p>Cargando contenido...</p>
+                    </div>
+
+                    <!-- Navigation -->
+                    <div class="d-flex justify-content-between align-items-center pt-4 mt-4 border-top flex-wrap gap-3">
+                        <button class="btn btn-uah-primary" id="prevButton" onclick="goToPreviousLesson()">
+                            <i class="bi bi-arrow-left me-2"></i>Lección Anterior
+                        </button>
+
+                        <button class="btn btn-uah-success" onclick="completeLesson()" id="completeButton">
+                            <i class="bi bi-check-circle me-2"></i>Marcar como Completada
+                        </button>
+
+                        <button class="btn btn-uah-primary" id="nextButton" onclick="goToNextLesson()">
+                            Siguiente Lección<i class="bi bi-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="notificationToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <i class="bi bi-check-circle-fill text-success me-2" id="toastIcon"></i>
+                <strong class="me-auto">Notificación</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body" id="toastBody">
+                Mensaje aquí
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // ============================================
+        // VARIABLES GLOBALES
+        // ============================================
+        let currentUser = null;
+        let currentLesson = 1;
+        let moduleProgress = 0;
+        let completedLessons = [];
+        let isOnline = navigator.onLine;
+        let evaluationScores = {};
+        
+        window.currentModuleId = 1;
+
+        // ============================================
+        // CONTENIDO DE LAS LECCIONES
+        // ============================================
+        const lessonsContent = {
+            1: {
+                title: 'Fundamentos del Croquis Rápido',
+                meta: '<span><i class="bi bi-clock me-1"></i>45 minutos</span><span><i class="bi bi-book me-1"></i>Observación</span><span><i class="bi bi-bar-chart me-1"></i>Nivel: Básico</span>',
+                content: `
+                    <div class="alert alert-info border-0" role="alert">
+                        <h5 class="alert-heading"><i class="bi bi-info-circle me-2"></i>Objetivos de Aprendizaje</h5>
+                        <ul class="mb-0">
+                            <li><strong>Aplicar</strong> técnicas de observación directa para capturar la línea de acción en 2 minutos</li>
+                            <li><strong>Identificar</strong> el eje central y puntos de peso en una figura humana</li>
+                        </ul>
+                    </div>
+
+                    <div class="video-section">
+                        <h4 class="mb-3"><i class="bi bi-play-circle me-2"></i>Video Explicativo (2-3 minutos)</h4>
+                        <p><strong>Guión del Video:</strong></p>
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <p class="mb-2"><strong>[0:00-0:20] APERTURA</strong></p>
+                                <p class="fst-italic">"Hola, soy Joselyn Vizcarra. En esta lección aprenderás a capturar el movimiento del cuerpo humano en croquis rápidos de 2 minutos. No buscamos perfección, buscamos capturar la energía y dirección del cuerpo."</p>
+                                
+                                <p class="mb-2 mt-3"><strong>[0:20-1:00] DEMOSTRACIÓN 1: LÍNEA DE ACCIÓN</strong></p>
+                                <p class="fst-italic">"Mira esta figura. Antes de dibujar nada, pregúntate: ¿Hacia dónde se dirige el cuerpo? Esa curva imaginaria que atraviesa desde la cabeza hasta los pies es la línea de acción."</p>
+                                
+                                <p class="mb-2 mt-3"><strong>[1:00-1:40] DEMOSTRACIÓN 2: PESO Y APOYO</strong></p>
+                                <p class="fst-italic">"Ahora observa dónde está el peso. ¿En qué pie se apoya? ¿Cómo se distribuye? Marca primero el punto de apoyo, luego construye hacia arriba."</p>
+                                
+                                <p class="mb-2 mt-3"><strong>[1:40-2:20] PROCESO PASO A PASO</strong></p>
+                                <p class="fst-italic">"Tu proceso en 2 minutos será: Segundos 0-20: Traza la línea de acción. Segundos 20-60: Indica cabeza, torso, pelvis con trazos simples. Segundos 60-120: Extremidades y dirección del movimiento."</p>
+                                
+                                <p class="mb-0 mt-3"><strong>[2:20-2:40] CIERRE</strong></p>
+                                <p class="fst-italic">"Recuerda: no estás dibujando detalles, estás capturando movimiento. Practica ahora con las 3 referencias proporcionadas."</p>
+                            </div>
+                        </div>
+                        
+                        <div class="video-placeholder mt-3">
+                            <div class="text-center">
+                                <i class="bi bi-camera-video" style="font-size: 3rem;"></i>
+                                <p class="mt-2">Espacio reservado para video explicativo</p>
+                                <p class="small">Instrucciones de grabación disponibles en el guión</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Contenido Teórico (5 minutos de lectura)</h3>
+                    
+                    <h4>¿Qué es la Línea de Acción?</h4>
+                    <p>La línea de acción es el eje imaginario que atraviesa toda la figura, definiendo la dirección y energía del movimiento. No es una línea que dibujas literalmente, sino una guía mental que te ayuda a capturar la esencia del gesto.</p>
+                    
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="card border-primary h-100">
+                                <div class="card-header bg-primary text-white">
+                                    <i class="bi bi-check-circle me-2"></i>Características Clave
+                                </div>
+                                <div class="card-body">
+                                    <ul class="mb-0">
+                                        <li>Atraviesa desde la cabeza hasta el pie de apoyo</li>
+                                        <li>Puede ser recta (pose estática) o curva (pose dinámica)</li>
+                                        <li>Define la dirección principal del cuerpo</li>
+                                        <li>Es lo primero que observas, lo último que dibujas</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-success h-100">
+                                <div class="card-header bg-success text-white">
+                                    <i class="bi bi-lightbulb me-2"></i>Concepto de Peso y Equilibrio
+                                </div>
+                                <div class="card-body">
+                                    <ul class="mb-0">
+                                        <li><strong>Punto de peso:</strong> Donde se concentra el apoyo</li>
+                                        <li><strong>Pie de apoyo:</strong> Sostiene la mayor parte del peso</li>
+                                        <li><strong>Contrapposto:</strong> Peso en un lado, relajación en otro</li>
+                                        <li><strong>Línea vertical:</strong> Desde el centro de gravedad al suelo</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4>¿Por qué el Croquis Rápido Importa?</h4>
+                    <div class="alert alert-warning border-0" role="alert">
+                        <i class="bi bi-star me-2"></i>
+                        <strong>Beneficios Fundamentales:</strong>
+                        <ol class="mb-0 mt-2">
+                            <li><strong>Desactiva la autocrítica:</strong> No hay tiempo para juzgar, solo para observar</li>
+                            <li><strong>Captura la esencia:</strong> Te enfocas en lo importante, no en detalles</li>
+                            <li><strong>Desarrolla observación:</strong> Entrenas tu ojo para ver proporciones reales</li>
+                            <li><strong>Construye confianza:</strong> Practicas sin miedo al error</li>
+                        </ol>
+                    </div>
+
+                    <div class="exercise-box">
+                        <div class="exercise-title">
+                            <i class="bi bi-pencil-square me-2"></i>Ejercicio 1: Primeros Croquis de 2 Minutos
+                        </div>
+                        <p><strong>Objetivo:</strong> Capturar 3 croquis rápidos enfocándote únicamente en línea de acción y peso.</p>
+                        
+                        <h6 class="mt-3">Materiales:</h6>
+                        <ul>
+                            <li>3 hojas de papel (puede ser reciclado)</li>
+                            <li>Lápiz o carboncillo</li>
+                            <li>Cronómetro (puedes usar tu teléfono)</li>
+                        </ul>
+
+                        <h6 class="mt-3">Referencias:</h6>
+                        <p>Usa estas 3 fotografías de alta calidad (descargar desde la plataforma):</p>
+                        <div class="row g-2">
+                            <div class="col-4">
+                                <div class="card">
+                                    <div class="card-body text-center bg-light">
+                                        <i class="bi bi-image" style="font-size: 2rem;"></i>
+                                        <p class="small mb-0 mt-2">Referencia 1<br>Figura de pie</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="card">
+                                    <div class="card-body text-center bg-light">
+                                        <i class="bi bi-image" style="font-size: 2rem;"></i>
+                                        <p class="small mb-0 mt-2">Referencia 2<br>Pose dinámica</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="card">
+                                    <div class="card-body text-center bg-light">
+                                        <i class="bi bi-image" style="font-size: 2rem;"></i>
+                                        <p class="small mb-0 mt-2">Referencia 3<br>Contrapposto</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h6 class="mt-3">Instrucciones:</h6>
+                        <ol>
+                            <li>Configura tu cronómetro a <strong>2 minutos exactos</strong></li>
+                            <li><strong>No borres, no corrijas</strong> - captura la dirección y el peso</li>
+                            <li>Proceso:
+                                <ul>
+                                    <li><strong>0-20 seg:</strong> Observa. Identifica línea de acción mental</li>
+                                    <li><strong>20-60 seg:</strong> Traza línea de acción + punto de apoyo</li>
+                                    <li><strong>60-120 seg:</strong> Indica masa corporal con trazos simples</li>
+                                </ul>
+                            </li>
+                            <li>Al terminar: Fotografía tu trabajo para entregar</li>
+                        </ol>
+
+                        <div class="alert alert-info mt-3 mb-0">
+                            <i class="bi bi-clock me-2"></i>
+                            <strong>Tiempo total del ejercicio:</strong> 15 minutos (3 croquis × 2 min + setup + fotografías)
+                        </div>
+                    </div>
+
+                    <div class="evaluation-section">
+                        <h4 class="text-warning mb-3"><i class="bi bi-clipboard-check me-2"></i>Evaluación de la Lección 1</h4>
+                        <p><strong>Pregunta 1:</strong> ¿Cuál es el objetivo principal de un croquis de 2 minutos?</p>
+                        <div class="eval-options" data-question="1" data-correct="2">
+                            <div class="eval-option" onclick="selectEvalOption(this, 1)">
+                                A) Lograr un dibujo perfectamente detallado y realista
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 2)">
+                                B) Capturar la energía, dirección y peso del cuerpo sin preocuparse por detalles
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 3)">
+                                C) Practicar técnicas de sombreado y textura
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 4)">
+                                D) Memorizar proporciones exactas del cuerpo humano
+                            </div>
+                        </div>
+
+                        <p class="mt-4"><strong>Pregunta 2:</strong> ¿Qué debes identificar PRIMERO antes de comenzar a dibujar?</p>
+                        <div class="eval-options" data-question="2" data-correct="1">
+                            <div class="eval-option" onclick="selectEvalOption(this, 1)">
+                                A) La línea de acción y el punto de apoyo/peso
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 2)">
+                                B) Los detalles del rostro y expresión facial
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 3)">
+                                C) La textura de la ropa y accesorios
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 4)">
+                                D) El fondo y contexto de la figura
+                            </div>
+                        </div>
+
+                        <p class="mt-4"><strong>Pregunta 3:</strong> En el croquis rápido, ¿qué actitud es la más apropiada?</p>
+                        <div class="eval-options" data-question="3" data-correct="3">
+                            <div class="eval-option" onclick="selectEvalOption(this, 1)">
+                                A) Borrar constantemente hasta que quede perfecto
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 2)">
+                                B) Comenzar directamente con los detalles más pequeños
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 3)">
+                                C) No borrar ni corregir, enfocarse en capturar el gesto
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 4)">
+                                D) Tomarse todo el tiempo necesario sin límite
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button class="btn btn-warning btn-lg" onclick="submitEvaluation(1)">
+                                <i class="bi bi-send me-2"></i>Enviar Evaluación
+                            </button>
+                        </div>
+
+                        <div id="evalResults1" class="alert alert-info mt-3" style="display: none;">
+                            <strong>Resultados:</strong> <span id="evalScore1"></span>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-success border-0 mt-4" role="alert">
+                        <h5 class="alert-heading"><i class="bi bi-check-circle me-2"></i>Checklist de Completación</h5>
+                        <p>Para completar esta lección, debes:</p>
+                        <ul class="mb-0">
+                            <li>☐ Ver el video explicativo completo</li>
+                            <li>☐ Leer el contenido teórico (5 minutos)
+                            <li>☐ Completar 3 croquis de 2 minutos (fotografiar resultados)</li>
+                            <li>☐ Aprobar evaluación con mínimo 2/3 correctas</li>
+                            <li>☐ Subir fotografías de tus 3 croquis al formulario de entrega</li>
+                        </ul>
+                    </div>
+                `,
+            },
+            2: {
+                title: 'Proporciones por Observación Directa',
+                meta: '<span><i class="bi bi-clock me-1"></i>50 minutos</span><span><i class="bi bi-book me-1"></i>Medición Visual</span><span><i class="bi bi-bar-chart me-1"></i>Nivel: Básico</span>',
+                content: `
+                    <div class="alert alert-info border-0" role="alert">
+                        <h5 class="alert-heading"><i class="bi bi-info-circle me-2"></i>Objetivos de Aprendizaje</h5>
+                        <ul class="mb-0">
+                            <li><strong>Medir</strong> proporciones por comparación visual usando el método de la cabeza como unidad</li>
+                            <li><strong>Aplicar</strong> proporciones observadas en 2 figuras completas de 15 minutos cada una</li>
+                        </ul>
+                    </div>
+
+                    <h3>Contenido Teórico (5 minutos de lectura)</h3>
+                    
+                    <h4>Método de Medición Visual</h4>
+                    <p>A diferencia de memorizar fórmulas, aprenderás a <strong>observar y comparar</strong> proporciones directamente de la figura que tienes frente a ti. La clave está en usar tu lápiz como instrumento de medición.</p>
+
+                    <div class="card bg-light mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Técnica del Lápiz como Regla</h5>
+                            <ol>
+                                <li><strong>Extiende tu brazo completamente</strong> con el lápiz vertical</li>
+                                <li><strong>Cierra un ojo</strong> para eliminar la percepción de profundidad</li>
+                                <li><strong>Alinea la punta del lápiz</strong> con la parte superior de la cabeza</li>
+                                <li><strong>Marca con tu pulgar</strong> dónde termina la barbilla</li>
+                                <li><strong>Esta distancia</strong> es tu unidad de medida base</li>
+                                <li><strong>Compara</strong> cuántas veces cabe esa medida en el resto del cuerpo</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <h4>Puntos Clave de Proporción</h4>
+                    <p><strong>IMPORTANTE:</strong> No memorices números exactos. Observa las <em>relaciones</em> entre partes del cuerpo.</p>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="card border-primary h-100">
+                                <div class="card-header bg-primary text-white">
+                                    <i class="bi bi-rulers me-2"></i>Alturas Aproximadas
+                                </div>
+                                <div class="card-body">
+                                    <ul class="mb-0">
+                                        <li><strong>Altura total:</strong> 7-8 cabezas (varía por persona)</li>
+                                        <li><strong>Codos:</strong> A la altura de la cintura</li>
+                                        <li><strong>Muñecas:</strong> A la altura de la entrepierna</li>
+                                        <li><strong>Rodillas:</strong> A mitad de la pierna</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-success h-100">
+                                <div class="card-header bg-success text-white">
+                                    <i class="bi bi-arrows-expand me-2"></i>Anchos Importantes
+                                </div>
+                                <div class="card-body">
+                                    <ul class="mb-0">
+                                        <li><strong>Hombros:</strong> ~2 cabezas de ancho</li>
+                                        <li><strong>Caderas:</strong> ~1.5 cabezas de ancho</li>
+                                        <li><strong>Importante:</strong> Estas son aproximaciones</li>
+                                        <li><strong>Siempre:</strong> Mide visualmente tu referencia específica</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning border-0" role="alert">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <strong>Error Común a Evitar:</strong> No te obsesiones con números exactos. Cada persona es diferente. La clave es mantener <strong>consistencia interna</strong> en tu dibujo: si la cabeza mide X, todo lo demás debe relacionarse proporcionalmente con ese X.
+                    </div>
+
+                    <h4>Construcción de la Figura por Observación</h4>
+                    <div class="card bg-light mb-4">
+                        <div class="card-body">
+                            <h5>Proceso Recomendado (15 minutos por figura):</h5>
+                            <ol>
+                                <li><strong>Minutos 0-2:</strong> Observa la referencia completa sin dibujar</li>
+                                <li><strong>Minutos 2-3:</strong> Mide visualmente con tu lápiz las proporciones clave</li>
+                                <li><strong>Minutos 3-5:</strong> Traza línea de acción + punto de apoyo</li>
+                                <li><strong>Minutos 5-8:</strong> Establece cabeza, torso, pelvis con trazos ligeros</li>
+                                <li><strong>Minutos 8-12:</strong> Agrega extremidades verificando proporciones</li>
+                                <li><strong>Minutos 12-15:</strong> Refina y oscurece líneas finales</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="exercise-box">
+                        <div class="exercise-title">
+                            <i class="bi bi-pencil-square me-2"></i>Ejercicio 2: Figuras Completas con Medición Visual
+                        </div>
+                        <p><strong>Objetivo:</strong> Dibujar 2 figuras completas aplicando el método de medición visual.</p>
+                        
+                        <h6 class="mt-3">Materiales:</h6>
+                        <ul>
+                            <li>2 hojas de papel tamaño carta</li>
+                            <li>Lápiz (HB o 2B recomendado)</li>
+                            <li>Goma de borrar (solo para ajustes mayores)</li>
+                            <li>Cronómetro</li>
+                        </ul>
+
+                        <h6 class="mt-3">Referencias:</h6>
+                        <p>Usa estas 2 fotografías de cuerpo completo frontal (descargar desde plataforma):</p>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <div class="card">
+                                    <div class="card-body text-center bg-light">
+                                        <i class="bi bi-image" style="font-size: 3rem;"></i>
+                                        <p class="small mb-0 mt-2">Referencia A<br>Figura masculina frontal</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="card">
+                                    <div class="card-body text-center bg-light">
+                                        <i class="bi bi-image" style="font-size: 3rem;"></i>
+                                        <p class="small mb-0 mt-2">Referencia B<br>Figura femenina frontal</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h6 class="mt-3">Instrucciones Detalladas:</h6>
+                        <div class="accordion" id="exerciseAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#step1">
+                                        Paso 1: Observación Inicial (2 min)
+                                    </button>
+                                </h2>
+                                <div id="step1" class="accordion-collapse collapse show" data-bs-parent="#exerciseAccordion">
+                                    <div class="accordion-body">
+                                        <ul>
+                                            <li>Mira la referencia completa sin dibujar</li>
+                                            <li>Identifica la línea de acción</li>
+                                            <li>Observa dónde está el peso</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#step2">
+                                        Paso 2: Medición Visual (1 min)
+                                    </button>
+                                </h2>
+                                <div id="step2" class="accordion-collapse collapse" data-bs-parent="#exerciseAccordion">
+                                    <div class="accordion-body">
+                                        <ul>
+                                            <li>Usa tu lápiz para medir la cabeza</li>
+                                            <li>Compara cuántas cabezas mide el cuerpo total</li>
+                                            <li>Verifica dónde caen codos, muñecas, rodillas</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#step3">
+                                        Paso 3: Construcción (12 min)
+                                    </button>
+                                </h2>
+                                <div id="step3" class="accordion-collapse collapse" data-bs-parent="#exerciseAccordion">
+                                    <div class="accordion-body">
+                                        <ul>
+                                            <li>Traza línea de acción ligera</li>
+                                            <li>Marca la altura total con trazos suaves</li>
+                                            <li>Dibuja la cabeza en proporción</li>
+                                            <li>Construye torso y pelvis</li>
+                                            <li>Agrega extremidades verificando proporciones</li>
+                                            <li>Refina líneas finales</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-success mt-3 mb-0">
+                            <i class="bi bi-clock me-2"></i>
+                            <strong>Tiempo total del ejercicio:</strong> 35 minutos (2 figuras × 15 min + fotografías)
+                        </div>
+                    </div>
+
+                    <div class="evaluation-section">
+                        <h4 class="text-warning mb-3"><i class="bi bi-clipboard-check me-2"></i>Evaluación de la Lección 2</h4>
+                        
+                        <p><strong>Pregunta 1:</strong> ¿Cuál es la técnica correcta para medir proporciones visualmente?</p>
+                        <div class="eval-options" data-question="1" data-correct="2">
+                            <div class="eval-option" onclick="selectEvalOption(this, 1)">
+                                A) Memorizar que el cuerpo mide exactamente 8 cabezas
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 2)">
+                                B) Extender el brazo, usar el lápiz como regla, comparar la cabeza con el resto del cuerpo
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 3)">
+                                C) Dibujar primero y medir después
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 4)">
+                                D) Usar una regla física para medir la fotografía
+                            </div>
+                        </div>
+
+                        <p class="mt-4"><strong>Pregunta 2:</strong> ¿Qué significa "consistencia interna" en un dibujo?</p>
+                        <div class="eval-options" data-question="2" data-correct="3">
+                            <div class="eval-option" onclick="selectEvalOption(this, 1)">
+                                A) Que todas las líneas tengan el mismo grosor
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 2)">
+                                B) Que el dibujo esté completamente terminado
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 3)">
+                                C) Que todas las partes del cuerpo se relacionen proporcionalmente entre sí
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 4)">
+                                D) Que el sombreado sea uniforme
+                            </div>
+                        </div>
+
+                        <p class="mt-4"><strong>Pregunta 3:</strong> Al construir una figura de 15 minutos, ¿qué debes hacer PRIMERO?</p>
+                        <div class="eval-options" data-question="3" data-correct="1">
+                            <div class="eval-option" onclick="selectEvalOption(this, 1)">
+                                A) Observar la referencia completa y medir visualmente las proporciones
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 2)">
+                                B) Dibujar inmediatamente los detalles del rostro
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 3)">
+                                C) Empezar por los pies y subir
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 4)">
+                                D) Sombrear el fondo antes que la figura
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button class="btn btn-warning btn-lg" onclick="submitEvaluation(2)">
+                                <i class="bi bi-send me-2"></i>Enviar Evaluación
+                            </button>
+                        </div>
+
+                        <div id="evalResults2" class="alert alert-info mt-3" style="display: none;">
+                            <strong>Resultados:</strong> <span id="evalScore2"></span>
+                        </div>
+                    </div>
+
+                    <div class="card border-info mt-4">
+                        <div class="card-header bg-info text-white">
+                            <i class="bi bi-chat-quote me-2"></i>Reflexión Breve (50 palabras)
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Pregunta de reflexión para entregar junto con tus dibujos:</strong></p>
+                            <p class="fst-italic">"¿Qué fue más difícil de medir visualmente en tus figuras? ¿Cómo podrías mejorar tu observación en el próximo ejercicio?"</p>
+                            <textarea class="form-control" rows="3" placeholder="Escribe tu reflexión aquí (mínimo 50 palabras)..." id="reflection2"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-success border-0 mt-4" role="alert">
+                        <h5 class="alert-heading"><i class="bi bi-check-circle me-2"></i>Checklist de Completación</h5>
+                        <ul class="mb-0">
+                            <li>☐ Leer contenido teórico sobre medición visual</li>
+                            <li>☐ Completar 2 figuras de 15 minutos (fotografiar)</li>
+                            <li>☐ Aprobar evaluación con mínimo 2/3 correctas</li>
+                            <li>☐ Escribir reflexión de 50 palabras</li>
+                            <li>☐ Subir fotografías + reflexión al formulario</li>
+                        </ul>
+                    </div>
+                `,
+            },
+            3: {
+                title: 'Composición y Balance Corporal',
+                meta: '<span><i class="bi bi-clock me-1"></i>55 minutos</span><span><i class="bi bi-book me-1"></i>Equilibrio</span><span><i class="bi bi-bar-chart me-1"></i>Nivel: Intermedio</span>',
+                content: `
+                    <div class="alert alert-info border-0" role="alert">
+                        <h5 class="alert-heading"><i class="bi bi-info-circle me-2"></i>Objetivos de Aprendizaje</h5>
+                        <ul class="mb-0">
+                            <li><strong>Identificar</strong> el contrapposto (distribución de peso asimétrica) en figuras humanas</li>
+                            <li><strong>Crear</strong> un croquis que demuestre comprensión del balance corporal en 3 poses</li>
+                        </ul>
+                    </div>
+
+                    <h3>Contenido Teórico (5 minutos de lectura)</h3>
+                    
+                    <h4>¿Qué es el Contrapposto?</h4>
+                    <p>El contrapposto es una pose natural donde el peso del cuerpo se distribuye asimétricamente: una cadera sube mientras el hombro opuesto baja, creando una línea diagonal de tensión que atraviesa el torso.</p>
+
+                    <div class="card bg-light mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">Características del Contrapposto</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Lado de Apoyo (con peso)</h6>
+                                    <ul>
+                                        <li>Cadera elevada</li>
+                                        <li>Pierna tensa/recta</li>
+                                        <li>Hombro ligeramente bajo</li>
+                                        <li>Músculos contraídos</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Lado Relajado (sin peso)</h6>
+                                    <ul>
+                                        <li>Cadera descendida</li>
+                                        <li>Pierna doblada/relajada</li>
+                                        <li>Hombro ligeramente alto</li>
+                                        <li>Músculos distendidos</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4>Cómo el Cuerpo Distribuye Peso Naturalmente</h4>
+                    <p>El cuerpo humano busca constantemente equilibrio. Cuando el peso se concentra en un lado, el resto del cuerpo compensa para mantener el centro de gravedad sobre los pies de apoyo.</p>
+
+                    <div class="alert alert-success border-0" role="alert">
+                        <i class="bi bi-lightbulb me-2"></i>
+                        <strong>Concepto Clave:</strong> La línea vertical desde el centro de la cabeza debe caer dentro del polígono de apoyo (área entre los pies). Si no, la figura se ve inestable.
+                    </div>
+
+                    <h4>Importancia de Ejes Verticales/Horizontales</h4>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="card border-primary h-100">
+                                <div class="card-header bg-primary text-white">
+                                    Eje Horizontal: Hombros
+                                </div>
+                                <div class="card-body">
+                                    <p>Dibuja una línea imaginaria conectando ambos hombros. En contrapposto, esta línea está inclinada opuesta a la línea de caderas.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-success h-100">
+                                <div class="card-header bg-success text-white">
+                                    Eje Horizontal: Caderas
+                                </div>
+                                <div class="card-body">
+                                    <p>Línea que conecta las crestas ilíacas (huesos de cadera). En contrapposto, un lado está más alto que el otro.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card bg-warning bg-opacity-10 border-warning mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-exclamation-triangle me-2"></i>Método de Verificación</h5>
+                            <p><strong>Antes de dibujar extremidades:</strong></p>
+                            <ol class="mb-0">
+                                <li>Traza línea de acción del cuerpo</li>
+                                <li>Marca línea horizontal de hombros</li>
+                                <li>Marca línea horizontal de caderas</li>
+                                <li>Verifica que estén inclinadas en direcciones opuestas</li>
+                                <li>Identifica cuál pierna sostiene el peso</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="exercise-box">
+                        <div class="exercise-title">
+                            <i class="bi bi-pencil-square me-2"></i>Ejercicio 3: Croquis de Balance y Contrapposto
+                        </div>
+                        <p><strong>Objetivo:</strong> Dibujar 3 croquis de 5 minutos enfocados en capturar el balance y distribución del peso.</p>
+                        
+                        <h6 class="mt-3">Materiales:</h6>
+                        <ul>
+                            <li>3 hojas de papel</li>
+                            <li>Lápiz de grafito o carboncillo</li>
+                            <li>Lápiz de color (opcional, para marcar ejes)</li>
+                            <li>Cronómetro</li>
+                        </ul>
+
+                        <h6 class="mt-3">Referencias:</h6>
+                        <p>Usa estas 3 fotografías con peso claramente distribuido:</p>
+                        <div class="row g-2">
+                            <div class="col-4">
+                                <div class="card">
+                                    <div class="card-body text-center bg-light">
+                                        <i class="bi bi-image" style="font-size: 2rem;"></i>
+                                        <p class="small mb-0 mt-2">Ref. 1<br>Contrapposto clásico</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="card">
+                                    <div class="card-body text-center bg-light">
+                                        <i class="bi bi-image" style="font-size: 2rem;"></i>
+                                        <p class="small mb-0 mt-2">Ref. 2<br>Peso dinámico</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="card">
+                                    <div class="card-body text-center bg-light">
+                                        <i class="bi bi-image" style="font-size: 2rem;"></i>
+                                        <p class="small mb-0 mt-2">Ref. 3<br>Balance sutil</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h6 class="mt-3">Instrucciones por Croquis (5 min cada uno):</h6>
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <p><strong>Minuto 1:</strong> Observación - Identifica dónde está el peso</p>
+                                <p><strong>Minuto 2:</strong> Marca ejes de hombros y caderas con líneas ligeras</p>
+                                <p><strong>Minutos 3-4:</strong> Traza línea de acción + masa corporal básica</p>
+                                <p class="mb-0"><strong>Minuto 5:</strong> Indica extremidades respetando el balance</p>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info mb-0">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Técnica Especial:</strong> Usa un lápiz de color diferente para marcar los ejes de hombros y caderas. Esto te ayudará a visualizar el contrapposto claramente.
+                        </div>
+                    </div>
+
+                    <div class="evaluation-section">
+                        <h4 class="text-warning mb-3"><i class="bi bi-clipboard-check me-2"></i>Evaluación Final del Módulo 1</h4>
+                        
+                        <p><strong>Pregunta 1:</strong> En una pose de contrapposto, si la cadera derecha está elevada, ¿qué sucede con el hombro derecho?</p>
+                        <div class="eval-options" data-question="1" data-correct="2">
+                            <div class="eval-option" onclick="selectEvalOption(this, 1)">
+                                A) También se eleva en la misma dirección
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 2)">
+                                B) Tiende a descender ligeramente (dirección opuesta)
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 3)">
+                                C) Permanece completamente horizontal
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 4)">
+                                D) No hay relación entre hombros y caderas
+                            </div>
+                        </div>
+
+                        <p class="mt-4"><strong>Pregunta 2:</strong> ¿Dónde debe caer la línea vertical desde el centro de la cabeza para que una figura esté equilibrada?</p>
+                        <div class="eval-options" data-question="2" data-correct="3">
+                            <div class="eval-option" onclick="selectEvalOption(this, 1)">
+                                A) Exactamente en el centro entre ambos pies
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 2)">
+                                B) Siempre en el pie derecho
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 3)">
+                                C) Dentro del polígono de apoyo (área entre los pies)
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 4)">
+                                D) No importa dónde caiga
+                            </div>
+                        </div>
+
+                        <p class="mt-4"><strong>Pregunta 3:</strong> Al comenzar un croquis enfocado en balance, ¿qué debes marcar PRIMERO?</p>
+                        <div class="eval-options" data-question="3" data-correct="1">
+                            <div class="eval-option" onclick="selectEvalOption(this, 1)">
+                                A) Los ejes horizontales de hombros y caderas para ver su inclinación
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 2)">
+                                B) Los dedos de las manos
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 3)">
+                                C) El sombreado del torso
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 4)">
+                                D) La textura de la ropa
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button class="btn btn-warning btn-lg" onclick="submitEvaluation(3)">
+                                <i class="bi bi-send me-2"></i>Enviar Evaluación Final
+                            </button>
+                        </div>
+
+                        <div id="evalResults3" class="alert alert-info mt-3" style="display: none;">
+                            <strong>Resultados:</strong> <span id="evalScore3"></span>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-success border-0 mt-4" role="alert">
+                        <h5 class="alert-heading"><i class="bi bi-trophy me-2"></i>Portfolio del Módulo 1</h5>
+                        <p><strong>Entregables Totales:</strong></p>
+                        <ul>
+                            <li>✅ 3 croquis rápidos de 2 minutos (Lección 1)</li>
+                            <li>✅ 2 figuras completas de 15 minutos (Lección 2)</li>
+                            <li>✅ 3 croquis de balance de 5 minutos (Lección 3)</li>
+                            <li>✅ 1 reflexión de 50 palabras (Lección 2)</li>
+                            <li>✅ 3 evaluaciones aprobadas (mínimo 2/3 correctas cada una)</li>
+                        </ul>
+                        <p class="mb-0"><strong>Total: 8 dibujos + 1 reflexión + 3 evaluaciones</strong></p>
+                    </div>
+
+                    <div class="card border-primary mt-4">
+                        <div class="card-header bg-primary text-white">
+                            <i class="bi bi-cloud-upload me-2"></i>Formulario de Entrega
+                        </div>
+                        <div class="card-body">
+                            <p>Una vez completados todos los ejercicios y evaluaciones, sube tus trabajos al formulario de Google:</p>
+                            <div class="text-center">
+                                <a href="#" class="btn btn-primary btn-lg" target="_blank">
+                                    <i class="bi bi-box-arrow-up-right me-2"></i>Ir al Formulario de Entrega
+                                </a>
+                            </div>
+                            <p class="small text-muted mt-2 mb-0">Se abrirá en una nueva pestaña. Asegúrate de tener todas las fotografías de tus dibujos listas.</p>
+                        </div>
+                    </div>
+                `,
+            }
+        };
+
+        // ============================================
+        // MONITOREO DE CONECTIVIDAD
+        // ============================================
+        window.addEventListener('online', () => {
+            isOnline = true;
+            console.log('✓ Conexión restaurada');
+            syncProgressWithSheets();
+        });
+
+        window.addEventListener('offline', () => {
+            isOnline = false;
+            console.log('⚠ Sin conexión - modo offline');
+        });
+
+        // ============================================
+        // INICIALIZACIÓN
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Inicializando Módulo 1...');
+            
+            // Verificar autenticación
+            if (typeof getCurrentUser !== 'undefined' && typeof protectPage !== 'undefined') {
+                if (!protectPage()) return;
+                currentUser = getCurrentUser();
+            } else {
+                const storedUser = localStorage.getItem('currentUser');
+                if (storedUser) {
+                    currentUser = JSON.parse(storedUser);
+                } else {
+                    console.error('❌ No hay usuario autenticado');
+                    window.location.href = 'login.html';
+                    return;
+                }
+            }
+
+            console.log('✓ Usuario autenticado:', currentUser);
+            
+            // Cargar progreso
+            loadModuleProgress();
+            
+            // Cargar primera lección
+            loadLesson(1);
+            
+            // Registrar actividad
+            if (typeof logUserActivity === 'function') {
+                logUserActivity('module_access', currentUser, { 
+                    moduleId: 1,
+                    moduleTitle: 'Observación y Gesto'
+                });
+            }
+        });
+
+        // ============================================
+        // CARGAR PROGRESO
+        // ============================================
+        async function loadModuleProgress() {
+            console.log('📊 Cargando progreso del Módulo 1...');
+            
+            try {
+                // Intentar Google Sheets primero
+                if (isOnline && typeof getStudentProgress === 'function') {
+                    console.log('☁️ Intentando cargar desde Google Sheets...');
+                    const sheetsProgress = await getStudentProgress(currentUser.username);
+                    
+                    if (sheetsProgress && sheetsProgress.modules && sheetsProgress.modules[1]) {
+                        moduleProgress = sheetsProgress.modules[1].progress || 0;
+                        completedLessons = sheetsProgress.modules[1].completedLessons || [];
+                        evaluationScores = sheetsProgress.modules[1].evaluationScores || {};
+                        
+                        console.log('✓ Progreso cargado desde Google Sheets');
+                        syncToLocalStorage(sheetsProgress.modules[1]);
+                        updateProgressDisplay();
+                        updateSidebarProgress();
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.error('❌ Error cargando desde Google Sheets:', error);
+            }
+            
+            // FALLBACK - localStorage
+            console.log('💾 Cargando desde localStorage...');
+            const progressKey = `progress_${currentUser.username || currentUser.email}`;
+            const userProgress = JSON.parse(localStorage.getItem(progressKey) || 'null');
+            
+            if (userProgress && userProgress.modules && userProgress.modules[1]) {
+                moduleProgress = userProgress.modules[1].progress || 0;
+                completedLessons = userProgress.modules[1].completedLessons || [];
+                evaluationScores = userProgress.modules[1].evaluationScores || {};
+                console.log('✓ Progreso cargado desde localStorage');
+            } else {
+                console.log('ℹ️ No hay progreso previo');
+            }
+            
+            updateProgressDisplay();
+            updateSidebarProgress();
+        }
+
+        // ============================================
+        // SINCRONIZAR CON LOCALSTORAGE
+        // ============================================
+        function syncToLocalStorage(moduleData) {
+            const progressKey = `progress_${currentUser.username || currentUser.email}`;
+            let userProgress = JSON.parse(localStorage.getItem(progressKey) || 'null');
+            
+            if (!userProgress) {
+                userProgress = {
+                    modules: {
+                        1: { completed: false, progress: 0, completedLessons: [], evaluationScores: {} },
+                        2: { completed: false, progress: 0, completedLessons: [], evaluationScores: {} },
+                        3: { completed: false, progress: 0, completedLessons: [], evaluationScores: {} }
+                    },
+                    overallProgress: 0,
+                    lastActivity: new Date().toISOString()
+                };
+            }
+            
+            userProgress.modules[1] = moduleData;
+            userProgress.lastActivity = new Date().toISOString();
+            localStorage.setItem(progressKey, JSON.stringify(userProgress));
+            console.log('✓ Sincronizado con localStorage');
+        }
+
+        // ============================================
+        // ACTUALIZAR VISUALIZACIÓN
+        // ============================================
+        function updateProgressDisplay() {
+            document.getElementById('progressText').textContent = moduleProgress + '% Completado';
+            
+            const progressBar = document.getElementById('moduleProgress');
+            progressBar.style.width = moduleProgress + '%';
+            const progressText = progressBar.querySelector('span');
+            if (progressText) {
+                progressText.textContent = moduleProgress + '%';
+            }
+        }
+
+        function updateSidebarProgress() {
+            document.querySelectorAll('.lesson-link').forEach((link) => {
+                const lessonNum = parseInt(link.getAttribute('data-lesson'));
+                link.classList.remove('completed');
+                
+                if (completedLessons.includes(lessonNum)) {
+                    link.classList.add('completed');
+                }
+            });
+        }
+
+        // ============================================
+        // CARGAR LECCIÓN
+        // ============================================
+        function loadLesson(lessonNumber) {
+            console.log('📖 Cargando lección:', lessonNumber);
+            currentLesson = lessonNumber;
+            
+            // Actualizar sidebar
+            document.querySelectorAll('.lesson-link').forEach((link) => {
+                link.classList.remove('active');
+                if (parseInt(link.getAttribute('data-lesson')) === lessonNumber) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Cargar contenido
+            const lesson = lessonsContent[lessonNumber];
+            if (lesson) {
+                document.getElementById('lessonTitle').textContent = lesson.title;
+                document.getElementById('lessonMeta').innerHTML = lesson.meta;
+                document.getElementById('lessonContent').innerHTML = lesson.content;
+            } else {
+                console.error('❌ Lección no encontrada:', lessonNumber);
+            }
+
+            // Actualizar navegación
+            updateNavigationButtons();
+
+            // Scroll al inicio
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ============================================
+        // NAVEGACIÓN
+        // ============================================
+        function updateNavigationButtons() {
+            const prevButton = document.getElementById('prevButton');
+            const nextButton = document.getElementById('nextButton');
+            const completeButton = document.getElementById('completeButton');
+
+            prevButton.disabled = (currentLesson <= 1);
+
+            if (currentLesson >= 3) {
+                nextButton.style.display = 'none';
+            } else {
+                nextButton.style.display = 'inline-block';
+            }
+
+            if (completedLessons.includes(currentLesson)) {
+                completeButton.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>Lección Completada';
+                completeButton.classList.add('btn', 'btn-success');
+                completeButton.classList.remove('btn-uah-success');
+                completeButton.disabled = true;
+            } else {
+                completeButton.innerHTML = '<i class="bi bi-check-circle me-2"></i>Marcar como Completada';
+                completeButton.classList.add('btn-uah-success');
+                completeButton.classList.remove('btn', 'btn-success');
+                completeButton.disabled = false;
+            }
+        }
+
+        function goToPreviousLesson() {
+            if (currentLesson > 1) {
+                loadLesson(currentLesson - 1);
+            }
+        }
+
+        function goToNextLesson() {
+            if (currentLesson < 3) {
+                loadLesson(currentLesson + 1);
+            }
+        }
+
+        // ============================================
+        // EVALUACIONES
+        // ============================================
+        function selectEvalOption(element, optionNumber) {
+            const container = element.parentElement;
+            const question = container.getAttribute('data-question');
+            
+            // Remover selección previa
+            container.querySelectorAll('.eval-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Marcar selección actual
+            element.classList.add('selected');
+            
+            // Guardar respuesta
+            if (!window.evaluationAnswers) {
+                window.evaluationAnswers = {};
+            }
+            if (!window.evaluationAnswers[currentLesson]) {
+                window.evaluationAnswers[currentLesson] = {};
+            }
+            window.evaluationAnswers[currentLesson][question] = optionNumber;
+        }
+
+        function submitEvaluation(lessonNum) {
+            const answers = window.evaluationAnswers?.[lessonNum] || {};
+            const containers = document.querySelectorAll(`[data-question]`);
+            
+            let correctCount = 0;
+            let totalQuestions = containers.length;
+            
+            containers.forEach(container => {
+                const question = container.getAttribute('data-question');
+                const correctAnswer = parseInt(container.getAttribute('data-correct'));
+                const userAnswer = answers[question];
+                
+                const options = container.querySelectorAll('.eval-option');
+                
+                options.forEach((opt, index) => {
+                    opt.style.pointerEvents = 'none';
+                    opt.classList.remove('correct', 'incorrect');
+                    
+                    if (index + 1 === correctAnswer) {
+                        opt.classList.add('correct');
+                    }
+                    
+                    if (index + 1 === userAnswer && userAnswer !== correctAnswer) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+                
+                if (userAnswer === correctAnswer) {
+                    correctCount++;
+                }
+            });
+            
+            const percentage = Math.round((correctCount / totalQuestions) * 100);
+            const passed = correctCount >= 2;
+            
+            // Guardar score
+            evaluationScores[lessonNum] = {
+                correct: correctCount,
+                total: totalQuestions,
+                percentage: percentage,
+                passed: passed
+            };
+            
+            // Mostrar resultados
+            const resultsDiv = document.getElementById(`evalResults${lessonNum}`);
+            const scoreSpan = document.getElementById(`evalScore${lessonNum}`);
+            
+            scoreSpan.innerHTML = `${correctCount}/${totalQuestions} correctas (${percentage}%) - ${passed ? '<span class="text-success">✓ Aprobado</span>' : '<span class="text-danger">✗ Requiere revisión</span>'}`;
+            resultsDiv.style.display = 'block';
+            resultsDiv.className = passed ? 'alert alert-success mt-3' : 'alert alert-warning mt-3';
+            
+            // Mostrar notificación
+            showNotification(
+                passed ? `¡Evaluación aprobada! ${correctCount}/${totalQuestions} correctas` : `Evaluación: ${correctCount}/${totalQuestions} correctas. Revisa el contenido.`,
+                passed ? 'success' : 'warning'
+            );
+            
+            // Guardar en progreso
+            saveProgress();
+        }
+
+        // ============================================
+        // COMPLETAR LECCIÓN
+        // ============================================
+        async function completeLesson() {
+            if (completedLessons.includes(currentLesson)) {
+                console.log('ℹ️ Lección ya completada');
+                return;
+            }
+
+            completedLessons.push(currentLesson);
+            moduleProgress = Math.round((completedLessons.length / 3) * 100);
+            
+            console.log('✓ Lección completada:', currentLesson, '- Progreso:', moduleProgress + '%');
+            
+            // Guardar progreso
+            await saveProgress();
+            
+            // Actualizar UI
+            updateProgressDisplay();
+            updateSidebarProgress();
+            updateNavigationButtons();
+            
+            // Notificaciones
+            if (moduleProgress >= 100) {
+                showNotification('¡Felicitaciones! Has completado el Módulo 1: Observación y Gesto', 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 3000);
+            } else {
+                showNotification('¡Lección ' + currentLesson + ' completada!', 'success');
+                
+                if (currentLesson < 3) {
+                    setTimeout(() => {
+                        loadLesson(currentLesson + 1);
+                    }, 2000);
+                }
+            }
+        }
+
+        // ============================================
+        // GUARDAR PROGRESO
+        // ============================================
+        async function saveProgress() {
+            console.log('💾 Guardando progreso...');
+            
+            const progressData = {
+                progress: moduleProgress,
+                completed: moduleProgress >= 100,
+                completedLessons: completedLessons,
+                evaluationScores: evaluationScores,
+                timeSpent: 0,
+                lastUpdate: new Date().toISOString()
+            };
+            
+            // Guardar en localStorage
+            const progressKey = `progress_${currentUser.username || currentUser.email}`;
+            let userProgress = JSON.parse(localStorage.getItem(progressKey) || 'null');
+            
+            if (!userProgress) {
+                userProgress = {
+                    modules: {
+                        1: { completed: false, progress: 0, completedLessons: [], evaluationScores: {} },
+                        2: { completed: false, progress: 0, completedLessons: [], evaluationScores: {} },
+                        3: { completed: false, progress: 0, completedLessons: [], evaluationScores: {} }
+                    },
+                    overallProgress: 0,
+                    lastActivity: new Date().toISOString()
+                };
+            }
+
+            userProgress.modules[1] = progressData;
+            
+            // Calcular progreso general
+            let totalProgress = 0;
+            for (let id in userProgress.modules) {
+                totalProgress += userProgress.modules[id].progress || 0;
+            }
+            userProgress.overallProgress = Math.round(totalProgress / 3);
+            userProgress.lastActivity = new Date().toISOString();
+
+            localStorage.setItem(progressKey, JSON.stringify(userProgress));
+            console.log('✓ Guardado en localStorage');
+
+            // Sincronizar con Google Sheets
+            try {
+                if (isOnline && typeof updateModuleProgress === 'function') {
+                    console.log('☁️ Sincronizando con Google Sheets...');
+                    const success = await updateModuleProgress(1, progressData);
+                    
+                    if (success) {
+                        console.log('✓ Sincronizado con Google Sheets');
+                    }
+                }
+                
+                if (typeof logUserActivity === 'function') {
+                    logUserActivity('lesson_completed', currentUser, {
+                        moduleId: 1,
+                        lessonId: currentLesson,
+                        progress: moduleProgress
+                    });
+                }
+                
+            } catch (error) {
+                console.error('❌ Error sincronizando:', error);
+            }
+        }
+
+        // ============================================
+        // NOTIFICACIONES
+        // ============================================
+        function showNotification(message, type = 'success') {
+            const toastEl = document.getElementById('notificationToast');
+            const toastBody = document.getElementById('toastBody');
+            const toastIcon = document.getElementById('toastIcon');
+            
+            const icons = {
+                success: 'bi-check-circle-fill text-success',
+                error: 'bi-x-circle-fill text-danger',
+                warning: 'bi-exclamation-triangle-fill text-warning',
+                info: 'bi-info-circle-fill text-info'
+            };
+            
+            toastIcon.className = icons[type] || icons.success;
+            toastIcon.className += ' me-2';
+            toastBody.textContent = message;
+            
+            const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+            toast.show();
+        }
+
+        // ============================================
+        // MANEJO DE ERRORES
+        // ============================================
+        window.addEventListener('error', function(e) {
+            console.error('❌ Error global:', e);
+        });
+
+        window.addEventListener('beforeunload', function() {
+            if (moduleProgress > 0 && completedLessons.length > 0) {
+                saveProgress();
+            }
+        });
+    </script>
+</body>
+</html></li>
+                
