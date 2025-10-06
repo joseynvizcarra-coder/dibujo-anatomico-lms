@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dibujo y Representación del Cuerpo Humano | UAH</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --primary-dark: #2C5F66;
+            --primary-light: #4A9099;
+            --accent: #E8B931;
+            --success: #4CAF50;
+            --danger: #F44336;
+            --text-dark: #212529;
+            --text-light: #6c757d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.3s ease;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .spinner-border-custom {
+            width: 3rem;
+            height: 3rem;
+            border: 4px solid var(--primary-light);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+
+        /* Info Cards */
+        .info-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            height: 100%;
+        }
+
+        .info-card h5 {
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .info-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .info-list li:last-child {
+            border-bottom: none;
+        }
+
+        .info-list i {
+            color: var(--primary-light);
+            margin-right: 0.5rem;
+        }
+
+        /* Module Cards */
+        .module-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .module-card.disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .module-card.disabled:hover {
+            transform: none;
+        }
+
+        .module-header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 2rem 1.5rem;
+            position: relative;
+        }
+
+        .module-number {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 3rem;
+            font-weight: bold;
+            opacity: 0.2;
+        }
+
+        .module-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .module-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .module-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .module-description {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .module-meta {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .meta-item i {
+            color: var(--primary-light);
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .difficulty-basico {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4CAF50;
+        }
+
+        .difficulty-intermedio {
+            background: rgba(255, 152, 0, 0.1);
+            color: #FF9800;
+        }
+
+        .difficulty-avanzado {
+            background: rgba(244, 67, 54, 0.1);
+            color: #F44336;
+        }
+
+        .btn-module {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-module.active {
+            background: var(--primary-dark);
+            color: white;
+        }
+
+        .btn-module.active:hover {
+            background: var(--primary-light);
+        }
+
+        .btn-module.disabled {
+            background: #e0e0e0;
+            color: #9e9e9e;
+            cursor: not-allowed;
+        }
+
+        .coming-soon-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: var(--accent);
+            color: var(--primary-dark);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            z-index: 10;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-dark);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        /* Animations */
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 1.8rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .module-meta {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <script src="auth.js"></script>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-4">
+                    <h1 class="h4 mb-0 d-flex align-items-center">
+                        <i class="bi bi-palette-fill me-2"></i>
+                        <span style="color: var(--accent);">Arte & Anatomía UAH</span>
+                    </h1>
+                </div>
+                <div class="col-md-4 text-center d-none d-md-block">
+                    <span class="text-white-50 small">Pedagogía en Artes Visuales</span>
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex justify-content-end align-items-center gap-2">
+                        <div class="user-badge">
+                            <div class="user-avatar" id="userAvatar">U</div>
+                            <div class="d-none d-lg-block">
+                                <div class="fw-bold small" id="userName">Cargando...</div>
+                                <div class="small opacity-75" id="userRole" style="font-size: 0.75rem;">...</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-sm btn-outline-light d-none" id="dashboardBtn" onclick="goToDashboard()">
+                            <i class="bi bi-speedometer2"></i>
+                            <span class="d-none d-lg-inline ms-1">Dashboard</span>
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="logout()">
+                            <i class="bi bi-box-arrow-right"></i>
+                            <span class="d-none d-md-inline ms-1">Salir</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main>
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-content">
+                <div class="spinner-border-custom mb-3"></div>
+                <p class="mb-0">Cargando curso...</p>
+            </div>
+        </div>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-8 fade-in-up">
+                        <h1 class="hero-title">Dibujo y Representación del Cuerpo Humano</h1>
+                        <p class="hero-subtitle">Desarrolla competencias técnicas y expresivas en dibujo de figura humana mediante práctica sistemática progresiva</p>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="stat-card fade-in-up" style="animation-delay: 0.2s;">
+                            <div class="stat-number">12</div>
+                            <div class="stat-label">Días Intensivos</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4 g-3">
+                    <div class="col-md-4 fade-in-up" style="animation-delay: 0.3s;">
+                        <div class="stat-card">
+                            <div class="stat-number">3</div>
+                            <div class="stat-label">Módulos Progresivos</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 fade-in-up" style="animation-delay: 0.4s;">
+                        <div class="stat-card">
+                            <div class="stat-number">10</div>
+                            <div class="stat-label">Lecciones Integradas</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 fade-in-up" style="animation-delay: 0.5s;">
+                        <div class="stat-card">
+                            <div class="stat-number">12-14h</div>
+                            <div class="stat-label">Carga Horaria Total</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <div class="container">
+            <div class="row g-4 mb-5">
+                <div class="col-md-6 fade-in-up">
+                    <div class="info-card">
+                        <h5><i class="bi bi-trophy me-2"></i>Objetivos del Curso</h5>
+                        <ul class="info-list">
+                            <li><i class="bi bi-check-circle-fill"></i> Aplicar técnicas de observación directa</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Analizar estructura anatómica básica</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Crear figuras completas integradas</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 fade-in-up">
+                    <div class="info-card">
+                        <h5><i class="bi bi-clipboard-check me-2"></i>Entregables Totales</h5>
+                        <ul class="info-list">
+                            <li><i class="bi bi-pencil"></i> 23 dibujos progresivos</li>
+                            <li><i class="bi bi-list-check"></i> 10 evaluaciones formativas</li>
+                            <li><i class="bi bi-star-fill"></i> 1 proyecto final (1/4 mercurio)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modules Section -->
+            <section class="mb-5">
+                <h2 class="mb-4" style="color: var(--primary-dark); font-weight: 600;">
+                    <i class="bi bi-book"></i> Módulos del Curso
+                </h2>
+                
+                <div class="row g-4" id="modulesGrid">
+                    <!-- Los módulos se cargarán dinámicamente -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <p class="mb-1">&copy; 2025 Universidad Alberto Hurtado</p>
+                    <p class="mb-0 small text-white-50">Pedagogía en Artes Visuales</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="mb-1">Desarrollado por Joselyn Vizcarra</p>
+                    <p class="mb-0 small text-white-50">Diplomado en Diseño Instruccional - U. de Chile</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // ========================
+        // CONFIGURACIÓN Y DATOS
+        // ========================
+        const modulesData = [
+            {
+                id: 1,
+                number: "01",
+                title: "Observación y Gesto",
+                subtitle: "Captura de movimiento y proporción",
+                description: "Domina técnicas de observación directa para capturar línea de acción en croquis de 2-5 minutos. Aprende a medir proporciones visualmente y comprender el balance corporal.",
+                duration: "3 días",
+                lessons: 3,
+                exercises: "8 croquis",
+                evaluations: "3 evaluaciones",
+                hours: "2.5 horas",
+                difficulty: "Básico",
+                url: "module1.html",
+                available: true
+            },
+            {
+                id: 2,
+                number: "02",
+                title: "Anatomía Funcional",
+                subtitle: "Estructura ósea y muscular",
+                description: "Identifica las 3 masas principales del cuerpo y 6 grupos musculares esenciales. Analiza la estructura de manos, pies y proporciones faciales.",
+                duration: "4 días",
+                lessons: 4,
+                exercises: "12 estudios",
+                evaluations: "4 evaluaciones",
+                hours: "3.3 horas",
+                difficulty: "Intermedio",
+                url: "module2.html",
+                available: true
+            },
+            {
+                id: 3,
+                number: "03",
+                title: "Figura Completa",
+                subtitle: "Integración y proyecto final",
+                description: "Integra gesto + anatomía en figuras completas. Aplica luz, sombra y volumen. Crea tu proyecto final en formato 1/4 mercurio.",
+                duration: "5 días",
+                lessons: 3,
+                exercises: "3 figuras + proyecto",
+                evaluations: "3 evaluaciones",
+                hours: "5-6 horas",
+                difficulty: "Avanzado",
+                url: "module3.html",
+                available: true
+            }
+        ];
+
+        // ========================
+        // SISTEMA DE AUTENTICACIÓN
+        // ========================
+        function isAuthenticated() {
+            return localStorage.getItem('isAuthenticated') === 'true';
+        }
+
+        function getCurrentUser() {
+            if (!isAuthenticated()) return null;
+            try {
+                return JSON.parse(localStorage.getItem('currentUser') || 'null');
+            } catch (error) {
+                console.error('Error parsing user data:', error);
+                return null;
+            }
+        }
+
+        function logout() {
+            saveProgress();
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('sessionStart');
+            window.location.href = 'login.html';
+        }
+
+        function checkAuthentication() {
+            if (!isAuthenticated()) {
+                window.location.href = 'login.html';
+                return false;
+            }
+            return true;
+        }
+
+        function goToDashboard() {
+            window.location.href = 'dashboard.html';
+        }
+
+        // ========================
+        // SISTEMA DE PROGRESO
+        // ========================
+        function getProgress() {
+            const user = getCurrentUser();
+            if (!user) return {};
+            
+            const key = `progress_${user.email}`;
+            try {
+                return JSON.parse(localStorage.getItem(key) || '{}');
+            } catch (error) {
+                console.error('Error loading progress:', error);
+                return {};
+            }
+        }
+
+        function saveProgress() {
+            const user = getCurrentUser();
+            if (!user) return;
+            
+            const key = `progress_${user.email}`;
+            const progress = getProgress();
+            localStorage.setItem(key, JSON.stringify(progress));
+        }
+
+        function getModuleProgress(moduleId) {
+            const progress = getProgress();
+            return progress[`module${moduleId}`] || { completed: false, lessonsCompleted: 0 };
+        }
+
+        // ========================
+        // RENDERIZADO DE MÓDULOS
+        // ========================
+        function renderModules() {
+            const grid = document.getElementById('modulesGrid');
+            grid.innerHTML = '';
+
+            modulesData.forEach((module, index) => {
+                const moduleProgress = getModuleProgress(module.id);
+                const progressPercentage = (moduleProgress.lessonsCompleted / module.lessons * 100).toFixed(0);
+                
+                const difficultyClass = module.difficulty.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                
+                const card = document.createElement('div');
+                card.className = 'col-lg-4 col-md-6 fade-in-up';
+                card.style.animationDelay = `${0.6 + (index * 0.1)}s`;
+                
+                card.innerHTML = `
+                    <div class="module-card ${!module.available ? 'disabled' : ''}">
+                        ${!module.available ? '<div class="coming-soon-badge">Próximamente</div>' : ''}
+                        <div class="module-header">
+                            <div class="module-number">${module.number}</div>
+                            <div class="module-title">${module.title}</div>
+                            <div class="module-subtitle">${module.subtitle}</div>
+                        </div>
+                        <div class="module-body">
+                            <p class="module-description">${module.description}</p>
+                            
+                            <div class="module-meta">
+                                <div class="meta-item">
+                                    <i class="bi bi-clock"></i>
+                                    <span>${module.duration}</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="bi bi-journal-text"></i>
+                                    <span>${module.lessons} lecciones</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="bi bi-pencil-square"></i>
+                                    <span>${module.exercises}</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="bi bi-hourglass-split"></i>
+                                    <span>${module.hours}</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="small">Progreso</span>
+                                    <span class="small fw-bold">${progressPercentage}%</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar" 
+                                         role="progressbar" 
+                                         style="width: ${progressPercentage}%; background: var(--primary-dark);"
+                                         aria-valuenow="${progressPercentage}" 
+                                         aria-valuemin="0" 
+                                         aria-valuemax="100">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <span class="difficulty-badge difficulty-${difficultyClass}">
+                                    ${module.difficulty}
+                                </span>
+                            </div>
+
+                            <button class="btn-module ${module.available ? 'active' : 'disabled'}" 
+                                    onclick="${module.available ? `window.location.href='${module.url}'` : 'return false;'}"
+                                    ${!module.available ? 'disabled' : ''}>
+                                <i class="bi ${module.available ? 'bi-play-circle' : 'bi-lock'}"></i>
+                                ${module.available ? 'Iniciar Módulo' : 'Bloqueado'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // ========================
+        // INTERFAZ DE USUARIO
+        // ========================
+        function updateUserInterface() {
+            const user = getCurrentUser();
+            if (!user) return;
+
+            const userAvatar = document.getElementById('userAvatar');
+            const userName = document.getElementById('userName');
+            const userRole = document.getElementById('userRole');
+
+            if (userAvatar && userName) {
+                userAvatar.textContent = user.name.charAt(0).toUpperCase();
+                userName.textContent = user.name;
+                
+                if (userRole) {
+                    userRole.textContent = user.role === 'student' ? 'Estudiante' : 'Docente';
+                }
+            }
+
+            const dashboardBtn = document.getElementById('dashboardBtn');
+            if (dashboardBtn && user.role === 'teacher') {
+                dashboardBtn.classList.remove('d-none');
+            }
+        }
+
+        function hideLoading() {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                }, 500);
+            }
+        }
+
+        // ========================
+        // INICIALIZACIÓN
+        // ========================
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!checkAuthentication()) return;
+            
+            updateUserInterface();
+            renderModules();
+            hideLoading();
+        });
+    </script>
+</body>
+</html>
