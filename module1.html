@@ -3,104 +3,145 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Módulo 1: Observación y Gesto — LMS UAH (Actualizado)</title>
+    <title>Módulo 1: Observación y Gesto — LMS UAH (Mejorado)</title>
 
     <!-- Bootstrap & Icons (CDN) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
-        :root{
-            --primary-dark:#2c5f66;
-            --primary-light:#e8a2b8;
-            --success:#4CAF50;
-            --warning:#FFC107;
-            --danger:#f44336;
-            --dark:#1a1a1a;
-        }
-        html,body{height:100%}
-        body {
-            font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-            background: #f3f6f8;
-            margin:0;
+        /* 🎨 THEME & VARIABLES */
+        :root {
+            --primary-dark: #2c5f66;
+            --primary-light: #e8a2b8;
+            --success: #4CAF50;
+            --warning: #FFC107;
+            --danger: #f44336;
+            --dark: #1a1a1a;
+            --light-gray: #f3f6f8;
+            --border-color: #e6e9eb;
         }
 
-        /* Header */
-        .header-uah{
-            background: linear-gradient(135deg,var(--primary-dark),var(--dark));
+        /* 🌐 GLOBAL STYLES */
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--light-gray);
+            margin: 0;
+            line-height: 1.6;
+        }
+        /* Accessibility improvement: better focus ring for keyboard users */
+        a:focus-visible, button:focus-visible, [role="button"]:focus-visible {
+            outline: 3px solid var(--primary-dark);
+            outline-offset: 2px;
+            box-shadow: none;
+        }
+
+        /*  LAYOUT: Header */
+        .header-uah {
+            background: linear-gradient(135deg, var(--primary-dark), var(--dark));
             color: white;
             padding: 1rem 0;
             position: sticky;
-            top:0;
-            z-index:1030;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            top: 0;
+            z-index: 1030;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
         }
 
-        /* Sidebar */
-        .sidebar-lesson{
+        /* LAYOUT: Sidebar */
+        .sidebar-lesson {
             background: white;
             border-radius: 12px;
             padding: 1.25rem;
             position: sticky;
             top: 100px;
-            max-height: calc(100vh - 130px);
+            max-height: calc(100vh - 120px);
             overflow-y: auto;
         }
-        .lesson-link{
-            display:flex; align-items:center; gap:0.9rem;
-            padding:0.6rem; border-radius:8px; cursor:pointer; text-decoration:none; color:var(--dark);
-            transition:all .18s;
-            margin-bottom:0.45rem;
+
+        /* COMPONENT: Lesson Link */
+        .lesson-link {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+            width: 100%;
+            padding: 0.6rem;
+            border-radius: 8px;
+            border: none;
+            background: none;
+            text-align: left;
+            text-decoration: none;
+            color: var(--dark);
+            transition: all .18s ease-in-out;
+            margin-bottom: 0.45rem;
         }
-        .lesson-link:hover{background:#f8f9fa}
-        .lesson-link.active{background:linear-gradient(135deg,var(--primary-dark),var(--primary-light)); color:white}
-        .lesson-number{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#eef2f4;font-weight:700}
-        .lesson-link.active .lesson-number{background:rgba(255,255,255,0.22); color:white}
-        .lesson-link.completed .lesson-number{background:var(--success); color:white}
-        .lesson-link.completed::after{content:'✓'; margin-left:auto; font-weight:700; color:var(--success) }
+        .lesson-link:hover { background-color: #f8f9fa; }
+        .lesson-link.active { background: linear-gradient(135deg, var(--primary-dark), var(--primary-light)); color: white; }
+        .lesson-number { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: #eef2f4; font-weight: 700; flex-shrink: 0; }
+        .lesson-link.active .lesson-number { background: rgba(255, 255, 255, 0.22); color: white; }
+        .lesson-link.completed .lesson-number { background: var(--success); color: white; }
+        .lesson-link.completed::after { content: '✓'; margin-left: auto; font-weight: 700; color: var(--success); }
 
-        /* Content */
-        .content-area{background:white;border-radius:12px;padding:2rem; min-height:65vh; box-shadow: 0 6px 20px rgba(15,20,25,0.03)}
-        .lesson-header{border-bottom:3px solid var(--primary-light); padding-bottom:1rem; margin-bottom:1.5rem}
-        .lesson-title{color:var(--primary-dark); font-weight:700}
-        .lesson-subtitle{color:#6c757d; margin-bottom:.5rem}
+        /* LAYOUT: Main Content */
+        .content-area {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            min-height: 65vh;
+            box-shadow: 0 6px 20px rgba(15, 20, 25, 0.03);
+        }
+        .lesson-header { border-bottom: 3px solid var(--primary-light); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+        .lesson-title { color: var(--primary-dark); font-weight: 700; }
+        .lesson-subtitle { color: #6c757d; margin-bottom: .5rem; }
 
-        .objectives-list{background:#fbfdfe;border-left:4px solid var(--primary-dark); padding:1rem 1.25rem; border-radius:0 10px 10px 0}
-        .video-container{background:#000;border-radius:12px; overflow:hidden; position:relative; padding-bottom:56.25%; height:0; margin:1rem 0}
-        .video-placeholder{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:white; background: linear-gradient(135deg, rgba(44,95,102,0.95), rgba(26,26,26,0.9)); font-size:3rem}
+        /* COMPONENT: Cards & Lists */
+        .objectives-list { background: #fbfdfe; border-left: 4px solid var(--primary-dark); padding: 1rem 1.25rem; border-radius: 0 10px 10px 0; }
+        .video-container { background: #000; border-radius: 12px; overflow: hidden; position: relative; padding-bottom: 56.25%; height: 0; margin: 1rem 0; }
+        .video-placeholder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: white; background: linear-gradient(135deg, rgba(44, 95, 102, 0.95), rgba(26, 26, 26, 0.9)); font-size: 3rem; }
+        .exercise-card { background: linear-gradient(135deg, #f8f9fa, #eef2f4); padding: 1.2rem; border-left: 5px solid var(--primary-light); border-radius: 8px; margin: 1.5rem 0; }
+        .reference-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .reference-card { background: white; padding: 0.6rem; border-radius: 10px; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04); cursor: pointer; transition: all .18s; border: 3px solid transparent; }
+        .reference-card:hover { transform: translateY(-6px); box-shadow: 0 10px 26px rgba(0, 0, 0, 0.08); }
+        .reference-card.selected { border-color: var(--primary-dark); background: rgba(44, 95, 102, 0.03); }
 
-        .exercise-card{background:linear-gradient(135deg,#f8f9fa,#eef2f4); padding:1.2rem; border-left:5px solid var(--primary-light); border-radius:8px; margin:1rem 0}
-        .reference-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(180px,1fr)); gap:1rem; margin-top:1rem}
-        .reference-card{background:white; padding:0.6rem; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.04); cursor:pointer; transition:all .18s; border:3px solid transparent}
-        .reference-card:hover{transform:translateY(-6px); box-shadow:0 10px 26px rgba(0,0,0,0.08)}
-        .reference-card.selected{border-color:var(--primary-dark); background:rgba(44,95,102,0.03)}
+        /* COMPONENT: Evaluation */
+        .eval-option {
+            padding: 1rem; border-radius: 8px; border: 2px solid var(--border-color); cursor: pointer;
+            display: flex; gap: 0.8rem; align-items: center; transition: all .14s; width: 100%; text-align: left;
+        }
+        .eval-option:not(:last-child) { margin-bottom: 0.5rem; }
+        .eval-option:hover { border-color: var(--primary-dark); background: rgba(44, 95, 102, 0.04); }
+        .eval-option.selected { border-color: var(--primary-dark); background: rgba(44, 95, 102, 0.08); font-weight: 600; }
+        .eval-option.correct { border-color: var(--success); background: rgba(76, 175, 80, 0.07); }
+        .eval-option.incorrect { border-color: var(--danger); background: rgba(244, 67, 54, 0.06); }
+        .eval-option[disabled] { cursor: not-allowed; opacity: 0.8; }
 
-        /* Eval */
-        .eval-option{padding:1rem; border-radius:8px; border:2px solid #e6e9eb; cursor:pointer; display:flex; gap:0.8rem; align-items:center; transition:all .14s}
-        .eval-option:hover{border-color:var(--primary-dark); background:rgba(44,95,102,0.04)}
-        .eval-option.selected{border-color:var(--primary-dark); background:rgba(44,95,102,0.08)}
-        .eval-option.correct{border-color:var(--success); background:rgba(76,175,80,0.07)}
-        .eval-option.incorrect{border-color:var(--danger); background:rgba(244,67,54,0.06)}
+        /* COMPONENT: Buttons & Toast */
+        .btn-nav { padding: 0.6rem 1.4rem; border-radius: 8px; font-weight: 600; }
+        .btn-gradient { background: linear-gradient(135deg, var(--primary-dark), var(--primary-light)); border: none; color: white; }
+        .toast-container { position: fixed; top: 90px; right: 20px; z-index: 9999; }
+        .toast-custom { padding: 0.9rem 1.1rem; border-radius: 8px; color: white; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); opacity: 0; transform: translateX(100%); transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        .toast-custom.show { opacity: 1; transform: translateX(0); }
+        .toast-custom + .toast-custom { margin-top: 0.5rem; }
 
-        .btn-nav{padding:0.6rem 1.4rem; border-radius:8px; font-weight:600}
-        .btn-primary-custom{background:linear-gradient(135deg,var(--primary-dark),var(--primary-light)); border:none; color:white}
-        .toast-custom{position:fixed; top:90px; right:20px; z-index:9999; padding:0.9rem 1.1rem; border-radius:8px; color:white; box-shadow:0 8px 24px rgba(0,0,0,0.12)}
-
-        @media (max-width:991px){
-            .sidebar-lesson{position:static; max-height:none; margin-bottom:1rem}
-            .content-area{padding:1rem}
+        /* 📱 RESPONSIVE DESIGN */
+        @media (max-width: 991px) {
+            .sidebar-lesson { position: static; max-height: none; margin-bottom: 1.5rem; top: auto; }
+            .content-area { padding: 1.5rem; }
         }
     </style>
 </head>
 <body>
-    <!-- auth script (user provided) -->
+    <!-- Auth script (user provided) -->
     <script src="auth.js"></script>
 
     <header class="header-uah">
         <div class="container-fluid">
             <div class="row align-items-center g-2">
                 <div class="col-auto">
-                    <a href="index.html" class="text-white text-decoration-none">
+                    <a href="index.html" class="text-white text-decoration-none" aria-label="Volver al índice de módulos">
                         <i class="bi bi-arrow-left me-2"></i><span class="d-none d-md-inline">Volver</span>
                     </a>
                 </div>
@@ -117,32 +158,23 @@
     <div class="container-fluid py-3 py-md-4">
         <div class="row g-3">
             <aside class="col-lg-3">
-                <div class="sidebar-lesson">
+                <div id="sidebar" class="sidebar-lesson">
                     <h5 class="mb-3"><i class="bi bi-book me-2"></i>Lecciones</h5>
-                    <a class="lesson-link active" data-lesson="1" onclick="loadLesson(1)">
-                        <span class="lesson-number">1</span>
-                        <span class="flex-grow-1">Fundamentos del Croquis</span>
-                    </a>
-                    <a class="lesson-link" data-lesson="2" onclick="loadLesson(2)">
-                        <span class="lesson-number">2</span>
-                        <span class="flex-grow-1">Proporciones</span>
-                    </a>
-                    <a class="lesson-link" data-lesson="3" onclick="loadLesson(3)">
-                        <span class="lesson-number">3</span>
-                        <span class="flex-grow-1">Balance</span>
-                    </a>
+                    <nav id="lesson-nav">
+                        <!-- Los links de lecciones se generarán aquí con JS -->
+                    </nav>
 
                     <div class="mt-4">
                         <h6 class="mb-2">Progreso del Módulo</h6>
-                        <div style="height:10px; background:#e9ecef; border-radius:8px; overflow:hidden;">
-                            <div id="progressBar" style="height:100%; width:0%; background:linear-gradient(90deg,var(--primary-dark),var(--primary-light)); transition:width .4s;"></div>
+                        <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="height: 10px;">
+                            <div id="progressBar" class="progress-bar" style="width: 0%; background: linear-gradient(90deg,var(--primary-dark),var(--primary-light)); transition: width .4s ease-out;"></div>
                         </div>
                         <small class="text-muted d-block mt-2" id="progressDetail">0 de 3 lecciones completadas</small>
                     </div>
 
                     <div class="card border-primary mt-3">
                         <div class="card-header bg-primary text-white">
-                            <i class="bi bi-info-circle me-2"></i>Módulo 1
+                            <i class="bi bi-info-circle me-2"></i>Info del Módulo
                         </div>
                         <div class="card-body">
                             <p class="small mb-2"><strong>Duración:</strong> 3 clases (45 min cada una)</p>
@@ -164,460 +196,337 @@
 
             <main class="col-lg-9">
                 <div class="content-area" id="lessonContent">
-                    <!-- contenido dinámico -->
+                    <!-- El contenido de la lección se carga aquí dinámicamente -->
+                    <div class="text-center p-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                    </div>
                 </div>
             </main>
         </div>
     </div>
 
     <!-- Toast container for notifications -->
-    <div id="toastHolder" aria-live="polite" aria-atomic="true"></div>
+    <div id="toastHolder" class="toast-container" aria-live="polite" aria-atomic="true"></div>
 
     <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
     <script>
-        // Protección de página con auth.js si está presente
-        try {
-            if (typeof protectPage === 'function') {
-                // protege la página (redirige si no autenticado)
-                protectPage();
-            }
-            if (typeof initializeAuth === 'function') {
-                // inicializa UI de auth
-                initializeAuth();
-            }
-        } catch (e) {
-            console.warn('auth.js no disponible o error al inicializar auth:', e);
-        }
+    document.addEventListener('DOMContentLoaded', () => {
 
-        // ===== Variables globales =====
-        let currentLesson = 1;
-        let completedLessons = [];
-        let evaluationAnswers = {};
-        // persistencia simple en memoria si no hay back-end disponible
-        window.module1Progress = window.module1Progress || { completedLessons: [], evaluations: {} };
-
-        // ===== Contenido de lecciones (basado en tu module1 original) =====
-        const lessons = {
-            1: {
-                title: 'Fundamentos del Croquis Rápido',
-                subtitle: 'Captura de línea de acción y peso (2 minutos)',
-                durationBadge: '45 min',
-                objectives: [
-                    'Aplicar técnicas de observación para capturar línea de acción (2 min).',
-                    'Identificar eje central y puntos de peso en figuras humanas.'
-                ],
-                videoNote: 'Insertar: video_leccion1.mp4',
-                exercise: {
-                    title: 'Ejercicio 1: 3 Croquis de 2 Minutos',
-                    instructions: 'Configura cronómetro a 2 minutos. No borrar ni corregir. Fotografía cada resultado para entregar.',
-                    materials: ['3 hojas de papel', 'Lápiz o carboncillo', 'Cronómetro'],
-                    references: ['ref1_figura_pie.jpg','ref2_pose_dinamica.jpg','ref3_contrapposto.jpg']
+        /**
+         * Módulo de Lógica para el LMS
+         * Encapsula todo el estado y la funcionalidad del módulo para evitar conflictos globales.
+         */
+        const lmsModule = {
+            // --- STATE & CONFIG ---
+            state: {
+                currentLesson: 1,
+                completedLessons: new Set(),
+                evaluationAnswers: {},
+            },
+            
+            // --- CONSTANTS ---
+            STORAGE_KEY: 'lms_module1_progress',
+            
+            LESSONS_DATA: {
+                1: {
+                    title: 'Fundamentos del Croquis Rápido',
+                    subtitle: 'Captura de línea de acción y peso (2 minutos)',
+                    durationBadge: '45 min',
+                    objectives: ['Aplicar técnicas de observación para capturar línea de acción (2 min).', 'Identificar eje central y puntos de peso en figuras humanas.'],
+                    videoNote: 'Insertar: video_leccion1.mp4',
+                    exercise: {
+                        title: 'Ejercicio 1: 3 Croquis de 2 Minutos',
+                        instructions: 'Configura cronómetro a 2 minutos. No borrar ni corregir. Fotografía cada resultado para entregar.',
+                        materials: ['3 hojas de papel', 'Lápiz o carboncillo', 'Cronómetro'],
+                        references: ['ref1_figura_pie.jpg', 'ref2_pose_dinamica.jpg', 'ref3_contrapposto.jpg']
+                    },
+                    evaluation: { q1: { text: '¿Cuál es el objetivo principal de un croquis de 2 minutos?', options: ['Lograr un dibujo detallado y realista', 'Capturar la energía, dirección y peso del cuerpo', 'Practicar técnicas de sombreado'], correct: 2 }, q2: { text: '¿Qué debes identificar PRIMERO antes de comenzar a dibujar?', options: ['La línea de acción y el punto de apoyo', 'Los detalles del rostro', 'La textura de la ropa'], correct: 1 }, q3: { text: 'En el croquis rápido, ¿qué actitud es la más apropiada?', options: ['Perfeccionista y meticulosa', 'Lenta y detallista', 'Rápida y segura, aceptar errores'], correct: 3 } }
                 },
-                evaluation: {
-                    questions: {
-                        q1: {
-                            text: '¿Cuál es el objetivo principal de un croquis de 2 minutos?',
-                            options: ['Lograr un dibujo detallado y realista','Capturar la energía, dirección y peso del cuerpo','Practicar técnicas de sombreado'],
-                            correct: 2
-                        },
-                        q2: {
-                            text: '¿Qué debes identificar PRIMERO antes de comenzar a dibujar?',
-                            options: ['La línea de acción y el punto de apoyo','Los detalles del rostro','La textura de la ropa'],
-                            correct: 1
-                        },
-                        q3: {
-                            text: 'En el croquis rápido, ¿qué actitud es la más apropiada?',
-                            options: ['Perfeccionista y meticulosa','Lenta y detallista','Rápida y segura, aceptar errores'],
-                            correct: 3
-                        }
-                    }
+                2: {
+                    title: 'Proporciones',
+                    subtitle: 'Medidas básicas y relación cabeza-cuerpo',
+                    durationBadge: '45 min',
+                    objectives: ['Conocer proporciones básicas: cabeza como unidad.', 'Aplicar proporciones en croquis y simplificaciones.'],
+                    videoNote: 'Insertar: video_leccion2.mp4',
+                    exercise: {
+                        title: 'Ejercicio 2: Medición por unidades',
+                        instructions: 'Dibuja una figura y marca la unidad cabeza. Realiza 2 estudios rápidos.',
+                        materials: ['Hojas', 'Lápiz HB', 'Regla opcional'],
+                        references: ['ref4_proporciones1.jpg', 'ref5_proporciones2.jpg']
+                    },
+                    evaluation: { q1: { text: '¿Aproximadamente cuántas “unidades cabeza” mide una figura adulta clásica?', options: ['4 unidades', '7-8 unidades', '12 unidades'], correct: 2 }, q2: { text: '¿Qué parte sirve como referencia para proporciones en dibujo rápido?', options: ['La mano', 'La cabeza', 'El pie'], correct: 2 }, q3: { text: '¿Por qué usar unidades cabeza en estudios rápidos?', options: ['Para detallar el rostro', 'Para mantener proporción rápida y consistente', 'Para sombrear mejor'], correct: 2 } }
+                },
+                3: {
+                    title: 'Balance',
+                    subtitle: 'Puntos de apoyo y centro de gravedad',
+                    durationBadge: '45 min',
+                    objectives: ['Identificar el polígono de apoyo y centro de gravedad.', 'Aplicar contrapposto en croquis rápidos.'],
+                    videoNote: 'Insertar: video_leccion3.mp4',
+                    exercise: {
+                        title: 'Ejercicio 3: Croquis con punto de apoyo',
+                        instructions: 'Realiza 3 croquis buscando el polígono de apoyo y el contrapposto.',
+                        materials: ['Hojas', 'Lápiz o carboncillo', 'Cronómetro'],
+                        references: ['ref6_balance1.jpg', 'ref7_balance2.jpg']
+                    },
+                    evaluation: { q1: { text: 'El polígono de apoyo es:', options: ['La zona donde se coloca la mesa', 'El área entre los pies que soporta el peso', 'El contorno del rostro'], correct: 2 }, q2: { text: 'El contrapposto implica:', options: ['Peso concentrado en un lado y relajación en el otro', 'Siempre ambas piernas con igual peso', 'No usar línea de acción'], correct: 1 }, q3: { text: '¿Qué indica una línea vertical desde la cabeza que cae fuera del polígono de apoyo?', options: ['Equilibrio perfecto', 'Inestabilidad o caída', 'Mejor diseño compositivo'], correct: 2 } }
                 }
             },
-            2: {
-                title: 'Proporciones',
-                subtitle: 'Medidas básicas y relación cabeza-cuerpo',
-                durationBadge: '45 min',
-                objectives: [
-                    'Conocer proporciones básicas: cabeza como unidad.',
-                    'Aplicar proporciones en croquis y simplificaciones.'
-                ],
-                videoNote: 'Insertar: video_leccion2.mp4',
-                exercise: {
-                    title: 'Ejercicio 2: Medición por unidades',
-                    instructions: 'Dibuja una figura y marca la unidad cabeza. Realiza 2 estudios rápidos.',
-                    materials: ['Hojas', 'Lápiz HB', 'Regla opcional'],
-                    references: ['ref4_proporciones1.jpg','ref5_proporciones2.jpg']
-                },
-                evaluation: {
-                    questions: {
-                        q1: {
-                            text: '¿Aproximadamente cuántas “unidades cabeza” mide una figura adulta clásica?',
-                            options: ['4 unidades','7-8 unidades','12 unidades'],
-                            correct: 2
-                        },
-                        q2: {
-                            text: '¿Qué parte sirve como referencia para proporciones en dibujo rápido?',
-                            options: ['La mano','La cabeza','El pie'],
-                            correct: 2
-                        },
-                        q3: {
-                            text: '¿Por qué usar unidades cabeza en estudios rápidos?',
-                            options: ['Para detallar el rostro','Para mantener proporción rápida y consistente','Para sombrear mejor'],
-                            correct: 2
-                        }
-                    }
-                }
+            
+            // --- DOM ELEMENTS ---
+            els: {},
+
+            /**
+             * Initializes the module, loads state, and sets up event listeners.
+             */
+            init() {
+                this.cacheDOMElements();
+                this.initAuth();
+                this.loadState();
+                this.renderSidebarNav();
+                this.bindEvents();
+                this.loadLesson(this.state.currentLesson);
+                this.updateProgressUI();
             },
-            3: {
-                title: 'Balance',
-                subtitle: 'Puntos de apoyo y centro de gravedad',
-                durationBadge: '45 min',
-                objectives: [
-                    'Identificar el polígono de apoyo y centro de gravedad.',
-                    'Aplicar contrapposto en croquis rápidos.'
-                ],
-                videoNote: 'Insertar: video_leccion3.mp4',
-                exercise: {
-                    title: 'Ejercicio 3: Croquis con punto de apoyo',
-                    instructions: 'Realiza 3 croquis buscando el polígono de apoyo y el contrapposto.',
-                    materials: ['Hojas', 'Lápiz o carboncillo', 'Cronómetro'],
-                    references: ['ref6_balance1.jpg','ref7_balance2.jpg']
-                },
-                evaluation: {
-                    questions: {
-                        q1: {
-                            text: 'El polígono de apoyo es:',
-                            options: ['La zona donde se coloca la mesa','El área entre los pies que soporta el peso','El contorno del rostro'],
-                            correct: 2
-                        },
-                        q2: {
-                            text: 'El contrapposto implica:',
-                            options: ['Peso concentrado en un lado y relajación en el otro','Siempre ambas piernas con igual peso','No usar línea de acción'],
-                            correct: 1
-                        },
-                        q3: {
-                            text: '¿Qué indica una línea vertical desde la cabeza que cae fuera del polígono de apoyo?',
-                            options: ['Equilibrio perfecto','Inestabilidad o caída','Mejor diseño compositivo'],
-                            correct: 2
-                        }
-                    }
-                }
-            }
-        };
+            
+            /**
+             * Caches frequently accessed DOM elements.
+             */
+            cacheDOMElements() {
+                this.els.sidebar = document.getElementById('sidebar');
+                this.els.lessonNav = document.getElementById('lesson-nav');
+                this.els.lessonContent = document.getElementById('lessonContent');
+                this.els.progressBar = document.getElementById('progressBar');
+                this.els.progressText = document.getElementById('progressText');
+                this.els.progressDetail = document.getElementById('progressDetail');
+                this.els.uploadBtn = document.getElementById('uploadBtn');
+                this.els.toastHolder = document.getElementById('toastHolder');
+            },
 
-        // ===== Renderizado de lección =====
-        function renderLessonContent(id){
-            const L = lessons[id];
-            if (!L) return;
-            currentLesson = id;
-
-            const meta = `
-                <div class="d-flex justify-content-between align-items-start mb-3">
-                    <div>
-                        <h2 class="lesson-title">${L.title}</h2>
-                        <p class="lesson-subtitle">${L.subtitle}</p>
-                    </div>
-                    <span class="badge bg-warning text-dark px-3 py-2">${L.durationBadge}</span>
-                </div>
-            `;
-
-            const objectives = `
-                <div class="objectives-list mb-3">
-                    <h6 class="mb-2"><i class="bi bi-bullseye me-2"></i>Objetivos de Aprendizaje</h6>
-                    <ul>${L.objectives.map(o=>`<li>${o}</li>`).join('')}</ul>
-                </div>
-            `;
-
-            const video = `
-                <div class="video-container" aria-hidden="true">
-                    <div class="video-placeholder">
-                        <i class="bi bi-play-circle"></i>
-                    </div>
-                </div>
-                <p class="text-center text-muted small">${L.videoNote}</p>
-            `;
-
-            const exercise = `
-                <div class="exercise-card">
-                    <h6 class="mb-1"><i class="bi bi-pencil me-2"></i>${L.exercise.title}</h6>
-                    <p class="small mb-1">${L.exercise.instructions}</p>
-                    <p class="small mb-1"><strong>Materiales:</strong> ${L.exercise.materials.join(', ')}</p>
-                    <div class="reference-grid">
-                        ${L.exercise.references.map((r,i)=>`
-                            <div class="reference-card" role="button" tabindex="0" aria-pressed="false">
-                                <div style="height:120px; display:flex; align-items:center; justify-content:center; background:#eef2f4; border-radius:8px; color:#6c757d; font-style:italic;">
-                                    ${r}
-                                </div>
-                                <h6 class="mt-2 mb-0">Ref ${i+1}</h6>
-                                <p class="small text-muted mb-0">Referencia rápida</p>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-
-            const evalHtml = renderEvaluation(id, L.evaluation.questions);
-
-            const nav = `
-                <div class="d-flex justify-content-between gap-2 pt-4 mt-4 border-top">
-                    <button class="btn btn-outline-primary btn-nav" onclick="goToPreviousLesson()"><i class="bi bi-arrow-left me-1"></i>Anterior</button>
-                    <div>
-                        <button class="btn btn-success btn-nav me-2" onclick="completeLesson(${id})"><i class="bi bi-check-circle me-1"></i>Completar</button>
-                        <button class="btn btn-primary btn-primary-custom btn-nav" id="nextButton" onclick="goToNextLesson()">Siguiente<i class="bi bi-arrow-right ms-2"></i></button>
-                    </div>
-                </div>
-            `;
-
-            const content = `
-                <div class="lesson-header">${meta}${objectives}</div>
-                ${video}
-                ${exercise}
-                ${evalHtml}
-                ${nav}
-            `;
-
-            document.getElementById('lessonContent').innerHTML = content;
-            markSidebarActive(id);
-            restoreEvaluationState(id);
-
-            // attach listeners to reference cards to toggle selection
-            document.querySelectorAll('.reference-card').forEach((card, idx) => {
-                card.addEventListener('click', () => {
-                    document.querySelectorAll('.reference-card').forEach(c=>c.classList.remove('selected'));
-                    card.classList.add('selected');
-                    showToast(`Referencia ${idx+1} seleccionada`, 'info');
+            /**
+             * Binds all event listeners using event delegation.
+             */
+            bindEvents() {
+                this.els.lessonNav.addEventListener('click', this.handleSidebarClick.bind(this));
+                this.els.lessonContent.addEventListener('click', this.handleContentClick.bind(this));
+                this.els.uploadBtn.addEventListener('click', e => {
+                    e.preventDefault();
+                    window.open('https://forms.gle/URL_FORMULARIO_SUBIDA', '_blank');
+                    this.showToast('Abriendo formulario de entrega...', 'info');
                 });
-            });
-        }
+            },
 
-        // ===== Evaluation renderer =====
-        function renderEvaluation(lessonId, questions){
-            let html = `<div class="evaluation-container mt-3"><h5>Evaluación rápida</h5>`;
-            Object.keys(questions).forEach((qKey, qIndex) => {
-                const q = questions[qKey];
-                html += `
-                    <div class="eval-question mt-3" data-lesson="${lessonId}" data-question="${qKey}">
-                        <p class="mb-2"><strong>${qIndex}. ${q.text}</strong></p>
-                        <div class="eval-options">
-                            ${q.options.map((opt, idx) => `
-                                <div class="eval-option" role="button" onclick="selectEvalOption(this, ${idx+1}, '${qKey}', ${lessonId})">
-                                    <div style="width:20px; height:20px; border-radius:50%; border:2px solid #dfe4e7; flex-shrink:0; display:flex; align-items:center; justify-content:center;"></div>
-                                    <div>${opt}</div>
+            // --- EVENT HANDLERS ---
+            handleSidebarClick(e) {
+                const lessonButton = e.target.closest('.lesson-link');
+                if (lessonButton) {
+                    const lessonId = parseInt(lessonButton.dataset.lesson);
+                    this.loadLesson(lessonId);
+                }
+            },
+            
+            handleContentClick(e) {
+                const target = e.target;
+                const action = target.closest('[data-action]');
+                if (!action) return;
+
+                const actionType = action.dataset.action;
+                const lessonId = this.state.currentLesson;
+
+                switch (actionType) {
+                    case 'select-eval-option':
+                        this.selectEvalOption(action);
+                        break;
+                    case 'submit-evaluation':
+                        this.submitEvaluation(lessonId);
+                        break;
+                    case 'retry-evaluation':
+                        this.retryEvaluation(lessonId);
+                        break;
+                    case 'complete-lesson':
+                        this.completeLesson(lessonId);
+                        break;
+                    case 'next-lesson':
+                        this.goToNextLesson();
+                        break;
+                    case 'prev-lesson':
+                        this.goToPreviousLesson();
+                        break;
+                }
+            },
+            
+            // --- STATE MANAGEMENT ---
+            loadState() {
+                try {
+                    const savedState = localStorage.getItem(this.STORAGE_KEY);
+                    if (savedState) {
+                        const parsed = JSON.parse(savedState);
+                        this.state.currentLesson = parsed.currentLesson || 1;
+                        this.state.completedLessons = new Set(parsed.completedLessons || []);
+                        this.state.evaluationAnswers = parsed.evaluationAnswers || {};
+                    }
+                } catch (e) {
+                    console.error("Error al cargar el estado desde localStorage", e);
+                }
+            },
+
+            saveState() {
+                try {
+                    const stateToSave = {
+                        currentLesson: this.state.currentLesson,
+                        completedLessons: Array.from(this.state.completedLessons),
+                        evaluationAnswers: this.state.evaluationAnswers,
+                    };
+                    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(stateToSave));
+                } catch (e) {
+                    console.error("Error al guardar el estado en localStorage", e);
+                }
+            },
+
+            // --- RENDERING ---
+            renderSidebarNav() {
+                const navHtml = Object.keys(this.LESSONS_DATA).map(id => {
+                    const lesson = this.LESSONS_DATA[id];
+                    return `
+                        <button class="lesson-link" data-lesson="${id}">
+                            <span class="lesson-number">${id}</span>
+                            <span class="flex-grow-1">${lesson.title}</span>
+                        </button>
+                    `;
+                }).join('');
+                this.els.lessonNav.innerHTML = navHtml;
+            },
+
+            loadLesson(id) {
+                const lessonId = parseInt(id);
+                if (!this.LESSONS_DATA[lessonId]) return;
+                
+                this.state.currentLesson = lessonId;
+                this.saveState();
+                
+                const L = this.LESSONS_DATA[lessonId];
+                const contentHtml = `
+                    <section aria-labelledby="lesson-title-${lessonId}">
+                        <div class="lesson-header">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <h2 class="lesson-title" id="lesson-title-${lessonId}">${L.title}</h2>
+                                    <p class="lesson-subtitle">${L.subtitle}</p>
                                 </div>
-                            `).join('')}
+                                <span class="badge bg-warning text-dark px-3 py-2">${L.durationBadge}</span>
+                            </div>
+                            <div class="objectives-list">
+                                <h6 class="mb-2"><i class="bi bi-bullseye me-2"></i>Objetivos de Aprendizaje</h6>
+                                <ul>${L.objectives.map(o => `<li>${o}</li>`).join('')}</ul>
+                            </div>
                         </div>
+                    </section>
+                    <section aria-label="Contenido multimedia">
+                        <div class="video-container" aria-hidden="true">
+                            <div class="video-placeholder"><i class="bi bi-play-circle"></i></div>
+                        </div>
+                        <p class="text-center text-muted small">${L.videoNote}</p>
+                    </section>
+                    <section aria-labelledby="exercise-title-${lessonId}">
+                        <div class="exercise-card">
+                            <h6 id="exercise-title-${lessonId}" class="mb-1"><i class="bi bi-pencil me-2"></i>${L.exercise.title}</h6>
+                            <p class="small mb-1">${L.exercise.instructions}</p>
+                            <p class="small mb-1"><strong>Materiales:</strong> ${L.exercise.materials.join(', ')}</p>
+                        </div>
+                    </section>
+                    <section aria-labelledby="eval-title-${lessonId}">
+                        ${this.renderEvaluation(lessonId)}
+                    </section>
+                    <nav class="d-flex justify-content-between gap-2 pt-4 mt-4 border-top" aria-label="Navegación de lección">
+                        <button class="btn btn-outline-primary btn-nav" data-action="prev-lesson" ${lessonId === 1 ? 'disabled' : ''}><i class="bi bi-arrow-left me-1"></i>Anterior</button>
+                        <div>
+                            <button class="btn btn-success btn-nav me-2" data-action="complete-lesson"><i class="bi bi-check-circle me-1"></i>Completar</button>
+                            <button class="btn btn-primary btn-gradient btn-nav" data-action="next-lesson" ${lessonId === Object.keys(this.LESSONS_DATA).length ? 'disabled' : ''}>Siguiente<i class="bi bi-arrow-right ms-2"></i></button>
+                        </div>
+                    </nav>
+                `;
+                
+                this.els.lessonContent.innerHTML = contentHtml;
+                this.updateSidebarActiveState();
+                this.restoreEvaluationState(lessonId);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            },
+
+            renderEvaluation(lessonId) {
+                const questions = this.LESSONS_DATA[lessonId].evaluation;
+                const answered = this.state.evaluationAnswers[lessonId] && this.state.evaluationAnswers[lessonId].submitted;
+                let questionsHtml = '';
+
+                Object.keys(questions).forEach((qKey, qIndex) => {
+                    const q = questions[qKey];
+                    questionsHtml += `
+                        <div class="eval-question mt-3" data-question-key="${qKey}">
+                            <p class="mb-2"><strong>${qIndex + 1}. ${q.text}</strong></p>
+                            <div class="eval-options">
+                                ${q.options.map((opt, idx) => `
+                                    <button class="eval-option" data-action="select-eval-option" data-option-number="${idx + 1}" ${answered ? 'disabled' : ''}>
+                                        <i class="bi bi-circle"></i>
+                                        <span>${opt}</span>
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                return `
+                    <div class="evaluation-container mt-4">
+                        <h5 id="eval-title-${lessonId}">Evaluación Rápida</h5>
+                        ${questionsHtml}
+                        <div class="text-center mt-3">
+                            <button class="btn btn-warning" data-action="submit-evaluation" ${answered ? 'style="display:none;"' : ''}>
+                                <i class="bi bi-send me-2"></i>Enviar Evaluación
+                            </button>
+                        </div>
+                        <div class="eval-result mt-3"></div>
                     </div>
                 `;
-            });
-            html += `<div class="text-center mt-3"><button class="btn btn-warning" id="submitEvalBtn" onclick="submitEvaluation(${lessonId})"><i class="bi bi-send me-2"></i>Enviar Evaluación</button></div>`;
-            html += `<div id="evalResult" class="mt-3"></div></div>`;
-            return html;
-        }
+            },
+            
+            // --- UI UPDATES ---
+            updateProgressUI() {
+                const total = Object.keys(this.LESSONS_DATA).length;
+                const completedCount = this.state.completedLessons.size;
+                const pct = total > 0 ? Math.round((completedCount / total) * 100) : 0;
+                
+                this.els.progressBar.style.width = `${pct}%`;
+                this.els.progressBar.setAttribute('aria-valuenow', pct);
+                this.els.progressText.textContent = `${pct}%`;
+                this.els.progressDetail.textContent = `${completedCount} de ${total} lecciones completadas`;
 
-        // ===== Selection and evaluation logic =====
-        function selectEvalOption(element, optionNumber, questionKey, lessonId){
-            // mark selection visually
-            const container = element.closest('.eval-question');
-            container.querySelectorAll('.eval-option').forEach(el=>el.classList.remove('selected'));
-            element.classList.add('selected');
-
-            // store
-            if (!evaluationAnswers[lessonId]) evaluationAnswers[lessonId] = {};
-            evaluationAnswers[lessonId][questionKey] = optionNumber;
-
-            // persist in memory
-            window.module1Progress.evaluations[lessonId] = evaluationAnswers[lessonId];
-        }
-
-        function submitEvaluation(lessonId){
-            const lessonEval = lessons[lessonId].evaluation.questions;
-            const userAns = evaluationAnswers[lessonId] || {};
-            const totalQs = Object.keys(lessonEval).length;
-
-            // ensure answered
-            if (Object.keys(userAns).length < totalQs) {
-                showToast('Por favor responde todas las preguntas antes de enviar', 'warning');
-                return;
-            }
-
-            let score = 0;
-            Object.keys(lessonEval).forEach(qKey => {
-                if (userAns[qKey] === lessonEval[qKey].correct) score++;
-            });
-
-            // show feedback visually
-            Object.keys(lessonEval).forEach(qKey => {
-                const qContainer = document.querySelector(`[data-question="${qKey}"][data-lesson="${lessonId}"]`);
-                if (!qContainer) return;
-                const opts = qContainer.querySelectorAll('.eval-option');
-                opts.forEach((opt, idx) => {
-                    const optNum = idx + 1;
-                    if (optNum === lessonEval[qKey].correct) opt.classList.add('correct');
-                    if (evaluationAnswers[lessonId][qKey] && evaluationAnswers[lessonId][qKey] === optNum && optNum !== lessonEval[qKey].correct) opt.classList.add('incorrect');
-                    opt.style.pointerEvents = 'none';
+                document.querySelectorAll('.lesson-link').forEach(link => {
+                    const lessonId = parseInt(link.dataset.lesson);
+                    link.classList.toggle('completed', this.state.completedLessons.has(lessonId));
                 });
-            });
+            },
+            
+            updateSidebarActiveState() {
+                document.querySelectorAll('.lesson-link').forEach(link => {
+                    link.classList.toggle('active', parseInt(link.dataset.lesson) === this.state.currentLesson);
+                });
+            },
 
-            document.getElementById('submitEvalBtn').style.display = 'none';
-
-            const resultEl = document.getElementById('evalResult');
-            if (score >= Math.ceil(totalQs * 0.6)) {
-                resultEl.innerHTML = `<div class="alert alert-success"><i class="bi bi-check-circle-fill me-2"></i><strong>¡Excelente!</strong> Aprobaste con ${score}/${totalQs} respuestas correctas.</div>`;
-                completeLesson(lessonId, { evaluationPassed: true, score });
-            } else {
-                resultEl.innerHTML = `<div class="alert alert-warning"><i class="bi bi-exclamation-triangle-fill me-2"></i><strong> Atención:</strong> Obtuviste ${score}/${totalQs}. Revisa el contenido e inténtalo nuevamente.</div>
-                <div class="mt-2"><button class="btn btn-outline-primary" id="retryEvalBtn" onclick="retryEvaluation(${lessonId})">Reintentar</button></div>`;
-            }
-
-            // persist evaluation result in memory
-            window.module1Progress.evaluations[lessonId] = { ...evaluationAnswers[lessonId], score };
-            saveProgressToBackendIfAvailable();
-        }
-
-        function retryEvaluation(lessonId){
-            if (window.module1Progress.evaluations && window.module1Progress.evaluations[lessonId]) {
-                delete window.module1Progress.evaluations[lessonId];
-            }
-            evaluationAnswers[lessonId] = {};
-            renderLessonContent(lessonId);
-            showToast('Puedes intentarlo nuevamente', 'info');
-        }
-
-        // ===== Progress handling =====
-        function completeLesson(lessonId, extra = {}){
-            if (!completedLessons.includes(lessonId)) {
-                completedLessons.push(lessonId);
-            }
-            // persist local
-            window.module1Progress.completedLessons = completedLessons;
-            updateProgressUI();
-            showToast('Lección completada', 'success');
-
-            // try to update backend via auth.js function if exists
-            saveProgressToBackendIfAvailable(lessonId, extra);
-        }
-
-        function updateProgressUI(){
-            const total = Object.keys(lessons).length;
-            const completed = completedLessons.length;
-            const pct = Math.round((completed/total)*100);
-            document.getElementById('progressBar').style.width = pct + '%';
-            document.getElementById('progressText').textContent = pct + '%';
-            document.getElementById('progressDetail').textContent = `${completed} de ${total} lecciones completadas`;
-
-            // mark sidebar completed
-            completedLessons.forEach(num => {
-                const link = document.querySelector(`[data-lesson="${num}"]`);
-                if (link) link.classList.add('completed');
-            });
-        }
-
-        async function saveProgressToBackendIfAvailable(moduleNumber, extra = {}){
-            try {
-                const currentUser = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
-                if (currentUser && typeof updateModuleProgress === 'function') {
-                    // prepare progressData (simple)
-                    const progressData = {
-                        completedLessons: window.module1Progress.completedLessons || [],
-                        evaluations: window.module1Progress.evaluations || {},
-                        timeSpent: (window.module1Progress.timeSpent || 0) + 0,
-                        completed: (window.module1Progress.completedLessons || []).length === Object.keys(lessons).length,
-                        ...extra
-                    };
-                    await updateModuleProgress(1, progressData);
-                    // optionally log activity
-                    if (typeof logUserActivity === 'function') {
-                        logUserActivity('module_complete_update', currentUser, { module: 1, progressData });
-                    }
-                } else {
-                    // no backend - keep local
-                    window.module1Progress.lastSaved = new Date().toISOString();
-                }
-            } catch (e) {
-                console.warn('No fue posible guardar progreso en backend:', e);
-            }
-        }
-
-        // ===== Navigation =====
-        function loadLesson(num){
-            renderLessonContent(num);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        function goToNextLesson(){
-            if (currentLesson < Object.keys(lessons).length) loadLesson(currentLesson + 1);
-            else showToast('Has llegado al final del módulo', 'info');
-        }
-        function goToPreviousLesson(){
-            if (currentLesson > 1) loadLesson(currentLesson - 1);
-            else showToast('Esta es la primera lección', 'info');
-        }
-
-        // ===== Utilities =====
-        function markSidebarActive(num){
-            document.querySelectorAll('.lesson-link').forEach(link => link.classList.remove('active'));
-            const el = document.querySelector(`[data-lesson="${num}"]`);
-            if (el) el.classList.add('active');
-        }
-
-        function showToast(message, type = 'info', timeout = 2600){
-            const colors = { success: 'var(--success)', warning: 'var(--warning)', info: '#2196F3', danger: 'var(--danger)' };
-            const holder = document.getElementById('toastHolder');
-            const toast = document.createElement('div');
-            toast.className = 'toast-custom d-inline-block';
-            toast.style.background = colors[type] || colors.info;
-            toast.innerHTML = `<div style="font-weight:600;">${message}</div>`;
-            holder.appendChild(toast);
-            setTimeout(()=> { toast.style.opacity = '0'; setTimeout(()=>toast.remove(),300); }, timeout);
-        }
-
-        // restore existing state if any
-        function restoreState(){
-            const saved = window.module1Progress || { completedLessons: [], evaluations: {} };
-            completedLessons = saved.completedLessons || [];
-            evaluationAnswers = saved.evaluations || {};
-            updateProgressUI();
-        }
-
-        function restoreEvaluationState(lessonId){
-            const saved = window.module1Progress.evaluations && window.module1Progress.evaluations[lessonId];
-            if (!saved) return;
-            // apply selection UI if available
-            Object.keys(saved).forEach(qKey => {
-                if (qKey === 'score') return;
-                const qContainer = document.querySelector(`[data-question="${qKey}"][data-lesson="${lessonId}"]`);
-                if (!qContainer) return;
-                const opts = qContainer.querySelectorAll('.eval-option');
-                const selectedNum = saved[qKey];
-                if (selectedNum) {
-                    opts.forEach((opt, idx) => {
-                        if (idx+1 === selectedNum) opt.classList.add('selected');
-                    });
-                }
-            });
-        }
-
-        // helper to show sidebar completed state
-        function markSidebarCompletedAll(){
-            (window.module1Progress.completedLessons || []).forEach(n => {
-                const link = document.querySelector(`[data-lesson="${n}"]`);
-                if (link) link.classList.add('completed');
-            });
-        }
-
-        // initial load
-        document.addEventListener('DOMContentLoaded', () => {
-            restoreState();
-            loadLesson(1);
-            markSidebarCompletedAll();
-
-            // wire upload button (open upload form placeholder)
-            document.getElementById('uploadBtn').addEventListener('click', (e) => {
-                e.preventDefault();
-                window.open('https://forms.gle/URL_FORMULARIO_SUBIDA', '_blank');
-            });
-        });
-    </script>
-</body>
-</html>
+            // --- LOGIC ---
+            selectEvalOption(button) {
+                const questionContainer = button.closest('.eval-question');
+                const qKey = questionContainer.dataset.questionKey;
+                const optionNumber = parseInt(button.dataset.optionNumber);
+                
+                // Update UI
+                questionContainer.querySelectorAll('.eval-option').forEach(btn => {
+                    btn.classList.remove('selected');
+                    btn.querySelector('i').className = 'bi bi-circle';
+                });
+                button.classList.add('selected');
+                button.querySelector('i').className = 'bi bi-check-circle-fill';
+                
+                // Store answer
+                const lessonId = this.state.currentLesson;
