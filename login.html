@@ -27,10 +27,14 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--dark) 100%);
             min-height: 100vh;
+        }
+
+        .main-wrapper {
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1rem;
+            padding: 2rem 1rem;
         }
 
         .login-container {
@@ -209,6 +213,10 @@
 
         /* Responsive */
         @media (max-width: 576px) {
+            .main-wrapper {
+                padding: 1rem 0.5rem;
+            }
+
             .logo-title {
                 font-size: 1.5rem;
             }
@@ -231,122 +239,124 @@
     <!-- Cargar auth.js -->
     <script src="auth.js"></script>
 
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-10 col-lg-8 col-xl-6">
-                <div class="login-container">
-                    <!-- Header -->
-                    <div class="login-header">
-                        <div class="logo-icon">
-                            <i class="bi bi-palette"></i>
-                        </div>
-                        <h1 class="logo-title">Arte & Anatomía UAH</h1>
-                        <p class="logo-subtitle">Sistema de Gestión de Aprendizaje</p>
-                    </div>
-
-                    <!-- Login Form -->
-                    <div class="login-body">
-                        <h2 class="section-title">
-                            <i class="bi bi-lock-fill me-2"></i>Acceso al Sistema
-                        </h2>
-
-                        <!-- Error Alert -->
-                        <div class="alert alert-danger d-none" id="errorAlert" role="alert">
-                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                            <span id="errorMessage">Error de autenticación</span>
+    <div class="main-wrapper">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+                    <div class="login-container">
+                        <!-- Header -->
+                        <div class="login-header">
+                            <div class="logo-icon">
+                                <i class="bi bi-palette"></i>
+                            </div>
+                            <h1 class="logo-title">Arte & Anatomía UAH</h1>
+                            <p class="logo-subtitle">Sistema de Gestión de Aprendizaje</p>
                         </div>
 
-                        <form onsubmit="handleLogin(event)" id="loginForm" novalidate>
-                            <!-- Usuario -->
-                            <div class="mb-3">
-                                <label for="username" class="form-label fw-semibold">Usuario</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">
-                                        <i class="bi bi-person-fill"></i>
+                        <!-- Login Form -->
+                        <div class="login-body">
+                            <h2 class="section-title">
+                                <i class="bi bi-lock-fill me-2"></i>Acceso al Sistema
+                            </h2>
+
+                            <!-- Error Alert -->
+                            <div class="alert alert-danger d-none" id="errorAlert" role="alert">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                <span id="errorMessage">Error de autenticación</span>
+                            </div>
+
+                            <form onsubmit="handleLogin(event)" id="loginForm" novalidate>
+                                <!-- Usuario -->
+                                <div class="mb-3">
+                                    <label for="username" class="form-label fw-semibold">Usuario</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="bi bi-person-fill"></i>
+                                        </span>
+                                        <input 
+                                            type="text" 
+                                            class="form-control form-control-lg" 
+                                            id="username" 
+                                            placeholder="Ej: Joselyn.INSTRUCTOR"
+                                            required
+                                            autocomplete="username"
+                                        >
+                                    </div>
+                                </div>
+
+                                <!-- Contraseña -->
+                                <div class="mb-4">
+                                    <label for="password" class="form-label fw-semibold">Contraseña</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="bi bi-key-fill"></i>
+                                        </span>
+                                        <input 
+                                            type="password" 
+                                            class="form-control form-control-lg" 
+                                            id="password" 
+                                            placeholder="••••••••"
+                                            required
+                                            autocomplete="current-password"
+                                        >
+                                    </div>
+                                </div>
+
+                                <!-- Botón de login -->
+                                <button type="submit" class="btn btn-login btn-lg" id="loginBtn">
+                                    <span id="loginBtnText">
+                                        <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
                                     </span>
-                                    <input 
-                                        type="text" 
-                                        class="form-control form-control-lg" 
-                                        id="username" 
-                                        placeholder="Ej: Joselyn.INSTRUCTOR"
-                                        required
-                                        autocomplete="username"
-                                    >
-                                </div>
-                            </div>
-
-                            <!-- Contraseña -->
-                            <div class="mb-4">
-                                <label for="password" class="form-label fw-semibold">Contraseña</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">
-                                        <i class="bi bi-key-fill"></i>
+                                    <span id="loginBtnLoading" class="d-none">
+                                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                        Verificando...
                                     </span>
-                                    <input 
-                                        type="password" 
-                                        class="form-control form-control-lg" 
-                                        id="password" 
-                                        placeholder="••••••••"
-                                        required
-                                        autocomplete="current-password"
-                                    >
-                                </div>
-                            </div>
+                                </button>
+                            </form>
+                        </div>
 
-                            <!-- Botón de login -->
-                            <button type="submit" class="btn btn-login btn-lg" id="loginBtn">
-                                <span id="loginBtnText">
-                                    <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
-                                </span>
-                                <span id="loginBtnLoading" class="d-none">
-                                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                                    Verificando...
-                                </span>
-                            </button>
-                        </form>
-                    </div>
-
-                    <!-- Información del sistema -->
-                    <div class="info-section">
-                        <p class="info-title">Sistema LMS UAH</p>
-                        
-                        <div class="row g-3">
-                            <div class="col-md-4 col-sm-12">
-                                <div class="role-card">
-                                    <div class="role-icon">👩‍🏫</div>
-                                    <div class="role-title">Instructores</div>
-                                    <div class="role-description">
-                                        Acceso completo al dashboard y gestión de contenidos
+                        <!-- Información del sistema -->
+                        <div class="info-section">
+                            <p class="info-title">Sistema LMS UAH</p>
+                            
+                            <div class="row g-3">
+                                <div class="col-12 col-sm-4">
+                                    <div class="role-card">
+                                        <div class="role-icon">👩‍🏫</div>
+                                        <div class="role-title">Instructores</div>
+                                        <div class="role-description">
+                                            Acceso completo al dashboard
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-4 col-sm-12">
-                                <div class="role-card">
-                                    <div class="role-icon">👨‍🎓</div>
-                                    <div class="role-title">Estudiantes</div>
-                                    <div class="role-description">
-                                        Acceso a módulos y seguimiento de progreso
+                                <div class="col-12 col-sm-4">
+                                    <div class="role-card">
+                                        <div class="role-icon">👨‍🎓</div>
+                                        <div class="role-title">Estudiantes</div>
+                                        <div class="role-description">
+                                            Módulos y progreso
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-4 col-sm-12">
-                                <div class="role-card">
-                                    <div class="role-icon">👩‍💼</div>
-                                    <div class="role-title">Evaluadores</div>
-                                    <div class="role-description">
-                                        Acceso para revisión y evaluación de trabajos
+                                <div class="col-12 col-sm-4">
+                                    <div class="role-card">
+                                        <div class="role-icon">👩‍💼</div>
+                                        <div class="role-title">Evaluadores</div>
+                                        <div class="role-description">
+                                            Revisión de trabajos
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Footer -->
+                    <p class="footer-text">
+                        © 2025 Universidad Alberto Hurtado<br>
+                        <a href="https://www.uahurtado.cl" target="_blank">www.uahurtado.cl</a>
+                    </p>
                 </div>
-
-                <!-- Footer -->
-                <p class="footer-text">
-                    © 2025 Universidad Alberto Hurtado<br>
-                    <a href="https://www.uahurtado.cl" target="_blank">www.uahurtado.cl</a>
-                </p>
             </div>
         </div>
     </div>
