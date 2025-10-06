@@ -929,13 +929,17 @@
 
         // ===== FUNCIONES DE EVALUACIÓN =====
         function updateEvaluationProgress(lessonNum) {
-            const answeredCount = Object.keys(evaluationAnswers[lessonNum] || {}).length;
-            const countElement = document.getElementById('answeredCount');
-            if (countElement) {
-                countElement.textContent = answeredCount;
-            }
-        }
-
+    // Limpiar respuestas de otras lecciones que no corresponden
+    const answeredCount = Object.keys(evaluationAnswers[lessonNum] || {}).length;
+    const totalQuestions = 3;
+    
+    const countElement = document.getElementById('answeredCount');
+    if (countElement) {
+        // Asegurar que nunca muestre más de 3
+        const displayCount = Math.min(answeredCount, totalQuestions);
+        countElement.textContent = displayCount;
+    }
+}
         function selectEvalOption(element, optionNumber, lessonNum) {
             // Encontrar el contenedor correcto (el div padre con data-question)
             const container = element.closest('[data-question]');
