@@ -40,6 +40,18 @@
             max-width: 500px;
             width: 100%;
             overflow: hidden;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .login-header {
@@ -78,8 +90,26 @@
             padding: 2rem;
         }
 
-        .form-floating {
+        .section-title {
+            text-align: center;
+            color: var(--primary-dark);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .input-group {
             margin-bottom: 1rem;
+        }
+
+        .input-group-text {
+            background-color: var(--gray-light);
+            border-right: none;
+            color: var(--primary-dark);
+        }
+
+        .form-control {
+            border-left: none;
         }
 
         .form-control:focus {
@@ -87,16 +117,7 @@
             box-shadow: 0 0 0 0.25rem rgba(44, 95, 102, 0.25);
         }
 
-        .input-group-text {
-            background-color: var(--gray-light);
-            border-right: none;
-        }
-
-        .form-control {
-            border-left: none;
-        }
-
-        .form-control:focus + .input-group-text {
+        .form-control:focus ~ .input-group-text {
             border-color: var(--primary-dark);
         }
 
@@ -125,7 +146,7 @@
         .info-section {
             border-top: 1px solid var(--gray-light);
             padding: 1.5rem 2rem 2rem;
-            background: var(--gray-light);
+            background: linear-gradient(135deg, #f8f9fa, white);
         }
 
         .info-title {
@@ -139,27 +160,28 @@
         .role-card {
             background: white;
             border-radius: 10px;
-            padding: 1rem;
+            padding: 1.2rem;
             text-align: center;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             transition: all 0.3s ease;
+            height: 100%;
         }
 
         .role-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
         }
 
         .role-icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
         }
 
         .role-title {
             font-weight: bold;
             color: var(--primary-dark);
             margin-bottom: 0.5rem;
-            font-size: 0.95rem;
+            font-size: 1rem;
         }
 
         .role-description {
@@ -168,69 +190,21 @@
             line-height: 1.4;
         }
 
-        .alert {
-            border-radius: 10px;
-            border: none;
-        }
-
-        .alert-danger {
-            background-color: #fee;
-            color: var(--danger);
-        }
-
         .footer-text {
             text-align: center;
-            margin-top: 1.5rem;
-            color: rgba(255,255,255,0.8);
+            margin-top: 2rem;
+            color: rgba(255,255,255,0.9);
             font-size: 0.85rem;
         }
 
         .footer-text a {
             color: var(--primary-light);
             text-decoration: none;
+            font-weight: 500;
         }
 
         .footer-text a:hover {
             text-decoration: underline;
-        }
-
-        /* Toast personalizado */
-        .toast {
-            border-radius: 10px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-        }
-
-        .toast-header {
-            background: var(--success);
-            color: white;
-            border: none;
-        }
-
-        .toast-header.error {
-            background: var(--danger);
-        }
-
-        /* Loading spinner */
-        .spinner-border-sm {
-            width: 1rem;
-            height: 1rem;
-            border-width: 0.15em;
-        }
-
-        /* Animaciones */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .login-container {
-            animation: fadeIn 0.5s ease-out;
         }
 
         /* Responsive */
@@ -246,6 +220,10 @@
             .info-section {
                 padding: 1.5rem;
             }
+
+            .role-icon {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
@@ -254,134 +232,132 @@
     <script src="auth.js"></script>
 
     <div class="container">
-        <div class="login-container">
-            <!-- Header -->
-            <div class="login-header">
-                <div class="logo-icon">
-                    <i class="bi bi-palette"></i>
-                </div>
-                <h1 class="logo-title">Arte & Anatomía UAH</h1>
-                <p class="logo-subtitle">Sistema de Gestión de Aprendizaje</p>
-            </div>
-
-            <!-- Login Form -->
-            <div class="login-body">
-                <h2 class="text-center mb-4" style="color: var(--primary-dark); font-weight: 600;">
-                    <i class="bi bi-lock-fill me-2"></i>Acceso al Sistema
-                </h2>
-
-                <!-- Error Alert (oculto por defecto) -->
-                <div class="alert alert-danger d-none" id="errorAlert" role="alert">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                    <span id="errorMessage">Error de autenticación</span>
-                </div>
-
-                <form onsubmit="handleLogin(event)" novalidate>
-                    <!-- Usuario -->
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Usuario</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="bi bi-person-fill"></i>
-                            </span>
-                            <input 
-                                type="text" 
-                                class="form-control" 
-                                id="username" 
-                                placeholder="Ej: Joselyn.INSTRUCTOR"
-                                required
-                                autocomplete="username"
-                            >
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="login-container">
+                    <!-- Header -->
+                    <div class="login-header">
+                        <div class="logo-icon">
+                            <i class="bi bi-palette"></i>
                         </div>
-                        <div class="invalid-feedback">
-                            Por favor ingresa tu usuario
-                        </div>
+                        <h1 class="logo-title">Arte & Anatomía UAH</h1>
+                        <p class="logo-subtitle">Sistema de Gestión de Aprendizaje</p>
                     </div>
 
-                    <!-- Contraseña -->
-                    <div class="mb-4">
-                        <label for="password" class="form-label">Contraseña</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="bi bi-key-fill"></i>
-                            </span>
-                            <input 
-                                type="password" 
-                                class="form-control" 
-                                id="password" 
-                                placeholder="••••••••"
-                                required
-                                autocomplete="current-password"
-                            >
-                        </div>
-                        <div class="invalid-feedback">
-                            Por favor ingresa tu contraseña
-                        </div>
-                    </div>
+                    <!-- Login Form -->
+                    <div class="login-body">
+                        <h2 class="section-title">
+                            <i class="bi bi-lock-fill me-2"></i>Acceso al Sistema
+                        </h2>
 
-                    <!-- Botón de login -->
-                    <button type="submit" class="btn btn-login" id="loginBtn">
-                        <span id="loginBtnText">
-                            <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
-                        </span>
-                        <span id="loginBtnLoading" class="d-none">
-                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                            Verificando...
-                        </span>
-                    </button>
-                </form>
-            </div>
+                        <!-- Error Alert -->
+                        <div class="alert alert-danger d-none" id="errorAlert" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <span id="errorMessage">Error de autenticación</span>
+                        </div>
 
-            <!-- Información del sistema -->
-            <div class="info-section">
-                <p class="info-title">Sistema LMS UAH</p>
-                
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <div class="role-card">
-                            <div class="role-icon">👩‍🏫</div>
-                            <div class="role-title">Instructores</div>
-                            <div class="role-description">
-                                Acceso completo al dashboard y gestión de contenidos
+                        <form onsubmit="handleLogin(event)" id="loginForm" novalidate>
+                            <!-- Usuario -->
+                            <div class="mb-3">
+                                <label for="username" class="form-label fw-semibold">Usuario</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-person-fill"></i>
+                                    </span>
+                                    <input 
+                                        type="text" 
+                                        class="form-control form-control-lg" 
+                                        id="username" 
+                                        placeholder="Ej: Joselyn.INSTRUCTOR"
+                                        required
+                                        autocomplete="username"
+                                    >
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="role-card">
-                            <div class="role-icon">👨‍🎓</div>
-                            <div class="role-title">Estudiantes</div>
-                            <div class="role-description">
-                                Acceso a módulos y seguimiento de progreso
+
+                            <!-- Contraseña -->
+                            <div class="mb-4">
+                                <label for="password" class="form-label fw-semibold">Contraseña</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-key-fill"></i>
+                                    </span>
+                                    <input 
+                                        type="password" 
+                                        class="form-control form-control-lg" 
+                                        id="password" 
+                                        placeholder="••••••••"
+                                        required
+                                        autocomplete="current-password"
+                                    >
+                                </div>
                             </div>
-                        </div>
+
+                            <!-- Botón de login -->
+                            <button type="submit" class="btn btn-login btn-lg" id="loginBtn">
+                                <span id="loginBtnText">
+                                    <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
+                                </span>
+                                <span id="loginBtnLoading" class="d-none">
+                                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                    Verificando...
+                                </span>
+                            </button>
+                        </form>
                     </div>
-                    <div class="col-md-4">
-                        <div class="role-card">
-                            <div class="role-icon">👩‍💼</div>
-                            <div class="role-title">Evaluadores</div>
-                            <div class="role-description">
-                                Acceso para revisión y evaluación de trabajos
+
+                    <!-- Información del sistema -->
+                    <div class="info-section">
+                        <p class="info-title">Sistema LMS UAH</p>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-4 col-sm-12">
+                                <div class="role-card">
+                                    <div class="role-icon">👩‍🏫</div>
+                                    <div class="role-title">Instructores</div>
+                                    <div class="role-description">
+                                        Acceso completo al dashboard y gestión de contenidos
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <div class="role-card">
+                                    <div class="role-icon">👨‍🎓</div>
+                                    <div class="role-title">Estudiantes</div>
+                                    <div class="role-description">
+                                        Acceso a módulos y seguimiento de progreso
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <div class="role-card">
+                                    <div class="role-icon">👩‍💼</div>
+                                    <div class="role-title">Evaluadores</div>
+                                    <div class="role-description">
+                                        Acceso para revisión y evaluación de trabajos
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Footer -->
+                <p class="footer-text">
+                    © 2025 Universidad Alberto Hurtado<br>
+                    <a href="https://www.uahurtado.cl" target="_blank">www.uahurtado.cl</a>
+                </p>
             </div>
         </div>
-
-        <!-- Footer -->
-        <p class="footer-text mt-4">
-            © 2025 Universidad Alberto Hurtado<br>
-            <a href="https://www.uahurtado.cl" target="_blank">www.uahurtado.cl</a>
-        </p>
     </div>
 
     <!-- Toast Container -->
-    <div class="toast-container position-fixed top-0 end-0 p-3">
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">
         <div id="notificationToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header" id="toastHeader">
                 <i class="bi bi-check-circle-fill me-2"></i>
                 <strong class="me-auto">Notificación</strong>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
             <div class="toast-body" id="toastBody">
                 Mensaje aquí
@@ -395,10 +371,15 @@
     <script>
         // Verificar sesión existente al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔐 Inicializando página de login...');
+            
             const currentUser = getCurrentUser();
             if (currentUser && isAuthenticated()) {
+                console.log('✅ Sesión activa detectada:', currentUser.fullName);
                 showNotification(`Sesión activa: ${currentUser.fullName}`, 'success');
                 setTimeout(() => redirectUser(currentUser.role), 1500);
+            } else {
+                console.log('ℹ️ No hay sesión activa');
             }
 
             // Focus en campo usuario
@@ -408,6 +389,7 @@
         // Manejar login
         async function handleLogin(event) {
             event.preventDefault();
+            console.log('🔑 Intentando autenticación...');
             
             const form = event.target;
             const username = document.getElementById('username').value.trim();
@@ -417,15 +399,14 @@
             const loginBtnLoading = document.getElementById('loginBtnLoading');
             const errorAlert = document.getElementById('errorAlert');
             
-            // Validación HTML5
-            if (!form.checkValidity()) {
-                form.classList.add('was-validated');
+            // Validación básica
+            if (!username || !password) {
+                showError('Por favor completa todos los campos');
                 return;
             }
 
             // Ocultar errores previos
             errorAlert.classList.add('d-none');
-            form.classList.remove('was-validated');
             
             // Deshabilitar botón y mostrar loading
             loginBtn.disabled = true;
@@ -433,22 +414,24 @@
             loginBtnLoading.classList.remove('d-none');
             
             try {
+                console.log('📡 Llamando a authenticateUser...');
                 const result = await authenticateUser(username, password);
+                console.log('📥 Respuesta recibida:', result);
                 
                 if (result.success) {
+                    console.log('✅ Login exitoso:', result.user);
                     showNotification(`¡Bienvenido/a ${result.user.fullName}!`, 'success');
                     
-                    // Pequeño delay para que se vea la notificación
                     setTimeout(() => {
                         redirectUser(result.user.role);
                     }, 1000);
                 } else {
-                    // Mostrar error
+                    console.error('❌ Login fallido:', result.error);
                     showError(result.error || 'Credenciales incorrectas');
                     showNotification(result.error || 'Credenciales incorrectas', 'error');
                 }
             } catch (error) {
-                console.error('Error en login:', error);
+                console.error('💥 Error en login:', error);
                 showError('Error de conexión. Verifica tu internet.');
                 showNotification('Error de conexión. Verifica tu internet.', 'error');
             } finally {
@@ -461,6 +444,7 @@
 
         // Redireccionar según rol
         function redirectUser(role) {
+            console.log('🚀 Redirigiendo usuario con rol:', role);
             switch(role) {
                 case 'instructor':
                 case 'profesor':
@@ -494,15 +478,13 @@
             const toastHeader = document.getElementById('toastHeader');
             const toastBody = document.getElementById('toastBody');
             
-            // Configurar tipo
-            toastHeader.classList.remove('error');
-            const icon = toastHeader.querySelector('i');
-            
+            // Configurar estilo según tipo
             if (type === 'success') {
-                icon.className = 'bi bi-check-circle-fill me-2';
+                toastHeader.className = 'toast-header bg-success text-white';
+                toastHeader.querySelector('i').className = 'bi bi-check-circle-fill me-2';
             } else {
-                icon.className = 'bi bi-exclamation-triangle-fill me-2';
-                toastHeader.classList.add('error');
+                toastHeader.className = 'toast-header bg-danger text-white';
+                toastHeader.querySelector('i').className = 'bi bi-exclamation-triangle-fill me-2';
             }
             
             toastBody.textContent = message;
@@ -517,18 +499,17 @@
         // Limpiar errores al escribir
         document.getElementById('username').addEventListener('input', function() {
             document.getElementById('errorAlert').classList.add('d-none');
-            this.classList.remove('is-invalid');
         });
 
         document.getElementById('password').addEventListener('input', function() {
             document.getElementById('errorAlert').classList.add('d-none');
-            this.classList.remove('is-invalid');
         });
 
-        // Permitir login con Enter
+        // Permitir login con Enter en password
         document.getElementById('password').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                document.querySelector('form').dispatchEvent(new Event('submit'));
+                e.preventDefault();
+                document.getElementById('loginForm').dispatchEvent(new Event('submit'));
             }
         });
     </script>
