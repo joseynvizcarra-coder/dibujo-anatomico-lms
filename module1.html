@@ -1,45 +1,28 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Módulo 1: Observación y Gesto — LMS UAH (Mejorado)</title>
-
-    <!-- Bootstrap & Icons (CDN) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 1: Observación y Gesto (Mejorado) - LMS UAH</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
+    
     <style>
-        /* 🎨 THEME & VARIABLES */
         :root {
             --primary-dark: #2c5f66;
             --primary-light: #e8a2b8;
+            --dark: #1a1a1a;
             --success: #4CAF50;
             --warning: #FFC107;
             --danger: #f44336;
-            --dark: #1a1a1a;
-            --light-gray: #f3f6f8;
-            --border-color: #e6e9eb;
         }
 
-        /* 🌐 GLOBAL STYLES */
-        html {
-            scroll-behavior: smooth;
-        }
         body {
-            font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: var(--light-gray);
-            margin: 0;
-            line-height: 1.6;
-        }
-        /* Accessibility improvement: better focus ring for keyboard users */
-        a:focus-visible, button:focus-visible, [role="button"]:focus-visible {
-            outline: 3px solid var(--primary-dark);
-            outline-offset: 2px;
-            box-shadow: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
         }
 
-        /*  LAYOUT: Header */
         .header-uah {
             background: linear-gradient(135deg, var(--primary-dark), var(--dark));
             color: white;
@@ -47,101 +30,224 @@
             position: sticky;
             top: 0;
             z-index: 1030;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        /* LAYOUT: Sidebar */
         .sidebar-lesson {
             background: white;
             border-radius: 12px;
-            padding: 1.25rem;
+            padding: 1.5rem;
             position: sticky;
-            top: 100px;
-            max-height: calc(100vh - 120px);
+            top: 90px;
+            max-height: calc(100vh - 110px);
             overflow-y: auto;
         }
 
-        /* COMPONENT: Lesson Link */
         .lesson-link {
             display: flex;
             align-items: center;
-            gap: 0.9rem;
-            width: 100%;
-            padding: 0.6rem;
+            gap: 1rem;
+            padding: 0.75rem;
             border-radius: 8px;
-            border: none;
-            background: none;
-            text-align: left;
             text-decoration: none;
             color: var(--dark);
-            transition: all .18s ease-in-out;
-            margin-bottom: 0.45rem;
+            transition: all 0.3s;
+            cursor: pointer;
+            margin-bottom: 0.5rem;
         }
-        .lesson-link:hover { background-color: #f8f9fa; }
-        .lesson-link.active { background: linear-gradient(135deg, var(--primary-dark), var(--primary-light)); color: white; }
-        .lesson-number { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: #eef2f4; font-weight: 700; flex-shrink: 0; }
-        .lesson-link.active .lesson-number { background: rgba(255, 255, 255, 0.22); color: white; }
-        .lesson-link.completed .lesson-number { background: var(--success); color: white; }
-        .lesson-link.completed::after { content: '✓'; margin-left: auto; font-weight: 700; color: var(--success); }
 
-        /* LAYOUT: Main Content */
+        .lesson-link:hover {
+            background: #f8f9fa;
+        }
+
+        .lesson-link.active {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            color: white;
+        }
+
+        .lesson-number {
+            width: 30px;
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .lesson-link.active .lesson-number {
+            background: white;
+            color: var(--primary-dark);
+        }
+
+        .lesson-link.completed .lesson-number {
+            background: var(--success);
+            color: white;
+        }
+        
+        .lesson-link.completed::after {
+            content: '\F26B'; /* Icono de Bootstrap checkmark */
+            font-family: 'bootstrap-icons';
+            color: var(--success);
+            font-size: 1.2rem;
+            margin-left: auto;
+        }
+
+        .progress-module {
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 10px;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+
+        .progress-bar-module {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-light));
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
         .content-area {
             background: white;
             border-radius: 12px;
             padding: 2rem;
-            min-height: 65vh;
-            box-shadow: 0 6px 20px rgba(15, 20, 25, 0.03);
+            min-height: 70vh;
         }
-        .lesson-header { border-bottom: 3px solid var(--primary-light); padding-bottom: 1rem; margin-bottom: 1.5rem; }
-        .lesson-title { color: var(--primary-dark); font-weight: 700; }
-        .lesson-subtitle { color: #6c757d; margin-bottom: .5rem; }
 
-        /* COMPONENT: Cards & Lists */
-        .objectives-list { background: #fbfdfe; border-left: 4px solid var(--primary-dark); padding: 1rem 1.25rem; border-radius: 0 10px 10px 0; }
-        .video-container { background: #000; border-radius: 12px; overflow: hidden; position: relative; padding-bottom: 56.25%; height: 0; margin: 1rem 0; }
-        .video-placeholder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: white; background: linear-gradient(135deg, rgba(44, 95, 102, 0.95), rgba(26, 26, 26, 0.9)); font-size: 3rem; }
-        .exercise-card { background: linear-gradient(135deg, #f8f9fa, #eef2f4); padding: 1.2rem; border-left: 5px solid var(--primary-light); border-radius: 8px; margin: 1.5rem 0; }
-        .reference-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-top: 1rem; }
-        .reference-card { background: white; padding: 0.6rem; border-radius: 10px; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04); cursor: pointer; transition: all .18s; border: 3px solid transparent; }
-        .reference-card:hover { transform: translateY(-6px); box-shadow: 0 10px 26px rgba(0, 0, 0, 0.08); }
-        .reference-card.selected { border-color: var(--primary-dark); background: rgba(44, 95, 102, 0.03); }
+        .lesson-header {
+            border-bottom: 3px solid var(--primary-light);
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .lesson-title {
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+        
+        .objectives-list {
+            background: #f8f9fa;
+            border-left: 4px solid var(--primary-dark);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
 
-        /* COMPONENT: Evaluation */
+        .accordion-button {
+            background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .accordion-button:not(.collapsed) {
+            background: var(--primary-dark);
+            color: white;
+        }
+
+        .exercise-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-left: 5px solid var(--primary-light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+        
+        .image-placeholder {
+            border: 2px dashed #adb5bd;
+            border-radius: 8px;
+            aspect-ratio: 3/4;
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            font-size: 0.85rem;
+        }
+
+        .evaluation-container {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .eval-question {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
         .eval-option {
-            padding: 1rem; border-radius: 8px; border: 2px solid var(--border-color); cursor: pointer;
-            display: flex; gap: 0.8rem; align-items: center; transition: all .14s; width: 100%; text-align: left;
+            padding: 1rem;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
-        .eval-option:not(:last-child) { margin-bottom: 0.5rem; }
-        .eval-option:hover { border-color: var(--primary-dark); background: rgba(44, 95, 102, 0.04); }
-        .eval-option.selected { border-color: var(--primary-dark); background: rgba(44, 95, 102, 0.08); font-weight: 600; }
-        .eval-option.correct { border-color: var(--success); background: rgba(76, 175, 80, 0.07); }
-        .eval-option.incorrect { border-color: var(--danger); background: rgba(244, 67, 54, 0.06); }
-        .eval-option[disabled] { cursor: not-allowed; opacity: 0.8; }
+        
+        .eval-option:hover {
+            border-color: var(--primary-dark);
+        }
+        
+        .eval-option.selected {
+            border-color: var(--primary-dark);
+            background: rgba(44, 95, 102, 0.1);
+        }
 
-        /* COMPONENT: Buttons & Toast */
-        .btn-nav { padding: 0.6rem 1.4rem; border-radius: 8px; font-weight: 600; }
-        .btn-gradient { background: linear-gradient(135deg, var(--primary-dark), var(--primary-light)); border: none; color: white; }
-        .toast-container { position: fixed; top: 90px; right: 20px; z-index: 9999; }
-        .toast-custom { padding: 0.9rem 1.1rem; border-radius: 8px; color: white; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); opacity: 0; transform: translateX(100%); transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
-        .toast-custom.show { opacity: 1; transform: translateX(0); }
-        .toast-custom + .toast-custom { margin-top: 0.5rem; }
+        .eval-option.correct {
+            border-color: var(--success);
+            background: rgba(76, 175, 80, 0.1);
+        }
 
-        /* 📱 RESPONSIVE DESIGN */
+        .eval-option.incorrect {
+            border-color: var(--danger);
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        .eval-radio {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #dee2e6;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .eval-option.selected .eval-radio {
+            border-color: var(--primary-dark);
+            background: var(--primary-dark);
+        }
+        
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            border: none;
+            color: white;
+        }
+
         @media (max-width: 991px) {
-            .sidebar-lesson { position: static; max-height: none; margin-bottom: 1.5rem; top: auto; }
-            .content-area { padding: 1.5rem; }
+            .sidebar-lesson {
+                position: static;
+                margin-bottom: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Auth script (user provided) -->
     <script src="auth.js"></script>
 
     <header class="header-uah">
         <div class="container-fluid">
             <div class="row align-items-center g-2">
                 <div class="col-auto">
-                    <a href="index.html" class="text-white text-decoration-none" aria-label="Volver al índice de módulos">
+                    <a href="index.html" class="text-white text-decoration-none">
                         <i class="bi bi-arrow-left me-2"></i><span class="d-none d-md-inline">Volver</span>
                     </a>
                 </div>
@@ -156,39 +262,39 @@
     </header>
 
     <div class="container-fluid py-3 py-md-4">
-        <div class="row g-3">
+        <div class="row">
             <aside class="col-lg-3">
-                <div id="sidebar" class="sidebar-lesson">
+                <div class="sidebar-lesson">
                     <h5 class="mb-3"><i class="bi bi-book me-2"></i>Lecciones</h5>
-                    <nav id="lesson-nav">
-                        <!-- Los links de lecciones se generarán aquí con JS -->
-                    </nav>
-
+                    <a class="lesson-link active" data-lesson="1" onclick="loadLesson(1)">
+                        <span class="lesson-number">1</span>
+                        <span class="flex-grow-1">Fundamentos del Croquis</span>
+                    </a>
+                    <a class="lesson-link" data-lesson="2" onclick="loadLesson(2)">
+                        <span class="lesson-number">2</span>
+                        <span class="flex-grow-1">Proporciones</span>
+                    </a>
+                    <a class="lesson-link" data-lesson="3" onclick="loadLesson(3)">
+                        <span class="lesson-number">3</span>
+                        <span class="flex-grow-1">Balance</span>
+                    </a>
+                    
                     <div class="mt-4">
                         <h6 class="mb-2">Progreso del Módulo</h6>
-                        <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="height: 10px;">
-                            <div id="progressBar" class="progress-bar" style="width: 0%; background: linear-gradient(90deg,var(--primary-dark),var(--primary-light)); transition: width .4s ease-out;"></div>
+                        <div class="progress-module">
+                            <div class="progress-bar-module" id="progressBar" style="width: 0%"></div>
                         </div>
                         <small class="text-muted d-block mt-2" id="progressDetail">0 de 3 lecciones completadas</small>
                     </div>
 
                     <div class="card border-primary mt-3">
                         <div class="card-header bg-primary text-white">
-                            <i class="bi bi-info-circle me-2"></i>Info del Módulo
+                            <i class="bi bi-info-circle me-2"></i>Módulo 1
                         </div>
                         <div class="card-body">
-                            <p class="small mb-2"><strong>Duración:</strong> 3 clases (45 min cada una)</p>
-                            <p class="small mb-2"><strong>Carga:</strong> Actividades prácticas + evaluación</p>
-                            <p class="small mb-0"><strong>Entregable:</strong> 3 croquis (2 min c/u)</p>
-                        </div>
-                    </div>
-
-                    <div class="card border-primary mt-3">
-                        <div class="card-header bg-primary text-white">
-                            <i class="bi bi-cloud-upload me-2"></i>Entrega
-                        </div>
-                        <div class="card-body text-center">
-                            <a href="#" class="btn btn-primary" id="uploadBtn"><i class="bi bi-box-arrow-up-right me-2"></i>Subir Trabajos</a>
+                            <p class="small mb-2"><strong>Duración:</strong> 3 días</p>
+                            <p class="small mb-2"><strong>Carga:</strong> 150 min aprox.</p>
+                            <p class="small mb-0"><strong>Entregable:</strong> 8 croquis/figuras</p>
                         </div>
                     </div>
                 </div>
@@ -196,337 +302,242 @@
 
             <main class="col-lg-9">
                 <div class="content-area" id="lessonContent">
-                    <!-- El contenido de la lección se carga aquí dinámicamente -->
-                    <div class="text-center p-5">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Cargando...</span>
-                        </div>
                     </div>
-                </div>
             </main>
         </div>
     </div>
-
-    <!-- Toast container for notifications -->
-    <div id="toastHolder" class="toast-container" aria-live="polite" aria-atomic="true"></div>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
+        let currentLesson = 1;
+        let completedLessons = [];
+        let evaluationAnswers = {};
+        let currentUser = { name: 'Estudiante', email: 'estudiante@uah.cl' }; // Default user
+        
+        // Cargar usuario real si auth.js está disponible
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof getCurrentUser === 'function' && getCurrentUser()) {
+                currentUser = getCurrentUser();
+            }
+            loadProgress();
+            loadLesson(1);
+        });
+        
+        // --- GESTIÓN DE PROGRESO ---
+        function loadProgress() {
+            const progressKey = `module1_progress_${currentUser.email}`;
+            const saved = JSON.parse(localStorage.getItem(progressKey)) || {};
+            completedLessons = saved.completedLessons || [];
+            evaluationAnswers = saved.evaluations || {};
+            updateProgressBar();
+        }
 
-        /**
-         * Módulo de Lógica para el LMS
-         * Encapsula todo el estado y la funcionalidad del módulo para evitar conflictos globales.
-         */
-        const lmsModule = {
-            // --- STATE & CONFIG ---
-            state: {
-                currentLesson: 1,
-                completedLessons: new Set(),
-                evaluationAnswers: {},
-            },
+        function saveProgress() {
+            const progressKey = `module1_progress_${currentUser.email}`;
+            const dataToSave = {
+                completedLessons: completedLessons,
+                evaluations: evaluationAnswers
+            };
+            localStorage.setItem(progressKey, JSON.stringify(dataToSave));
+            updateProgressBar();
+        }
+
+        function updateProgressBar() {
+            const totalLessons = 3;
+            const completedCount = completedLessons.length;
+            const percentage = Math.round((completedCount / totalLessons) * 100);
             
-            // --- CONSTANTS ---
-            STORAGE_KEY: 'lms_module1_progress',
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = percentage + '%';
+            document.getElementById('progressDetail').textContent = 
+                `${completedCount} de ${totalLessons} lecciones completadas`;
             
-            LESSONS_DATA: {
-                1: {
-                    title: 'Fundamentos del Croquis Rápido',
-                    subtitle: 'Captura de línea de acción y peso (2 minutos)',
-                    durationBadge: '45 min',
-                    objectives: ['Aplicar técnicas de observación para capturar línea de acción (2 min).', 'Identificar eje central y puntos de peso en figuras humanas.'],
-                    videoNote: 'Insertar: video_leccion1.mp4',
-                    exercise: {
-                        title: 'Ejercicio 1: 3 Croquis de 2 Minutos',
-                        instructions: 'Configura cronómetro a 2 minutos. No borrar ni corregir. Fotografía cada resultado para entregar.',
-                        materials: ['3 hojas de papel', 'Lápiz o carboncillo', 'Cronómetro'],
-                        references: ['ref1_figura_pie.jpg', 'ref2_pose_dinamica.jpg', 'ref3_contrapposto.jpg']
-                    },
-                    evaluation: { q1: { text: '¿Cuál es el objetivo principal de un croquis de 2 minutos?', options: ['Lograr un dibujo detallado y realista', 'Capturar la energía, dirección y peso del cuerpo', 'Practicar técnicas de sombreado'], correct: 2 }, q2: { text: '¿Qué debes identificar PRIMERO antes de comenzar a dibujar?', options: ['La línea de acción y el punto de apoyo', 'Los detalles del rostro', 'La textura de la ropa'], correct: 1 }, q3: { text: 'En el croquis rápido, ¿qué actitud es la más apropiada?', options: ['Perfeccionista y meticulosa', 'Lenta y detallista', 'Rápida y segura, aceptar errores'], correct: 3 } }
-                },
-                2: {
-                    title: 'Proporciones',
-                    subtitle: 'Medidas básicas y relación cabeza-cuerpo',
-                    durationBadge: '45 min',
-                    objectives: ['Conocer proporciones básicas: cabeza como unidad.', 'Aplicar proporciones en croquis y simplificaciones.'],
-                    videoNote: 'Insertar: video_leccion2.mp4',
-                    exercise: {
-                        title: 'Ejercicio 2: Medición por unidades',
-                        instructions: 'Dibuja una figura y marca la unidad cabeza. Realiza 2 estudios rápidos.',
-                        materials: ['Hojas', 'Lápiz HB', 'Regla opcional'],
-                        references: ['ref4_proporciones1.jpg', 'ref5_proporciones2.jpg']
-                    },
-                    evaluation: { q1: { text: '¿Aproximadamente cuántas “unidades cabeza” mide una figura adulta clásica?', options: ['4 unidades', '7-8 unidades', '12 unidades'], correct: 2 }, q2: { text: '¿Qué parte sirve como referencia para proporciones en dibujo rápido?', options: ['La mano', 'La cabeza', 'El pie'], correct: 2 }, q3: { text: '¿Por qué usar unidades cabeza en estudios rápidos?', options: ['Para detallar el rostro', 'Para mantener proporción rápida y consistente', 'Para sombrear mejor'], correct: 2 } }
-                },
-                3: {
-                    title: 'Balance',
-                    subtitle: 'Puntos de apoyo y centro de gravedad',
-                    durationBadge: '45 min',
-                    objectives: ['Identificar el polígono de apoyo y centro de gravedad.', 'Aplicar contrapposto en croquis rápidos.'],
-                    videoNote: 'Insertar: video_leccion3.mp4',
-                    exercise: {
-                        title: 'Ejercicio 3: Croquis con punto de apoyo',
-                        instructions: 'Realiza 3 croquis buscando el polígono de apoyo y el contrapposto.',
-                        materials: ['Hojas', 'Lápiz o carboncillo', 'Cronómetro'],
-                        references: ['ref6_balance1.jpg', 'ref7_balance2.jpg']
-                    },
-                    evaluation: { q1: { text: 'El polígono de apoyo es:', options: ['La zona donde se coloca la mesa', 'El área entre los pies que soporta el peso', 'El contorno del rostro'], correct: 2 }, q2: { text: 'El contrapposto implica:', options: ['Peso concentrado en un lado y relajación en el otro', 'Siempre ambas piernas con igual peso', 'No usar línea de acción'], correct: 1 }, q3: { text: '¿Qué indica una línea vertical desde la cabeza que cae fuera del polígono de apoyo?', options: ['Equilibrio perfecto', 'Inestabilidad o caída', 'Mejor diseño compositivo'], correct: 2 } }
+            document.querySelectorAll('.lesson-link').forEach(link => {
+                const lessonNum = parseInt(link.dataset.lesson);
+                if (completedLessons.includes(lessonNum)) {
+                    link.classList.add('completed');
                 }
-            },
-            
-            // --- DOM ELEMENTS ---
-            els: {},
-
-            /**
-             * Initializes the module, loads state, and sets up event listeners.
-             */
-            init() {
-                this.cacheDOMElements();
-                this.initAuth();
-                this.loadState();
-                this.renderSidebarNav();
-                this.bindEvents();
-                this.loadLesson(this.state.currentLesson);
-                this.updateProgressUI();
-            },
-            
-            /**
-             * Caches frequently accessed DOM elements.
-             */
-            cacheDOMElements() {
-                this.els.sidebar = document.getElementById('sidebar');
-                this.els.lessonNav = document.getElementById('lesson-nav');
-                this.els.lessonContent = document.getElementById('lessonContent');
-                this.els.progressBar = document.getElementById('progressBar');
-                this.els.progressText = document.getElementById('progressText');
-                this.els.progressDetail = document.getElementById('progressDetail');
-                this.els.uploadBtn = document.getElementById('uploadBtn');
-                this.els.toastHolder = document.getElementById('toastHolder');
-            },
-
-            /**
-             * Binds all event listeners using event delegation.
-             */
-            bindEvents() {
-                this.els.lessonNav.addEventListener('click', this.handleSidebarClick.bind(this));
-                this.els.lessonContent.addEventListener('click', this.handleContentClick.bind(this));
-                this.els.uploadBtn.addEventListener('click', e => {
-                    e.preventDefault();
-                    window.open('https://forms.gle/URL_FORMULARIO_SUBIDA', '_blank');
-                    this.showToast('Abriendo formulario de entrega...', 'info');
-                });
-            },
-
-            // --- EVENT HANDLERS ---
-            handleSidebarClick(e) {
-                const lessonButton = e.target.closest('.lesson-link');
-                if (lessonButton) {
-                    const lessonId = parseInt(lessonButton.dataset.lesson);
-                    this.loadLesson(lessonId);
+            });
+        }
+        
+        function completeLesson(lessonNum) {
+            if (!completedLessons.includes(lessonNum)) {
+                completedLessons.push(lessonNum);
+                saveProgress();
+                showToast('¡Lección completada!', 'success');
+                if (lessonNum < 3) {
+                   setTimeout(() => loadLesson(lessonNum + 1), 1500);
+                } else {
+                   showToast('¡Felicidades, has completado el Módulo 1!', 'success');
                 }
-            },
+            }
+        }
+
+        // --- NAVEGACIÓN Y CARGA DE CONTENIDO ---
+        function loadLesson(lessonNum) {
+            currentLesson = lessonNum;
+            document.querySelectorAll('.lesson-link').forEach(link => link.classList.remove('active'));
+            document.querySelector(`[data-lesson="${lessonNum}"]`).classList.add('active');
             
-            handleContentClick(e) {
-                const target = e.target;
-                const action = target.closest('[data-action]');
-                if (!action) return;
-
-                const actionType = action.dataset.action;
-                const lessonId = this.state.currentLesson;
-
-                switch (actionType) {
-                    case 'select-eval-option':
-                        this.selectEvalOption(action);
-                        break;
-                    case 'submit-evaluation':
-                        this.submitEvaluation(lessonId);
-                        break;
-                    case 'retry-evaluation':
-                        this.retryEvaluation(lessonId);
-                        break;
-                    case 'complete-lesson':
-                        this.completeLesson(lessonId);
-                        break;
-                    case 'next-lesson':
-                        this.goToNextLesson();
-                        break;
-                    case 'prev-lesson':
-                        this.goToPreviousLesson();
-                        break;
-                }
-            },
+            const lessonData = lessonsContent[`lesson${lessonNum}`];
+            document.getElementById('lessonContent').innerHTML = lessonData.content;
             
-            // --- STATE MANAGEMENT ---
-            loadState() {
-                try {
-                    const savedState = localStorage.getItem(this.STORAGE_KEY);
-                    if (savedState) {
-                        const parsed = JSON.parse(savedState);
-                        this.state.currentLesson = parsed.currentLesson || 1;
-                        this.state.completedLessons = new Set(parsed.completedLessons || []);
-                        this.state.evaluationAnswers = parsed.evaluationAnswers || {};
-                    }
-                } catch (e) {
-                    console.error("Error al cargar el estado desde localStorage", e);
+            // MEJORA: Personalización
+            const welcomeEl = document.getElementById('welcomeMessage');
+            if(welcomeEl) {
+                welcomeEl.textContent = `¡Hola, ${currentUser.name}! Empecemos con la Lección ${lessonNum}.`;
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // --- EVALUACIONES ---
+        function selectEvalOption(element, optionNumber, lessonNum) {
+            const container = element.parentElement;
+            const question = container.dataset.question;
+            container.querySelectorAll('.eval-option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            
+            if (!evaluationAnswers[lessonNum]) evaluationAnswers[lessonNum] = {};
+            evaluationAnswers[lessonNum][question] = optionNumber;
+        }
+
+        function submitEvaluation(lessonNum) {
+            const correctAnswers = lessonsContent[`lesson${lessonNum}`].answers;
+            const userAnswers = evaluationAnswers[lessonNum] || {};
+
+            if (Object.keys(userAnswers).length < Object.keys(correctAnswers).length) {
+                showToast('Por favor, responde todas las preguntas.', 'warning');
+                return;
+            }
+
+            let score = 0;
+            Object.keys(correctAnswers).forEach(q => {
+                if (userAnswers[q] === correctAnswers[q]) score++;
+            });
+
+            // Mostrar feedback visual
+            Object.keys(correctAnswers).forEach(q => {
+                const container = document.querySelector(`[data-question="${q}"]`);
+                if (container) {
+                    const options = container.querySelectorAll('.eval-option');
+                    options.forEach((opt, idx) => {
+                        const optNum = idx + 1;
+                        if (optNum === correctAnswers[q]) opt.classList.add('correct');
+                        else if (optNum === userAnswers[q]) opt.classList.add('incorrect');
+                        opt.style.pointerEvents = 'none';
+                    });
                 }
-            },
+            });
 
-            saveState() {
-                try {
-                    const stateToSave = {
-                        currentLesson: this.state.currentLesson,
-                        completedLessons: Array.from(this.state.completedLessons),
-                        evaluationAnswers: this.state.evaluationAnswers,
-                    };
-                    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(stateToSave));
-                } catch (e) {
-                    console.error("Error al guardar el estado en localStorage", e);
-                }
-            },
+            document.getElementById('submitEvalBtn').style.display = 'none';
+            const passed = score >= 2;
+            const resultText = `Obtuviste ${score}/${Object.keys(correctAnswers).length} respuestas correctas.`;
 
-            // --- RENDERING ---
-            renderSidebarNav() {
-                const navHtml = Object.keys(this.LESSONS_DATA).map(id => {
-                    const lesson = this.LESSONS_DATA[id];
-                    return `
-                        <button class="lesson-link" data-lesson="${id}">
-                            <span class="lesson-number">${id}</span>
-                            <span class="flex-grow-1">${lesson.title}</span>
-                        </button>
-                    `;
-                }).join('');
-                this.els.lessonNav.innerHTML = navHtml;
-            },
+            if (passed) {
+                document.getElementById('evalResult').innerHTML = `
+                    <div class="alert alert-success"><i class="bi bi-check-circle-fill me-2"></i><strong>¡Aprobado!</strong> ${resultText}</div>`;
+                completeLesson(lessonNum);
+                document.getElementById('nextLessonBtn').style.display = 'inline-block';
+            } else {
+                document.getElementById('evalResult').innerHTML = `
+                    <div class="alert alert-warning"><i class="bi bi-exclamation-triangle-fill me-2"></i><strong>A revisar.</strong> ${resultText} Revisa el contenido e inténtalo de nuevo.</div>`;
+                document.getElementById('retryEvalBtn').style.display = 'inline-block';
+            }
+            saveProgress();
+        }
 
-            loadLesson(id) {
-                const lessonId = parseInt(id);
-                if (!this.LESSONS_DATA[lessonId]) return;
-                
-                this.state.currentLesson = lessonId;
-                this.saveState();
-                
-                const L = this.LESSONS_DATA[lessonId];
-                const contentHtml = `
-                    <section aria-labelledby="lesson-title-${lessonId}">
-                        <div class="lesson-header">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div>
-                                    <h2 class="lesson-title" id="lesson-title-${lessonId}">${L.title}</h2>
-                                    <p class="lesson-subtitle">${L.subtitle}</p>
-                                </div>
-                                <span class="badge bg-warning text-dark px-3 py-2">${L.durationBadge}</span>
-                            </div>
-                            <div class="objectives-list">
-                                <h6 class="mb-2"><i class="bi bi-bullseye me-2"></i>Objetivos de Aprendizaje</h6>
-                                <ul>${L.objectives.map(o => `<li>${o}</li>`).join('')}</ul>
-                            </div>
-                        </div>
-                    </section>
-                    <section aria-label="Contenido multimedia">
-                        <div class="video-container" aria-hidden="true">
-                            <div class="video-placeholder"><i class="bi bi-play-circle"></i></div>
-                        </div>
-                        <p class="text-center text-muted small">${L.videoNote}</p>
-                    </section>
-                    <section aria-labelledby="exercise-title-${lessonId}">
-                        <div class="exercise-card">
-                            <h6 id="exercise-title-${lessonId}" class="mb-1"><i class="bi bi-pencil me-2"></i>${L.exercise.title}</h6>
-                            <p class="small mb-1">${L.exercise.instructions}</p>
-                            <p class="small mb-1"><strong>Materiales:</strong> ${L.exercise.materials.join(', ')}</p>
-                        </div>
-                    </section>
-                    <section aria-labelledby="eval-title-${lessonId}">
-                        ${this.renderEvaluation(lessonId)}
-                    </section>
-                    <nav class="d-flex justify-content-between gap-2 pt-4 mt-4 border-top" aria-label="Navegación de lección">
-                        <button class="btn btn-outline-primary btn-nav" data-action="prev-lesson" ${lessonId === 1 ? 'disabled' : ''}><i class="bi bi-arrow-left me-1"></i>Anterior</button>
-                        <div>
-                            <button class="btn btn-success btn-nav me-2" data-action="complete-lesson"><i class="bi bi-check-circle me-1"></i>Completar</button>
-                            <button class="btn btn-primary btn-gradient btn-nav" data-action="next-lesson" ${lessonId === Object.keys(this.LESSONS_DATA).length ? 'disabled' : ''}>Siguiente<i class="bi bi-arrow-right ms-2"></i></button>
-                        </div>
-                    </nav>
-                `;
-                
-                this.els.lessonContent.innerHTML = contentHtml;
-                this.updateSidebarActiveState();
-                this.restoreEvaluationState(lessonId);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            },
+        function retryEvaluation(lessonNum) {
+            evaluationAnswers[lessonNum] = {};
+            saveProgress();
+            loadLesson(lessonNum);
+        }
 
-            renderEvaluation(lessonId) {
-                const questions = this.LESSONS_DATA[lessonId].evaluation;
-                const answered = this.state.evaluationAnswers[lessonId] && this.state.evaluationAnswers[lessonId].submitted;
-                let questionsHtml = '';
+        function goToNextLesson() {
+            if (currentLesson < 3) {
+                loadLesson(currentLesson + 1);
+            }
+        }
+        
+        // --- UTILIDADES ---
+        function showToast(message, type = 'info') {
+            const colors = { success: '#4CAF50', warning: '#FFC107', info: '#2196F3' };
+            const toast = document.createElement('div');
+            toast.style.cssText = `position: fixed; top: 80px; right: 20px; background: ${colors[type]}; color: white; padding: 1rem 1.5rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 9999; animation: slideIn 0.3s ease-out;`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => { toast.remove() }, 3000);
+        }
 
-                Object.keys(questions).forEach((qKey, qIndex) => {
-                    const q = questions[qKey];
-                    questionsHtml += `
-                        <div class="eval-question mt-3" data-question-key="${qKey}">
-                            <p class="mb-2"><strong>${qIndex + 1}. ${q.text}</strong></p>
-                            <div class="eval-options">
-                                ${q.options.map((opt, idx) => `
-                                    <button class="eval-option" data-action="select-eval-option" data-option-number="${idx + 1}" ${answered ? 'disabled' : ''}>
-                                        <i class="bi bi-circle"></i>
-                                        <span>${opt}</span>
-                                    </button>
-                                `).join('')}
-                            </div>
-                        </div>
-                    `;
-                });
-
-                return `
-                    <div class="evaluation-container mt-4">
-                        <h5 id="eval-title-${lessonId}">Evaluación Rápida</h5>
-                        ${questionsHtml}
-                        <div class="text-center mt-3">
-                            <button class="btn btn-warning" data-action="submit-evaluation" ${answered ? 'style="display:none;"' : ''}>
-                                <i class="bi bi-send me-2"></i>Enviar Evaluación
-                            </button>
-                        </div>
-                        <div class="eval-result mt-3"></div>
+        // --- CONTENIDO DE LECCIONES ---
+        const lessonsContent = {
+            lesson1: {
+                answers: { q1: 2, q2: 1, q3: 3 },
+                content: `
+                    <div class="lesson-header">
+                        <h2 class="lesson-title">Lección 1.1: Fundamentos del Croquis Rápido</h2>
+                        <p class="text-muted" id="welcomeMessage">¡Hola, ${currentUser.name}! Empecemos con la Lección 1.</p>
                     </div>
-                `;
-            },
-            
-            // --- UI UPDATES ---
-            updateProgressUI() {
-                const total = Object.keys(this.LESSONS_DATA).length;
-                const completedCount = this.state.completedLessons.size;
-                const pct = total > 0 ? Math.round((completedCount / total) * 100) : 0;
-                
-                this.els.progressBar.style.width = `${pct}%`;
-                this.els.progressBar.setAttribute('aria-valuenow', pct);
-                this.els.progressText.textContent = `${pct}%`;
-                this.els.progressDetail.textContent = `${completedCount} de ${total} lecciones completadas`;
+                    
+                    <div class="objectives-list">
+                        <h6 class="mb-2"><i class="bi bi-bullseye me-2"></i>Objetivos de Aprendizaje</h6>
+                        <ul>
+                            <li>Aplicar técnicas de observación para capturar la línea de acción (2 min).</li>
+                            <li>Identificar eje central y puntos de peso en figuras humanas.</li>
+                        </ul>
+                    </div>
 
-                document.querySelectorAll('.lesson-link').forEach(link => {
-                    const lessonId = parseInt(link.dataset.lesson);
-                    link.classList.toggle('completed', this.state.completedLessons.has(lessonId));
-                });
-            },
-            
-            updateSidebarActiveState() {
-                document.querySelectorAll('.lesson-link').forEach(link => {
-                    link.classList.toggle('active', parseInt(link.dataset.lesson) === this.state.currentLesson);
-                });
-            },
+                    <div class="accordion mb-4" id="accordionLesson1">
+                        <div class="accordion-item"><h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#c1">¿Qué es la Línea de Acción?</button></h2><div id="c1" class="accordion-collapse collapse show" data-bs-parent="#accordionLesson1"><div class="accordion-body">La línea de acción es el eje imaginario que atraviesa toda la figura, definiendo la dirección y energía del movimiento.</div></div></div>
+                        <div class="accordion-item"><h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c2">Peso y Punto de Apoyo</button></h2><div id="c2" class="accordion-collapse collapse" data-bs-parent="#accordionLesson1"><div class="accordion-body">Identificar dónde se concentra el peso es fundamental para crear figuras creíbles. La línea vertical desde el centro de la cabeza debe caer dentro del área entre los pies.</div></div></div>
+                    </div>
 
-            // --- LOGIC ---
-            selectEvalOption(button) {
-                const questionContainer = button.closest('.eval-question');
-                const qKey = questionContainer.dataset.questionKey;
-                const optionNumber = parseInt(button.dataset.optionNumber);
-                
-                // Update UI
-                questionContainer.querySelectorAll('.eval-option').forEach(btn => {
-                    btn.classList.remove('selected');
-                    btn.querySelector('i').className = 'bi bi-circle';
-                });
-                button.classList.add('selected');
-                button.querySelector('i').className = 'bi bi-check-circle-fill';
-                
-                // Store answer
-                const lessonId = this.state.currentLesson;
+                    <div class="exercise-card">
+                        <h5 class="mb-3"><i class="bi bi-palette me-2"></i>Ejercicio 1: 3 Croquis de 2 Minutos</h5>
+                        <p><strong>Objetivo:</strong> Capturar línea de acción y peso en 3 poses diferentes.</p>
+                        <div class="row g-2 mb-3">
+                            <div class="col-4"><div class="image-placeholder">ref1_figura_pie.jpg</div></div>
+                            <div class="col-4"><div class="image-placeholder">ref2_pose_dinamica.jpg</div></div>
+                            <div class="col-4"><div class="image-placeholder">ref3_contrapposto.jpg</div></div>
+                        </div>
+                        <div class="list-group">
+                           <label class="list-group-item"><input class="form-check-input me-2" type="checkbox" value="">Configurar cronómetro a 2 minutos.</label>
+                           <label class="list-group-item"><input class="form-check-input me-2" type="checkbox" value="">Dibujar croquis 1 sin borrar.</label>
+                           <label class="list-group-item"><input class="form-check-input me-2" type="checkbox" value="">Repetir para croquis 2 y 3.</label>
+                        </div>
+                    </div>
+
+                    <div class="evaluation-container">
+                        <h4 class="mb-4"><i class="bi bi-clipboard-check me-2"></i>Evaluación Lección 1.1</h4>
+                        <div class="eval-question" data-question="q1"><p><strong>1. ¿Cuál es el objetivo principal de un croquis de 2 minutos?</strong></p><div class="eval-options"><div class="eval-option" onclick="selectEvalOption(this,1,1)"><div class="eval-radio"></div><span>A) Lograr un dibujo detallado y realista</span></div><div class="eval-option" onclick="selectEvalOption(this,2,1)"><div class="eval-radio"></div><span>B) Capturar la energía, dirección y peso del cuerpo</span></div><div class="eval-option" onclick="selectEvalOption(this,3,1)"><div class="eval-radio"></div><span>C) Practicar técnicas de sombreado</span></div></div></div>
+                        <div class="eval-question" data-question="q2"><p><strong>2. ¿Qué debes identificar PRIMERO antes de comenzar a dibujar?</strong></p><div class="eval-options"><div class="eval-option" onclick="selectEvalOption(this,1,1)"><div class="eval-radio"></div><span>A) La línea de acción y el punto de apoyo</span></div><div class="eval-option" onclick="selectEvalOption(this,2,1)"><div class="eval-radio"></div><span>B) Los detalles del rostro</span></div><div class="eval-option" onclick="selectEvalOption(this,3,1)"><div class="eval-radio"></div><span>C) La textura de la ropa</span></div></div></div>
+                        <div class="eval-question" data-question="q3"><p><strong>3. En el croquis rápido, ¿qué actitud es la más apropiada?</strong></p><div class="eval-options"><div class="eval-option" onclick="selectEvalOption(this,1,1)"><div class="eval-radio"></div><span>A) Borrar constantemente hasta lograr perfección</span></div><div class="eval-option" onclick="selectEvalOption(this,2,1)"><div class="eval-radio"></div><span>B) Comenzar con detalles pequeños</span></div><div class="eval-option" onclick="selectEvalOption(this,3,1)"><div class="eval-radio"></div><span>C) No borrar, enfocarse en capturar el gesto</span></div></div></div>
+                        <div id="evalResult"></div>
+                        <div class="text-center mt-4">
+                            <button class="btn btn-warning" id="submitEvalBtn" onclick="submitEvaluation(1)">Enviar</button>
+                            <button class="btn btn-secondary" id="retryEvalBtn" style="display: none;" onclick="retryEvaluation(1)">Reintentar</button>
+                            <button class="btn btn-primary-custom" id="nextLessonBtn" style="display: none;" onclick="goToNextLesson()">Siguiente Lección <i class="bi bi-arrow-right"></i></button>
+                        </div>
+                    </div>
+                `
+            },
+            // MEJORA: La misma estructura se aplicaría a las lecciones 2 y 3.
+            lesson2: {
+                answers: { q1: 2, q2: 3, q3: 1 },
+                content: `<div class="lesson-header"><h2 class="lesson-title">Lección 1.2: Proporciones por Observación</h2><p class="text-muted" id="welcomeMessage"></p></div><div class="objectives-list"><h6>Objetivos</h6><ul><li>Medir proporciones por comparación visual directa.</li></ul></div><p>Contenido de la lección 2 aquí...</p>`
+            },
+            lesson3: {
+                answers: { q1: 2, q2: 3, q3: 1 },
+                content: `<div class="lesson-header"><h2 class="lesson-title">Lección 1.3: Composición y Balance</h2><p class="text-muted" id="welcomeMessage"></p></div><div class="objectives-list"><h6>Objetivos</h6><ul><li>Identificar contrapposto.</li></ul></div><p>Contenido de la lección 3 aquí...</p>`
+            }
+        };
+        
+        // Estilos para la animación del toast
+        const style = document.createElement('style');
+        style.textContent = `@keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }`;
+        document.head.appendChild(style);
+
+    </script>
+</body>
+</html>
