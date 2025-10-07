@@ -17,13 +17,20 @@
             --success: #4CAF50;
             --warning: #FFC107;
             --danger: #f44336;
+            --info: #2196F3;
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #f8f9fa;
+            min-height: 100vh;
         }
 
+        /* HEADER */
         .header-uah {
             background: linear-gradient(135deg, var(--primary-dark), var(--dark));
             color: white;
@@ -34,15 +41,45 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
+        .header-uah .badge {
+            font-size: 0.9rem;
+            padding: 0.5rem 0.75rem;
+        }
+
+        /* BREADCRUMBS */
+        .breadcrumb-custom {
+            background: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .breadcrumb-custom .breadcrumb {
+            margin-bottom: 0;
+        }
+
+        /* SIDEBAR */
         .sidebar-lesson {
             background: white;
             border-radius: 12px;
             padding: 1.5rem;
-            position: sticky;
-            top: 90px;
-            max-height: calc(100vh - 110px);
-            overflow-y: auto;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        @media (min-width: 992px) {
+            .sidebar-lesson {
+                position: sticky;
+                top: 90px;
+                max-height: calc(100vh - 110px);
+                overflow-y: auto;
+            }
+        }
+
+        @media (max-width: 991px) {
+            .sidebar-lesson {
+                margin-bottom: 1.5rem;
+            }
         }
 
         .lesson-link {
@@ -53,31 +90,34 @@
             border-radius: 8px;
             text-decoration: none;
             color: var(--dark);
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             cursor: pointer;
             margin-bottom: 0.5rem;
+            border: 2px solid transparent;
         }
 
         .lesson-link:hover {
             background: #f8f9fa;
-            transform: translateX(5px);
+            transform: translateX(3px);
+            border-color: var(--primary-light);
         }
 
         .lesson-link.active {
             background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
             color: white;
+            border-color: var(--primary-dark);
         }
 
         .lesson-number {
-            width: 30px;
-            height: 30px;
+            width: 35px;
+            height: 35px;
             background: #e9ecef;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             flex-shrink: 0;
         }
 
@@ -96,10 +136,12 @@
             font-family: 'bootstrap-icons';
             color: var(--success);
             font-size: 1.2rem;
+            margin-left: auto;
         }
 
+        /* PROGRESS BAR */
         .progress-module {
-            height: 6px;
+            height: 8px;
             background: #e9ecef;
             border-radius: 10px;
             margin-top: 1rem;
@@ -110,9 +152,10 @@
             height: 100%;
             background: linear-gradient(90deg, var(--primary-dark), var(--primary-light));
             border-radius: 10px;
-            transition: width 0.5s ease;
+            transition: width 0.6s ease;
         }
 
+        /* CONTENT AREA */
         .content-area {
             background: white;
             border-radius: 12px;
@@ -121,45 +164,52 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
+        @media (max-width: 768px) {
+            .content-area {
+                padding: 1.25rem;
+            }
+        }
+
+        /* LESSON HEADER */
         .lesson-header {
             border-bottom: 3px solid var(--primary-light);
-            padding-bottom: 1rem;
+            padding-bottom: 1.5rem;
             margin-bottom: 2rem;
         }
 
         .lesson-title {
             color: var(--primary-dark);
             font-weight: 700;
+            font-size: clamp(1.5rem, 4vw, 2rem);
             margin-bottom: 0.5rem;
         }
 
         .lesson-subtitle {
-            color: var(--gray-medium);
-            font-size: 1.1rem;
+            color: #6c757d;
+            font-size: clamp(1rem, 2.5vw, 1.1rem);
             margin-bottom: 1rem;
         }
 
+        .lesson-duration {
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+        }
+
+        /* OBJECTIVES */
         .objectives-list {
-            background: #f8f9fa;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
             border-left: 4px solid var(--primary-dark);
-            padding: 1rem 1.5rem;
+            padding: 1.25rem 1.5rem;
             margin: 1.5rem 0;
             border-radius: 0 8px 8px 0;
         }
 
-        .objectives-list ul {
-            margin-bottom: 0;
-            padding-left: 1.5rem;
-        }
-
-        .objectives-list li {
-            margin-bottom: 0.5rem;
-        }
-
+        /* ACCORDION */
         .accordion-button {
             background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
             color: white;
             font-weight: 600;
+            font-size: clamp(0.9rem, 2vw, 1rem);
         }
 
         .accordion-button:not(.collapsed) {
@@ -168,9 +218,15 @@
         }
 
         .accordion-button:focus {
-            box-shadow: none;
+            box-shadow: 0 0 0 0.25rem rgba(44, 95, 102, 0.25);
+            border-color: var(--primary-dark);
         }
 
+        .accordion-button::after {
+            filter: brightness(0) invert(1);
+        }
+
+        /* VIDEO CONTAINER */
         .video-container {
             background: #000;
             border-radius: 12px;
@@ -188,40 +244,66 @@
             width: 100%;
             height: 100%;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             background: linear-gradient(135deg, rgba(44,95,102,0.9), rgba(26,26,26,0.9));
             color: white;
-            font-size: 4rem;
         }
 
+        .video-placeholder i {
+            font-size: clamp(2rem, 8vw, 4rem);
+        }
+
+        /* EXERCISE CARD */
         .exercise-card {
             background: linear-gradient(135deg, #f8f9fa, #e9ecef);
             border-left: 5px solid var(--primary-light);
             padding: 1.5rem;
             border-radius: 8px;
             margin: 1.5rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
+        /* REFERENCE IMAGES */
         .reference-image {
-            max-width: 100%;
-            height: auto;
+            width: 100%;
+            height: 100%;
+            min-height: 150px;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             background: #e9ecef;
-            min-height: 200px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #6c757d;
             font-style: italic;
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.85rem;
         }
 
+        /* EVALUATION */
         .evaluation-container {
             background: #f8f9fa;
             padding: 2rem;
             border-radius: 12px;
             margin: 2rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        @media (max-width: 768px) {
+            .evaluation-container {
+                padding: 1.25rem;
+            }
+        }
+
+        .eval-progress {
+            background: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--info);
         }
 
         .eval-question {
@@ -244,15 +326,16 @@
             border: 2px solid #dee2e6;
             border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             gap: 0.75rem;
         }
 
-        .eval-option:hover {
+        .eval-option:hover:not(.correct):not(.incorrect) {
             border-color: var(--primary-dark);
             background: rgba(44, 95, 102, 0.05);
+            transform: translateX(3px);
         }
 
         .eval-option.selected {
@@ -271,14 +354,15 @@
         }
 
         .eval-radio {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             border: 2px solid #dee2e6;
             border-radius: 50%;
             flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.3s ease;
         }
 
         .eval-option.selected .eval-radio {
@@ -288,17 +372,36 @@
 
         .eval-option.selected .eval-radio::after {
             content: '';
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             background: white;
             border-radius: 50%;
         }
 
+        .eval-option.correct .eval-radio {
+            border-color: var(--success);
+            background: var(--success);
+        }
+
+        .eval-option.incorrect .eval-radio {
+            border-color: var(--danger);
+            background: var(--danger);
+        }
+
+        /* BUTTONS */
         .btn-nav {
             padding: 0.75rem 2rem;
             border-radius: 8px;
             font-weight: 600;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 576px) {
+            .btn-nav {
+                padding: 0.65rem 1.25rem;
+                font-size: 0.9rem;
+                width: 100%;
+            }
         }
 
         .btn-primary-custom {
@@ -312,6 +415,7 @@
             box-shadow: 0 6px 20px rgba(44, 95, 102, 0.3);
         }
 
+        /* ALERTS */
         .alert-custom {
             border-left: 4px solid;
             border-radius: 8px;
@@ -325,13 +429,40 @@
             margin-top: 1rem;
         }
 
-        @media (max-width: 991px) {
-            .sidebar-lesson {
-                position: static;
-                margin-bottom: 1.5rem;
-            }
+        /* LOADING SPINNER */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
         }
 
+        .loading-overlay.show {
+            display: flex;
+        }
+
+        /* SCROLLBAR */
+        .sidebar-lesson::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar-lesson::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .sidebar-lesson::-webkit-scrollbar-thumb {
+            background: var(--primary-dark);
+            border-radius: 10px;
+        }
+
+        /* ANIMATIONS */
         @keyframes slideIn {
             from {
                 transform: translateX(100%);
@@ -353,9 +484,45 @@
                 opacity: 0;
             }
         }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* UTILITY CLASSES */
+        .text-sm { font-size: 0.875rem; }
+        .text-xs { font-size: 0.75rem; }
     </style>
 </head>
 <body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="text-center">
+            <div class="spinner-border text-light" style="width: 3rem; height: 3rem;" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="text-white mt-3">Cargando contenido...</p>
+        </div>
+    </div>
+
+    <!-- Header -->
     <header class="header-uah">
         <div class="container-fluid">
             <div class="row align-items-center g-2">
@@ -374,19 +541,35 @@
         </div>
     </header>
 
+    <!-- Main Content -->
     <div class="container-fluid py-3 py-md-4">
+        <!-- Breadcrumbs -->
+        <div class="breadcrumb-custom d-none d-md-block">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="index.html">Inicio</a></li>
+                    <li class="breadcrumb-item"><a href="index.html">Módulo 1</a></li>
+                    <li class="breadcrumb-item active" aria-current="page" id="breadcrumbLesson">Lección 1</li>
+                </ol>
+            </nav>
+        </div>
+
         <div class="row">
+            <!-- Sidebar -->
             <aside class="col-lg-3">
                 <div class="sidebar-lesson">
                     <h5 class="mb-3"><i class="bi bi-book me-2"></i>Lecciones</h5>
+                    
                     <a class="lesson-link active" data-lesson="1" onclick="loadLesson(1)">
                         <span class="lesson-number">1</span>
                         <span class="flex-grow-1">Fundamentos del Croquis</span>
                     </a>
+                    
                     <a class="lesson-link" data-lesson="2" onclick="loadLesson(2)">
                         <span class="lesson-number">2</span>
                         <span class="flex-grow-1">Proporciones</span>
                     </a>
+                    
                     <a class="lesson-link" data-lesson="3" onclick="loadLesson(3)">
                         <span class="lesson-number">3</span>
                         <span class="flex-grow-1">Balance</span>
@@ -408,20 +591,32 @@
                             <p class="small mb-2"><strong>Duración:</strong> 5 días</p>
                             <p class="small mb-2"><strong>Carga:</strong> 150 min</p>
                             <p class="small mb-0"><strong>Entregables:</strong></p>
-                            <ul class="small mb-0">
+                            <ul class="small mb-0 mt-2">
                                 <li>3 croquis de 2 min</li>
                                 <li>2 figuras de 15 min</li>
                                 <li>3 croquis de 5 min</li>
-                                <li>3 evaluaciones aprobadas</li>
+                                <li>3 evaluaciones</li>
                             </ul>
+                        </div>
+                    </div>
+
+                    <div class="card border-success mt-3">
+                        <div class="card-header bg-success text-white">
+                            <i class="bi bi-cloud-upload me-2"></i>Entrega
+                        </div>
+                        <div class="card-body text-center">
+                            <a href="https://forms.gle/URL_FORMULARIO_M1" class="btn btn-success btn-sm w-100" target="_blank">
+                                <i class="bi bi-box-arrow-up-right me-2"></i>Subir Trabajos
+                            </a>
                         </div>
                     </div>
                 </div>
             </aside>
 
+            <!-- Main Content Area -->
             <main class="col-lg-9">
                 <div class="content-area" id="lessonContent">
-                    <!-- Contenido dinámico -->
+                    <!-- Content loads dynamically here -->
                 </div>
             </main>
         </div>
@@ -430,30 +625,55 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        // ===== CONFIGURACIÓN Y ESTADO GLOBAL =====
         let currentLesson = 1;
         let evaluationAnswers = {};
         let completedLessons = [];
         
         const currentUser = {
-            email: 'estudiante@uah.cl',
-            name: 'Estudiante'
+            email: localStorage.getItem('currentUserEmail') || 'estudiante@uah.cl',
+            name: localStorage.getItem('currentUserName') || 'Estudiante'
         };
 
-        function loadProgress() {
-            const saved = window.moduleProgress || {
-                completedLessons: [],
-                evaluations: {}
+        const STORAGE_KEY = `module1_progress_${currentUser.email}`;
+
+        // ===== FUNCIONES DE PERSISTENCIA =====
+        function saveProgress() {
+            const progressData = {
+                completedLessons: completedLessons,
+                evaluations: evaluationAnswers,
+                timestamp: new Date().toISOString(),
+                currentLesson: currentLesson
             };
-            completedLessons = saved.completedLessons || [];
-            evaluationAnswers = saved.evaluations || {};
-            updateProgressBar();
+            
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(progressData));
+                updateProgressBar();
+                console.log('Progreso guardado exitosamente');
+            } catch (error) {
+                console.error('Error al guardar progreso:', error);
+                showToast('Error al guardar progreso', 'danger');
+            }
         }
 
-        function saveProgress() {
-            window.moduleProgress = {
-                completedLessons: completedLessons,
-                evaluations: evaluationAnswers
-            };
+        function loadProgress() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    completedLessons = data.completedLessons || [];
+                    evaluationAnswers = data.evaluations || {};
+                    currentLesson = data.currentLesson || 1;
+                    
+                    console.log('Progreso cargado:', {
+                        completedLessons,
+                        evaluationsCount: Object.keys(evaluationAnswers).length
+                    });
+                }
+            } catch (error) {
+                console.error('Error al cargar progreso:', error);
+            }
+            
             updateProgressBar();
         }
 
@@ -462,57 +682,124 @@
             const completed = completedLessons.length;
             const percentage = Math.round((completed / totalLessons) * 100);
             
-            document.getElementById('progressBar').style.width = percentage + '%';
-            document.getElementById('progressText').textContent = percentage + '%';
-            document.getElementById('progressDetail').textContent = 
-                `${completed} de ${totalLessons} lecciones completadas`;
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const progressDetail = document.getElementById('progressDetail');
             
+            if (progressBar) progressBar.style.width = percentage + '%';
+            if (progressText) progressText.textContent = percentage + '%';
+            if (progressDetail) progressDetail.textContent = `${completed} de ${totalLessons} lecciones completadas`;
+            
+            // Actualizar checkmarks en sidebar
             completedLessons.forEach(lessonNum => {
                 const link = document.querySelector(`[data-lesson="${lessonNum}"]`);
-                if (link) link.classList.add('completed');
+                if (link && !link.classList.contains('completed')) {
+                    link.classList.add('completed');
+                }
             });
         }
 
-        function completeLesson(lessonNum) {
-            if (!completedLessons.includes(lessonNum)) {
-                completedLessons.push(lessonNum);
-                saveProgress();
-                
-                const link = document.querySelector(`[data-lesson="${lessonNum}"]`);
-                if (link) link.classList.add('completed');
-                
-                showToast('¡Lección completada!', 'success');
+        // ===== FUNCIONES DE NAVEGACIÓN =====
+        function showLoading(show = true) {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.classList.toggle('show', show);
             }
         }
 
         function loadLesson(lessonNum) {
+            showLoading(true);
             currentLesson = lessonNum;
             
+            // Update breadcrumb
+            const breadcrumb = document.getElementById('breadcrumbLesson');
+            if (breadcrumb) breadcrumb.textContent = `Lección ${lessonNum}`;
+            
+            // Update sidebar
             document.querySelectorAll('.lesson-link').forEach(link => {
                 link.classList.remove('active');
             });
-            document.querySelector(`[data-lesson="${lessonNum}"]`).classList.add('active');
+            const activeLink = document.querySelector(`[data-lesson="${lessonNum}"]`);
+            if (activeLink) activeLink.classList.add('active');
             
-            const lessonContent = lessons[`lesson${lessonNum}`];
-            document.getElementById('lessonContent').innerHTML = lessonContent;
-            
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Simulate async loading
+            setTimeout(() => {
+                const contentArea = document.getElementById('lessonContent');
+                const lessonContent = lessons[`lesson${lessonNum}`];
+                
+                if (contentArea && lessonContent) {
+                    contentArea.innerHTML = lessonContent;
+                    contentArea.classList.add('fade-in');
+                }
+                
+                showLoading(false);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                saveProgress();
+            }, 400);
         }
 
+        function completeLesson(lessonNum) {
+            if (completedLessons.includes(lessonNum)) {
+                showToast('Esta lección ya está completada', 'info');
+                return;
+            }
+            
+            completedLessons.push(lessonNum);
+            saveProgress();
+            
+            const link = document.querySelector(`[data-lesson="${lessonNum}"]`);
+            if (link) link.classList.add('completed');
+            
+            showToast('¡Lección completada exitosamente!', 'success');
+        }
+
+        function goToNextLesson() {
+            if (currentLesson < 3) {
+                loadLesson(currentLesson + 1);
+            } else {
+                showConfirmModal(
+                    '¡Felicitaciones!',
+                    'Has completado todas las lecciones del Módulo 1. ¿Deseas volver al inicio?',
+                    () => window.location.href = 'index.html'
+                );
+            }
+        }
+
+        // ===== FUNCIONES DE EVALUACIÓN =====
         function selectEvalOption(element, optionNumber, lessonNum) {
-            const container = element.parentElement;
+            const container = element.closest('[data-question]');
+            if (!container) {
+                console.error('No se encontró contenedor con data-question');
+                return;
+            }
+            
             const question = container.getAttribute('data-question');
             
+            // Remove previous selection in same question
             container.querySelectorAll('.eval-option').forEach(opt => {
                 opt.classList.remove('selected');
             });
+            
+            // Add selection
             element.classList.add('selected');
             
-            if (!evaluationAnswers[lessonNum]) evaluationAnswers[lessonNum] = {};
+            // Save answer
+            if (!evaluationAnswers[lessonNum]) {
+                evaluationAnswers[lessonNum] = {};
+            }
             evaluationAnswers[lessonNum][question] = optionNumber;
+            
+            console.log('Respuesta guardada:', {
+                leccion: lessonNum,
+                pregunta: question,
+                respuesta: optionNumber,
+                totalRespuestas: Object.keys(evaluationAnswers[lessonNum]).length
+            });
         }
 
         function submitEvaluation(lessonNum) {
+            showLoading(true);
+            
             const correctAnswers = {
                 1: { q1: 2, q2: 1, q3: 3 },
                 2: { q1: 2, q2: 3, q3: 1 },
@@ -523,71 +810,132 @@
             const correct = correctAnswers[lessonNum];
             
             if (Object.keys(userAnswers).length < 3) {
+                showLoading(false);
                 showToast('Por favor responde todas las preguntas', 'warning');
+                
+                // Highlight unanswered questions
+                ['q1', 'q2', 'q3'].forEach(q => {
+                    if (!userAnswers[q]) {
+                        const container = document.querySelector(`[data-question="${q}"]`);
+                        if (container) {
+                            container.style.animation = 'shake 0.5s';
+                            setTimeout(() => {
+                                container.style.animation = '';
+                            }, 500);
+                        }
+                    }
+                });
                 return;
             }
             
-            let score = 0;
-            Object.keys(correct).forEach(q => {
-                if (userAnswers[q] === correct[q]) score++;
-            });
-            
-            Object.keys(correct).forEach(q => {
-                const container = document.querySelector(`[data-question="${q}"]`);
-                if (container) {
-                    const options = container.querySelectorAll('.eval-option');
-                    options.forEach((opt, idx) => {
-                        const optNum = idx + 1;
-                        if (optNum === correct[q]) {
-                            opt.classList.add('correct');
-                        } else if (optNum === userAnswers[q]) {
-                            opt.classList.add('incorrect');
-                        }
-                        opt.style.pointerEvents = 'none';
-                    });
+            setTimeout(() => {
+                let score = 0;
+                
+                Object.keys(correct).forEach(q => {
+                    const container = document.querySelector(`[data-question="${q}"]`);
+                    if (container) {
+                        const options = container.querySelectorAll('.eval-option');
+                        options.forEach((opt, idx) => {
+                            const optNum = idx + 1;
+                            opt.style.pointerEvents = 'none';
+                            
+                            if (optNum === correct[q]) {
+                                opt.classList.add('correct');
+                                if (userAnswers[q] === correct[q]) score++;
+                            } else if (optNum === userAnswers[q]) {
+                                opt.classList.add('incorrect');
+                            }
+                        });
+                    }
+                });
+                
+                document.getElementById('submitEvalBtn').style.display = 'none';
+                
+                const resultDiv = document.getElementById('evalResult');
+                const percentage = Math.round((score / 3) * 100);
+                const passed = score >= 2;
+                
+                if (resultDiv) {
+                    if (passed) {
+                        resultDiv.innerHTML = `
+                            <div class="alert alert-success alert-custom">
+                                <h5 class="alert-heading">
+                                    <i class="bi bi-check-circle-fill me-2"></i>¡Excelente!
+                                </h5>
+                                <p class="mb-2">Has aprobado la evaluación con <strong>${score}/3</strong> respuestas correctas (${percentage}%).</p>
+                                <hr>
+                                <p class="mb-0 small">Puedes continuar con la siguiente lección.</p>
+                            </div>
+                        `;
+                        
+                        completeLesson(lessonNum);
+                        
+                        const nextBtn = document.getElementById('nextLessonBtn');
+                        if (nextBtn) nextBtn.style.display = 'inline-block';
+                    } else {
+                        resultDiv.innerHTML = `
+                            <div class="alert alert-warning alert-custom">
+                                <h5 class="alert-heading">
+                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>Necesitas mejorar
+                                </h5>
+                                <p class="mb-2">Obtuviste <strong>${score}/3</strong> respuestas correctas (${percentage}%).</p>
+                                <p class="mb-2">Se requiere al menos 2/3 para aprobar.</p>
+                                <hr>
+                                <p class="mb-0 small">Revisa el contenido de la lección e inténtalo nuevamente.</p>
+                            </div>
+                        `;
+                        
+                        const retryBtn = document.getElementById('retryEvalBtn');
+                        if (retryBtn) retryBtn.style.display = 'inline-block';
+                    }
                 }
-            });
-            
-            document.getElementById('submitEvalBtn').style.display = 'none';
-            
-            if (score >= 2) {
-                document.getElementById('evalResult').innerHTML = `
-                    <div class="alert alert-success alert-custom">
-                        <i class="bi bi-check-circle-fill me-2"></i>
-                        <strong>¡Excelente!</strong> Aprobaste con ${score}/3 respuestas correctas.
-                    </div>
-                `;
-                completeLesson(lessonNum);
-                document.getElementById('nextLessonBtn').style.display = 'inline-block';
-            } else {
-                document.getElementById('evalResult').innerHTML = `
-                    <div class="alert alert-warning alert-custom">
-                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                        <strong>Atención:</strong> Obtuviste ${score}/3 respuestas correctas. 
-                        Revisa el contenido e inténtalo nuevamente.
-                    </div>
-                `;
-                document.getElementById('retryEvalBtn').style.display = 'inline-block';
-            }
-            
-            saveProgress();
+                
+                showLoading(false);
+                saveProgress();
+                
+                // Scroll to results
+                if (resultDiv) {
+                    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 600);
         }
 
         function retryEvaluation(lessonNum) {
-            evaluationAnswers[lessonNum] = {};
-            loadLesson(lessonNum);
-            showToast('Puedes intentarlo nuevamente', 'info');
-        }
-
-        function goToNextLesson() {
-            if (currentLesson < 3) {
-                loadLesson(currentLesson + 1);
-            } else {
-                showToast('¡Has completado el Módulo 1!', 'success');
+            // Clear answers
+            if (evaluationAnswers[lessonNum]) {
+                delete evaluationAnswers[lessonNum];
+            }
+            
+            // Clear visual state
+            document.querySelectorAll('.eval-option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+                opt.style.pointerEvents = 'auto';
+            });
+            
+            // Reset UI
+            const evalResult = document.getElementById('evalResult');
+            if (evalResult) evalResult.innerHTML = '';
+            
+            const submitBtn = document.getElementById('submitEvalBtn');
+            const retryBtn = document.getElementById('retryEvalBtn');
+            const nextBtn = document.getElementById('nextLessonBtn');
+            
+            if (submitBtn) submitBtn.style.display = 'inline-block';
+            if (retryBtn) retryBtn.style.display = 'none';
+            if (nextBtn) nextBtn.style.display = 'none';
+            
+            saveProgress();
+            showToast('Puedes intentar la evaluación nuevamente', 'info');
+            
+            // Scroll to first question
+            const firstQuestion = document.querySelector('.eval-question');
+            if (firstQuestion) {
+                firstQuestion.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
 
-        function showToast(message, type) {
+        // ===== UTILIDADES UI =====
+        function showToast(message, type = 'info') {
             const colors = {
                 success: '#4CAF50',
                 warning: '#FFC107',
@@ -595,7 +943,15 @@
                 danger: '#f44336'
             };
             
+            const icons = {
+                success: 'check-circle-fill',
+                warning: 'exclamation-triangle-fill',
+                info: 'info-circle-fill',
+                danger: 'x-circle-fill'
+            };
+            
             const toast = document.createElement('div');
+            toast.className = 'toast-notification';
             toast.style.cssText = `
                 position: fixed;
                 top: 80px;
@@ -607,8 +963,17 @@
                 box-shadow: 0 4px 12px rgba(0,0,0,0.3);
                 z-index: 9999;
                 animation: slideIn 0.3s ease-out;
+                max-width: 350px;
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
             `;
-            toast.textContent = message;
+            
+            toast.innerHTML = `
+                <i class="bi bi-${icons[type]}" style="font-size: 1.25rem;"></i>
+                <span>${message}</span>
+            `;
+            
             document.body.appendChild(toast);
             
             setTimeout(() => {
@@ -617,20 +982,63 @@
             }, 3000);
         }
 
+        function showConfirmModal(title, message, onConfirm, confirmText = 'Confirmar', variant = 'primary') {
+            const modalHTML = `
+                <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="confirmModalLabel">${title}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="mb-0">${message}</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="button" class="btn btn-${variant}" id="confirmBtn">${confirmText}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Remove existing modal
+            const existingModal = document.getElementById('confirmModal');
+            if (existingModal) existingModal.remove();
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+            modal.show();
+            
+            document.getElementById('confirmBtn').addEventListener('click', () => {
+                modal.hide();
+                if (typeof onConfirm === 'function') {
+                    onConfirm();
+                }
+            });
+            
+            document.getElementById('confirmModal').addEventListener('hidden.bs.modal', function () {
+                this.remove();
+            });
+        }
+
+        // ===== CONTENIDO DE LECCIONES =====
         const lessons = {
             lesson1: `
                 <div class="lesson-header">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div>
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start mb-3">
+                        <div class="flex-grow-1 mb-2 mb-md-0">
                             <h2 class="lesson-title">Lección 1.1: Fundamentos del Croquis Rápido</h2>
                             <p class="lesson-subtitle">Capturando la esencia del movimiento</p>
                         </div>
-                        <span class="badge bg-warning text-dark px-3 py-2">45 minutos</span>
+                        <span class="badge bg-warning text-dark lesson-duration">45 minutos</span>
                     </div>
                     
                     <div class="objectives-list">
                         <h6 class="mb-2"><i class="bi bi-bullseye me-2"></i>Objetivos de Aprendizaje</h6>
-                        <ul>
+                        <ul class="mb-0">
                             <li>Aplicar técnicas de observación directa para capturar línea de acción (2 min)</li>
                             <li>Identificar eje central y puntos de peso en figuras humanas</li>
                         </ul>
@@ -640,14 +1048,14 @@
                 <div class="video-container">
                     <div class="video-placeholder">
                         <i class="bi bi-play-circle"></i>
+                        <p class="mt-3 mb-0 text-sm">Video: Fundamentos del croquis rápido (2-3 min)</p>
                     </div>
                 </div>
-                <p class="text-center text-muted small">Video: Fundamentos del croquis rápido (2-3 min)</p>
 
                 <div class="accordion mb-4" id="accordionLesson1">
                     <div class="accordion-item">
                         <h2 class="accordion-header">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
                                 <i class="bi bi-1-circle me-2"></i>¿Qué es la Línea de Acción?
                             </button>
                         </h2>
@@ -783,6 +1191,10 @@
                 <div class="evaluation-container">
                     <h4 class="mb-4"><i class="bi bi-clipboard-check me-2"></i>Evaluación Lección 1.1</h4>
                     
+                    <div class="eval-progress">
+                        <small class="text-muted">Responde las 3 preguntas para continuar</small>
+                    </div>
+                    
                     <div class="eval-question" data-question="q1">
                         <h6>Pregunta 1:</h6>
                         <p>¿Cuál es el objetivo principal de un croquis de 2 minutos?</p>
@@ -842,7 +1254,7 @@
 
                     <div id="evalResult"></div>
 
-                    <div class="text-center mt-4">
+                    <div class="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">
                         <button class="btn btn-primary btn-lg btn-nav" id="submitEvalBtn" onclick="submitEvaluation(1)">
                             <i class="bi bi-check-circle me-2"></i>Enviar Evaluación
                         </button>
@@ -858,17 +1270,17 @@
 
             lesson2: `
                 <div class="lesson-header">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div>
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start mb-3">
+                        <div class="flex-grow-1 mb-2 mb-md-0">
                             <h2 class="lesson-title">Lección 1.2: Proporciones por Observación</h2>
                             <p class="lesson-subtitle">Medición visual sin fórmulas</p>
                         </div>
-                        <span class="badge bg-warning text-dark px-3 py-2">50 minutos</span>
+                        <span class="badge bg-warning text-dark lesson-duration">50 minutos</span>
                     </div>
                     
                     <div class="objectives-list">
                         <h6 class="mb-2"><i class="bi bi-bullseye me-2"></i>Objetivos de Aprendizaje</h6>
-                        <ul>
+                        <ul class="mb-0">
                             <li>Medir proporciones por comparación visual directa</li>
                             <li>Aplicar proporciones observadas en 2 figuras de 15 minutos</li>
                         </ul>
@@ -878,7 +1290,7 @@
                 <div class="accordion mb-4" id="accordionLesson2">
                     <div class="accordion-item">
                         <h2 class="accordion-header">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2_1">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2_1" aria-expanded="true" aria-controls="collapse2_1">
                                 <i class="bi bi-1-circle me-2"></i>Medición Visual sin Fórmulas
                             </button>
                         </h2>
@@ -1013,6 +1425,10 @@
                 <div class="evaluation-container">
                     <h4 class="mb-4"><i class="bi bi-clipboard-check me-2"></i>Evaluación Lección 1.2</h4>
                     
+                    <div class="eval-progress">
+                        <small class="text-muted">Responde las 3 preguntas para continuar</small>
+                    </div>
+                    
                     <div class="eval-question" data-question="q1">
                         <h6>Pregunta 1:</h6>
                         <p>¿Cuál es la técnica correcta para medir proporciones visualmente?</p>
@@ -1026,320 +1442,3 @@
                                 <span>B) Extender brazo, usar lápiz como regla, comparar partes</span>
                             </div>
                             <div class="eval-option" onclick="selectEvalOption(this, 3, 2)">
-                                <div class="eval-radio"></div>
-                                <span>C) Usar regla física sobre la fotografía</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="eval-question" data-question="q2">
-                        <h6>Pregunta 2:</h6>
-                        <p>¿Qué significa "consistencia interna"?</p>
-                        <div class="eval-options">
-                            <div class="eval-option" onclick="selectEvalOption(this, 1, 2)">
-                                <div class="eval-radio"></div>
-                                <span>A) Todas las líneas tienen el mismo grosor</span>
-                            </div>
-                            <div class="eval-option" onclick="selectEvalOption(this, 2, 2)">
-                                <div class="eval-radio"></div>
-                                <span>B) El dibujo está completamente terminado</span>
-                            </div>
-                            <div class="eval-option" onclick="selectEvalOption(this, 3, 2)">
-                                <div class="eval-radio"></div>
-                                <span>C) Todas las partes se relacionan proporcionalmente</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="eval-question" data-question="q3">
-                        <h6>Pregunta 3:</h6>
-                        <p>Al construir una figura de 15 minutos, ¿qué hacer PRIMERO?</p>
-                        <div class="eval-options">
-                            <div class="eval-option" onclick="selectEvalOption(this, 1, 2)">
-                                <div class="eval-radio"></div>
-                                <span>A) Observar y medir visualmente las proporciones</span>
-                            </div>
-                            <div class="eval-option" onclick="selectEvalOption(this, 2, 2)">
-                                <div class="eval-radio"></div>
-                                <span>B) Dibujar detalles del rostro</span>
-                            </div>
-                            <div class="eval-option" onclick="selectEvalOption(this, 3, 2)">
-                                <div class="eval-radio"></div>
-                                <span>C) Sombrear el fondo</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="evalResult"></div>
-
-                    <div class="text-center mt-4">
-                        <button class="btn btn-primary btn-lg btn-nav" id="submitEvalBtn" onclick="submitEvaluation(2)">
-                            <i class="bi bi-check-circle me-2"></i>Enviar Evaluación
-                        </button>
-                        <button class="btn btn-warning btn-lg btn-nav" id="retryEvalBtn" style="display: none;" onclick="retryEvaluation(2)">
-                            <i class="bi bi-arrow-clockwise me-2"></i>Reintentar
-                        </button>
-                        <button class="btn btn-primary-custom btn-lg btn-nav" id="nextLessonBtn" style="display: none;" onclick="goToNextLesson()">
-                            Siguiente Lección <i class="bi bi-arrow-right ms-2"></i>
-                        </button>
-                    </div>
-                </div>
-            `,
-
-            lesson3: `
-                <div class="lesson-header">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div>
-                            <h2 class="lesson-title">Lección 1.3: Composición y Balance</h2>
-                            <p class="lesson-subtitle">Contrapposto y distribución del peso</p>
-                        </div>
-                        <span class="badge bg-warning text-dark px-3 py-2">55 minutos</span>
-                    </div>
-                    
-                    <div class="objectives-list">
-                        <h6 class="mb-2"><i class="bi bi-bullseye me-2"></i>Objetivos de Aprendizaje</h6>
-                        <ul>
-                            <li>Identificar contrapposto (distribución de peso asimétrica)</li>
-                            <li>Crear 3 croquis con comprensión de balance corporal</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="accordion mb-4" id="accordionLesson3">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3_1">
-                                <i class="bi bi-1-circle me-2"></i>¿Qué es el Contrapposto?
-                            </button>
-                        </h2>
-                        <div id="collapse3_1" class="accordion-collapse collapse show" data-bs-parent="#accordionLesson3">
-                            <div class="accordion-body">
-                                <p>El contrapposto es una pose natural donde el peso se distribuye asimétricamente: cuando una cadera sube, el hombro opuesto tiende a bajar.</p>
-                                
-                                <div class="row g-3 mt-3">
-                                    <div class="col-md-6">
-                                        <div class="card border-primary">
-                                            <div class="card-header bg-primary text-white">Lado con Peso</div>
-                                            <div class="card-body">
-                                                <ul class="small mb-0">
-                                                    <li>Cadera elevada</li>
-                                                    <li>Pierna tensa/recta</li>
-                                                    <li>Hombro ligeramente bajo</li>
-                                                    <li>Músculos contraídos</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="card border-success">
-                                            <div class="card-header bg-success text-white">Lado Relajado</div>
-                                            <div class="card-body">
-                                                <ul class="small mb-0">
-                                                    <li>Cadera descendida</li>
-                                                    <li>Pierna doblada/relajada</li>
-                                                    <li>Hombro ligeramente alto</li>
-                                                    <li>Músculos distendidos</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="reference-text mt-3">
-                                    <small>Richer, P. (1890). <em>Artistic anatomy</em>. Watson-Guptill Publications.</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3_2">
-                                <i class="bi bi-2-circle me-2"></i>Polígono de Apoyo
-                            </button>
-                        </h2>
-                        <div id="collapse3_2" class="accordion-collapse collapse" data-bs-parent="#accordionLesson3">
-                            <div class="accordion-body">
-                                <p>Para que una figura se vea equilibrada, la línea vertical desde el centro de la cabeza debe caer dentro del polígono de apoyo (área entre los pies).</p>
-                                
-                                <div class="alert alert-success mt-3">
-                                    <small><i class="bi bi-check-circle me-2"></i><strong>Regla visual:</strong> Si la línea cae fuera del polígono, la figura se verá inestable.</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3_3">
-                                <i class="bi bi-3-circle me-2"></i>Ejes de Hombros y Caderas
-                            </button>
-                        </h2>
-                        <div id="collapse3_3" class="accordion-collapse collapse" data-bs-parent="#accordionLesson3">
-                            <div class="accordion-body">
-                                <p>Los ejes horizontales son fundamentales para entender el balance.</p>
-                                
-                                <ol>
-                                    <li>Observa inclinación de hombros</li>
-                                    <li>Observa inclinación de caderas</li>
-                                    <li>En contrapposto, tienen inclinaciones opuestas</li>
-                                    <li>Marca estas líneas como guías</li>
-                                </ol>
-
-                                <div class="alert alert-info mt-3">
-                                    <small><i class="bi bi-palette me-2"></i><strong>Consejo:</strong> Usa un lápiz de color diferente para marcar estos ejes temporalmente.</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="exercise-card">
-                    <h5 class="mb-3">
-                        <i class="bi bi-palette me-2"></i>EJERCICIO 3: 3 Croquis de Balance (5 min c/u)
-                    </h5>
-                    <p><strong>Objetivo:</strong> Capturar distribución de peso y balance</p>
-                    
-                    <div class="row mt-3">
-                        <div class="col-md-6">
-                            <h6>Materiales:</h6>
-                            <ul>
-                                <li>3 hojas de papel</li>
-                                <li>Lápiz + lápiz de color (opcional)</li>
-                                <li>Cronómetro</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6">
-                            <h6>Referencias proporcionadas:</h6>
-                            <div class="row g-2">
-                                <div class="col-4">
-                                    <div class="reference-image" style="height: 100px;">
-                                        <small>ref6_contrapposto.jpg</small>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="reference-image" style="height: 100px;">
-                                        <small>ref7_peso_asimetrico.jpg</small>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="reference-image" style="height: 100px;">
-                                        <small>ref8_balance_dinamico.jpg</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <p class="mb-0 small mt-3"><strong>Proceso:</strong> Min 1: observa peso | Min 2: marca ejes | Min 3-4: línea + masa | Min 5: extremidades</p>
-                </div>
-
-                <div class="evaluation-container">
-                    <h4 class="mb-4"><i class="bi bi-clipboard-check me-2"></i>Evaluación Final Módulo 1</h4>
-                    
-                    <div class="eval-question" data-question="q1">
-                        <h6>Pregunta 1:</h6>
-                        <p>Si la cadera derecha está elevada, ¿qué sucede con el hombro derecho?</p>
-                        <div class="eval-options">
-                            <div class="eval-option" onclick="selectEvalOption(this, 1, 3)">
-                                <div class="eval-radio"></div>
-                                <span>A) También se eleva</span>
-                            </div>
-                            <div class="eval-option" onclick="selectEvalOption(this, 2, 3)">
-                                <div class="eval-radio"></div>
-                                <span>B) Tiende a descender (opuesto)</span>
-                            </div>
-                            <div class="eval-option" onclick="selectEvalOption(this, 3, 3)">
-                                <div class="eval-radio"></div>
-                                <span>C) Permanece horizontal</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="eval-question" data-question="q2">
-                        <h6>Pregunta 2:</h6>
-                        <p>¿Dónde debe caer la línea vertical para equilibrio?</p>
-                        <div class="eval-options">
-                            <div class="eval-option" onclick="selectEvalOption(this, 1, 3)">
-                                <div class="eval-radio"></div>
-                                <span>A) Centro exacto entre pies</span>
-                            </div>
-                            <div class="eval-option" onclick="selectEvalOption(this, 2, 3)">
-                                <div class="eval-radio"></div>
-                                <span>B) Siempre pie derecho</span>
-                            </div>
-                            <div class="eval-option" onclick="selectEvalOption(this, 3, 3)">
-                                <div class="eval-radio"></div>
-                                <span>C) Dentro del polígono de apoyo</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="eval-question" data-question="q3">
-                        <h6>Pregunta 3:</h6>
-                        <p>¿Qué marcar PRIMERO en croquis de balance?</p>
-                        <div class="eval-options">
-                            <div class="eval-option" onclick="selectEvalOption(this, 1, 3)">
-                                <div class="eval-radio"></div>
-                                <span>A) Ejes de hombros y caderas</span>
-                            </div>
-                            <div class="eval-option" onclick="selectEvalOption(this, 2, 3)">
-                                <div class="eval-radio"></div>
-                                <span>B) Dedos de manos</span>
-                            </div>
-                            <div class="eval-option" onclick="selectEvalOption(this, 3, 3)">
-                                <div class="eval-radio"></div>
-                                <span>C) Sombreado del torso</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="evalResult"></div>
-
-                    <div class="text-center mt-4">
-                        <button class="btn btn-primary btn-lg btn-nav" id="submitEvalBtn" onclick="submitEvaluation(3)">
-                            <i class="bi bi-check-circle me-2"></i>Enviar Evaluación
-                        </button>
-                        <button class="btn btn-warning btn-lg btn-nav" id="retryEvalBtn" style="display: none;" onclick="retryEvaluation(3)">
-                            <i class="bi bi-arrow-clockwise me-2"></i>Reintentar
-                        </button>
-                        <button class="btn btn-success btn-lg btn-nav" id="nextLessonBtn" style="display: none;" onclick="window.location.href='index.html'">
-                            <i class="bi bi-house-door me-2"></i>Completar Módulo
-                        </button>
-                    </div>
-                </div>
-
-                <div class="alert alert-success alert-custom mt-4">
-                    <h5><i class="bi bi-trophy-fill me-2"></i>Portfolio Módulo 1</h5>
-                    <p class="mb-2"><strong>Entregables totales:</strong></p>
-                    <ul class="mb-0">
-                        <li>3 croquis de 2 min (Lección 1)</li>
-                        <li>2 figuras de 15 min (Lección 2)</li>
-                        <li>3 croquis de 5 min (Lección 3)</li>
-                        <li>3 evaluaciones aprobadas (mínimo 2/3 en cada una)</li>
-                    </ul>
-                </div>
-
-                <div class="card border-primary mt-3">
-                    <div class="card-header bg-primary text-white">
-                        <i class="bi bi-cloud-upload me-2"></i>Entrega Final Módulo 1
-                    </div>
-                    <div class="card-body text-center">
-                        <p class="mb-3">Fotografía todos tus trabajos con buena iluminación y súbelos al formulario:</p>
-                        <a href="https://forms.gle/URL_FORMULARIO_MODULO1" class="btn btn-primary" target="_blank">
-                            <i class="bi bi-box-arrow-up-right me-2"></i>Subir Trabajos Módulo 1
-                        </a>
-                        <p class="small text-muted mt-3 mb-0">Plazo: Antes de iniciar Módulo 2</p>
-                    </div>
-                </div>
-            `
-        };
-
-        document.addEventListener('DOMContentLoaded', function() {
-            loadProgress();
-            loadLesson(1);
-        });
-    </script>
-</body>
-</html>
-                                
