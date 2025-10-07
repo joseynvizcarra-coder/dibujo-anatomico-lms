@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 1: Observación y Gesto - LMS UAH</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        :root {
+            --primary-dark: #2c5f66;
+            --primary-light: #e8a2b8;
+            --dark: #1a1a1a;
+            --success: #4CAF50;
+            --warning: #FFC107;
+            --danger: #f44336;
+            --info: #2196F3;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+        }
+
+        .header-uah {
+            background: linear-gradient(135deg, var(--primary-dark), var(--dark));
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .breadcrumb-custom {
+            background: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .sidebar-lesson {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        @media (min-width: 992px) {
+            .sidebar-lesson {
+                position: sticky;
+                top: 90px;
+                max-height: calc(100vh - 110px);
+                overflow-y: auto;
+            }
+        }
+
+        .lesson-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--dark);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-bottom: 0.5rem;
+            border: 2px solid transparent;
+        }
+
+        .lesson-link:hover {
+            background: #f8f9fa;
+            transform: translateX(3px);
+            border-color: var(--primary-light);
+        }
+
+        .lesson-link.active {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            color: white;
+        }
+
+        .lesson-number {
+            width: 35px;
+            height: 35px;
+            background: #e9ecef;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .lesson-link.active .lesson-number {
+            background: white;
+            color: var(--primary-dark);
+        }
+
+        .lesson-link.completed .lesson-number {
+            background: var(--success);
+            color: white;
+        }
+
+        .lesson-link.completed::after {
+            content: '\F26B';
+            font-family: 'bootstrap-icons';
+            color: var(--success);
+            font-size: 1.2rem;
+            margin-left: auto;
+        }
+
+        .progress-module {
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 10px;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+
+        .progress-bar-module {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-light));
+            border-radius: 10px;
+            transition: width 0.6s ease;
+        }
+
+        .content-area {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            min-height: 70vh;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        @media (max-width: 768px) {
+            .content-area { padding: 1.25rem; }
+        }
+
+        .lesson-header {
+            border-bottom: 3px solid var(--primary-light);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .lesson-title {
+            color: var(--primary-dark);
+            font-weight: 700;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            margin-bottom: 0.5rem;
+        }
+
+        .lesson-subtitle {
+            color: #6c757d;
+            font-size: clamp(1rem, 2.5vw, 1.1rem);
+        }
+
+        .objectives-list {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-left: 4px solid var(--primary-dark);
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .accordion-button {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            color: white;
+            font-weight: 600;
+        }
+
+        .accordion-button:not(.collapsed) {
+            background: var(--primary-dark);
+            color: white;
+        }
+
+        .accordion-button::after {
+            filter: brightness(0) invert(1);
+        }
+
+        .video-container {
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+        }
+
+        .video-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(44,95,102,0.9), rgba(26,26,26,0.9));
+            color: white;
+        }
+
+        .video-placeholder i {
+            font-size: clamp(2rem, 8vw, 4rem);
+        }
+
+        .exercise-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-left: 5px solid var(--primary-light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .reference-image {
+            width: 100%;
+            min-height: 100px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .checklist {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border: 1px solid #e9ecef;
+        }
+
+        .checklist-item {
+            padding: 0.75rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: background 0.2s;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checklist-item:hover { background: #f8f9fa; }
+        .checklist-item:last-child { border-bottom: none; }
+        .checklist-item.checked { background: rgba(76, 175, 80, 0.1); }
+        .checklist-item.checked i { color: var(--success); }
+
+        .evaluation-container {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .eval-progress {
+            background: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--info);
+        }
+
+        .eval-question {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .eval-option {
+            padding: 1rem;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .eval-option:hover:not(.correct):not(.incorrect) {
+            border-color: var(--primary-dark);
+            background: rgba(44, 95, 102, 0.05);
+            transform: translateX(3px);
+        }
+
+        .eval-option.selected {
+            border-color: var(--primary-dark);
+            background: rgba(44, 95, 102, 0.1);
+        }
+
+        .eval-option.correct {
+            border-color: var(--success);
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .eval-option.incorrect {
+            border-color: var(--danger);
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        .eval-radio {
+            width: 22px;
+            height: 22px;
+            border: 2px solid #dee2e6;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .eval-option.selected .eval-radio {
+            border-color: var(--primary-dark);
+            background: var(--primary-dark);
+        }
+
+        .eval-option.selected .eval-radio::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .btn-nav {
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 576px) {
+            .btn-nav {
+                padding: 0.65rem 1.25rem;
+                font-size: 0.9rem;
+                width: 100%;
+            }
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            border: none;
+            color: white;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(44, 95, 102, 0.3);
+        }
+
+        .alert-custom {
+            border-left: 4px solid;
+            border-radius: 8px;
+        }
+
+        .reference-text {
+            font-size: 0.85rem;
+            color: #6c757d;
+            border-left: 3px solid var(--primary-light);
+            padding-left: 1rem;
+            margin-top: 1rem;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .loading-overlay.show { display: flex; }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="text-center">
+            <div class="spinner-border text-light" style="width: 3rem; height: 3rem;"></div>
+            <p class="text-white mt-3">Cargando...</p>
+        </div>
+    </div>
+
+    <header class="header-uah">
+        <div class="container-fluid">
+            <div class="row align-items-center g-2">
+                <div class="col-auto">
+                    <a href="index.html" class="text-white text-decoration-none">
+                        <i class="bi bi-arrow-left me-2"></i>
+                        <span class="d-none d-md-inline">Volver</span>
+                    </a>
+                </div>
+                <div class="col text-center">
+                    <h1 class="h5 mb-0">Módulo 1: Observación y Gesto</h1>
+                </div>
+                <div class="col-auto">
+                    <span class="badge bg-light text-dark" id="progressText">0%</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid py-3 py-md-4">
+        <div class="breadcrumb-custom d-none d-md-block">
+            <nav>
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="index.html">Inicio</a></li>
+                    <li class="breadcrumb-item">Módulo 1</li>
+                    <li class="breadcrumb-item active" id="breadcrumbLesson">Lección 1</li>
+                </ol>
+            </nav>
+        </div>
+
+        <div class="row">
+            <aside class="col-lg-3">
+                <div class="sidebar-lesson">
+                    <h5 class="mb-3"><i class="bi bi-book me-2"></i>Lecciones</h5>
+                    
+                    <a class="lesson-link active" data-lesson="1" onclick="loadLesson(1)">
+                        <span class="lesson-number">1</span>
+                        <span>Fundamentos del Croquis</span>
+                    </a>
+                    
+                    <a class="lesson-link" data-lesson="2" onclick="loadLesson(2)">
+                        <span class="lesson-number">2</span>
+                        <span>Proporciones</span>
+                    </a>
+                    
+                    <a class="lesson-link" data-lesson="3" onclick="loadLesson(3)">
+                        <span class="lesson-number">3</span>
+                        <span>Balance</span>
+                    </a>
+                    
+                    <div class="mt-4">
+                        <h6 class="mb-2">Progreso del Módulo</h6>
+                        <div class="progress-module">
+                            <div class="progress-bar-module" id="progressBar" style="width: 0%"></div>
+                        </div>
+                        <small class="text-muted d-block mt-2" id="progressDetail">0 de 3 lecciones</small>
+                    </div>
+
+                    <div class="card border-primary mt-3">
+                        <div class="card-header bg-primary text-white">
+                            <i class="bi bi-info-circle me-2"></i>Información
+                        </div>
+                        <div class="card-body">
+                            <p class="small mb-2"><strong>Duración:</strong> 5 días</p>
+                            <p class="small mb-2"><strong>Carga:</strong> 150 min</p>
+                            <p class="small mb-0"><strong>Entregables:</strong></p>
+                            <ul class="small mb-0 mt-2">
+                                <li>3 croquis de 2 min</li>
+                                <li>2 figuras de 15 min</li>
+                                <li>3 croquis de 5 min</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="col-lg-9">
+                <div class="content-area" id="lessonContent"></div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentLesson = 1;
+        let evaluationAnswers = {};
+        let completedLessons = [];
+        
+        const STORAGE_KEY = 'module1_progress';
+
+        function saveProgress() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                completedLessons,
+                evaluations: evaluationAnswers,
+                currentLesson
+            }));
+            updateProgressBar();
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                const data = JSON.parse(saved);
+                completedLessons = data.completedLessons || [];
+                evaluationAnswers = data.evaluations || {};
+                currentLesson = data.currentLesson || 1;
+            }
+            updateProgressBar();
+        }
+
+        function updateProgressBar() {
+            const completed = completedLessons.length;
+            const percentage = Math.round((completed / 3) * 100);
+            
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = percentage + '%';
+            document.getElementById('progressDetail').textContent = `${completed} de 3 lecciones`;
+            
+            completedLessons.forEach(lessonNum => {
+                const link = document.querySelector(`[data-lesson="${lessonNum}"]`);
+                if (link) link.classList.add('completed');
+            });
+        }
+
+        function showLoading(show = true) {
+            document.getElementById('loadingOverlay').classList.toggle('show', show);
+        }
+
+        function loadLesson(lessonNum) {
+            showLoading(true);
+            currentLesson = lessonNum;
+            
+            document.getElementById('breadcrumbLesson').textContent = `Lección ${lessonNum}`;
+            
+            document.querySelectorAll('.lesson-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`[data-lesson="${lessonNum}"]`).classList.add('active');
+            
+            setTimeout(() => {
+                document.getElementById('lessonContent').innerHTML = lessons[`lesson${lessonNum}`];
+                document.getElementById('lessonContent').classList.add('fade-in');
+                restoreEvaluationState(lessonNum);
+                showLoading(false);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                saveProgress();
+            }, 400);
+        }
+
+        function completeLesson(lessonNum) {
+            if (!completedLessons.includes(lessonNum)) {
+                completedLessons.push(lessonNum);
+                saveProgress();
+                showToast('¡Lección completada!', 'success');
+            }
+        }
+
+        function goToNextLesson() {
+            if (currentLesson < 3) {
+                loadLesson(currentLesson + 1);
+            } else {
+                showToast('¡Módulo completado!', 'success');
+            }
+        }
+
+        function toggleChecklistItem(element) {
+            element.classList.toggle('checked');
+            const icon = element.querySelector('i');
+            icon.className = element.classList.contains('checked') ? 
+                'bi bi-check-circle-fill' : 'bi bi-circle';
+        }
+
+        function updateEvalProgress(lessonNum) {
+            const count = Object.keys(evaluationAnswers[lessonNum] || {}).length;
+            const el = document.getElementById('answeredCount');
+            if (el) el.textContent = count;
+        }
+
+        function selectEvalOption(element, optionNumber, lessonNum) {
+            const container = element.closest('[data-question]');
+            const question = container.getAttribute('data-question');
+            
+            container.querySelectorAll('.eval-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            
+            if (!evaluationAnswers[lessonNum]) evaluationAnswers[lessonNum] = {};
+            evaluationAnswers[lessonNum][question] = optionNumber;
+            
+            updateEvalProgress(lessonNum);
+            saveProgress();
+        }
+
+        function submitEvaluation(lessonNum) {
+            const userAnswers = evaluationAnswers[lessonNum] || {};
+            
+            if (Object.keys(userAnswers).length < 3) {
+                showToast('Completa todas las preguntas', 'warning');
+                return;
+            }
+            
+            const correctAnswers = {
+                1: { q1: 2, q2: 1, q3: 3 },
+                2: { q1: 2, q2: 3, q3: 1 },
+                3: { q1: 2, q2: 3, q3: 1 }
+            };
+            
+            processEvaluation(lessonNum, userAnswers, correctAnswers[lessonNum]);
+        }
+
+        function processEvaluation(lessonNum, userAnswers, correctAnswers) {
+            showLoading(true);
+            
+            setTimeout(() => {
+                let score = 0;
+                
+                Object.keys(correctAnswers).forEach(q => {
+                    const container = document.querySelector(`[data-question="${q}"]`);
+                    if (container) {
+                        const options = container.querySelectorAll('.eval-option');
+                        options.forEach((opt, idx) => {
+                            const optNum = idx + 1;
+                            opt.style.pointerEvents = 'none';
+                            
+                            if (optNum === correctAnswers[q]) {
+                                opt.classList.add('correct');
+                                if (userAnswers[q] === correctAnswers[q]) score++;
+                            } else if (optNum === userAnswers[q]) {
+                                opt.classList.add('incorrect');
+                            }
+                        });
+                    }
+                });
+                
+                document.getElementById('submitEvalBtn').style.display = 'none';
+                
+                const passed = score >= 2;
+                const resultHTML = passed ? 
+                    `<div class="alert alert-success alert-custom">
+                        <h5><i class="bi bi-check-circle-fill me-2"></i>¡Excelente!</h5>
+                        <p class="mb-0">Aprobaste con ${score}/3 correctas.</p>
+                    </div>` :
+                    `<div class="alert alert-warning alert-custom">
+                        <h5><i class="bi bi-exclamation-triangle-fill me-2"></i>Necesitas mejorar</h5>
+                        <p class="mb-0">Obtuviste ${score}/3. Requieres 2/3 para aprobar.</p>
+                    </div>`;
+                
+                document.getElementById('evalResult').innerHTML = resultHTML;
+                
+                if (passed) {
+                    completeLesson(lessonNum);
+                    document.getElementById('nextLessonBtn').style.display = 'inline-block';
+                } else {
+                    document.getElementById('retryEvalBtn').style.display = 'inline-block';
+                }
+                
+                showLoading(false);
+                saveProgress();
+            }, 600);
+        }
+
+        function retryEvaluation(lessonNum) {
+            delete evaluationAnswers[lessonNum];
+            loadLesson(lessonNum);
+            showToast('Inténtalo nuevamente', 'info');
+        }
+
+        function restoreEvaluationState(lessonNum) {
+            const answers = evaluationAnswers[lessonNum];
+            if (!answers) return;
+            
+            Object.keys(answers).forEach(question => {
+                const container = document.querySelector(`[data-question="${question}"]`);
+                if (container) {
+                    const options = container.querySelectorAll('.eval-option');
+                    options.forEach((opt, idx) => {
+                        if (idx + 1 === answers[question]) {
+                            opt.classList.add('selected');
+                        }
+                    });
+                }
+            });
+            
+            updateEvalProgress(lessonNum);
+        }
+
+        function showToast(message, type = 'info') {
+            const colors = {
+                success: '#4CAF50',
+                warning: '#FFC107',
+                info: '#2196F3',
+                danger: '#f44336'
+            };
+            
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                background: ${colors[type]};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                z-index: 9999;
+                animation: slideIn 0.3s ease-out;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        const lessons = {
+            lesson1: `
+                <div class="lesson-header">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start mb-3">
+                        <div class="flex-grow-1 mb-2 mb-md-0">
+                            <h2 class="lesson-title">Lección 1.1: Fundamentos del Croquis Rápido</h2>
+                            <p class="lesson-subtitle">Capturando la esencia del movimiento</p>
+                        </div>
+                        <span class="badge bg-warning text-dark">45 minutos</span>
+                    </div>
+                    
+                    <div class="objectives-list">
+                        <h6 class="mb-2"><i class="bi bi-bullseye me-2"></i>Objetivos</h6>
+                        <ul class="mb-0">
+                            <li>Aplicar técnicas de observación para capturar línea de acción</li>
+                            <li>Identificar eje central y puntos de peso</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <i class="bi bi-play-circle"></i>
+                        <p class="mt-3 mb-0 text-sm">Video: Fundamentos del croquis</p>
+                    </div>
+                </div>
+
+                <div class="accordion mb-4" id="acc1">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#c1">
+                                <i class="bi bi-1-circle me-2"></i>Línea de Acción
+                            </button>
+                        </h2>
+                        <div id="c1" class="accordion-collapse collapse show" data-bs-parent="#acc1">
+                            <div class="accordion-body">
+                                <p>Eje imaginario que atraviesa la figura, definiendo la dirección y energía del movimiento.</p>
+                                <h6 class="mt-3">Características:</h6>
+                                <ul>
+                                    <li><strong>Recorrido:</strong> De cabeza a pie de apoyo</li>
+                                    <li><strong>Forma:</strong> Recta en estáticas, curva en dinámicas</li>
+                                    <li><strong>Función:</strong> Define dirección del movimiento</li>
+                                </ul>
+                                <div class="reference-text">
+                                    <small>Loomis, A. (1943). Figure drawing for all it's worth.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c2">
+                                <i class="bi bi-2-circle me-2"></i>Peso y Punto de Apoyo
+                            </button>
+                        </h2>
+                        <div id="c2" class="accordion-collapse collapse" data-bs-parent="#acc1">
+                            <div class="accordion-body">
+                                <p>El peso corporal se distribuye a través de los puntos de apoyo.</p>
+                                <h6 class="mt-3">Conceptos:</h6>
+                                <ul>
+                                    <li><strong>Punto de peso:</strong> Zona de apoyo principal</li>
+                                    <li><strong>Pie de apoyo:</strong> Extremidad que sostiene el peso</li>
+                                    <li><strong>Centro de gravedad:</strong> Punto desde donde cae línea vertical</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c3">
+                                <i class="bi bi-3-circle me-2"></i>Proceso de 2 Minutos
+                            </button>
+                        </h2>
+                        <div id="c3" class="accordion-collapse collapse" data-bs-parent="#acc1">
+                            <div class="accordion-body">
+                                <p>División del tiempo:</p>
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <div class="card bg-light">
+                                            <div class="card-body text-center">
+                                                <h6 class="text-primary">0-20 seg</h6>
+                                                <p class="small mb-0">Observa e identifica</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card bg-light">
+                                            <div class="card-body text-center">
+                                                <h6 class="text-primary">20-60 seg</h6>
+                                                <p class="small mb-0">Línea + apoyo</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card bg-light">
+                                            <div class="card-body text-center">
+                                                <h6 class="text-primary">60-120 seg</h6>
+                                                <p class="small mb-0">Masa corporal</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercise-card">
+                    <h5 class="mb-3"><i class="bi bi-palette me-2"></i>EJERCICIO: 3 Croquis de 2 Minutos</h5>
+                    <p><strong>Objetivo:</strong> Capturar línea de acción y peso</p>
+                    
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <h6>Materiales:</h6>
+                            <ul>
+                                <li>3 hojas de papel</li>
+                                <li>Lápiz o carboncillo</li>
+                                <li>Cronómetro</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Referencias:</h6>
+                            <div class="row g-2">
+                                <div class="col-4">
+                                    <div class="reference-image">ref1.jpg</div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="reference-image">ref2.jpg</div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="reference-image">ref3.jpg</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <div class="checklist">
+                            <div class="checklist-item" onclick="toggleChecklistItem(this)">
+                                <i class="bi bi-circle"></i>
+                                <span>Configura cronómetro a 2 minutos</span>
+                            </div>
+                            <div class="checklist-item" onclick="toggleChecklistItem(this)">
+                                <i class="bi bi-circle"></i>
+                                <span>No borres ni corrijas</span>
+                            </div>
+                            <div class="checklist-item" onclick="toggleChecklistItem(this)">
+                                <i class="bi bi-circle"></i>
+                                <span>Fotografía cada resultado</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="evaluation-container">
+                    <h4 class="mb-4"><i class="bi bi-clipboard-check me-2"></i>Evaluación 1.1</h4>
+                    
+                    <div class="eval-progress">
+                        <small>Respondidas: <strong><span id="answeredCount">0</span>/3</strong></small>
+                    </div>
+                    
+                    <div class="eval-question" data-question="q1">
+                        <h6>Pregunta 1: ¿Objetivo principal de un croquis de 2 minutos?</h6>
+                        <div class="eval-option" onclick="selectEvalOption(this, 1, 1)">
+                            <div class="eval-radio"></div>
+                            <span>A) Dibujo detallado y realista</span>
+                        </div>
+                        <div class="eval-option" onclick="selectEvalOption(this, 2, 1)">
+                            <div class="eval-radio"></div>
+                            <span>B) Capturar energía, dirección y peso</span>
+                        </div>
+                        <div class="eval-option" onclick="selectEvalOption(this, 3, 1)">
+                            <div class="eval-radio"></div>
+                            <span>C) Técnicas de sombreado</span>
+                        </div>
+                    </div>
+
+                    <div class="eval-question" data-question="q2">
+                        <h6>Pregunta 2: ¿Qué identificar PRIMERO?</h6>
+                        <div class="eval-option" onclick="selectEvalOption(this, 1, 1)">
+                            <div class="eval-radio"></div>
+                            <span>A) Línea de acción y punto de apoyo</span>
+                        </div>
+                        <div class="eval-option" onclick="selectEvalOption(this, 2, 1)">
+                            <div class="eval-radio"></div>
+                            <span>B) Detalles del rostro</span>
+                        </div>
+                        <div class="eval-option" onclick="selectEvalOption(this, 3, 1)">
+                            <div class="eval-radio"></div>
+                            <span>C) Textura de la ropa</span>
+                        </div>
+                    </div>
+
+                    <div class="eval-question" data-question="q3">
+                        <h6>Pregunta 3: ¿Actitud apropiada en croquis rápido?</h6>
+                        <div class="eval-option" onclick="selectEvalOption(this, 1, 1)">
+                            <div class="eval-radio"></div>
+                            <span>A) Borrar hasta lograr perfección</span>
+                        </div>
+                        <div class="eval-option" onclick="selectEvalOption(this, 2, 1)">
+                            <div class="eval-radio"></div>
+                            <span>B) Comenzar con detalles pequeños</span>
+                        </div>
+                        <div class="eval-option" onclick="selectEvalOption(this, 3, 1)">
+                            <div class="eval-radio"></div>
+                            <span>C) No borrar, enfocarse en el gesto</span>
+                        </div>
+                    </div>
+
+                    <div id="evalResult" class="mt-3"></div>
+
+                    <div class="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">
+                        <button class="btn btn-primary btn-nav" id="submitEvalBtn" onclick="submitEvaluation(1)">
+                            <i class="bi bi-check-circle me-2"></i>Enviar
+                        </button>
+                        <button class="btn btn-warning btn-nav" id="retryEvalBtn" style="display: none;" onclick="retryEvaluation(1)">
+                            <i class="bi bi-arrow-clockwise me-2"></i>Reintentar
+                        </button>
+                        <button class="btn btn-primary-custom btn-nav" id="nextLessonBtn" style="display: none;" onclick="goToNextLesson()">
+                            Siguiente <i class="bi bi-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            `,
+
+            lesson2: `
+                <div class="lesson-header">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start mb-3">
+                        <div class="flex-grow-1 mb-2 mb-md-0">
+                            <h2 class="lesson-title">Lección 1.2: Proporciones por Observación</h2>
+                            <p class="lesson-subtitle">Medición visual sin fórmulas</p>
+                        </div>
+                        <span class="badge bg-warning text-dark">50 minutos</span>
+                    </div>
+                    
+                    <div class="objectives-list">
+                        <h6 class="mb-2"><i class="bi bi-bullseye me-2"></i>Objetivos</h6>
+                        <ul class="mb-0">
+                            <li>Medir proporciones por comparación visual</li>
+                            <li>Aplicar en 2 figuras de 15 minutos</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="accordion mb-4" id="acc2">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#c2_1">
+                                <i class="bi bi-1-circle me-2"></i>Técnica del Lápiz
+                            </button>
+                        </h2>
+                        <div id="c2_1" class="accordion-collapse collapse show" data-bs-parent="#acc2">
+                            <div class="accordion-body">
+                                <p>Observar y comparar proporciones directamente.</p>
+                                <h6 class="mt-3">Técnica:</h6>
+                                <ol>
+                                    <li>Extiende brazo con lápiz vertical</li>
+                                    <li>Cierra un ojo</li>
+                                    <li>Alinea punta con parte superior cabeza</li>
+                                    <li>Marca con pulgar donde termina barbilla</li>
+                                    <li>Esta es tu unidad base</li>
+                                    <li>Compara cuántas veces cabe</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c2_2">
+                                <i class="bi bi-2-circle me-2"></i>Consistencia Interna
+                            </button>
+                        </h2>
+                        <div id="c2_2" class="accordion-collapse collapse" data-bs-parent="#acc2">
+                            <div class="accordion-body">
+                                <p>Todas las partes se relacionan proporcionalmente.</p>
+                                <div class="alert alert-warning">
+                                    <small><strong>Error común:</strong> Aplicar "8 cabezas" mecánicamente. Cada persona es diferente.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercise-card">
+                    <h5 class="mb-3"><i class="bi bi-palette me-2"></i>EJERCICIO: 2 Figuras de 15 Min</h5>
+                    <p><strong>Objetivo:</strong> Aplicar medición visual</p>
+                    
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <h6>Materiales:</h6>
+                            <ul>
+                                <li>2 hojas papel carta</li>
+                                <li>Lápiz HB o 2B</li>
+                                <li>Goma de borrar</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Referencias:</h6>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <div class="reference-image">ref4.jpg</div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="reference-image">ref5.jpg</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="evaluation-container">
+                    <h4 class="mb-4"><i class="bi bi-clipboard-check me-2"></i>Evaluación 1.2</h4>
+                    
+                    <div class="eval-progress">
+                        <small>Respondidas: <strong><span id="answeredCount">0</span>/3</strong></small>
+                    </div>
+                    
+                    <div class="eval-question" data-question="q1">
+                        <h6>Pregunta 1: ¿Técnica correcta para medir?</h6>
+                        <div class="eval-option" onclick="selectEvalOption(this, 1, 2)">
+                            <div class="eval-radio"></div>
+                            <span>A) Memorizar 8 cabezas</span>
+                        </div>
+                        <div class="eval-option" onclick="selectEvalOption(this, 2, 2)">
+                            <div class="eval-radio"></div>
+                            <span>B) Usar lápiz como regla</span>
+                        </div>
+                        <div class="eval-option" onclick="selectEvalOption(this, 3, 2)">
+                            <div class="eval-radio"></div>
+                            <span>C) Regla física</span>
+                        </div>
+                    </div>
+
+                    <div class="eval-question" data-question="q2">
+                        <h6>Pregunta 2: ¿Qué es consistencia interna?</h6>
+                        <div class="eval-option" onclick="selectEvalOption(this, 1, 2)">
+                            <div class="eval-radio"></div>
+                            <span>A) Líneas mismo grosor</span>
+                        </div>
+                        <div class="eval-option" onclick="selectEvalOption(this, 2, 2)">
+                            <div class="eval-radio"></div>
+                            <span>B) Dibujo terminado</span>
+                        </div>
+                        <div class="eval-option" onclick="selectEvalOption(this, 3, 2)">
+                            <div class="eval-radio"></div>
+                            <span>C) Partes relacionadas proporcionalmente</span>
+                        </div>
+                    </div>
+
+                    <div class="eval-question" data-question="q3">
+                        <h6>Pregunta 3: ¿Qué hacer PRIMERO?</h6>
+                        <div class="eval-option" onclick="selectEvalOption(this, 1, 2)">
+                            <div class="eval-radio"></div>
+                            <span>A) Observar y medir</span>
+                        </div>
+                        <div class="eval-option" onclick="selectEvalOption(this, 2, 2)">
+                            <div class="eval-radio"></div>
+                            <span>B) Detalles del rostro</span>
+                        </div>
+                        <div class="eval-option" onclick="selectEvalOption(this, 3, 2)">
+                            <div class="eval-radio"></div>
+                            <span>C) Sombrear fondo</span>
+                        </div>
+                    </div>
+
+                    <div id="evalResult" class="mt-3"></div>
+
+                    <div class="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">
+                        <button class="btn btn-primary btn-nav" id="submitEvalBtn" onclick="submitEvaluation(2)">
+                            <i class="bi bi-check-circle me-2"></i>Enviar
+                        </button>
+                        <button class="btn btn-warning btn-nav" id="retryEvalBtn" style="display: none;" onclick="retryEvaluation(2)">
+                            <i class="bi bi-arrow-clockwise me-2"></i>Reintentar
+                        </button>
+                        <button class="btn btn-primary-custom btn-nav" id="nextLessonBtn" style="display: none;" onclick="goToNextLesson()">
+                            Siguiente <i class="bi bi-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            `,
+
+            lesson3: `
+                <div class="lesson-header">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start mb-3">
+                        <div class="flex-grow-1 mb-2 mb-md-0">
+                            <h2 class="lesson-title">Lección 1.3: Composición y Balance</h2>
+                            <p class="lesson-subtitle">Contrapposto y distribución del peso</p>
+                        </div>
+                        <span class="badge bg-warning text-dark">55 minutos</span>
+                    </div>
+                    
+                    <div class="objectives-list">
+                        <h6 class="mb-2"><i class="bi bi-bullseye me-2"></i>Objetivos</h6>
+                        <ul class="mb-0">
+                            <li>Identificar contrapposto</li>
+                            <li>Crear 3 croquis con balance</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="accordion mb-4" id="acc3">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#c3_1">
+                                <i class="bi bi-1-circle me-2"></i>Contrapposto
+                            </button>
+                        </h2>
+                        <div id="c3_1" class="accordion-collapse collapse show" data-bs-parent="#acc3">
+                            <div class="accordion-body">
+                                <p>Distribución asimétrica: cadera sube, hombro opuesto baja.</p>
+                                <div class="row g-3 mt-2">
+                                    <div class="col-md-6">
+                                        <div class="card border-primary">
+                                            <div class="card-header bg-primary text-white">Con Peso</div>
+                                            <div class="card-body">
+                                                <ul class="small mb-0">
+                                                    <li>Cadera elevada</li>
+                                                    <li>Pierna tensa</li>
+                                                    <li>Hombro bajo</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card border-success">
+                                            <div class="card-header bg-success text-white">Relajado</div>
+                                            <div class="card-body">
+                                                <ul class="small mb-0">
+                                                    <li>Cadera baja</li>
+                                                    <li>Pierna doblada</li>
+                                                    <li>Hombro alto</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c3_2">
+                                <i class="bi bi-2-circle me-2"></i>Polígono de Apoyo
+                            </button>
+                        </h2>
+                        <div id="c3_2" class="accordion-collapse collapse" data-bs-parent="#acc3">
+                            <div class="accordion-body">
+                                <p>Línea vertical desde cabeza debe caer dentro del área entre los pies.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercise-card">
+                    <h5 class="mb-3"><i class="bi bi-palette me-2"></i>EJERCICIO: 3 Croquis de Balance</h5>
+                    <p><strong>Objetivo:</strong> Capturar distribución de peso</p>
+                    
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <h6>Materiales:</h6>
+                            <ul>
+                                <li>3 hojas papel</li>
+                                <li>Lápiz + color</li>
+                                <li>Cronómetro (5 min c/u)</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Referencias:</h6>
+                            <div class="row g-2">
+                                <div class="col-4">
+                                    <div class="reference-image">ref6.jpg</div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="reference-image">ref7.jpg</div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="reference-image">ref8.jpg</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="evaluation-container">
+                    <h4 class="mb-4"><i class="bi bi-clipboard-check me-2"></i>Evaluación Final</h4>
+                    
+                    <div class="eval-progress">
+                        <small>Respondidas: <strong><span id="answeredCount">0</span>/3</strong></small>
+                    </div>
+                    
+                    <div class="eval-question" data-question="q1">
+                        <h6>Pregunta 1: Si cadera derecha elevada, ¿hombro derecho?</h6>
+                        <div class="eval-option" onclick="selectEvalOption(this, 1, 3)">
+                            <div class="eval-radio"></div>
+                            <span>A) También se eleva</span>
+                        </div>
+                        <div class="eval-option" onclick="selectEvalOption(this, 2, 3)">
+                            <div class="eval-radio"></div>
+                            <span>B) Tiende a descender</span>
+                        </div>
+                        <div class="eval-option" onclick="selectEvalOption(this, 3, 3)">
+                            <div class="eval-radio"></div>
+                            <span>C) Permanece horizontal</span>
+                        </div>
+                    </div>
+
+                    <div class="eval-question" data-question="q2">
+                        <h6>Pregunta 2: ¿Dónde debe caer línea vertical?</h6>
+                        <div class="eval-option" onclick="selectEvalOption(this, 1, 3)">
+                            <div class="eval-radio"></div>
+                            <span>A) Centro exacto</span>
+                        </div>
+                        <div class="eval-option" onclick="selectEvalOption(this, 2, 3)">
+                            <div class="eval-radio"></div>
+                            <span>B) Siempre pie derecho</span>
+                        </div>
+                        <div class="eval-option" onclick="selectEvalOption(this, 3, 3)">
+                            <div class="eval-radio"></div>
+                            <span>C) Dentro del polígono de apoyo</span>
+                        </div>
+                    </div>
+
+                    <div class="eval-question" data-question="q3">
+                        <h6>Pregunta 3: ¿Qué marcar PRIMERO?</h6>
+                        <div class="eval-option" onclick="selectEvalOption(this, 1, 3)">
+                            <div class="eval-radio"></div>
+                            <span>A) Ejes de hombros y caderas</span>
+                        </div>
+                        <div class="eval-option" onclick="selectEvalOption(this, 2, 3)">
+                            <div class="eval-radio"></div>
+                            <span>B) Dedos de manos</span>
+                        </div>
+                        <div class="eval-option" onclick="selectEvalOption(this, 3, 3)">
+                            <div class="eval-radio"></div>
+                            <span>C) Sombreado del torso</span>
+                        </div>
+                    </div>
+
+                    <div id="evalResult" class="mt-3"></div>
+
+                    <div class="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">
+                        <button class="btn btn-primary btn-nav" id="submitEvalBtn" onclick="submitEvaluation(3)">
+                            <i class="bi bi-check-circle me-2"></i>Enviar
+                        </button>
+                        <button class="btn btn-warning btn-nav" id="retryEvalBtn" style="display: none;" onclick="retryEvaluation(3)">
+                            <i class="bi bi-arrow-clockwise me-2"></i>Reintentar
+                        </button>
+                        <button class="btn btn-success btn-nav" id="nextLessonBtn" style="display: none;" onclick="window.location.href='index.html'">
+                            <i class="bi bi-house-door me-2"></i>Completar
+                        </button>
+                    </div>
+                </div>
+
+                <div class="alert alert-success alert-custom mt-4">
+                    <h5><i class="bi bi-trophy-fill me-2"></i>Portfolio Módulo 1</h5>
+                    <p class="mb-2"><strong>Entregables:</strong></p>
+                    <ul class="mb-0">
+                        <li>3 croquis de 2 min</li>
+                        <li>2 figuras de 15 min</li>
+                        <li>3 croquis de 5 min</li>
+                        <li>3 evaluaciones aprobadas</li>
+                    </ul>
+                </div>
+            `
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProgress();
+            loadLesson(1);
+        });
+
+        window.addEventListener('beforeunload', saveProgress);
+    </script>
+</body>
+</html>
