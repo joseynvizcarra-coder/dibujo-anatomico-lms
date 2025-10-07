@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Instructor - Dibujo Anatómico UAH</title>
+    <title>Dashboard Instructor - Dibujo AnatÃ³mico UAH</title>
     <style>
         :root {
             --color-petroleo: #2c5f66;
@@ -153,10 +153,6 @@
             background: var(--color-negro);
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .btn.secondary {
-            background: var(--color-gris-medio);
         }
 
         .btn.success {
@@ -334,32 +330,32 @@
     </style>
 </head>
 <body>
-    <!-- Cargar sistema de autenticación -->
+    <!-- Cargar sistema de autenticaciÃ³n -->
     <script src="auth.js"></script>
 
     <header class="header">
-        <h1>📊 Dashboard del Instructor</h1>
+        <h1>ðŸ“Š Dashboard del Instructor</h1>
         <div class="header-actions">
             <span id="instructorName">Cargando...</span>
-            <a href="index.html" class="btn-header">← Volver al Curso</a>
+            <a href="index.html" class="btn-header">â† Volver al Curso</a>
             <button class="btn-header" onclick="logout()">Salir</button>
         </div>
     </header>
 
     <div class="dashboard-container">
-        <!-- Estadísticas principales -->
+        <!-- EstadÃ­sticas principales -->
         <div class="stats-grid">
             <div class="stat-card">
                 <span class="stat-number" id="totalStudents">-</span>
-                <div class="stat-label">Estudiantes Registrados</div>
+                <div class="stat-label">Estudiantes UAH</div>
             </div>
             <div class="stat-card">
-                <span class="stat-number" id="activeStudents">-</span>
-                <div class="stat-label">Estudiantes Activos</div>
+                <span class="stat-number" id="totalEvaluators">-</span>
+                <div class="stat-label">Evaluadores</div>
             </div>
             <div class="stat-card">
-                <span class="stat-number" id="completedModules">-</span>
-                <div class="stat-label">Módulos Completados</div>
+                <span class="stat-number" id="activeUsers">-</span>
+                <div class="stat-label">Usuarios Activos</div>
             </div>
             <div class="stat-card">
                 <span class="stat-number" id="avgProgress">-%</span>
@@ -367,12 +363,12 @@
             </div>
         </div>
 
-        <!-- Gestión de estudiantes -->
+        <!-- GestiÃ³n de estudiantes -->
         <div class="section">
             <h2>
-                👥 Estudiantes del Curso
+                ðŸ‘¥ Estudiantes UAH (17)
                 <div class="section-actions">
-                    <button class="btn success" onclick="refreshDashboard()">🔄 Actualizar</button>
+                    <button class="btn success" onclick="refreshDashboard()">ðŸ”„ Actualizar</button>
                 </div>
             </h2>
             
@@ -389,38 +385,71 @@
                         <th>Estudiante</th>
                         <th>Usuario</th>
                         <th>Progreso</th>
-                        <th>Módulos</th>
-                        <th>Último Acceso</th>
+                        <th>MÃ³dulos</th>
+                        <th>Ãšltimo Acceso</th>
                         <th>Estado</th>
                     </tr>
                 </thead>
                 <tbody id="studentsTableBody">
-                    <!-- Datos cargados dinámicamente -->
+                    <!-- Datos cargados dinÃ¡micamente -->
                 </tbody>
             </table>
         </div>
 
-        <!-- Estadísticas por módulo -->
+        <!-- GestiÃ³n de evaluadores -->
         <div class="section">
-            <h2>📚 Estadísticas por Módulo</h2>
+            <h2>
+                ðŸ‘©â€ðŸ’¼ Evaluadores y Profesores (5)
+                <div class="section-actions">
+                    <span style="font-size: 0.9rem; color: var(--color-gris-medio);">UAH + UCH</span>
+                </div>
+            </h2>
+            
+            <div id="evaluatorsSection">
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Cargando datos de evaluadores...</p>
+                </div>
+            </div>
+
+            <table class="progress-table" id="evaluatorsTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Evaluador</th>
+                        <th>Usuario</th>
+                        <th>InstituciÃ³n</th>
+                        <th>Ãšltimo Acceso</th>
+                        <th>Actividad</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="evaluatorsTableBody">
+                    <!-- Datos cargados dinÃ¡micamente -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- EstadÃ­sticas por mÃ³dulo -->
+        <div class="section">
+            <h2>ðŸ“š EstadÃ­sticas por MÃ³dulo</h2>
             <div class="module-stats">
                 <div class="module-stat">
-                    <h4>Módulo 1: Fundamentos</h4>
+                    <h4>MÃ³dulo 1: Fundamentos</h4>
                     <div class="number" id="module1Count">-</div>
                     <div>Completados</div>
                 </div>
                 <div class="module-stat">
-                    <h4>Módulo 2: Anatomía Facial</h4>
+                    <h4>MÃ³dulo 2: AnatomÃ­a Facial</h4>
                     <div class="number" id="module2Count">-</div>
                     <div>Completados</div>
                 </div>
                 <div class="module-stat">
-                    <h4>Módulo 3: Torso</h4>
+                    <h4>MÃ³dulo 3: Torso</h4>
                     <div class="number" id="module3Count">-</div>
                     <div>Completados</div>
                 </div>
                 <div class="module-stat">
-                    <h4>Módulo 4: Figura Completa</h4>
+                    <h4>MÃ³dulo 4: Figura Completa</h4>
                     <div class="number" id="module4Count">-</div>
                     <div>Completados</div>
                 </div>
@@ -429,7 +458,7 @@
 
         <!-- Actividad reciente -->
         <div class="section">
-            <h2>📈 Actividad Reciente</h2>
+            <h2>ðŸ“ˆ Actividad Reciente</h2>
             <div class="activity-log" id="activityLog">
                 <div class="loading">
                     <div class="loading-spinner"></div>
@@ -440,11 +469,11 @@
 
         <!-- Analytics -->
         <div class="section">
-            <h2>📊 Analytics del LMS</h2>
+            <h2>ðŸ“Š Analytics del LMS</h2>
             <div class="alert info">
                 <strong>LMS Conectado con Google Sheets:</strong> Todos los datos se actualizan en tiempo real desde la base de datos.
                 <br><strong>Estudiantes registrados:</strong> <span id="totalRegistered">17</span> estudiantes UAH + 5 evaluadores.
-                <br><strong>Última actualización:</strong> <span id="lastUpdate">Cargando...</span>
+                <br><strong>Ãšltima actualizaciÃ³n:</strong> <span id="lastUpdate">Cargando...</span>
             </div>
         </div>
     </div>
@@ -453,6 +482,7 @@
         // Variables globales
         let dashboardData = {
             students: [],
+            evaluators: [],
             activities: [],
             stats: {}
         };
@@ -461,7 +491,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Inicializando dashboard...');
             
-            // Verificar autenticación
+            // Verificar autenticaciÃ³n
             if (!protectPage('instructor')) {
                 return;
             }
@@ -485,47 +515,56 @@
         // Cargar todos los datos del dashboard
         async function loadDashboardData() {
             try {
-                showLoading(true);
+                showLoadingOverlay(true);
                 
-                // Cargar estudiantes y sus progresos
-                await loadStudentsData();
+                // Cargar todos los usuarios (estudiantes + evaluadores)
+                await loadAllUsersData();
                 
                 // Cargar actividades recientes
                 await loadRecentActivities();
                 
-                // Actualizar estadísticas
+                // Actualizar estadÃ­sticas
                 updateMainStats();
                 updateModuleStats();
                 
                 // Actualizar timestamp
                 document.getElementById('lastUpdate').textContent = new Date().toLocaleString();
                 
-                showLoading(false);
+                showLoadingOverlay(false);
                 
             } catch (error) {
                 console.error('Error cargando dashboard:', error);
-                showError('Error cargando datos del dashboard. Verifica tu conexión.');
-                showLoading(false);
+                showError('Error cargando datos del dashboard. Verifica tu conexiÃ³n.');
+                showLoadingOverlay(false);
             }
         }
 
-        // Cargar datos de estudiantes desde Google Sheets
-        async function loadStudentsData() {
+        // Cargar datos de todos los usuarios desde Google Sheets
+        async function loadAllUsersData() {
             try {
-                // Usar la función de auth.js que ya maneja JSONP
-                const result = await makeJSONPRequest('getAllStudents');
+                // Cargar estudiantes
+                const studentsResult = await makeJSONPRequest('getAllStudents');
                 
-                if (result.success) {
-                    dashboardData.students = result.data;
+                if (studentsResult.success) {
+                    dashboardData.students = studentsResult.data;
                     updateStudentsTable();
                     document.getElementById('studentsSection').querySelector('.loading').style.display = 'none';
                     document.getElementById('studentsTable').style.display = 'table';
-                } else {
-                    throw new Error(result.error || 'Error obteniendo estudiantes');
                 }
+
+                // Cargar evaluadores
+                const evaluatorsResult = await makeJSONPRequest('getAllEvaluators');
+                
+                if (evaluatorsResult.success) {
+                    dashboardData.evaluators = evaluatorsResult.data;
+                    updateEvaluatorsTable();
+                    document.getElementById('evaluatorsSection').querySelector('.loading').style.display = 'none';
+                    document.getElementById('evaluatorsTable').style.display = 'table';
+                }
+                
             } catch (error) {
-                console.error('Error cargando estudiantes:', error);
-                showError('Error cargando datos de estudiantes: ' + error.message);
+                console.error('Error cargando usuarios:', error);
+                showError('Error cargando datos de usuarios: ' + error.message);
             }
         }
 
@@ -562,7 +601,7 @@
                 const overallProgress = progress.overallProgress || 0;
                 const completedModules = Object.values(progress.modules || {}).filter(m => m.completed).length;
                 
-                // Formatear último acceso
+                // Formatear Ãºltimo acceso
                 let lastAccessText = 'Nunca';
                 if (progress.lastAccess) {
                     const lastAccess = new Date(progress.lastAccess);
@@ -590,20 +629,79 @@
             });
         }
 
-        // Actualizar estadísticas principales
+        // Actualizar tabla de evaluadores
+        function updateEvaluatorsTable() {
+            const tbody = document.getElementById('evaluatorsTableBody');
+            tbody.innerHTML = '';
+
+            if (dashboardData.evaluators.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #666;">No hay evaluadores encontrados</td></tr>';
+                return;
+            }
+
+            dashboardData.evaluators.forEach(evaluator => {
+                const row = document.createElement('tr');
+                
+                // Determinar Ãºltimo acceso
+                let lastAccessText = 'Sin acceso registrado';
+                let hasActivity = false;
+                
+                // Buscar actividades del evaluador
+                const userActivities = dashboardData.activities.filter(a => a.username === evaluator.username);
+                if (userActivities.length > 0) {
+                    const lastActivity = userActivities[0]; // Ya estÃ¡n ordenadas por fecha
+                    const lastAccess = new Date(lastActivity.timestamp);
+                    lastAccessText = lastAccess.toLocaleDateString() + ' ' + lastAccess.toLocaleTimeString();
+                    hasActivity = true;
+                }
+                
+                // Color segÃºn instituciÃ³n
+                const institutionColor = evaluator.institution === 'UAH' ? '#2c5f66' : '#e8a2b8';
+                
+                row.innerHTML = `
+                    <td>${evaluator.fullName}</td>
+                    <td><code>${evaluator.username}</code></td>
+                    <td>
+                        <span style="color: ${institutionColor}; font-weight: bold;">
+                            ${evaluator.institution}
+                        </span>
+                    </td>
+                    <td>${lastAccessText}</td>
+                    <td>
+                        <span style="color: ${hasActivity ? '#4CAF50' : '#666'};">
+                            ${userActivities.length} accesos
+                        </span>
+                    </td>
+                    <td>
+                        <span style="color: ${hasActivity ? '#4CAF50' : '#FFC107'};">
+                            ${hasActivity ? 'Activo' : 'Pendiente'}
+                        </span>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Actualizar estadÃ­sticas principales
         function updateMainStats() {
             const totalStudents = dashboardData.students.length;
+            const totalEvaluators = dashboardData.evaluators.length;
+            
+            // Estudiantes activos (con progreso > 0)
             const activeStudents = dashboardData.students.filter(s => 
                 s.progress && s.progress.overallProgress > 0
             ).length;
             
-            let totalCompletedModules = 0;
+            // Evaluadores activos (con actividad registrada)
+            const activeEvaluators = dashboardData.evaluators.filter(e => {
+                return dashboardData.activities.some(a => a.username === e.username);
+            }).length;
+            
+            const totalActiveUsers = activeStudents + activeEvaluators;
+            
             let totalProgress = 0;
-
             dashboardData.students.forEach(student => {
-                if (student.progress && student.progress.modules) {
-                    const completed = Object.values(student.progress.modules).filter(m => m.completed).length;
-                    totalCompletedModules += completed;
+                if (student.progress) {
                     totalProgress += student.progress.overallProgress || 0;
                 }
             });
@@ -612,12 +710,12 @@
 
             // Actualizar UI
             document.getElementById('totalStudents').textContent = totalStudents;
-            document.getElementById('activeStudents').textContent = activeStudents;
-            document.getElementById('completedModules').textContent = totalCompletedModules;
+            document.getElementById('totalEvaluators').textContent = totalEvaluators;
+            document.getElementById('activeUsers').textContent = totalActiveUsers;
             document.getElementById('avgProgress').textContent = avgProgress + '%';
         }
 
-        // Actualizar estadísticas por módulo
+        // Actualizar estadÃ­sticas por mÃ³dulo
         function updateModuleStats() {
             for (let i = 1; i <= 4; i++) {
                 const completed = dashboardData.students.filter(student => 
@@ -656,15 +754,15 @@
             }).join('');
         }
 
-        // Obtener descripción de actividad
+        // Obtener descripciÃ³n de actividad
         function getActivityDescription(activity) {
             const actions = {
-                'login': 'Inició sesión',
-                'logout': 'Cerró sesión',
-                'module_access': `Accedió al módulo ${activity.moduleId}`,
-                'lesson_completed': `Completó lección ${activity.lessonId}`,
-                'progress_update': 'Actualizó progreso',
-                'dashboard_access': 'Accedió al dashboard'
+                'login': 'IniciÃ³ sesiÃ³n',
+                'logout': 'CerrÃ³ sesiÃ³n',
+                'module_access': `AccediÃ³ al mÃ³dulo ${activity.moduleId}`,
+                'lesson_completed': `CompletÃ³ lecciÃ³n ${activity.lessonId}`,
+                'progress_update': 'ActualizÃ³ progreso',
+                'dashboard_access': 'AccediÃ³ al dashboard'
             };
             
             return actions[activity.action] || activity.action;
@@ -672,13 +770,12 @@
 
         // Refrescar dashboard
         async function refreshDashboard() {
-            showLoading(true, 'Actualizando datos...');
             await loadDashboardData();
         }
 
-        // Mostrar loading
-        function showLoading(show, message = 'Cargando...') {
-            // Implementación básica - puedes mejorarla
+        // Mostrar loading overlay
+        function showLoadingOverlay(show, message = 'Cargando...') {
+            // ImplementaciÃ³n bÃ¡sica - puedes mejorarla
             if (show) {
                 console.log('Loading:', message);
             }
@@ -698,8 +795,8 @@
             }, 5000);
         }
 
-        // Función makeJSONPRequest debe estar disponible desde auth.js
-        // Si no está disponible, la definimos aquí
+        // FunciÃ³n makeJSONPRequest debe estar disponible desde auth.js
+        // Si no estÃ¡ disponible, la definimos aquÃ­
         if (typeof makeJSONPRequest === 'undefined') {
             function makeJSONPRequest(action, params = {}) {
                 return new Promise((resolve, reject) => {
@@ -741,4 +838,4 @@
         }
     </script>
 </body>
-</html>
+</html> 
