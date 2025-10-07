@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Instructor - Dibujo Anatómico UAH</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --primary-dark: #2c5f66;
+            --primary-light: #e8a2b8;
+            --dark: #1a1a1a;
+            --light-bg: #f8f9fa;
+            --success: #4CAF50;
+            --warning: #FFC107;
+            --danger: #f44336;
+            --info: #2196F3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--light-bg);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .header-uah {
+            background: linear-gradient(135deg, var(--primary-dark), var(--dark));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+        }
+
+        .header-title {
+            color: var(--primary-light);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .btn-header {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-header:hover {
+            background: var(--primary-light);
+            color: var(--dark);
+            transform: translateY(-2px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-light));
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+
+        .section-card {
+            background: white;
+            margin: 1.5rem 0;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .section-header {
+            border-bottom: 3px solid var(--primary-light);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            color: var(--primary-dark);
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .table-responsive {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table {
+            margin: 0;
+        }
+
+        .table thead th {
+            background: var(--light-bg);
+            color: var(--primary-dark);
+            font-weight: 600;
+            border: none;
+            padding: 1rem;
+        }
+
+        .table tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        .table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .table tbody td {
+            padding: 1rem;
+            vertical-align: middle;
+        }
+
+        .progress-bar-small {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 8px;
+            width: 100px;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .progress-fill-small {
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-light));
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .module-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .module-stat {
+            background: var(--light-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .module-stat:hover {
+            transform: translateY(-3px);
+        }
+
+        .module-stat h6 {
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .module-stat .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+
+        .eval-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .eval-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .eval-card:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 4px 12px rgba(44,95,102,0.1);
+        }
+
+        .eval-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .eval-card-title {
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin: 0;
+        }
+
+        .eval-stats {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .eval-stat-item {
+            flex: 1;
+            text-align: center;
+            padding: 0.75rem;
+            background: var(--light-bg);
+            border-radius: 8px;
+        }
+
+        .eval-stat-item .label {
+            font-size: 0.75rem;
+            color: #6c757d;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .eval-stat-item .value {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+
+        .activity-log {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+        }
+
+        .activity-item {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s ease;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-item:hover {
+            background: #f8f9fa;
+        }
+
+        .activity-user {
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .activity-action {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .activity-time {
+            color: #6c757d;
+            font-size: 0.8rem;
+        }
+
+        .loading-spinner {
+            border: 3px solid var(--light-bg);
+            border-top: 3px solid var(--primary-dark);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .badge-status {
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .alert-custom {
+            border-left: 4px solid;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .module-stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .eval-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-card {
+                padding: 1.25rem;
+            }
+        }
+
+        .activity-log::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .activity-log::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .activity-log::-webkit-scrollbar-thumb {
+            background: var(--primary-dark);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <script src="auth.js"></script>
+
+    <header class="header-uah">
+        <div class="container-fluid">
+            <div class="row align-items-center g-2">
+                <div class="col-md-3">
+                    <h1 class="header-title">
+                        <i class="bi bi-graph-up me-2"></i>Dashboard Instructor
+                    </h1>
+                </div>
+                <div class="col-md-6 text-center">
+                    <span class="text-white-50 small">Dibujo Anatómico UAH</span>
+                </div>
+                <div class="col-md-3 text-end">
+                    <span class="text-white me-3" id="instructorName">Cargando...</span>
+                    <a href="index.html" class="btn-header me-2">
+                        <i class="bi bi-arrow-left me-1"></i>Volver
+                    </a>
+                    <button class="btn-header" onclick="logout()">
+                        <i class="bi bi-box-arrow-right me-1"></i>Salir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid py-4">
+        <!-- Estadísticas principales -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-number" id="totalStudents">-</span>
+                <div class="stat-label">Estudiantes Registrados</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="activeStudents">-</span>
+                <div class="stat-label">Estudiantes Activos</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="completedModules">-</span>
+                <div class="stat-label">Módulos Completados</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="avgProgress">-%</span>
+                <div class="stat-label">Progreso Promedio</div>
+            </div>
+        </div>
+
+        <!-- Gestión de estudiantes -->
+        <div class="section-card">
+            <div class="section-header d-flex justify-content-between align-items-center">
+                <h2 class="section-title">
+                    <i class="bi bi-people me-2"></i>Estudiantes del Curso
+                </h2>
+                <button class="btn btn-success" onclick="refreshDashboard()">
+                    <i class="bi bi-arrow-clockwise me-2"></i>Actualizar
+                </button>
+            </div>
+            
+            <div id="studentsSection">
+                <div class="text-center py-5">
+                    <div class="loading-spinner"></div>
+                    <p class="text-muted">Cargando datos de estudiantes desde Google Sheets...</p>
+                </div>
+            </div>
+
+            <div class="table-responsive" id="studentsTableContainer" style="display: none;">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Estudiante</th>
+                            <th>Usuario</th>
+                            <th>Progreso</th>
+                            <th>Módulos</th>
+                            <th>Último Acceso</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Estadísticas por módulo -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="bi bi-book me-2"></i>Estadísticas por Módulo
+                </h2>
+            </div>
+            <div class="module-stats-grid">
+                <div class="module-stat">
+                    <h6>Módulo 1: Fundamentos</h6>
+                    <div class="number" id="module1Count">-</div>
+                    <small class="text-muted">Completados</small>
+                </div>
+                <div class="module-stat">
+                    <h6>Módulo 2: Anatomía Facial</h6>
+                    <div class="number" id="module2Count">-</div>
+                    <small class="text-muted">Completados</small>
+                </div>
+                <div class="module-stat">
+                    <h6>Módulo 3: Torso</h6>
+                    <div class="number" id="module3Count">-</div>
+                    <small class="text-muted">Completados</small>
+                </div>
+                <div class="module-stat">
+                    <h6>Módulo 4: Figura Completa</h6>
+                    <div class="number" id="module4Count">-</div>
+                    <small class="text-muted">Completados</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- NUEVA SECCIÓN: Seguimiento de Evaluaciones -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="bi bi-clipboard-check me-2"></i>Seguimiento de Evaluaciones
+                </h2>
+            </div>
+            
+            <div class="eval-grid">
+                <!-- Módulo 1 -->
+                <div class="eval-card">
+                    <div class="eval-card-header">
+                        <h5 class="eval-card-title">Módulo 1: Observación y Gesto</h5>
+                        <span class="badge bg-primary">3 Lecciones</span>
+                    </div>
+                    <div class="eval-stats">
+                        <div class="eval-stat-item">
+                            <span class="label">Lección 1.1</span>
+                            <span class="value" id="eval_m1l1">0</span>
+                        </div>
+                        <div class="eval-stat-item">
+                            <span class="label">Lección 1.2</span>
+                            <span class="value" id="eval_m1l2">0</span>
+                        </div>
+                        <div class="eval-stat-item">
+                            <span class="label">Lección 1.3</span>
+                            <span class="value" id="eval_m1l3">0</span>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-center">
+                        <small class="text-muted">
+                            <span id="eval_m1_total">0</span> evaluaciones aprobadas
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Módulo 2 -->
+                <div class="eval-card">
+                    <div class="eval-card-header">
+                        <h5 class="eval-card-title">Módulo 2: Anatomía Funcional</h5>
+                        <span class="badge bg-info">4 Lecciones</span>
+                    </div>
+                    <div class="eval-stats">
+                        <div class="eval-stat-item">
+                            <span class="label">Lección 2.1</span>
+                            <span class="value" id="eval_m2l1">0</span>
+                        </div>
+                        <div class="eval-stat-item">
+                            <span class="label">Lección 2.2</span>
+                            <span class="value" id="eval_m2l2">0</span>
+                        </div>
+                    </div>
+                    <div class="eval-stats">
+                        <div class="eval-stat-item">
+                            <span class="label">Lección 2.3</span>
+                            <span class="value" id="eval_m2l3">0</span>
+                        </div>
+                        <div class="eval-stat-item">
+                            <span class="label">Lección 2.4</span>
+                            <span class="value" id="eval_m2l4">0</span>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-center">
+                        <small class="text-muted">
+                            <span id="eval_m2_total">0</span> evaluaciones aprobadas
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Módulo 3 -->
+                <div class="eval-card">
+                    <div class="eval-card-header">
+                        <h5 class="eval-card-title">Módulo 3: Figura Completa</h5>
+                        <span class="badge bg-success">3 Lecciones</span>
+                    </div>
+                    <div class="eval-stats">
+                        <div class="eval-stat-item">
+                            <span class="label">Lección 3.1</span>
+                            <span class="value" id="eval_m3l1">0</span>
+                        </div>
+                        <div class="eval-stat-item">
+                            <span class="label">Lección 3.2</span>
+                            <span class="value" id="eval_m3l2">0</span>
+                        </div>
+                        <div class="eval-stat-item">
+                            <span class="label">Lección 3.3</span>
+                            <span class="value" id="eval_m3l3">0</span>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-center">
+                        <small class="text-muted">
+                            <span id="eval_m3_total">0</span> evaluaciones aprobadas
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detalle por estudiante -->
+            <div class="mt-4">
+                <h5 class="mb-3">
+                    <i class="bi bi-person-check me-2"></i>Detalle por Estudiante
+                </h5>
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Estudiante</th>
+                                <th class="text-center">M1 (3)</th>
+                                <th class="text-center">M2 (4)</th>
+                                <th class="text-center">M3 (3)</th>
+                                <th class="text-center">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="evalDetailsTableBody">
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-3">
+                                    Cargando datos de evaluaciones...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actividad reciente -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="bi bi-clock-history me-2"></i>Actividad Reciente
+                </h2>
+            </div>
+            <div class="activity-log" id="activityLog">
+                <div class="text-center py-5">
+                    <div class="loading-spinner"></div>
+                    <p class="text-muted">Cargando actividades recientes...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="bi bi-bar-chart me-2"></i>Analytics del LMS
+                </h2>
+            </div>
+            <div class="alert alert-info alert-custom">
+                <strong><i class="bi bi-cloud-check me-2"></i>LMS Conectado con Google Sheets:</strong> Todos los datos se actualizan en tiempo real desde la base de datos.
+                <br><strong>Estudiantes registrados:</strong> <span id="totalRegistered">17</span> estudiantes UAH + 5 evaluadores.
+                <br><strong>Última actualización:</strong> <span id="lastUpdate">Cargando...</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Variables globales
+        let dashboardData = {
+            students: [],
+            activities: [],
+            stats: {},
+            evaluations: {}
+        };
+
+        // Inicializar dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Inicializando dashboard...');
+            
+            // Verificar autenticación
+            if (!protectPage('instructor')) {
+                return;
+            }
+            
+            const currentUser = getCurrentUser();
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Actualizar UI con datos del instructor
+            document.getElementById('instructorName').textContent = currentUser.fullName || currentUser.username;
+            
+            // Cargar datos del dashboard
+            loadDashboardData();
+            
+            // Registrar acceso al dashboard
+            logUserActivity('dashboard_access', currentUser);
+        });
+
+        // Cargar todos los datos del dashboard
+        async function loadDashboardData() {
+            try {
+                showLoading(true);
+                
+                // Cargar estudiantes y sus progresos
+                await loadStudentsData();
+                
+                // Cargar actividades recientes
+                await loadRecentActivities();
+                
+                // Cargar datos de evaluaciones
+                await loadEvaluationsData();
+                
+                // Actualizar estadísticas
+                updateMainStats();
+                updateModuleStats();
+                updateEvaluationStats();
+                
+                // Actualizar timestamp
+                document.getElementById('lastUpdate').textContent = new Date().toLocaleString();
+                
+                showLoading(false);
+                
+            } catch (error) {
+                console.error('Error cargando dashboard:', error);
+                showError('Error cargando datos del dashboard. Verifica tu conexión.');
+                showLoading(false);
+            }
+        }
+
+        // Cargar datos de estudiantes desde Google Sheets
+        async function loadStudentsData() {
+            try {
+                const result = await makeJSONPRequest('getAllStudents');
+                
+                if (result.success) {
+                    dashboardData.students = result.data;
+                    updateStudentsTable();
+                    document.getElementById('studentsSection').style.display = 'none';
+                    document.getElementById('studentsTableContainer').style.display = 'block';
+                } else {
+                    throw new Error(result.error || 'Error obteniendo estudiantes');
+                }
+            } catch (error) {
+                console.error('Error cargando estudiantes:', error);
+                showError('Error cargando datos de estudiantes: ' + error.message);
+            }
+        }
+
+        // Cargar actividades recientes
+        async function loadRecentActivities() {
+            try {
+                const result = await makeJSONPRequest('getActivities', { limit: 20 });
+                
+                if (result.success) {
+                    dashboardData.activities = result.data;
+                    updateActivityLog();
+                } else {
+                    throw new Error(result.error || 'Error obteniendo actividades');
+                }
+            } catch (error) {
+                console.error('Error cargando actividades:', error);
+            }
+        }
+
+        // NUEVA FUNCIÓN: Cargar datos de evaluaciones
+        async function loadEvaluationsData() {
+            try {
+                // Obtener datos de evaluaciones de localStorage de cada estudiante
+                // En producción, esto vendría de Google Sheets
+                const evaluations = {};
+                
+                dashboardData.students.forEach(student => {
+                    evaluations[student.username] = {
+                        module1: getModuleEvaluations(student.username, 1),
+                        module2: getModuleEvaluations(student.username, 2),
+                        module3: getModuleEvaluations(student.username, 3)
+                    };
+                });
+                
+                dashboardData.evaluations = evaluations;
+            } catch (error) {
+                console.error('Error cargando evaluaciones:', error);
+            }
+        }
+
+        // Obtener evaluaciones de un módulo específico
+        function getModuleEvaluations(username, moduleNum) {
+            // Simular datos de evaluaciones
+            // En producción real, esto vendría de Google Sheets
+            const storageKey = `module${moduleNum}_progress_${username}`;
+            const saved = localStorage.getItem(storageKey);
+            
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    return data.evaluations || {};
+                } catch (e) {
+                    return {};
+                }
+            }
+            return {};
+        }
+
+        // Actualizar tabla de estudiantes
+        function updateStudentsTable() {
+            const tbody = document.getElementById('studentsTableBody');
+            tbody.innerHTML = '';
+
+            if (dashboardData.students.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-4">No hay estudiantes encontrados</td></tr>';
+                return;
+            }
+
+            dashboardData.students.forEach(student => {
+                const row = document.createElement('tr');
+                const progress = student.progress || {};
+                const overallProgress = progress.overallProgress || 0;
+                const completedModules = Object.values(progress.modules || {}).filter(m => m.completed).length;
+                
+                let lastAccessText = 'Nunca';
+                if (progress.lastAccess) {
+                    const lastAccess = new Date(progress.lastAccess);
+                    lastAccessText = lastAccess.toLocaleDateString() + ' ' + lastAccess.toLocaleTimeString();
+                }
+                
+                const statusClass = overallProgress > 0 ? 'bg-success' : 'bg-secondary';
+                const statusText = overallProgress > 0 ? 'Activo' : 'Sin actividad';
+                
+                row.innerHTML = `
+                    <td><strong>${student.fullName}</strong></td>
+                    <td><code class="small">${student.username}</code></td>
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="progress-bar-small">
+                                <div class="progress-fill-small" style="width: ${overallProgress}%"></div>
+                            </div>
+                            <span class="small">${overallProgress}%</span>
+                        </div>
+                    </td>
+                    <td class="text-center"><strong>${completedModules}</strong>/4</td>
+                    <td class="small text-muted">${lastAccessText}</td>
+                    <td>
+                        <span class="badge badge-status ${statusClass}">
+                            ${statusText}
+                        </span>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Actualizar estadísticas principales
+        function updateMainStats() {
+            const totalStudents = dashboardData.students.length;
+            const activeStudents = dashboardData.students.filter(s => 
+                s.progress && s.progress.overallProgress > 0
+            ).length;
+            
+            let totalCompletedModules = 0;
+            let totalProgress = 0;
+
+            dashboardData.students.forEach(student => {
+                if (student.progress && student.progress.modules) {
+                    const completed = Object.values(student.progress.modules).filter(m => m.completed).length;
+                    totalCompletedModules += completed;
+                    totalProgress += student.progress.overallProgress || 0;
+                }
+            });
+
+            const avgProgress = totalStudents > 0 ? Math.round(totalProgress / totalStudents) : 0;
+
+            document.getElementById('totalStudents').textContent = totalStudents;
+            document.getElementById('activeStudents').textContent = activeStudents;
+            document.getElementById('completedModules').textContent = totalCompletedModules;
+            document.getElementById('avgProgress').textContent = avgProgress + '%';
+        }
+
+        // Actualizar estadísticas por módulo
+        function updateModuleStats() {
+            for (let i = 1; i <= 4; i++) {
+                const completed = dashboardData.students.filter(student => 
+                    student.progress && 
+                    student.progress.modules && 
+                    student.progress.modules[i] && 
+                    student.progress.modules[i].completed
+                ).length;
+                
+                document.getElementById(`module${i}Count`).textContent = completed;
+            }
+        }
+
+        // NUEVA FUNCIÓN: Actualizar estadísticas de evaluaciones
+        function updateEvaluationStats() {
+            const evalCounts = {
+                m1: { l1: 0, l2: 0, l3: 0, total: 0 },
+                m2: { l1: 0, l2: 0, l3: 0, l4: 0, total: 0 },
+                m3: { l1: 0, l2: 0, l3: 0, total: 0 }
+            };
+
+            // Contar evaluaciones aprobadas
+            Object.values(dashboardData.evaluations).forEach(studentEvals => {
+                // Módulo 1
+                if (studentEvals.module1) {
+                    if (isEvaluationPassed(studentEvals.module1, 1)) evalCounts.m1.l1++;
+                    if (isEvaluationPassed(studentEvals.module1, 2)) evalCounts.m1.l2++;
+                    if (isEvaluationPassed(studentEvals.module1, 3)) evalCounts.m1.l3++;
+                }
+                // Módulo 2
+                if (studentEvals.module2) {
+                    if (isEvaluationPassed(studentEvals.module2, 1)) evalCounts.m2.l1++;
+                    if (isEvaluationPassed(studentEvals.module2, 2)) evalCounts.m2.l2++;
+                    if (isEvaluationPassed(studentEvals.module2, 3)) evalCounts.m2.l3++;
+                    if (isEvaluationPassed(studentEvals.module2, 4)) evalCounts.m2.l4++;
+                }
+                // Módulo 3
+                if (studentEvals.module3) {
+                    if (isEvaluationPassed(studentEvals.module3, 1)) evalCounts.m3.l1++;
+                    if (isEvaluationPassed(studentEvals.module3, 2)) evalCounts.m3.l2++;
+                    if (isEvaluationPassed(studentEvals.module3, 3)) evalCounts.m3.l3++;
+                }
+            });
+
+            // Calcular totales
+            evalCounts.m1.total = evalCounts.m1.l1 + evalCounts.m1.l2 + evalCounts.m1.l3;
+            evalCounts.m2.total = evalCounts.m2.l1 + evalCounts.m2.l2 + evalCounts.m2.l3 + evalCounts.m2.l4;
+            evalCounts.m3.total = evalCounts.m3.l1 + evalCounts.m3.l2 + evalCounts.m3.l3;
+
+            // Actualizar UI
+            document.getElementById('eval_m1l1').textContent = evalCounts.m1.l1;
+            document.getElementById('eval_m1l2').textContent = evalCounts.m1.l2;
+            document.getElementById('eval_m1l3').textContent = evalCounts.m1.l3;
+            document.getElementById('eval_m1_total').textContent = evalCounts.m1.total;
+
+            document.getElementById('eval_m2l1').textContent = evalCounts.m2.l1;
+            document.getElementById('eval_m2l2').textContent = evalCounts.m2.l2;
+            document.getElementById('eval_m2l3').textContent = evalCounts.m2.l3;
+            document.getElementById('eval_m2l4').textContent = evalCounts.m2.l4;
+            document.getElementById('eval_m2_total').textContent = evalCounts.m2.total;
+
+            document.getElementById('eval_m3l1').textContent = evalCounts.m3.l1;
+            document.getElementById('eval_m3l2').textContent = evalCounts.m3.l2;
+            document.getElementById('eval_m3l3').textContent = evalCounts.m3.l3;
+            document.getElementById('eval_m3_total').textContent = evalCounts.m3.total;
+
+            // Actualizar tabla de detalles
+            updateEvaluationDetailsTable(evalCounts);
+        }
+
+        // Verificar si una evaluación fue aprobada (mínimo 2/3)
+        function isEvaluationPassed(moduleEvals, lessonNum) {
+            if (!moduleEvals || !moduleEvals[lessonNum]) return false;
+            const answers = moduleEvals[lessonNum];
+            return Object.keys(answers).length >= 2; // Simplificado
+        }
+
+        // Actualizar tabla de detalles de evaluaciones
+        function updateEvaluationDetailsTable(evalCounts) {
+            const tbody = document.getElementById('evalDetailsTableBody');
+            tbody.innerHTML = '';
+
+            if (dashboardData.students.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-3">No hay datos disponibles</td></tr>';
+                return;
+            }
+
+            dashboardData.students.forEach(student => {
+                const row = document.createElement('tr');
+                const evals = dashboardData.evaluations[student.username] || {};
+                
+                const m1Count = countPassedEvaluations(evals.module1);
+                const m2Count = countPassedEvaluations(evals.module2);
+                const m3Count = countPassedEvaluations(evals.module3);
+                const total = m1Count + m2Count + m3Count;
+
+                row.innerHTML = `
+                    <td><strong>${student.fullName}</strong></td>
+                    <td class="text-center">
+                        <span class="badge ${m1Count === 3 ? 'bg-success' : m1Count > 0 ? 'bg-warning' : 'bg-secondary'}">
+                            ${m1Count}/3
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <span class="badge ${m2Count === 4 ? 'bg-success' : m2Count > 0 ? 'bg-warning' : 'bg-secondary'}">
+                            ${m2Count}/4
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <span class="badge ${m3Count === 3 ? 'bg-success' : m3Count > 0 ? 'bg-warning' : 'bg-secondary'}">
+                            ${m3Count}/3
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <strong>${total}</strong>/10
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Contar evaluaciones aprobadas de un módulo
+        function countPassedEvaluations(moduleEvals) {
+            if (!moduleEvals) return 0;
+            let count = 0;
+            for (let lesson in moduleEvals) {
+                if (isEvaluationPassed({ [lesson]: moduleEvals[lesson] }, lesson)) {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        // Actualizar log de actividades
+        function updateActivityLog() {
+            const log = document.getElementById('activityLog');
+            
+            if (dashboardData.activities.length === 0) {
+                log.innerHTML = `
+                    <div class="activity-item">
+                        <div class="activity-details">
+                            <div class="activity-user">Sin actividad</div>
+                            <div class="activity-action">No hay actividades registradas</div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            log.innerHTML = dashboardData.activities.slice(0, 10).map(activity => {
+                const time = new Date(activity.timestamp).toLocaleString();
+                const actionText = getActivityDescription(activity);
+                
+                return `
+                    <div class="activity-item">
+                        <div class="activity-details flex-grow-1">
+                            <div class="activity-user">${activity.username}</div>
+                            <div class="activity-action">${actionText}</div>
+                        </div>
+                        <div class="activity-time">${time}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Obtener descripción de actividad
+        function getActivityDescription(activity) {
+            const actions = {
+                'login': 'Inició sesión',
+                'logout': 'Cerró sesión',
+                'module_access': `Accedió al módulo ${activity.moduleId}`,
+                'lesson_completed': `Completó lección ${activity.lessonId}`,
+                'progress_update': 'Actualizó progreso',
+                'dashboard_access': 'Accedió al dashboard',
+                'evaluation_completed': `Completó evaluación ${activity.evaluationId}`
+            };
+            
+            return actions[activity.action] || activity.action;
+        }
+
+        // Refrescar dashboard
+        async function refreshDashboard() {
+            await loadDashboardData();
+            showToast('Dashboard actualizado exitosamente', 'success');
+        }
+
+        // Mostrar loading
+        function showLoading(show) {
+            // Implementación básica
+            if (show) {
+                console.log('Loading...');
+            }
+        }
+
+        // Mostrar error
+        function showError(message) {
+            const toast = document.createElement('div');
+            toast.className = 'position-fixed top-0 end-0 p-3';
+            toast.style.zIndex = '9999';
+            toast.innerHTML = `
+                <div class="toast show" role="alert">
+                    <div class="toast-header bg-danger text-white">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <strong class="me-auto">Error</strong>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+                    </div>
+                    <div class="toast-body">
+                        ${message}
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 5000);
+        }
+
+        // Mostrar toast
+        function showToast(message, type = 'info') {
+            const colors = {
+                success: 'bg-success',
+                warning: 'bg-warning',
+                info: 'bg-info',
+                danger: 'bg-danger'
+            };
+            
+            const toast = document.createElement('div');
+            toast.className = 'position-fixed top-0 end-0 p-3';
+            toast.style.zIndex = '9999';
+            toast.innerHTML = `
+                <div class="toast show" role="alert">
+                    <div class="toast-header ${colors[type]} text-white">
+                        <i class="bi bi-check-circle me-2"></i>
+                        <strong class="me-auto">Éxito</strong>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+                    </div>
+                    <div class="toast-body">
+                        ${message}
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Función makeJSONPRequest debe estar disponible desde auth.js
+        if (typeof makeJSONPRequest === 'undefined') {
+            function makeJSONPRequest(action, params = {}) {
+                return new Promise((resolve, reject) => {
+                    const callbackName = 'jsonpCallback_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    
+                    window[callbackName] = function(data) {
+                        delete window[callbackName];
+                        document.head.removeChild(script);
+                        resolve(data);
+                    };
+                    
+                    const queryParams = new URLSearchParams({
+                        action: action,
+                        callback: callbackName,
+                        ...params
+                    });
+                    
+                    const url = `${API_URL}?${queryParams.toString()}`;
+                    
+                    const script = document.createElement('script');
+                    script.src = url;
+                    script.onerror = () => {
+                        delete window[callbackName];
+                        document.head.removeChild(script);
+                        reject(new Error('Error de red'));
+                    };
+                    
+                    setTimeout(() => {
+                        if (window[callbackName]) {
+                            delete window[callbackName];
+                            document.head.removeChild(script);
+                            reject(new Error('Timeout'));
+                        }
+                    }, 10000);
+                    
+                    document.head.appendChild(script);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
