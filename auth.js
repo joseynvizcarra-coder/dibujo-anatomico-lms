@@ -1,6 +1,6 @@
 // auth.js - Sistema de Autenticación LMS Dibujo Anatómico
 // Universidad Alberto Hurtado - Joselyn Vizcarra
-// Versión 2.0 - Optimizada y corregida
+// Versión 2.1 - CORRECCIÓN JSONP para Google Sheets
 
 // ========================
 // CONFIGURACIÓN GLOBAL
@@ -284,76 +284,82 @@ async function getStudentProgress(username = null) {
 }
 
 /**
- * Actualiza el progreso de un módulo en Google Sheets
- * Versión mejorada con validaciones y manejo de errores
+ * ✅ FUNCIÓN CORREGIDA: Actualiza el progreso de un módulo en Google Sheets
+ * Optimizada para JSONP - Envía SOLO datos del módulo actual
  */
 async function updateModuleProgress(moduleNumber, progressData) {
     try {
         const currentUser = getCurrentUser();
         
         if (!currentUser) {
-            console.error('No hay usuario autenticado');
+            console.error('❌ No hay usuario autenticado');
             return false;
         }
 
         // Validar que sea estudiante (instructor puede ver pero no guardar progreso)
         if (currentUser.role !== 'estudiante') {
-            console.warn('Solo estudiantes pueden guardar progreso');
+            console.warn('⚠️ Solo estudiantes pueden guardar progreso');
             return false;
         }
 
         // Validar número de módulo
         if (moduleNumber < 1 || moduleNumber > TOTAL_MODULES) {
-            console.error(`Módulo inválido: ${moduleNumber}. Debe ser 1-${TOTAL_MODULES}`);
+            console.error(`❌ Módulo inválido: ${moduleNumber}. Debe ser 1-${TOTAL_MODULES}`);
             return false;
         }
 
-        // Obtener progreso actual (o inicializar si no existe)
-        let currentProgress = await getStudentProgress();
-        if (!currentProgress) {
-            currentProgress = initializeEmptyProgress();
-        }
-
-        // Actualizar módulo específico
-        currentProgress.modules[moduleNumber] = {
-            ...currentProgress.modules[moduleNumber],
-            ...progressData,
-            lastUpdate: new Date().toISOString()
+        // ✅ OPTIMIZACIÓN CRÍTICA: Enviar SOLO datos del módulo actual
+        // En lugar de enviar todo el objeto progress con 3 módulos
+        const compactData = {
+            completed: progressData.completed ? '1' : '0',
+            progress: progressData.progress || 0,
+            timeSpent: progressData.timeSpent || 0,
+            // Convertir array a string separado por comas (más corto)
+            lessons: (progressData.completedLessons || []).join(','),
+            timestamp: Date.now() // Usar timestamp numérico en lugar de ISO string
         };
 
-        // Calcular progreso general (3 módulos, no 4)
-        const completedModules = Object.values(currentProgress.modules)
-            .filter(m => m.completed).length;
-        currentProgress.overallProgress = Math.round((completedModules / TOTAL_MODULES) * 100);
-        currentProgress.lastAccess = new Date().toISOString();
+        console.log('📤 Enviando datos compactos:', compactData);
+        console.log('📏 Tamaño estimado:', JSON.stringify(compactData).length, 'caracteres');
 
-        // Calcular tiempo total
-        currentProgress.totalTime = Object.values(currentProgress.modules)
-            .reduce((total, module) => total + (module.timeSpent || 0), 0);
-
-        // Guardar en Google Sheets usando JSONP
+        // Usar JSONP con parámetros individuales (mucho más corto que JSON)
         const result = await makeJSONPRequest('saveProgress', {
             username: currentUser.username,
-            progress: JSON.stringify(currentProgress)
+            module: moduleNumber,
+            completed: compactData.completed,
+            progress: compactData.progress,
+            timeSpent: compactData.timeSpent,
+            lessons: compactData.lessons,
+            timestamp: compactData.timestamp
         });
         
         if (result.success) {
             console.log(`✅ Progreso módulo ${moduleNumber} guardado exitosamente`);
             
-            // Registrar actividad
-            await logUserActivity('progress_update', currentUser, {
+            // Registrar actividad (sin esperar respuesta para no bloquear UI)
+            logUserActivity('progress_update', currentUser, {
                 moduleId: moduleNumber,
                 progress: progressData.progress,
                 completed: progressData.completed
-            });
+            }).catch(err => console.warn('⚠️ Error logging activity:', err));
             
             return true;
         } else {
-            console.error('Error guardando progreso:', result.error);
+            console.error('❌ Error guardando progreso:', result.error);
+            
+            // Fallback: guardar localmente si falla Google Sheets
+            saveProgressLocally(moduleNumber, progressData);
+            console.log('💾 Progreso guardado localmente como backup');
+            
             return false;
         }
     } catch (error) {
-        console.error('Error actualizando progreso:', error);
+        console.error('❌ Error actualizando progreso:', error);
+        
+        // Fallback: guardar localmente
+        saveProgressLocally(moduleNumber, progressData);
+        console.log('💾 Progreso guardado localmente como backup');
+        
         return false;
     }
 }
@@ -768,4 +774,4 @@ window.showLoading = showLoading;
 window.showToast = showToast;
 window.makeJSONPRequest = makeJSONPRequest;
 
-console.log('📚 auth.js v2.0 cargado - LMS Dibujo Anatómico UAH');
+console.log('📚 auth.js v2.1 cargado - LMS Dibujo Anatómico UAH [JSONP OPTIMIZADO]');
