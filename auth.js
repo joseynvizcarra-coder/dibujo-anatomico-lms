@@ -1,48 +1,36 @@
 // auth.js - Sistema de Autenticación LMS Dibujo Anatómico
 // Universidad Alberto Hurtado - Joselyn Vizcarra
-// Versión 2.1 - CORRECCIÓN JSONP para Google Sheets
+// Versión 2.1 - Compatibilidad total con Apps Script JSONP
 
 // ========================
 // CONFIGURACIÓN GLOBAL
 // ========================
 
 const API_URL = 'https://script.google.com/macros/s/AKfycbygraW83QphICTmm9KdASa7Qax2TXABGmqLkYx5zruenWG45WeBGGFn8MnwXIscwrK4/exec';
-const TOTAL_MODULES = 3; // ✅ Curso tiene 3 módulos, no 4
+const TOTAL_MODULES = 3;
 const SESSION_TIMEOUT = 24 * 60 * 60 * 1000; // 24 horas
 
-// Variable global para tracking
 let authInitialized = false;
 
 // ========================
-// FUNCIONES DE AUTENTICACIÓN
+// AUTENTICACIÓN
 // ========================
 
-/**
- * Autentica usuario con Google Sheets usando JSONP
- */
 async function authenticateUser(username, password) {
     try {
         showLoading(true, 'Verificando credenciales...');
-        
-        // Usar JSONP para evitar CORS
-        const result = await makeJSONPRequest('login', {
-            username: username,
-            password: password
-        });
-        
+
+        const result = await makeJSONPRequest('login', { username, password });
+
         if (result.success) {
             const userData = result.data;
-            
-            // Guardar datos del usuario en localStorage
+
             localStorage.setItem('currentUser', JSON.stringify(userData));
             localStorage.setItem('isAuthenticated', 'true');
             localStorage.setItem('sessionStart', userData.loginTime || new Date().toISOString());
-            
-            // Registrar login
-            await logUserActivity('login', userData, {
-                timestamp: new Date().toISOString()
-            });
-            
+
+            await logUserActivity('login', userData, { timestamp: new Date().toISOString() });
+
             showLoading(false);
             return { success: true, user: userData };
         } else {
@@ -56,82 +44,61 @@ async function authenticateUser(username, password) {
     }
 }
 
-/**
- * Función helper para hacer requests JSONP
- * Maneja timeout y errores de red
- */
+// ========================
+// JSONP REQUEST
+// ========================
+
 function makeJSONPRequest(action, params = {}) {
     return new Promise((resolve, reject) => {
-        // Crear callback único
         const callbackName = 'jsonpCallback_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        
-        // Registrar callback global
-        window[callbackName] = function(data) {
+
+        window[callbackName] = function (data) {
             delete window[callbackName];
-            if (document.head.contains(script)) {
-                document.head.removeChild(script);
-            }
+            if (document.head.contains(script)) document.head.removeChild(script);
             resolve(data);
         };
-        
-        // Construir URL con parámetros
-        const queryParams = new URLSearchParams({
-            action: action,
-            callback: callbackName,
-            ...params
-        });
-        
+
+        const queryParams = new URLSearchParams({ action, callback: callbackName, ...params });
         const url = `${API_URL}?${queryParams.toString()}`;
-        
-        // Crear script tag
+
         const script = document.createElement('script');
         script.src = url;
         script.async = true;
-        
         script.onerror = () => {
             delete window[callbackName];
-            if (document.head.contains(script)) {
-                document.head.removeChild(script);
-            }
+            if (document.head.contains(script)) document.head.removeChild(script);
             reject(new Error('Error de red al conectar con Google Sheets'));
         };
-        
-        // Timeout después de 15 segundos
+
         const timeout = setTimeout(() => {
             if (window[callbackName]) {
                 delete window[callbackName];
-                if (document.head.contains(script)) {
-                    document.head.removeChild(script);
-                }
+                if (document.head.contains(script)) document.head.removeChild(script);
                 reject(new Error('Timeout: La solicitud tardó demasiado (15s)'));
             }
         }, 15000);
-        
-        // Limpiar timeout cuando se complete
+
         const originalCallback = window[callbackName];
-        window[callbackName] = function(data) {
+        window[callbackName] = function (data) {
             clearTimeout(timeout);
             originalCallback(data);
         };
-        
+
         document.head.appendChild(script);
     });
 }
 
-/**
- * Verifica si el usuario está autenticado (mejorada)
- */
+// ========================
+// SESIÓN Y ROLES
+// ========================
+
 function isAuthenticated() {
     const authFlag = localStorage.getItem('isAuthenticated') === 'true';
     const userStr = localStorage.getItem('currentUser');
     const sessionStart = localStorage.getItem('sessionStart');
-    
-    // Validación básica
-    if (!authFlag || !userStr || userStr === 'null') {
-        return false;
-    }
-    
-    // Verificar si la sesión expiró
+
+    if (!authFlag || !userStr || userStr === 'null') return false;
+
     if (sessionStart) {
         const sessionAge = Date.now() - new Date(sessionStart).getTime();
         if (sessionAge > SESSION_TIMEOUT) {
@@ -140,8 +107,7 @@ function isAuthenticated() {
             return false;
         }
     }
-    
-    // Validar integridad del objeto usuario
+
     try {
         const user = JSON.parse(userStr);
         return !!(user && user.username && user.role);
@@ -151,81 +117,43 @@ function isAuthenticated() {
     }
 }
 
-/**
- * Obtiene los datos del usuario actual
- */
 function getCurrentUser() {
     if (!isAuthenticated()) return null;
-    
     try {
-        const userStr = localStorage.getItem('currentUser');
-        const user = JSON.parse(userStr);
+        const user = JSON.parse(localStorage.getItem('currentUser'));
         return user;
     } catch (error) {
-        console.error('Error parsing user data:', error);
         logout();
         return null;
     }
 }
 
-/**
- * Cierra la sesión del usuario
- */
 async function logout() {
     const currentUser = getCurrentUser();
-    
     if (currentUser) {
         try {
-            await logUserActivity('logout', currentUser, {
-                timestamp: new Date().toISOString()
-            });
-        } catch (error) {
-            console.error('Error registrando logout:', error);
-        }
+            await logUserActivity('logout', currentUser, { timestamp: new Date().toISOString() });
+        } catch (e) {}
     }
-
-    // Limpiar datos de sesión
-    localStorage.removeItem('currentUser');
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('sessionStart');
-
-    // Redirigir a login
+    localStorage.clear();
     window.location.href = 'login.html';
 }
 
-/**
- * Protege una página verificando autenticación y rol
- */
 function protectPage(requiredRole = null) {
     const currentUser = getCurrentUser();
-    
+
     if (!isAuthenticated() || !currentUser) {
-        // No autenticado, redirigir a login
-        console.warn('Usuario no autenticado, redirigiendo a login');
         window.location.href = 'login.html';
         return false;
     }
 
-    // Si no se requiere rol específico, permitir acceso
-    if (!requiredRole) {
-        return true;
-    }
+    if (!requiredRole) return true;
 
-    // Verificar rol específico
     if (currentUser.role !== requiredRole) {
-        console.warn(`Rol incorrecto. Requerido: ${requiredRole}, Actual: ${currentUser.role}`);
-        
-        // Redirigir según el rol actual
         if (currentUser.role === 'instructor') {
-            if (!window.location.pathname.includes('dashboard.html')) {
-                window.location.href = 'dashboard.html';
-            }
+            window.location.href = 'dashboard.html';
         } else {
-            // Estudiante o evaluador
-            if (!window.location.pathname.includes('index.html') && 
-                !window.location.pathname.includes('module')) {
-                window.location.href = 'index.html';
-            }
+            window.location.href = 'index.html';
         }
         return false;
     }
@@ -237,9 +165,6 @@ function protectPage(requiredRole = null) {
 // SISTEMA DE PROGRESO
 // ========================
 
-/**
- * Inicializa progreso vacío para nuevo estudiante
- */
 function initializeEmptyProgress() {
     return {
         modules: {
@@ -253,525 +178,155 @@ function initializeEmptyProgress() {
     };
 }
 
-/**
- * Obtiene el progreso de un estudiante desde Google Sheets
- * Usa JSONP y maneja casos sin datos
- */
 async function getStudentProgress(username = null) {
     try {
         const userToQuery = username || getCurrentUser()?.username;
-        if (!userToQuery) {
-            console.warn('No hay usuario para consultar progreso');
-            return null;
-        }
+        if (!userToQuery) return null;
 
-        // Usar JSONP en lugar de fetch
-        const result = await makeJSONPRequest('getProgress', {
-            username: userToQuery
-        });
+        const result = await makeJSONPRequest('getProgress', { username: userToQuery });
+        if (result.success && result.data) return result.data;
 
-        if (result.success && result.data) {
-            return result.data;
-        } else {
-            console.warn('No hay progreso previo, inicializando nuevo');
-            return initializeEmptyProgress();
-        }
-    } catch (error) {
-        console.error('Error obteniendo progreso:', error);
-        // Devolver progreso vacío en caso de error
+        return initializeEmptyProgress();
+    } catch {
         return initializeEmptyProgress();
     }
 }
 
-/**
- * ✅ FUNCIÓN CORREGIDA: Actualiza el progreso de un módulo en Google Sheets
- * Optimizada para JSONP - Envía SOLO datos del módulo actual
- */
+// ✅ CORREGIDO: compatibilidad total con Apps Script v2.1
 async function updateModuleProgress(moduleNumber, progressData) {
-    try {
-        const currentUser = getCurrentUser();
-        
-        if (!currentUser) {
-            console.error('❌ No hay usuario autenticado');
-            return false;
-        }
-
-        // Validar que sea estudiante (instructor puede ver pero no guardar progreso)
-        if (currentUser.role !== 'estudiante') {
-            console.warn('⚠️ Solo estudiantes pueden guardar progreso');
-            return false;
-        }
-
-        // Validar número de módulo
-        if (moduleNumber < 1 || moduleNumber > TOTAL_MODULES) {
-            console.error(`❌ Módulo inválido: ${moduleNumber}. Debe ser 1-${TOTAL_MODULES}`);
-            return false;
-        }
-
-        // ✅ OPTIMIZACIÓN CRÍTICA: Enviar SOLO datos del módulo actual
-        // En lugar de enviar todo el objeto progress con 3 módulos
-        const compactData = {
-            completed: progressData.completed ? '1' : '0',
-            progress: progressData.progress || 0,
-            timeSpent: progressData.timeSpent || 0,
-            // Convertir array a string separado por comas (más corto)
-            lessons: (progressData.completedLessons || []).join(','),
-            timestamp: Date.now() // Usar timestamp numérico en lugar de ISO string
-        };
-
-        console.log('📤 Enviando datos compactos:', compactData);
-        console.log('📏 Tamaño estimado:', JSON.stringify(compactData).length, 'caracteres');
-
-        // Usar JSONP con parámetros individuales (mucho más corto que JSON)
-        const result = await makeJSONPRequest('saveProgress', {
-            username: currentUser.username,
-            module: moduleNumber,
-            completed: compactData.completed,
-            progress: compactData.progress,
-            timeSpent: compactData.timeSpent,
-            lessons: compactData.lessons,
-            timestamp: compactData.timestamp
-        });
-        
-        if (result.success) {
-            console.log(`✅ Progreso módulo ${moduleNumber} guardado exitosamente`);
-            
-            // Registrar actividad (sin esperar respuesta para no bloquear UI)
-            logUserActivity('progress_update', currentUser, {
-                moduleId: moduleNumber,
-                progress: progressData.progress,
-                completed: progressData.completed
-            }).catch(err => console.warn('⚠️ Error logging activity:', err));
-            
-            return true;
-        } else {
-            console.error('❌ Error guardando progreso:', result.error);
-            
-            // Fallback: guardar localmente si falla Google Sheets
-            saveProgressLocally(moduleNumber, progressData);
-            console.log('💾 Progreso guardado localmente como backup');
-            
-            return false;
-        }
-    } catch (error) {
-        console.error('❌ Error actualizando progreso:', error);
-        
-        // Fallback: guardar localmente
-        saveProgressLocally(moduleNumber, progressData);
-        console.log('💾 Progreso guardado localmente como backup');
-        
-        return false;
-    }
-}
-
-/**
- * Guarda progreso local (backup en localStorage)
- */
-function saveProgressLocally(moduleNumber, progressData) {
     try {
         const currentUser = getCurrentUser();
         if (!currentUser) return false;
 
-        const storageKey = `progress_${currentUser.username}_module${moduleNumber}`;
-        const data = {
+        // permitir estudiante o evaluador
+        if (!['estudiante', 'evaluador'].includes(currentUser.role)) {
+            console.warn(`Rol sin permisos para guardar progreso: ${currentUser.role}`);
+            return false;
+        }
+
+        if (moduleNumber < 1 || moduleNumber > TOTAL_MODULES) return false;
+
+        let currentProgress = await getStudentProgress();
+        if (!currentProgress) currentProgress = initializeEmptyProgress();
+
+        currentProgress.modules[moduleNumber] = {
+            ...currentProgress.modules[moduleNumber],
             ...progressData,
-            savedAt: new Date().toISOString()
+            lastUpdate: new Date().toISOString()
         };
-        
-        localStorage.setItem(storageKey, JSON.stringify(data));
-        return true;
+
+        const completedModules = Object.values(currentProgress.modules).filter(m => m.completed).length;
+        currentProgress.overallProgress = Math.round((completedModules / TOTAL_MODULES) * 100);
+        currentProgress.lastAccess = new Date().toISOString();
+        currentProgress.totalTime = Object.values(currentProgress.modules).reduce((t, m) => t + (m.timeSpent || 0), 0);
+
+        // enviar parámetros individuales (versión JSONP optimizada)
+        const mod = currentProgress.modules[moduleNumber];
+        const result = await makeJSONPRequest('saveProgress', {
+            username: currentUser.username,
+            module: moduleNumber,
+            completed: mod.completed ? 1 : 0,
+            progress: mod.progress || 0,
+            timeSpent: mod.timeSpent || 0,
+            lessons: (mod.completedLessons || []).join(','),
+            timestamp: Date.now()
+        });
+
+        if (result.success) {
+            console.log(`✅ Progreso módulo ${moduleNumber} guardado en Sheets`);
+            await logUserActivity('progress_update', currentUser, {
+                moduleId: moduleNumber,
+                progress: progressData.progress,
+                completed: progressData.completed
+            });
+            return true;
+        } else {
+            console.error('❌ Error guardando progreso:', result.error);
+            return false;
+        }
     } catch (error) {
-        console.error('Error guardando progreso local:', error);
+        console.error('Error updateModuleProgress:', error);
         return false;
     }
 }
 
-/**
- * Recupera progreso local (si Google Sheets falla)
- */
-function getProgressLocally(moduleNumber) {
-    try {
-        const currentUser = getCurrentUser();
-        if (!currentUser) return null;
-
-        const storageKey = `progress_${currentUser.username}_module${moduleNumber}`;
-        const data = localStorage.getItem(storageKey);
-        
-        return data ? JSON.parse(data) : null;
-    } catch (error) {
-        console.error('Error recuperando progreso local:', error);
-        return null;
-    }
-}
-
 // ========================
-// SISTEMA DE ACTIVIDADES
+// LOG DE ACTIVIDADES
 // ========================
 
-/**
- * Registra una actividad del usuario en Google Sheets
- * Versión corregida sin duplicación de propiedad 'action'
- */
 async function logUserActivity(activityType, userData, details = {}) {
     try {
-        // Validar datos mínimos
-        if (!userData || !userData.username) {
-            console.warn('No se puede registrar actividad sin usuario');
-            return false;
-        }
+        if (!userData || !userData.username) return false;
 
         const activity = {
-            action: 'logActivity',  // Acción para Google Sheets
+            action: 'logActivity',
             userId: userData.id || 0,
             username: userData.username,
-            activityType: activityType,  // ✅ CORREGIDO: Renombrado de 'action' a 'activityType'
-            moduleId: details.moduleId || details.module || '',
-            lessonId: details.lessonId || details.lesson || '',
+            activityType,
+            moduleId: details.moduleId || '',
+            lessonId: details.lessonId || '',
             details: JSON.stringify(details),
             sessionId: userData.sessionId || generateSessionId(),
             timestamp: new Date().toISOString()
         };
 
-        // Usar JSONP para evitar problemas CORS
         const result = await makeJSONPRequest('logActivity', activity);
-        
         if (result.success) {
-            console.log(`✅ Actividad registrada: ${activityType}`);
+            console.log(`📝 Actividad registrada: ${activityType}`);
             return true;
         } else {
-            console.warn('Actividad no registrada:', result.error);
+            console.warn('⚠️ No se registró actividad:', result.error);
             return false;
         }
-    } catch (error) {
-        console.error('Error logging activity:', error);
-        // No bloquear la UI por errores de logging
+    } catch (e) {
+        console.error('Error registrando actividad:', e);
         return false;
     }
 }
 
 // ========================
-// FUNCIONES PARA DASHBOARD
+// UTILIDADES UI
 // ========================
 
-/**
- * Obtiene todos los estudiantes y su progreso (solo instructor)
- */
-async function getAllStudentsProgress() {
-    try {
-        const currentUser = getCurrentUser();
-        if (!currentUser || currentUser.role !== 'instructor') {
-            console.warn('Solo instructores pueden ver todos los estudiantes');
-            return null;
-        }
-
-        const result = await makeJSONPRequest('getAllStudents', {});
-
-        if (result.success) {
-            return result.data;
-        } else {
-            console.error('Error obteniendo estudiantes:', result.error);
-            return [];
-        }
-    } catch (error) {
-        console.error('Error de conexión al obtener estudiantes:', error);
-        return [];
-    }
-}
-
-/**
- * Obtiene actividades recientes (para dashboard)
- */
-async function getRecentActivities(username = null, limit = 50) {
-    try {
-        const params = { limit: limit };
-        if (username) {
-            params.username = username;
-        }
-
-        const result = await makeJSONPRequest('getActivities', params);
-
-        if (result.success) {
-            return result.data || [];
-        } else {
-            console.error('Error obteniendo actividades:', result.error);
-            return [];
-        }
-    } catch (error) {
-        console.error('Error de conexión al obtener actividades:', error);
-        return [];
-    }
-}
-
-// ========================
-// UTILIDADES
-// ========================
-
-/**
- * Genera un ID único de sesión
- */
 function generateSessionId() {
     return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 }
 
-/**
- * Actualiza la UI según el rol del usuario
- */
-function updateUIForRole() {
-    const currentUser = getCurrentUser();
-    if (!currentUser) return;
-
-    // Mostrar/ocultar elementos según el rol
-    const roleSpecificElements = document.querySelectorAll('[data-role]');
-    roleSpecificElements.forEach(element => {
-        const allowedRoles = element.dataset.role.split(',');
-        if (allowedRoles.includes(currentUser.role)) {
-            element.style.display = '';
-        } else {
-            element.style.display = 'none';
-        }
-    });
-
-    // Actualizar información del usuario en la UI
-    const userNameElements = document.querySelectorAll('.user-name');
-    userNameElements.forEach(el => {
-        el.textContent = currentUser.fullName || currentUser.username;
-    });
-
-    const userEmailElements = document.querySelectorAll('.user-email');
-    userEmailElements.forEach(el => {
-        el.textContent = currentUser.email || '';
-    });
-
-    // Actualizar elementos específicos por ID
-    const userName = document.getElementById('userName');
-    const userRole = document.getElementById('userRole'); 
-    const userAvatar = document.getElementById('userAvatar');
-    const instructorName = document.getElementById('instructorName');
-
-    if (userName) {
-        userName.textContent = currentUser.fullName || currentUser.username;
-    }
-    
-    if (userRole) {
-        userRole.textContent = getRoleDisplayName(currentUser.role);
-    }
-    
-    if (userAvatar) {
-        const initial = (currentUser.fullName || currentUser.username).charAt(0).toUpperCase();
-        userAvatar.textContent = initial;
-    }
-    
-    if (instructorName) {
-        instructorName.textContent = currentUser.fullName || currentUser.username;
-    }
-}
-
-/**
- * Obtiene el nombre de visualización del rol
- */
-function getRoleDisplayName(role) {
-    const roleNames = {
-        'instructor': 'Instructor',
-        'estudiante': 'Estudiante',
-        'evaluador': 'Evaluador'
-    };
-    return roleNames[role] || 'Usuario';
-}
-
-/**
- * Muestra/oculta indicador de carga
- */
 function showLoading(show, message = 'Cargando...') {
     let loader = document.getElementById('globalLoader');
-    
     if (show) {
         if (!loader) {
             loader = document.createElement('div');
             loader.id = 'globalLoader';
             loader.innerHTML = `
-                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-                           background: rgba(0,0,0,0.5); z-index: 9999; 
-                           display: flex; align-items: center; justify-content: center;">
-                    <div style="background: white; padding: 2rem; border-radius: 10px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
-                        <div style="border: 3px solid #f3f3f3; border-top: 3px solid #2c5f66; 
-                                   border-radius: 50%; width: 40px; height: 40px; 
-                                   animation: spin 1s linear infinite; margin: 0 auto 1rem;"></div>
-                        <div style="color: #2c5f66; font-weight: 600;">${message}</div>
+                <div style="position:fixed;top:0;left:0;width:100%;height:100%;
+                            background:rgba(0,0,0,0.5);z-index:9999;
+                            display:flex;align-items:center;justify-content:center;">
+                    <div style="background:white;padding:2rem;border-radius:10px;
+                                text-align:center;box-shadow:0 2px 10px rgba(0,0,0,0.2);">
+                        <div class="spinner-border text-primary mb-3" role="status"></div>
+                        <p>${message}</p>
                     </div>
-                </div>
-                <style>
-                    @keyframes spin {
-                        0% { transform: rotate(0deg); }
-                        100% { transform: rotate(360deg); }
-                    }
-                </style>
-            `;
+                </div>`;
             document.body.appendChild(loader);
-        } else {
-            // Actualizar mensaje si ya existe
-            const messageDiv = loader.querySelector('div > div > div:last-child');
-            if (messageDiv) {
-                messageDiv.textContent = message;
-            }
         }
-        loader.style.display = 'block';
-    } else {
-        if (loader) {
-            loader.style.display = 'none';
-        }
+    } else if (loader) {
+        loader.remove();
     }
 }
 
-/**
- * Muestra un toast de notificación
- */
-function showToast(message, type = 'info') {
-    const colors = {
-        success: '#4CAF50',
-        warning: '#FFC107',
-        info: '#2196F3',
-        danger: '#f44336'
-    };
-    
-    const icons = {
-        success: 'check-circle-fill',
-        warning: 'exclamation-triangle-fill',
-        info: 'info-circle-fill',
-        danger: 'x-circle-fill'
-    };
-    
-    const toast = document.createElement('div');
-    toast.style.cssText = `
-        position: fixed;
-        top: 80px;
-        right: 20px;
-        background: ${colors[type]};
-        color: white;
-        padding: 1rem 1.5rem;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        z-index: 10000;
-        animation: slideInRight 0.3s ease-out;
-        max-width: 350px;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-    `;
-    
-    // Agregar ícono si Bootstrap Icons está disponible
-    const iconHTML = typeof bootstrap !== 'undefined' 
-        ? `<i class="bi bi-${icons[type]}" style="font-size: 1.25rem;"></i>`
-        : '';
-    
-    toast.innerHTML = `
-        ${iconHTML}
-        <span>${message}</span>
-    `;
-    
-    document.body.appendChild(toast);
-    
-    // Animación de salida
-    setTimeout(() => {
-        toast.style.animation = 'slideOutRight 0.3s ease-out';
-        setTimeout(() => toast.remove(), 300);
-    }, 3000);
+function getRoleDisplayName(role) {
+    const names = { instructor: 'Instructor', estudiante: 'Estudiante', evaluador: 'Evaluador' };
+    return names[role] || 'Usuario';
 }
 
-// Agregar estilos de animación
-if (!document.getElementById('toastAnimations')) {
-    const style = document.createElement('style');
-    style.id = 'toastAnimations';
-    style.textContent = `
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-        @keyframes slideOutRight {
-            from {
-                transform: translateX(0);
-                opacity: 1;
-            }
-            to {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-        }
-    `;
-    document.head.appendChild(style);
+function updateUIForRole() {
+    const currentUser = getCurrentUser();
+    if (!currentUser) return;
+    document.querySelectorAll('.user-name').forEach(e => e.textContent = currentUser.fullName || currentUser.username);
+    document.querySelectorAll('.user-email').forEach(e => e.textContent = currentUser.email || '');
+    const roleEl = document.getElementById('userRole');
+    if (roleEl) roleEl.textContent = getRoleDisplayName(currentUser.role);
 }
 
-// ========================
-// INICIALIZACIÓN
-// ========================
-
-/**
- * Inicializa el sistema de autenticación cuando se carga la página
- */
-function initializeAuth() {
-    try {
-        // Evitar inicialización múltiple
-        if (authInitialized) {
-            console.log('Auth ya inicializado');
-            return;
-        }
-
-        console.log('🔐 Inicializando sistema de autenticación...');
-
-        // Verificar si la sesión ha expirado (24 horas)
-        const sessionStart = localStorage.getItem('sessionStart');
-        if (sessionStart) {
-            const sessionAge = Date.now() - new Date(sessionStart).getTime();
-            
-            if (sessionAge > SESSION_TIMEOUT) {
-                console.warn('⏰ Sesión expirada, cerrando sesión...');
-                logout();
-                return;
-            }
-        }
-
-        // Actualizar UI según el rol
-        updateUIForRole();
-
-        authInitialized = true;
-        console.log('✅ Sistema de autenticación inicializado correctamente');
-    } catch (error) {
-        console.error('❌ Error initializing auth:', error);
-        // En caso de error, limpiar datos corruptos
-        localStorage.removeItem('currentUser');
-        localStorage.removeItem('isAuthenticated');
-    }
-}
-
-// ========================
-// INICIALIZACIÓN AUTOMÁTICA
-// ========================
-
-// Inicializar cuando se carga el script
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeAuth);
-} else {
-    initializeAuth();
-}
-
-// Exportar funciones globales (para compatibilidad)
-window.authenticateUser = authenticateUser;
-window.isAuthenticated = isAuthenticated;
-window.getCurrentUser = getCurrentUser;
-window.logout = logout;
-window.protectPage = protectPage;
-window.getStudentProgress = getStudentProgress;
-window.updateModuleProgress = updateModuleProgress;
-window.logUserActivity = logUserActivity;
-window.getAllStudentsProgress = getAllStudentsProgress;
-window.getRecentActivities = getRecentActivities;
-window.showLoading = showLoading;
-window.showToast = showToast;
-window.makeJSONPRequest = makeJSONPRequest;
-
-console.log('📚 auth.js v2.1 cargado - LMS Dibujo Anatómico UAH [JSONP OPTIMIZADO]');
+console.log('✅ auth.js v2.1 cargado correctamente');
