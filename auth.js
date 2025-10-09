@@ -329,4 +329,40 @@ function updateUIForRole() {
     if (roleEl) roleEl.textContent = getRoleDisplayName(currentUser.role);
 }
 
-console.log('✅ auth.js v2.1 cargado correctamente');
+console.log('✅ auth.js v2.1 cargado correctamente'); 
+// ========================
+// 🔍 TEST DE CONEXIÓN
+// ========================
+async function testGoogleSheetsConnection() {
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+        alert('Debes iniciar sesión primero.');
+        return;
+    }
+
+    showLoading(true, 'Verificando conexión con Google Sheets...');
+
+    try {
+        const result = await makeJSONPRequest('saveProgress', {
+            username: currentUser.username,
+            module: 1,
+            completed: 0,
+            progress: 10,
+            timeSpent: 2,
+            lessons: '1',
+            timestamp: Date.now()
+        });
+
+        showLoading(false);
+        console.log('Resultado de test:', result);
+
+        if (result.success) {
+            alert('✅ Conexión exitosa: los datos se guardaron correctamente.');
+        } else {
+            alert('⚠️ Falló el guardado: ' + (result.error || 'Error desconocido'));
+        }
+    } catch (err) {
+        showLoading(false);
+        alert('❌ Error de red o CORS: ' + err.message);
+    }
+}
