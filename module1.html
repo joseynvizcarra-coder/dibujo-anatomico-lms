@@ -575,57 +575,135 @@
             }
         }
 
-        // ===== FUNCIÓN: saveProgress() =====
-        async function saveProgress() {
-            debugLog('saveProgress()');
-            
-            const currentUser = getCurrentUser();
-            if (!currentUser) {
-                console.warn('❌ No hay usuario');
-                return;
-            }
+        // ===== FUNCIÓN: saveProgress() CON DEBUG =====
+async function saveProgress() {
+    console.log('═'.repeat(60));
+    console.log('🔥 saveProgress() INICIADO');
+    console.log('═'.repeat(60));
+    
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+        console.error('❌ No hay usuario autenticado');
+        return;
+    }
+    console.log('✅ Usuario:', currentUser.username);
 
-            const timeSpent = Math.round((Date.now() - moduleStartTime) / 60000);
-            const progress = Math.round((completedLessons.length / TOTAL_LESSONS) * 100);
-            const isCompleted = completedLessons.length === TOTAL_LESSONS;
+    const timeSpent = Math.round((Date.now() - moduleStartTime) / 60000);
+    const progress = Math.round((completedLessons.length / TOTAL_LESSONS) * 100);
+    const isCompleted = completedLessons.length === TOTAL_LESSONS;
 
-            // 1. localStorage
-            try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify({
-                    completedLessons,
-                    evaluations: evaluationAnswers,
-                    currentLesson,
-                    timeSpent,
-                    lastUpdate: new Date().toISOString()
-                }));
-                console.log('✅ localStorage guardado');
-            } catch (error) {
-                console.error('❌ Error localStorage:', error);
-            }
+    console.log('📊 Datos calculados:');
+    console.log('   - Lecciones completadas:', completedLessons);
+    console.log('   - Progreso:', progress + '%');
+    console.log('   - Tiempo:', timeSpent, 'min');
+    console.log('   - Completado:', isCompleted);
 
-            // 2. Google Sheets
-            try {
-                const progressData = {
-                    completed: isCompleted,
-                    progress,
-                    timeSpent,
-                    completedLessons,
-                    lastUpdate: new Date().toISOString()
-                };
+    // 1. localStorage
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            completedLessons,
+            evaluations: evaluationAnswers,
+            currentLesson,
+            timeSpent,
+            lastUpdate: new Date().toISOString()
+        }));
+        console.log('✅ localStorage guardado');
+    } catch (error) {
+        console.error('❌ Error localStorage:', error);
+    }
 
-                if (typeof updateModuleProgress !== 'function') {
-                    console.error('❌ updateModuleProgress no existe');
-                    return;
-                }
+    // 2. Google Sheets
+    try {
+        console.log('📤 Intentando guardar en Google Sheets...');
+        
+        const progressData = {
+            completed: isCompleted,
+            progress,
+            timeSpent,
+            completedLessons,
+            lastUpdate: new Date().toISOString()
+        };
+        
+        console.log('📦 Datos a enviar:', progressData);
 
-                const success = await updateModuleProgress(MODULE_NUMBER, progressData);
-                console.log(success ? '✅ Sheets guardado' : '⚠️ Sheets falló');
-            } catch (error) {
-                console.error('❌ Error Sheets:', error);
-            }
-
-            updateProgressBar();
+        // Verificar que la función existe
+        if (typeof updateModuleProgress !== 'function') {
+            console.error('❌ updateModuleProgress NO EXISTE');
+            console.log('❓ Funciones disponibles:', Object.keys(window).filter(k => k.includes('Module')));
+            return;
         }
+        console.log('✅ updateModuleProgress existe');
+
+        console.log('⏳ Llamando a updateModuleProgress(1, ...)');
+        const success = await updateModuleProgress(MODULE_NUMBER, progressData);
+        
+        if (success) {
+            console.log('🎉 ¡¡¡SHEETS GUARDADO EXITOSAMENTE!!!');
+        } else {
+            console.warn('⚠️ Sheets falló pero no dio error');
+        }
+    } catch (error) {
+        console.error('❌ ERROR CRÍTICO en Sheets:', error);
+        console.error('Stack:', error.stack);
+    }
+
+    updateProgressBar();
+    
+    console.log('═'.repeat(60));
+    console.log('🏁 saveProgress() FINALIZADO');
+    console.log('═'.repeat(60));
+}
+
+// ===== FUNCIÓN DE PRUEBA MEJORADA =====
+async function testGoogleSheetsConnection() {
+    console.log('═'.repeat(60));
+    console.log('🧪 TEST CONEXIÓN GOOGLE SHEETS');
+    console.log('═'.repeat(60));
+    
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+        console.error('❌ No hay usuario');
+        return;
+    }
+    console.log('✅ Usuario:', currentUser.username);
+    console.log('✅ Rol:', currentUser.role);
+    
+    if (currentUser.role !== 'estudiante') {
+        console.warn('⚠️ ATENCIÓN: Solo estudiantes pueden guardar progreso');
+        console.warn('   Tu rol actual:', currentUser.role);
+        return;
+    }
+    
+    try {
+        console.log('📤 Enviando datos de prueba...');
+        
+        const result = await updateModuleProgress(1, {
+            completed: false,
+            progress: 33,
+            timeSpent: 5,
+            completedLessons: [1],
+            lastUpdate: new Date().toISOString()
+        });
+        
+        if (result) {
+            console.log('🎉 ✅ ¡¡¡ÉXITO!!! El progreso se guardó correctamente');
+        } else {
+            console.error('❌ FALLÓ - La función retornó false');
+        }
+    } catch (error) {
+        console.error('❌ ERROR:', error);
+        console.error('Stack:', error.stack);
+    }
+    
+    console.log('═'.repeat(60));
+}
+
+// ===== INSTRUCCIONES =====
+console.log('%c📋 INSTRUCCIONES DE DEBUG', 'color: #4CAF50; font-size: 16px; font-weight: bold;');
+console.log('%c1. Ejecuta: testGoogleSheetsConnection()', 'color: #2196F3; font-size: 14px;');
+console.log('%c2. Completa una lección', 'color: #2196F3; font-size: 14px;');
+console.log('%c3. Revisa los logs detallados', 'color: #2196F3; font-size: 14px;');
+console.log('');        }
 
         // ===== FUNCIÓN: completeLesson() =====
         async function completeLesson(lessonNum) {
