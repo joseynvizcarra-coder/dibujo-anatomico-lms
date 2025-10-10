@@ -7,9 +7,7 @@
     <meta name="author" content="Joselyn Vizcarra">
     <title>Curso de Dibujo Anatómico - LMS UAH</title>
     
-    <!-- Bootstrap 5.3.2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
     <style>
@@ -22,6 +20,7 @@
             --success: #4CAF50;
             --danger: #f44336;
             --warning: #FFC107;
+            --info: #2196F3;
         }
 
         body {
@@ -87,6 +86,206 @@
             opacity: 0.3;
         }
 
+        /* ============================================
+           NUEVO: ESTILOS PARA DASHBOARD DEL ESTUDIANTE
+           ============================================ */
+        .student-dashboard {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 3rem;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-header h3 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .progress-circle-container {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 12px;
+        }
+
+        .progress-circle {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto;
+        }
+
+        .progress-circle svg {
+            transform: rotate(-90deg);
+        }
+
+        .progress-circle-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .stat-box {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid var(--gray-light);
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .stat-box-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-box-label {
+            font-size: 0.85rem;
+            color: var(--gray-medium);
+        }
+
+        .next-task-card {
+            background: linear-gradient(135deg, rgba(44,95,102,0.1), rgba(232,162,184,0.1));
+            border-left: 4px solid var(--primary-dark);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+
+        .next-task-card h6 {
+            color: var(--primary-dark);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .next-task-card p {
+            margin: 0;
+            color: var(--dark);
+        }
+
+        .module-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .breakdown-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 2px solid var(--gray-light);
+            transition: all 0.3s ease;
+        }
+
+        .breakdown-card:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .breakdown-card h6 {
+            color: var(--primary-dark);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .breakdown-progress {
+            height: 8px;
+            background: var(--gray-light);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.75rem;
+        }
+
+        .breakdown-progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .breakdown-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--gray-medium);
+        }
+
+        /* ============================================
+           NUEVO: ALERTA DE EVALUACIÓN DIAGNÓSTICA
+           ============================================ */
+        .diagnostic-alert {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border-left: 4px solid var(--warning);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(255,193,7,0.2);
+        }
+
+        .diagnostic-alert h5 {
+            color: #856404;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .diagnostic-alert p {
+            color: #856404;
+            margin-bottom: 1rem;
+        }
+
+        .btn-diagnostic {
+            background: var(--warning);
+            color: var(--dark);
+            padding: 0.75rem 2rem;
+            border-radius: 25px;
+            border: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-diagnostic:hover {
+            background: #e0a800;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255,193,7,0.4);
+            color: var(--dark);
+        }
+
+        /* Estilos originales continúan... */
         .progress-card {
             background: white;
             border-radius: 15px;
@@ -391,6 +590,14 @@
             .btn-module {
                 width: 100%;
             }
+
+            .dashboard-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .module-breakdown {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -455,7 +662,99 @@
         </section>
 
         <div class="container">
-            <div class="progress-card fade-in-up">
+            <!-- ============================================
+                 NUEVO: ALERTA DE EVALUACIÓN DIAGNÓSTICA
+                 ============================================ -->
+            <div class="diagnostic-alert fade-in-up" id="diagnosticAlert" style="display: none;">
+                <h5>
+                    <i class="bi bi-clipboard-check"></i>
+                    ¡Comienza con una Evaluación Diagnóstica!
+                </h5>
+                <p class="mb-3">
+                    Antes de empezar el curso, ayúdanos a conocer tu nivel inicial. 
+                    Esto nos permitirá personalizar tu experiencia de aprendizaje.
+                </p>
+                <a href="diagnostic.html" class="btn-diagnostic">
+                    <i class="bi bi-play-fill me-2"></i>Realizar Evaluación (5 min)
+                </a>
+            </div>
+
+            <!-- ============================================
+                 NUEVO: DASHBOARD PERSONAL DEL ESTUDIANTE
+                 ============================================ -->
+            <div class="student-dashboard fade-in-up" id="studentDashboard" style="display: none;">
+                <div class="dashboard-header">
+                    <h3>
+                        <i class="bi bi-graph-up me-2"></i>
+                        Tu Progreso Personal
+                    </h3>
+                </div>
+
+                <div class="row g-4">
+                    <!-- Círculo de progreso -->
+                    <div class="col-md-4">
+                        <div class="progress-circle-container">
+                            <div class="progress-circle">
+                                <svg width="140" height="140">
+                                    <circle cx="70" cy="70" r="60" fill="none" stroke="#e9ecef" stroke-width="12"/>
+                                    <circle id="progressCircle" cx="70" cy="70" r="60" fill="none" 
+                                            stroke="var(--primary-dark)" stroke-width="12" 
+                                            stroke-linecap="round" 
+                                            stroke-dasharray="377" 
+                                            stroke-dashoffset="377"
+                                            transform="rotate(-90 70 70)"
+                                            style="transition: stroke-dashoffset 0.8s ease;"/>
+                                </svg>
+                                <div class="progress-circle-text" id="progressPercentText">0%</div>
+                            </div>
+                            <h6 class="mt-3 mb-0">Progreso Total</h6>
+                        </div>
+                    </div>
+
+                    <!-- Estadísticas -->
+                    <div class="col-md-8">
+                        <div class="dashboard-stats">
+                            <div class="stat-box">
+                                <span class="stat-box-number" id="studentModulesCompleted">0</span>
+                                <span class="stat-box-label">Módulos Completados</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="stat-box-number" id="studentLessonsCompleted">0</span>
+                                <span class="stat-box-label">Lecciones Completadas</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="stat-box-number" id="studentEvaluationsPassed">0</span>
+                                <span class="stat-box-label">Evaluaciones Aprobadas</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="stat-box-number" id="studentExercises">0</span>
+                                <span class="stat-box-label">Ejercicios Realizados</span>
+                            </div>
+                        </div>
+
+                        <!-- Próxima tarea -->
+                        <div class="next-task-card">
+                            <h6>
+                                <i class="bi bi-arrow-right-circle me-2"></i>
+                                Próxima Tarea
+                            </h6>
+                            <p id="nextTaskText">Cargando...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Desglose por módulo -->
+                <div class="mt-4">
+                    <h5 class="mb-3" style="color: var(--primary-dark); font-weight: 600;">
+                        <i class="bi bi-list-check me-2"></i>
+                        Desglose por Módulo
+                    </h5>
+                    <div class="module-breakdown" id="moduleBreakdown"></div>
+                </div>
+            </div>
+
+            <!-- Barra de progreso original (simplificada) -->
+            <div class="progress-card fade-in-up" id="simpleProgressCard">
                 <h3 class="progress-header">
                     <i class="bi bi-graph-up"></i>
                     Tu Progreso General
@@ -509,8 +808,7 @@
                     <i class="bi bi-book"></i> Módulos del Curso
                 </h2>
                 
-                <div class="row g-4" id="modulesGrid">
-                </div>
+                <div class="row g-4" id="modulesGrid"></div>
             </section>
         </div>
     </main>
@@ -559,8 +857,7 @@
                 lessons: 4,
                 exercises: "12 estudios",
                 evaluations: "4 evaluaciones",
-                hours: "3.3 horas",
-                difficulty: "Intermedio",
+                hours: "3.3 horas",difficulty: "Intermedio",
                 url: "module2.html",
                 available: true
             },
@@ -703,6 +1000,12 @@
             }
 
             updateProgress();
+            
+            // ============================================
+            // NUEVO: Verificar y mostrar elementos según estado
+            // ============================================
+            checkDiagnosticStatus();
+            loadStudentDashboard();
         }
 
         function getRoleDisplayName(role) {
@@ -716,6 +1019,166 @@
             return roles[role] || 'Usuario';
         }
 
+        // ============================================
+        // NUEVA FUNCIÓN: Verificar estado de evaluación diagnóstica
+        // ============================================
+        function checkDiagnosticStatus() {
+            const currentUser = getCurrentUser();
+            if (!currentUser) return;
+
+            // Solo mostrar alerta a estudiantes
+            if (currentUser.role === 'instructor' || currentUser.role === 'profesor') {
+                return;
+            }
+
+            const diagnosticCompleted = localStorage.getItem('student_diagnostic');
+            const diagnosticAlert = document.getElementById('diagnosticAlert');
+            const studentDashboard = document.getElementById('studentDashboard');
+            const simpleProgressCard = document.getElementById('simpleProgressCard');
+
+            if (!diagnosticCompleted) {
+                // No ha completado diagnóstica: mostrar alerta
+                diagnosticAlert.style.display = 'block';
+                studentDashboard.style.display = 'none';
+                simpleProgressCard.style.display = 'block';
+            } else {
+                // Ya completó diagnóstica: mostrar dashboard completo
+                diagnosticAlert.style.display = 'none';
+                studentDashboard.style.display = 'block';
+                simpleProgressCard.style.display = 'none';
+            }
+        }
+
+        // ============================================
+        // NUEVA FUNCIÓN: Cargar dashboard personalizado del estudiante
+        // ============================================
+        function loadStudentDashboard() {
+            const currentUser = getCurrentUser();
+            if (!currentUser || currentUser.role === 'instructor' || currentUser.role === 'profesor') {
+                return;
+            }
+
+            const diagnosticCompleted = localStorage.getItem('student_diagnostic');
+            if (!diagnosticCompleted) return;
+
+            // Recopilar datos de todos los módulos
+            const modules = [1, 2, 3];
+            let totalLessons = 0;
+            let completedLessons = 0;
+            let passedEvaluations = 0;
+            let completedModules = 0;
+
+            const moduleDetails = modules.map(moduleNum => {
+                const key = `module${moduleNum}_progress`;
+                const saved = localStorage.getItem(key);
+                
+                if (saved) {
+                    try {
+                        const data = JSON.parse(saved);
+                        const completed = data.completedLessons || [];
+                        const evaluations = data.evaluations || {};
+                        
+                        const moduleLessons = moduleNum === 1 ? 3 : moduleNum === 2 ? 4 : 3;
+                        totalLessons += moduleLessons;
+                        completedLessons += completed.length;
+                        
+                        // Contar evaluaciones aprobadas (mínimo 2/3 respuestas correctas)
+                        Object.values(evaluations).forEach(evalData => {
+                            if (Object.keys(evalData).length >= 2) passedEvaluations++;
+                        });
+                        
+                        const moduleCompleted = completed.length === moduleLessons;
+                        if (moduleCompleted) completedModules++;
+                        
+                        return {
+                            num: moduleNum,
+                            name: modulesData[moduleNum - 1].title,
+                            completed: completed.length,
+                            total: moduleLessons,
+                            percentage: Math.round((completed.length / moduleLessons) * 100),
+                            status: moduleCompleted ? 'completed' : completed.length > 0 ? 'in-progress' : 'not-started'
+                        };
+                    } catch (e) {
+                        return null;
+                    }
+                }
+                return {
+                    num: moduleNum,
+                    name: modulesData[moduleNum - 1].title,
+                    completed: 0,
+                    total: moduleNum === 1 ? 3 : moduleNum === 2 ? 4 : 3,
+                    percentage: 0,
+                    status: 'not-started'
+                };
+            }).filter(Boolean);
+
+            // Actualizar estadísticas principales
+            const overallProgress = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+            
+            document.getElementById('studentModulesCompleted').textContent = completedModules;
+            document.getElementById('studentLessonsCompleted').textContent = completedLessons;
+            document.getElementById('studentEvaluationsPassed').textContent = passedEvaluations;
+            document.getElementById('studentExercises').textContent = completedLessons * 3; // Estimado: 3 ejercicios por lección
+            
+            // Actualizar círculo de progreso
+            const circumference = 377; // 2 * PI * 60
+            const offset = circumference - (circumference * overallProgress / 100);
+            const progressCircle = document.getElementById('progressCircle');
+            if (progressCircle) {
+                progressCircle.style.strokeDashoffset = offset;
+            }
+            document.getElementById('progressPercentText').textContent = overallProgress + '%';
+            
+            // Determinar próxima tarea
+            let nextTask = 'Comenzar Módulo 1 - Lección 1.1';
+            if (completedLessons === 0) {
+                nextTask = 'Comenzar Módulo 1 - Lección 1.1: Fundamentos del Croquis';
+            } else if (completedModules === 3) {
+                nextTask = '¡Has completado todo el curso! 🎉 Puedes repasar cualquier módulo.';
+            } else {
+                const currentModule = moduleDetails.find(m => m.status === 'in-progress');
+                if (currentModule) {
+                    nextTask = `Continuar ${currentModule.name} - Lección ${currentModule.completed + 1}`;
+                } else {
+                    const nextModule = moduleDetails.find(m => m.status === 'not-started');
+                    if (nextModule) {
+                        nextTask = `Comenzar ${nextModule.name} - Lección 1`;
+                    }
+                }
+            }
+            document.getElementById('nextTaskText').textContent = nextTask;
+            
+            // Generar desglose por módulo
+            const breakdown = document.getElementById('moduleBreakdown');
+            if (breakdown) {
+                breakdown.innerHTML = moduleDetails.map(m => {
+                    const statusConfig = {
+                        'completed': { color: 'success', icon: 'check-circle-fill', label: 'Completado' },
+                        'in-progress': { color: 'warning', icon: 'clock-fill', label: 'En progreso' },
+                        'not-started': { color: 'secondary', icon: 'circle', label: 'No iniciado' }
+                    };
+                    const config = statusConfig[m.status];
+                    
+                    return `
+                        <div class="breakdown-card">
+                            <h6>
+                                <i class="bi bi-${config.icon} me-2" style="color: var(--${config.color});"></i>
+                                Módulo ${m.num}: ${m.name}
+                            </h6>
+                            <div class="breakdown-progress">
+                                <div class="breakdown-progress-fill" 
+                                     style="width: ${m.percentage}%; background: var(--${config.color});"></div>
+                            </div>
+                            <div class="breakdown-stats">
+                                <span>${m.completed}/${m.total} lecciones</span>
+                                <span class="badge bg-${config.color}">${config.label}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
         function updateProgress() {
             const overallProgress = calculateOverallProgress();
             const completedModules = countCompletedModules();
@@ -723,16 +1186,21 @@
             document.getElementById('completedModules').textContent = completedModules;
             
             const progressBar = document.getElementById('progressBar');
-            progressBar.style.width = `${overallProgress}%`;
-            progressBar.querySelector('span').textContent = `${overallProgress}%`;
+            if (progressBar) {
+                progressBar.style.width = `${overallProgress}%`;
+                const span = progressBar.querySelector('span');
+                if (span) span.textContent = `${overallProgress}%`;
+            }
 
             const progressDetails = document.getElementById('progressDetails');
-            if (overallProgress === 0) {
-                progressDetails.textContent = 'Comienza tu primera lección para ver tu progreso';
-            } else if (overallProgress === 100) {
-                progressDetails.textContent = '¡Felicitaciones! Has completado todos los módulos';
-            } else {
-                progressDetails.textContent = `Has avanzado ${overallProgress}% del curso total`;
+            if (progressDetails) {
+                if (overallProgress === 0) {
+                    progressDetails.textContent = 'Comienza tu primera lección para ver tu progreso';
+                } else if (overallProgress === 100) {
+                    progressDetails.textContent = '¡Felicitaciones! Has completado todos los módulos';
+                } else {
+                    progressDetails.textContent = `Has avanzado ${overallProgress}% del curso total`;
+                }
             }
         }
 
@@ -833,7 +1301,12 @@
             }
         }
 
+        // ============================================
+        // INICIALIZACIÓN
+        // ============================================
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎨 Inicializando LMS...');
+            
             if (!checkAuthentication()) {
                 return;
             }
@@ -844,12 +1317,16 @@
                 updateUserInterface();
                 loadModules();
                 showLoading(false);
+                console.log('✅ LMS inicializado correctamente');
             }, 500);
         });
 
         window.addEventListener('beforeunload', function() {
             saveProgress();
         });
+
+        // Auto-guardar progreso cada 2 minutos
+        setInterval(saveProgress, 120000);
     </script>
 </body>
 </html>
