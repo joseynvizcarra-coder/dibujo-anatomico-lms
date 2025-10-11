@@ -59,7 +59,7 @@ const knowledge = {
                 'Hey, entiendo esa sensación de "es demasiado". 💭 Pero aquí está la verdad: tu cerebro puede manejar esto, solo necesita organizarlo. Hagamos una lista juntos de TODO lo que sientes que tienes que hacer, y luego decidamos QUÉ hacer PRIMERO. ¿Te parece?'
             ],
             intense: [
-                'Para. Respira. Estás entrando en pánico y necesito que sepas que estás SEGURO/A. 🛟 No hay ninguna emergencia real aquí. El curso seguirá mañana. Los ejercicios pueden esperar. TÚ no puedes. ¿Qué necesitas ahora mismo? ¿Hablar? ¿Pausa? ¿Ayuda específica?'
+                'Para. Respira. Estás entrando en pánico y necesito que sepas que estás SEGURO/A. 🛟 No hay ninguna emergencia real aquí. El curso seguirá mañana. Los ejercicios pueden esperar. Tú no puedes. ¿Qué necesitas ahora mismo? ¿Hablar? ¿Pausa? ¿Ayuda específica?'
             ]
         },
         
@@ -129,7 +129,7 @@ const knowledge = {
             ],
             moderate: [
                 'Hey, te mando un abrazo virtual. 🫂 Estar triste es completamente válido. Si es por tus dibujos: son solo ejercicios de práctica, no definen tu valor. Si es por algo personal: recuerda que puedes hablar con alguien de confianza. ¿Quieres contarme qué sientes?',
-                'Noto mucha tristeza. 😔 Y quiero que sepas algo importante: tu bienestar emocional es MÁS importante que cualquier ejercicio de dibujo. Si necesitas parar, para. Si necesitas llorar, llora. Si necesitas hablar con alguien, hazlo. El curso puede esperar. TÚ eres lo primero.'
+                'Noto mucha tristeza. 😔 Y quiero que sepas algo importante: tu bienestar emocional es MÁS importante que cualquier ejercicio de dibujo. Si necesitas parar, para. Si necesitas llorar, llora. Si necesitas hablar con alguien, hazlo. El curso puede esperar. Tú eres lo primero.'
             ],
             intense: [
                 'Estoy preocupado/a por ti. 💔 Lo que describes suena muy intenso, y quiero que sepas que NO tienes que sentirte así solo/a. Si la tristeza es muy profunda o dura varios días, por favor considera hablar con un profesional de salud mental. Mientras tanto, estoy aquí. ¿Quieres que hablemos de lo que sientes?'
@@ -370,7 +370,7 @@ Voy a cronometrar. Solo tienes que sacar el papel y hacer UN trazo. UN solo traz
                 content: 'Van Gogh empezó a pintar seriamente a los 27 años (tarde para la época). Solo pintó durante 10 años antes de morir. En esos 10 años creó 2,100 obras. Eso es más de 200 obras por año. Durante su vida vendió SOLO UNA pintura. Hoy sus obras valen millones. Moraleja: el éxito no siempre es inmediato.'
             },
             {
-                title: '📐 La proporción "7.5 cabezas"',
+                title: '📏 La proporción "7.5 cabezas"',
                 content: 'Las famosas proporciones de "7.5 cabezas" que estudias NO son naturales. La mayoría de las personas miden 7 cabezas. Los 7.5 son un IDEAL ESTÉTICO creado en la Grecia clásica para sus esculturas. Estás aprendiendo un lenguaje artístico, no anatomía médica. ¡Es un código de belleza de hace 2,500 años!'
             },
             {
@@ -534,7 +534,6 @@ function findEmotionalResponse(text) {
 
 // ========================================
 // BASE DE CONOCIMIENTO TÉCNICO
-// (Mantén tu knowledge técnico original aquí)
 // ========================================
 
 const technicalKnowledge = {
@@ -773,7 +772,6 @@ class ConversationMemory {
 // EXPORTAR PARA USO EN EL MENTOR
 // ========================================
 
-// Este objeto se usará en el código principal del mentor
 window.mentorKnowledge = {
     knowledge,
     technicalKnowledge,
