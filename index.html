@@ -2315,30 +2315,83 @@ motivationalBoost: {
             }, 800);
         }
         
-        findResponse(text) {
-            const lower = text.toLowerCase();
-            
-            // Buscar en conocimiento
-            for (const [key, data] of Object.entries(knowledge)) {
-                if (data.keywords && data.keywords.some(kw => lower.includes(kw))) {
-                    if (Array.isArray(data.responses)) {
-                        const msg = data.responses[Math.floor(Math.random() * data.responses.length)];
-                        return { text: msg, actions: data.actions || [] };
-                    } else if (data.response) {
-                        return {
-                            text: `<strong>${data.response.title}</strong>\n\n${data.response.content}`,
-                            actions: data.response.actions || []
-                        };
-                    }
+        // ============================================
+// ALGORITMO DE BÚSQUEDA MEJORADO
+// Reemplaza el método findResponse() en tu código
+// ============================================
+
+// Busca esta función en tu <script> (alrededor de línea 150-200)
+// y REEMPLÁZALA completa con esta versión mejorada:
+
+findResponse(text) {
+    const lower = text.toLowerCase();
+    let bestMatch = null;
+    let bestScore = 0;
+    
+    // Buscar en todas las entradas
+    for (const [key, data] of Object.entries(knowledge)) {
+        if (!data.keywords) continue;
+        
+        // Calcular score para esta entrada
+        let score = 0;
+        let matchCount = 0;
+        
+        for (const keyword of data.keywords) {
+            if (lower.includes(keyword)) {
+                matchCount++;
+                // Dar más puntos a keywords más largas (más específicas)
+                score += keyword.length;
+                
+                // Bonus si es un match exacto
+                if (lower === keyword) {
+                    score += 100;
+                }
+                
+                // Bonus si la keyword está al inicio
+                if (lower.startsWith(keyword)) {
+                    score += 50;
                 }
             }
+        }
+        
+        // Si hay matches, evaluar
+        if (matchCount > 0) {
+            // Normalizar score por número de palabras en la entrada
+            const normalizedScore = score / data.keywords.length;
             
-            // No encontrado
+            // Guardar si es mejor que el anterior
+            if (normalizedScore > bestScore) {
+                bestScore = normalizedScore;
+                bestMatch = { key, data };
+            }
+        }
+    }
+    
+    // Si encontramos un match
+    if (bestMatch && bestScore > 2) {
+        const data = bestMatch.data;
+        
+        // Si tiene múltiples respuestas (conversacionales)
+        if (Array.isArray(data.responses)) {
+            const msg = data.responses[Math.floor(Math.random() * data.responses.length)];
+            return { text: msg, actions: data.actions || [] };
+        }
+        
+        // Si tiene respuesta estructurada (técnicas)
+        if (data.response) {
             return {
-                text: 'No encontré una respuesta específica para eso. 🤔\n\nPuedo ayudarte con:\n• Dudas técnicas sobre anatomía\n• Tu dashboard y progreso\n• Evaluaciones y navegación\n\n¿Podrías reformular tu pregunta?',
-                actions: ['Ver dashboard', 'Ayuda general']
+                text: `<strong>${data.response.title}</strong>\n\n${data.response.content}`,
+                actions: data.response.actions || []
             };
         }
+    }
+    
+    // No encontrado
+    return {
+        text: 'No encontré una respuesta específica para eso. 🤔\n\nPuedo ayudarte con:\n• Dudas técnicas sobre anatomía\n• Tu dashboard y progreso\n• Motivación y apoyo emocional\n• Evaluaciones y navegación\n\n¿Podrías reformular tu pregunta?',
+        actions: ['Ver dashboard', 'Ayuda general', 'Estoy frustrado/a']
+    };
+}
         
         addUserMsg(text) {
             const container = document.getElementById('mentorMessages');
