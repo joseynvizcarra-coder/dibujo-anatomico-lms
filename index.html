@@ -1764,67 +1764,230 @@
     console.log('🤖 Mentor Anatómico: Inicializando...');
     
     // Base de conocimiento
-    const knowledge = {
-        greetings: {
-            keywords: ['hola', 'hey', 'buenos días', 'buenas tardes', 'hi', 'hello'],
-            responses: [
-                '¡Hola! 👋 Soy tu Mentor Anatómico. ¿En qué puedo ayudarte hoy?',
-                '¡Hey! 😊 ¿Tienes alguna duda sobre el curso o necesitas ayuda?',
-                '¡Hola! Estoy aquí para ayudarte con anatomía, técnicas de dibujo o cualquier duda del curso.'
-            ],
-            actions: ['Ver mi progreso', '¿Qué debo hacer hoy?', 'Tengo una duda técnica']
-        },
-        howAreYou: {
-            keywords: ['cómo estás', 'como estas', 'qué tal', 'que tal'],
-            responses: [
-                '¡Muy bien, gracias! 😊 Listo para ayudarte. ¿Qué necesitas?',
-                '¡De maravilla! 🤖 ¿En qué puedo apoyarte hoy?',
-                '¡Excelente! Aquí para resolver tus dudas.'
-            ],
-            actions: ['Ver dashboard', 'Ayuda con ejercicios']
-        },
-        thanks: {
-            keywords: ['gracias', 'muchas gracias', 'te agradezco', 'excelente', 'perfecto'],
-            responses: [
-                '¡De nada! 😊 Estoy aquí cuando me necesites.',
-                '¡Un placer ayudarte! 🎨',
-                '¡Para eso estoy! Sigue practicando. 💪'
-            ],
-            actions: []
-        },
-        dashboard: {
-            keywords: ['dashboard', 'progreso', 'avance', 'estadísticas', 'cómo voy'],
-            response: {
-                title: 'Tu Dashboard Personal',
-                content: 'Tu dashboard muestra tu progreso en tiempo real:\n\n• Progreso general del curso\n• Avance por módulo (M1, M2, M3)\n• Lecciones completadas\n• Evaluaciones aprobadas\n• Ejercicios entregados\n\nPuedes acceder haciendo click en "Inicio" o el logo UAH.',
-                actions: ['¿Qué sigue?', 'Ver evaluaciones']
-            }
-        },
-        nextSteps: {
-            keywords: ['qué hago', 'que hago', 'qué sigue', 'que sigue', 'próximo paso'],
-            response: {
-                title: 'Próximos Pasos',
-                content: 'Basándome en tu situación actual, te recomiendo:\n\n1. Revisa tu dashboard para ver tu progreso\n2. Completa las lecciones pendientes en orden\n3. Practica los ejercicios de cada lección\n4. Realiza las evaluaciones formativas\n5. Avanza al siguiente módulo cuando completes todo',
-                actions: ['Ver dashboard', 'Ir a módulos']
-            }
-        },
-        help: {
-            keywords: ['ayuda', 'help', 'no entiendo', 'estoy perdido', 'auxilio'],
-            response: {
-                title: '¿En qué puedo ayudarte?',
-                content: 'Puedo ayudarte con:\n\n• Dudas técnicas sobre dibujo y anatomía\n• Tu progreso y dashboard\n• Ejercicios y evaluaciones\n• Navegación del LMS\n• Próximos pasos\n\n¿Qué necesitas específicamente?',
-                actions: ['Ver progreso', 'Dudas técnicas', 'Navegación']
-            }
-        },
-        lineaAccion: {
-            keywords: ['línea de acción', 'linea accion', 'gesto', 'eje'],
-            response: {
-                title: 'Línea de Acción',
-                content: 'La línea de acción es el eje imaginario que atraviesa toda la figura, definiendo la dirección y energía del movimiento.\n\n🔑 Características:\n• Va desde la cabeza hasta el pie de apoyo\n• Recta en poses estáticas, curva en dinámicas\n• NO la dibujas literalmente, es una guía mental\n\n💡 En tu croquis de 2 min:\n1. Observa 20 seg sin dibujar\n2. Identifica mentalmente la línea\n3. Trázala PRIMERO (0-30 seg)\n4. Agrega masa después',
-                actions: ['¿Qué es contrapposto?', 'Cómo medir proporciones']
-            }
+    // ============================================
+// BASE DE CONOCIMIENTO COMPLETA DEL MENTOR
+// Reemplaza la sección "const knowledge = {...}" 
+// en tu código actual con ESTO
+// ============================================
+
+const knowledge = {
+    // ========== CONVERSACIÓN CASUAL ==========
+    greetings: {
+        keywords: ['hola', 'hey', 'buenos días', 'buenas tardes', 'buenas noches', 'hi', 'hello', 'saludos'],
+        responses: [
+            '¡Hola! 👋 Soy tu Mentor Anatómico. ¿En qué puedo ayudarte hoy?',
+            '¡Hey! 😊 ¿Tienes alguna duda sobre el curso o necesitas ayuda con algo específico?',
+            '¡Hola! Estoy aquí para ayudarte con anatomía, técnicas de dibujo o cualquier duda del curso. ¿Qué necesitas?'
+        ],
+        actions: ['Ver mi dashboard', '¿Qué debo hacer hoy?', 'Tengo una duda técnica']
+    },
+    
+    howAreYou: {
+        keywords: ['cómo estás', 'como estas', 'qué tal estás', 'que tal estas', 'todo bien'],
+        responses: [
+            '¡Muy bien, gracias por preguntar! 😊 Listo para ayudarte con tus dudas de dibujo anatómico. ¿En qué te puedo apoyar?',
+            '¡De maravilla! 🤖 Siempre feliz de ayudar a estudiantes como tú. ¿Tienes alguna pregunta?',
+            '¡Excelente! Aquí trabajando para ayudarte. ¿Qué necesitas saber?'
+        ],
+        actions: ['Ver mi progreso', 'Ayuda con ejercicios']
+    },
+    
+    thanks: {
+        keywords: ['gracias', 'muchas gracias', 'te agradezco', 'thank you', 'excelente', 'perfecto', 'genial'],
+        responses: [
+            '¡De nada! 😊 Estoy aquí cuando me necesites. ¡Éxito con tu práctica!',
+            '¡Un placer ayudarte! Si tienes más dudas, aquí estaré. 🎨',
+            '¡Para eso estoy! No dudes en preguntar cuando lo necesites. ¡Sigue practicando! 💪'
+        ],
+        actions: []
+    },
+    
+    goodbye: {
+        keywords: ['adiós', 'adios', 'chao', 'hasta luego', 'nos vemos', 'bye'],
+        responses: [
+            '¡Hasta luego! 👋 Que tengas una excelente sesión de dibujo. Vuelve cuando quieras.',
+            '¡Nos vemos! 😊 Recuerda que estoy aquí 24/7 para ayudarte. ¡Éxito!',
+            '¡Chao! 🎨 Sigue practicando y no dudes en volver si tienes dudas.'
+        ],
+        actions: []
+    },
+    
+    help: {
+        keywords: ['ayuda', 'help', 'auxilio', 'no entiendo', 'estoy perdido', 'no sé qué hacer'],
+        response: {
+            title: '¿En qué puedo ayudarte?',
+            content: 'Puedo responder dudas sobre:\n\n• Técnicas de dibujo y anatomía\n• Tu progreso y dashboard\n• Ejercicios y evaluaciones\n• Navegación del LMS\n• Referencias bibliográficas\n• Materiales necesarios\n\n¿Qué necesitas específicamente?',
+            actions: ['Ver dashboard', 'Dudas técnicas', 'Navegación del LMS']
         }
-    };
+    },
+    
+    // ========== DASHBOARD Y PROGRESO ==========
+    dashboard: {
+        keywords: ['dashboard', 'panel', 'mi progreso', 'mi avance', 'estadísticas', 'cómo voy'],
+        response: {
+            title: 'Tu Dashboard Personal',
+            content: 'Tu dashboard personal muestra toda tu información de progreso en tiempo real.\n\n📊 Qué puedes ver:\n• Progreso general: % del curso completado\n• Por módulo: Avance en M1, M2, M3\n• Lecciones: Completadas de 10 totales\n• Evaluaciones: Aprobadas y pendientes\n• Ejercicios: Entregados y por entregar\n• Tiempo restante: Estimado para terminar\n\n🔍 Cómo acceder:\n• Click en "Inicio" o el logo UAH desde cualquier página\n• El dashboard se actualiza automáticamente',
+            actions: ['¿Qué sigue?', 'Ver evaluaciones']
+        }
+    },
+    
+    nextSteps: {
+        keywords: ['qué debo hacer', 'que debo hacer', 'qué sigue', 'que sigue', 'próximo paso', 'proximo paso', 'qué hago ahora'],
+        response: {
+            title: 'Próximos Pasos',
+            content: 'Basándome en tu situación actual, te recomiendo:\n\n✅ Si estás en Módulo 1:\n1. Completa las lecciones 1.1, 1.2, 1.3 en orden\n2. Practica los croquis rápidos (2-5 min)\n3. Haz la evaluación formativa del módulo\n4. Avanza al Módulo 2\n\n✅ Si estás en Módulo 2:\n1. Enfócate en las 3 masas corporales\n2. Practica estructura de manos y pies\n3. Completa ejercicios de anatomía\n4. Aprueba la evaluación\n\n✅ Si estás en Módulo 3:\n1. Domina el proceso de 4 capas\n2. Practica valores tonales\n3. Prepárate para el proyecto final',
+            actions: ['Ver mi módulo actual', 'Ir a lecciones']
+        }
+    },
+    
+    feedback: {
+        keywords: ['retroalimentación', 'retroalimentacion', 'feedback', 'comentarios', 'corrección', 'correccion'],
+        response: {
+            title: 'Tu Retroalimentación',
+            content: 'La retroalimentación aparece después de cada entrega importante.\n\n📝 Tipos:\n\n1. Evaluaciones formativas (automáticas):\n• Feedback inmediato al responder\n• Explicación de respuestas correctas/incorrectas\n• Sugerencias para mejorar\n\n2. Ejercicios prácticos (del instructor):\n• Comentarios específicos por criterio\n• Fortalezas identificadas\n• Áreas de mejora señaladas\n• Tiempo de respuesta: 3-5 días\n\n3. Proyecto final (evaluación detallada):\n• Calificación por rúbrica (100 pts)\n• Retroalimentación exhaustiva\n\n🔍 Dónde verla:\n• En tu dashboard\n• En el email asociado a tu cuenta',
+            actions: ['Ver dashboard', '¿Cómo mejorar?']
+        }
+    },
+    
+    // ========== MÓDULO 1: OBSERVACIÓN Y GESTO ==========
+    lineaAccion: {
+        keywords: ['línea de acción', 'linea accion', 'linea de accion', 'gesto', 'eje principal', 'direccion movimiento'],
+        response: {
+            title: 'Línea de Acción',
+            content: 'La línea de acción es el eje imaginario que atraviesa toda la figura, definiendo la dirección y energía del movimiento. NO es una línea que dibujes literalmente, sino una guía mental.\n\n🔑 Características clave:\n• Recorrido: Desde la cabeza hasta el pie de apoyo\n• Forma: Recta en poses estáticas, curva en dinámicas\n• Función: Define la dirección principal del movimiento\n• Prioridad: Es lo PRIMERO que debes identificar\n\n💡 En tu croquis de 2 minutos:\n1. Observa 10-20 seg SIN dibujar\n2. Identifica mentalmente esa línea invisible\n3. Trázala PRIMERO (0-30 seg)\n4. Luego agrega masa corporal (30-120 seg)\n\n📚 Referencia: Loomis (1943) explica que es el primer paso antes de agregar detalles.',
+            actions: ['¿Qué es contrapposto?', 'Cómo medir proporciones']
+        }
+    },
+    
+    medirLapiz: {
+        keywords: ['medir', 'proporciones', 'lápiz', 'lapiz', 'medición', 'metodo lapiz'],
+        response: {
+            title: 'Método del Lápiz',
+            content: 'El método del lápiz te permite medir relaciones entre partes del cuerpo, NO tamaños exactos.\n\n📐 Paso a paso:\n1. Extiende el brazo completamente (codo bloqueado)\n2. Cierra un ojo para eliminar paralaje\n3. Alinea la punta del lápiz con el punto superior\n4. Marca con el pulgar el punto inferior\n5. Usa esa "unidad" para comparar otras partes\n\n⚠️ Errores comunes:\n• Doblar el codo = medidas inconsistentes\n• No cerrar un ojo = distorsión\n• Cambiar distancia del brazo entre mediciones\n\n✅ Práctica (Lección 1.2):\n• Mide la cabeza como unidad base (1 unidad)\n• El cuerpo completo: ~7.5 cabezas\n• Torso: ~3 cabezas | Piernas: ~4 cabezas\n\n🎯 Objetivo: 80% de precisión (OE2)',
+            actions: ['Canon 7.5 cabezas', 'Croquis rápidos']
+        }
+    },
+    
+    contrapposto: {
+        keywords: ['contrapposto', 'balance', 'peso', 'apoyo', 'distribucion peso'],
+        response: {
+            title: 'Contrapposto y Balance',
+            content: 'El contrapposto es una postura donde el peso del cuerpo está distribuido asimétricamente sobre una pierna, creando una postura natural y dinámica.\n\n🎯 Características:\n• Pierna de apoyo: Recibe el peso (línea recta)\n• Pierna libre: Relajada, flexionada\n• Cadera: Elevada del lado de apoyo\n• Hombros: Se inclinan en dirección opuesta\n• Columna: Forma curva en "S"\n\n🔍 Cómo identificarlo:\n• Observa qué pie está completamente apoyado\n• Nota cómo la cadera de ese lado está más alta\n• Ve cómo los hombros compensan al lado contrario\n• La línea de acción será curva, no recta\n\n✏️ En tu croquis de 5 min (Lección 1.3):\n1. Dibuja la línea de acción curva\n2. Marca el punto de apoyo en el suelo\n3. Indica diferencia de altura entre caderas\n4. Muestra inclinación opuesta de hombros',
+            actions: ['Línea de acción', 'Punto de apoyo']
+        }
+    },
+    
+    croquisRapido: {
+        keywords: ['croquis', 'rapido', 'rápido', '2 minutos', 'dibujo rapido', 'tiempo limitado'],
+        response: {
+            title: 'Croquis Rápidos (2 minutos)',
+            content: 'Los croquis de 2 minutos buscan capturar la esencia del gesto, NO crear un dibujo detallado.\n\n⏱️ Distribución del tiempo:\n• 0-20 seg: OBSERVA sin dibujar (línea de acción, balance)\n• 20-40 seg: Dibuja línea de acción y formas básicas\n• 40-100 seg: Agrega masa corporal simple\n• 100-120 seg: Último vistazo, ajustes mínimos\n\n✅ Lo que DEBES hacer:\n• Usar trazos sueltos y seguros\n• Priorizar el gesto sobre detalles\n• Mantener el lápiz en movimiento\n• Capturar la energía y dirección\n\n❌ Lo que NO hacer:\n• Borrar (no hay tiempo)\n• Dibujar contornos cuidadosos\n• Agregar detalles faciales o dedos\n• Preocuparte por la "perfección"\n\n🎯 Meta: Capturar línea de acción con 80% precisión (OE1)\n\n💪 Recuerda: El 47% de tus compañeros siente ansiedad. Los croquis rápidos ayudan a superar el miedo al error.',
+            actions: ['Línea de acción', 'Observación']
+        }
+    },
+    
+    // ========== MÓDULO 2: ANATOMÍA FUNCIONAL ==========
+    tresMasas: {
+        keywords: ['3 masas', 'tres masas', 'cabeza torso pelvis', 'bloques', 'simplificacion'],
+        response: {
+            title: '3 Masas Corporales',
+            content: 'Las 3 masas corporales son una simplificación estructural del cuerpo que te permite construir figuras sólidas y volumétricas.\n\n🔷 Las 3 masas:\n1. CABEZA: Óvalo o esfera (incluye cuello)\n2. TORSO: Caja de costillas (hombros → cintura)\n3. PELVIS: Cuenco invertido (cintura → entrepierna)\n\n🎯 Por qué funciona:\n• Cada masa puede rotar independientemente\n• Crea volumen 3D desde el inicio\n• Facilita entender la perspectiva\n• Establece proporciones antes de detalles\n\n✏️ Aplicación (Lección 2.1, 15 min):\nPaso 1: Línea de acción\nPaso 2: Dibuja las 3 masas como formas 3D\nPaso 3: Define ángulo entre ellas\nPaso 4: Conecta con cuello y cintura\nPaso 5: Agrega extremidades\n\n💡 Tips:\n• El torso NO es cilindro: tiene forma de barril\n• La pelvis se inclina en contrapposto\n• Piensa en cajas, NO siluetas planas',
+            actions: ['Anatomía funcional', 'Volumen']
+        }
+    },
+    
+    manosEstructura: {
+        keywords: ['mano', 'manos', 'dedos', 'palma', 'estructura mano', 'mano plana'],
+        response: {
+            title: 'Estructura de las Manos',
+            content: 'Las manos planas ocurren cuando dibujas el contorno sin entender la estructura 3D subyacente.\n\n🛠️ Solución estructural:\n1. Palma = Bloque: Rectángulo con GROSOR (no plano)\n2. Dedos = Cilindros: Cada dedo: 3 falanges = 3 cilindros\n3. Articulaciones = Esferas: Marca las articulaciones\n4. Pulgar especial: 2 falanges, nace del LATERAL\n\n📦 Piensa en volúmenes:\n• Palma: caja con altura, anchura Y profundidad\n• Dedos: cilindros que se estrechan\n• Cada articulación permite rotación\n• Los dedos se curvan hacia el pulgar\n\n✏️ Ejercicio progresivo (Lección 2.3):\nFase 1 (2 min): SOLO palma como volumen\nFase 2 (2 min): Agrega UN dedo (3 segmentos)\nFase 3 (3 min): Completa 4 dedos restantes\nFase 4 (2 min): Agrega pulgar desde lateral\nFase 5 (6 min): Refina proporciones\n\n✅ Checklist:\n☐ ¿Palma tiene grosor visible?\n☐ ¿Cada dedo tiene 3 segmentos?\n☐ ¿Pulgar posicionado correctamente?\n☐ ¿Articulaciones marcadas?\n\n📚 Hogarth (1996): "La mano es una pala con 5 palitos"',
+            actions: ['Anatomía dedos', 'Volumen']
+        }
+    },
+    
+    gruposMusculares: {
+        keywords: ['músculos', 'musculos', 'grupos musculares', 'anatomia muscular', '6 grupos'],
+        response: {
+            title: '6 Grupos Musculares',
+            content: 'El curso enseña los 6 grupos musculares superficiales más importantes para representar la figura con volumen.\n\n💪 Los 6 grupos (vista frontal):\n1. PECTORALES: Músculos del pecho (abanico desde esternón)\n2. ABDOMINALES: "Six-pack" + oblicuos laterales\n3. DELTOIDES: Hombros (gota invertida)\n4. BÍCEPS/TRÍCEPS: Brazos (volumen brazo superior)\n5. CUÁDRICEPS: Muslos frontales (4 músculos)\n6. GEMELOS: Pantorrillas (forma diamante)\n\n🎨 Aplicación (20 min, Lección 2.2):\nPrimero: Dibuja las 3 masas corporales\nSegundo: Agrega los 6 grupos como formas simples\nTercero: Define dirección según la pose\nCuarto: Conecta los grupos naturalmente\n\n⚠️ Errores comunes:\n• Dibujar músculos como líneas vs volúmenes\n• Agregar músculos sin tener las 3 masas\n• Músculos "flotantes" sin conexión\n• Exceso de detalle (el curso pide SIMPLIFICACIÓN)\n\n💡 Principio clave: Los músculos siguen la forma y dirección del movimiento.',
+            actions: ['3 masas', 'Estructura']
+        }
+    },
+    
+    proporcionesRostro: {
+        keywords: ['rostro', 'cara', 'proporciones faciales', 'tercios', 'regla tercios'],
+        response: {
+            title: 'Regla de Tercios Faciales',
+            content: 'La regla de tercios divide el rostro en 3 secciones iguales para proporciones correctas.\n\n📏 Los 3 tercios (vista frontal):\n• Tercio superior: Línea de cabello → cejas\n• Tercio medio: Cejas → base de nariz\n• Tercio inferior: Base nariz → barbilla\n\n👀 Ubicación de rasgos:\n• Ojos: En el ECUADOR del cráneo (mitad exacta)\n• Ancho entre ojos: Un ojo de separación\n• Ancho total cara: 5 ojos\n• Orejas: Desde cejas hasta base nariz\n• Boca: Entre nariz y barbilla, más cerca de nariz\n\n✏️ Proceso (Lección 2.4):\n1. Dibuja óvalo para la cabeza\n2. Traza línea horizontal a la mitad (ojos)\n3. Divide mitad inferior en 3 partes\n4. Ubica rasgos según tercios\n5. Ajusta según características individuales\n\n⚠️ Error más común: Colocar ojos demasiado arriba. Los ojos están en la MITAD del cráneo.\n\n📚 Loomis (1956): "Drawing the Head and Hands" - método completo',
+            actions: ['Construcción facial', 'Proporciones']
+        }
+    },
+    
+    // ========== MÓDULO 3: FIGURA COMPLETA ==========
+    procesoCapas: {
+        keywords: ['capas', 'proceso', '4 capas', 'workflow', 'pasos figura'],
+        response: {
+            title: 'Proceso de 4 Capas',
+            content: 'El proceso por capas es un método sistemático para figuras completas de 60-90 min, integrando todo lo aprendido.\n\n🎨 Las 4 capas secuenciales:\n\nCapa 1: GESTO (10-15 min)\n• Línea de acción\n• Formas básicas y balance\n• Proporciones generales\n\nCapa 2: ANATOMÍA (20-25 min)\n• 3 masas corporales\n• 6 grupos musculares\n• Estructura de manos y pies\n\nCapa 3: REFINAMIENTO (15-20 min)\n• Contornos precisos\n• Corrección de proporciones\n• Detalles anatómicos\n\nCapa 4: VOLUMEN (20-30 min)\n• 5 valores tonales\n• Sombras propias y proyectadas\n• Definición de volumen\n\n🎯 Por qué funciona:\n• Construyes de general → específico\n• Cada capa depende de la anterior\n• Reduces errores estructurales tempranos\n• Mantienes el gesto hasta el final\n\n⚠️ Error crítico: Empezar con detalles o sombreado SIN estructura sólida = figuras desproporcionadas.\n\n💡 Tip: No borres las capas anteriores completamente. Las líneas estructurales ayudan a mantener coherencia.',
+            actions: ['Figura completa', 'Workflow']
+        }
+    },
+    
+    valoresTonales: {
+        keywords: ['valores', 'tonales', '5 valores', 'sombra', 'luz', 'sombreado'],
+        response: {
+            title: '5 Valores Tonales (Loomis)',
+            content: 'Los valores tonales definen volumen y profundidad. El curso requiere el sistema de 5 valores de Loomis.\n\n🎨 Los 5 valores (claro → oscuro):\n1. Luz Directa (blanco): Luz golpea directamente\n2. Luz Reflejada: Zonas iluminadas indirectamente\n3. Medio Tono: Transición luz-sombra (neutral)\n4. Sombra Propia: Superficie SIN luz directa\n5. Sombra Proyectada (negro): Sombra en otra superficie\n\n📍 Ubicación (luz lateral derecha):\n• Luz directa: Lado derecho (torso, hombro, muslo)\n• Luz reflejada: Luz rebotada del entorno\n• Medio tono: Centro del torso (transición)\n• Sombra propia: Lado izquierdo (opuesto a luz)\n• Sombra proyectada: En suelo o superficie\n\n💡 Técnica (Lección 3.2):\n1. Identifica PRIMERO la fuente de luz\n2. Marca qué superficies reciben luz directa\n3. Aplica valores: claro → oscuro\n4. NO uses todos los valores en todo lado\n5. Mantén consistencia: 1 fuente = 1 sistema\n\n⚠️ Errores:\n• Usar todos los valores uniformemente\n• Sombrear sin entender fuente de luz\n• Exceso de valores intermedios\n\n🎯 Meta: Usar mínimo 3 valores consistentemente.',
+            actions: ['Volumen', 'Sombreado']
+        }
+    },
+    
+    proyectoFinal: {
+        keywords: ['proyecto final', 'evaluacion final', 'mercurio', '100 puntos', 'proyecto integrador'],
+        response: {
+            title: 'Proyecto Final Integrador',
+            content: 'El proyecto final es una figura del Mercurio (vista 1/4) que integra TODO. Necesitas ≥60/100 puntos.\n\n📊 Criterios (100 pts total):\n• Gesto y Línea de Acción (20 pts): Energía y dirección\n• Anatomía Funcional (20 pts): 3 masas + articulaciones + 6 grupos\n• Proporciones (20 pts): Canon ~7.5 cabezas correcto\n• Volumen y Valores (20 pts): Mínimo 3 valores consistentes\n• Detalles (10 pts): Manos/pies estructurados\n• Composición (10 pts): Uso del espacio, formato\n\n✏️ Proceso (90-120 min):\n1. Observación (5 min): Analiza sin dibujar\n2. Capa 1 - Gesto (15 min): Línea + formas\n3. Capa 2 - Anatomía (25 min): 3 masas + 6 grupos\n4. Capa 3 - Refinamiento (20 min): Proporciones\n5. Capa 4 - Volumen (30 min): Valores\n6. Revisión (15 min): Ajustes\n\n🎯 Estrategia para ≥60 pts:\n• Estructura ANTES que detalles (40 pts)\n• Mínimo 3 valores bien aplicados (15-18 pts)\n• Manos/pies estructurados básicos (7-8 pts)\n• Total estimado: 62-66 pts = APROBADO',
+            actions: ['Proceso capas', 'Ver rúbrica']
+        }
+    },
+    
+    bloqueoFrustacion: {
+        keywords: ['bloqueado', 'frustrado', 'no puedo', 'ansiedad', 'miedo', 'horrible', 'mal'],
+        response: {
+            title: 'Manejo de Bloqueos',
+            content: 'Sentir frustración es completamente normal. El 47% de tus compañeros reportó ansiedad similar al inicio.\n\n🌱 Perspectiva importante:\n• Los croquis NO buscan perfección\n• El objetivo es capturar la esencia, no obras maestras\n• Cada ejercicio es práctica, NO evaluación definitiva\n• El curso permite reintentos ilimitados\n\n✅ Protocolo anti-bloqueo AHORA:\n1. RESPIRA: Descanso 5-10 min (camina, toma agua)\n2. REVISA objetivo: ¿Qué pide ESTA lección? (no todo)\n3. SIMPLIFICA: Enfócate en UN elemento\n4. INTENTA DE NUEVO: Hoja nueva, mente fresca\n5. AJUSTA expectativas: 80% del objetivo es EXCELENTE\n\n📊 Dato motivacional: Estudiantes que completaron Módulo 1 reportaron reducción del 65% en ansiedad.\n\n🎯 Estrategia por módulo:\n• Módulo 1: Haz 5 croquis de 30 seg (súper rápidos)\n• Módulo 2: Dibuja SOLO las 3 masas (10 min, sin detalles)\n• Módulo 3: Revisa ejercicios anteriores (tu progreso real)\n\n🌟 Verdad importante: Estás recuperando habilidades tras 4 semestres. El progreso NO es lineal.',
+            actions: ['Motivación', 'Consejos']
+        }
+    },
+    
+    // ========== SISTEMA LMS ==========
+    subirEjercicios: {
+        keywords: ['subir', 'entregar', 'ejercicios', 'upload', 'enviar', 'cargar'],
+        response: {
+            title: 'Entrega de Ejercicios',
+            content: 'El LMS usa Google Forms embebidos para recibir tus ejercicios prácticos.\n\n📤 Proceso de entrega:\n\nPaso 1: Completa tu ejercicio\n• Dibuja según las especificaciones de la lección\n• Fotografía tu trabajo con buena luz\n• Asegúrate que la imagen sea clara\n\nPaso 2: Accede al formulario\n• En cada lección práctica hay botón "Entregar Ejercicio"\n• Click para abrir el Google Form embebido\n\nPaso 3: Completa el formulario\n• Tu nombre y correo\n• Módulo y lección correspondiente\n• Adjunta la imagen de tu dibujo\n• Comentarios opcionales\n\nPaso 4: Envía\n• Click en "Enviar"\n• Recibirás confirmación automática\n\n📸 Tips para fotografiar:\n• Luz natural (cerca de ventana)\n• Fondo neutro (blanco o gris)\n• Dibujo centrado y completo\n• Sin sombras que distorsionen\n• Formato JPG o PNG (< 5MB)',
+            actions: ['Ver Google Forms', 'Formato de foto']
+        }
+    },
+    
+    materiales: {
+        keywords: ['materiales', 'necesito', 'lápiz', 'lapiz', 'papel', 'herramientas'],
+        response: {
+            title: 'Materiales del Curso',
+            content: 'El curso requiere materiales básicos de dibujo. No necesitas nada costoso.\n\n✏️ Materiales esenciales:\n\nPara dibujar:\n• Lápices grafito: HB, 2B, 4B (mínimo)\n• Goma de borrar (blanca y amasable)\n• Sacapuntas de calidad\n• Papel de dibujo (90-120g) tamaño carta o A4\n\nPara medir:\n• Lápiz para método de medición\n• Regla (opcional, para verificar proporciones)\n\nPara documentar:\n• Cámara de celular (para fotografiar ejercicios)\n• Buena iluminación\n\n📦 Cantidad recomendada:\n• 50-100 hojas de papel\n• Set de 3-5 lápices de diferentes durezas\n• El curso requiere ~23 dibujos totales\n\n💰 Presupuesto estimado:\n• Papel: $3.000-5.000 CLP\n• Lápices: $2.000-4.000 CLP\n• Gomas: $1.000-2.000 CLP\n• Total: ~$6.000-11.000 CLP\n\n⚠️ NO necesitas:\n• Tableta gráfica (es analógico)\n• Papel especial costoso\n• Set de 50 lápices profesionales',
+            actions: ['Ejercicios', 'Requisitos']
+        }
+    },
+    
+    librosLoomis: {
+        keywords: ['libros', 'loomis', 'conseguir', 'comprar', 'dónde', 'bibliografia'],
+        response: {
+            title: 'Referencias Bibliográficas',
+            content: 'Los libros de Loomis y otras referencias están disponibles en versión digital y física.\n\n📚 Libros principales del curso:\n\nAndrew Loomis:\n1. "Figure Drawing For All It\'s Worth" (1943)\n   • Disponible: Amazon, Book Depository\n   • PDF gratuito: archive.org\n   • Precio físico: $15.000-25.000 CLP\n\n2. "Drawing the Head and Hands" (1956)\n   • Mismo disponibilidad\n   • Precio similar\n\nOtros autores:\n• Nicolaïdes - "The Natural Way to Draw"\n• Bridgman - "Constructive Anatomy"\n• Hogarth - "Dynamic Anatomy"\n• Goldfinger - "Human Anatomy for Artists"\n\n💻 Opciones digitales:\n\nGratuitas:\n• Archive.org (dominio público)\n• Librerías universitarias digitales\n\nDe pago:\n• Amazon Kindle\n• Google Books\n• Precio: $5-15 USD cada uno\n\n📖 Físicos en Chile:\n• Librería Nacional (Alameda)\n• Antártica (mall/online)\n• Buscalibre.cl\n\n⚠️ Importante: NO necesitas comprar todos. El curso provee los conceptos clave. Los libros son para profundizar (opcional).',
+            actions: ['Recursos', 'Materiales']
+        }
+    }
+};
     
     // Sistema del Mentor
     class MentorChat {
