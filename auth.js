@@ -54,7 +54,7 @@ function makeJSONPRequest(action, params = {}) {
 
     const queryParams = new URLSearchParams({ action, callback: callbackName, ...params });
     const url = `${API_URL}?${queryParams.toString()}`;
-    console.log('📡 JSONP Request →', url); // <-- útil para depurar
+    console.log('📡 JSONP Request →', url); // útil para depurar
 
     const script = document.createElement('script');
     script.src = url;
@@ -212,7 +212,7 @@ async function logUserActivity(activityType, userData, details = {}) {
     if (!userData || !userData.username) return false;
 
     const params = {
-      action: 'logActivity', // <-- CLAVE: debe coincidir con tu Apps Script
+      action: 'logActivity',
       userId: userData.id || 0,
       username: userData.username,
       activityType,
