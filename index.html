@@ -1764,18 +1764,36 @@
 }
 </style>
 
-<script src="mentor-knowledge.js"></script>
+// ============================================
+// PEGA ESTE CÓDIGO AL FINAL DE index-4.html
+// ANTES DEL </body>
+// REEMPLAZA TODO EL CÓDIGO DEL MENTOR ACTUAL
+// ============================================
 
-<script>
-// ========== MENTOR ANATÓMICO 2.0 - SISTEMA COMPLETO ==========
-(function() {
-    'use strict';
+// PRIMERO: Cargar el archivo de conocimiento
+const mentorScript = document.createElement('script');
+mentorScript.src = 'mentor-knowledge.js';
+mentorScript.onerror = function() {
+    console.error('❌ ERROR: No se pudo cargar mentor-knowledge.js');
+    console.log('Verifica que el archivo existe en la misma carpeta que index-4.html');
+};
+document.head.appendChild(mentorScript);
+
+// SEGUNDO: Esperar a que cargue e inicializar
+mentorScript.onload = function() {
+    console.log('✅ mentor-knowledge.js cargado correctamente');
+    
+    // Verificar que el objeto esté disponible
+    if (typeof window.mentorKnowledge === 'undefined') {
+        console.error('❌ window.mentorKnowledge no está definido');
+        return;
+    }
     
     console.log('🤖 Mentor Anatómico 2.0: Inicializando...');
     
-    // Cargar el sistema de conocimiento desde el archivo externo
-    // (Usa el código que creé arriba en mentor_emotional_system)
-    
+    // ========================================
+    // CLASE PRINCIPAL DEL MENTOR
+    // ========================================
     class MentorChat {
         constructor() {
             this.isOpen = false;
@@ -1952,7 +1970,7 @@
                         );
                     }, 2000);
                 }
-            }, 1000 + Math.random() * 800); // Variar tiempo de respuesta para parecer más humano
+            }, 1000 + Math.random() * 800);
         }
         
         addUserMsg(text) {
@@ -1979,10 +1997,10 @@
             const container = document.getElementById('mentorMessages');
             const time = new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
             
-            // Formatear texto (mantener saltos de línea, convertir markdown básico)
+            // Formatear texto
             let formattedText = response.text
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // **negrita**
-                .replace(/\n/g, '<br>'); // saltos de línea
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
             
             const actionsHTML = response.actions && response.actions.length > 0
                 ? `<div class="mentor-quick-actions">
@@ -2055,6 +2073,6 @@
     } else {
         window.mentorChat = new MentorChat();
     }
-})();
-</script>
+};
+</body>
 </html>
