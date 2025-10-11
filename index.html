@@ -601,7 +601,93 @@
         }
     </style>
 </head>
-<body>
+<!-- Botón para abrir chat -->
+<button id="open-mentor-btn" class="floating-chat-btn">
+    <i class="bi bi-robot"></i>
+</button>
+
+<!-- Overlay del chat -->
+<div id="mentor-overlay" style="display: none;">
+    <div class="mentor-overlay-backdrop"></div>
+    <div class="mentor-overlay-container">
+        <button id="close-mentor-btn" class="btn-close-mentor">
+            <i class="bi bi-x-lg"></i>
+        </button>
+        <iframe src="mentor.html" class="mentor-iframe"></iframe>
+    </div>
+</div>
+
+<style>
+.mentor-overlay-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 9998;
+}
+
+.mentor-overlay-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 900px;
+    height: 90vh;
+    z-index: 9999;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 50px rgba(0,0,0,0.3);
+}
+
+.mentor-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.btn-close-mentor {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.btn-close-mentor:hover {
+    background: rgba(255,255,255,0.3);
+    transform: scale(1.1);
+}
+</style>
+
+<script>
+// Abrir/cerrar overlay
+document.getElementById('open-mentor-btn').addEventListener('click', () => {
+    document.getElementById('mentor-overlay').style.display = 'block';
+});
+
+document.getElementById('close-mentor-btn').addEventListener('click', () => {
+    document.getElementById('mentor-overlay').style.display = 'none';
+});
+
+document.querySelector('.mentor-overlay-backdrop').addEventListener('click', () => {
+    document.getElementById('mentor-overlay').style.display = 'none';
+});
+</script>
+    <body>
     <script src="auth.js"></script>
 
     <header class="header-uah">
@@ -1328,47 +1414,5 @@
         // Auto-guardar progreso cada 2 minutos
         setInterval(saveProgress, 120000);
     </script>
-</body><!-- Botón flotante para abrir el mentor -->
-<a href="mentor.html" class="floating-chat-btn" title="Mentor Anatómico">
-    <i class="bi bi-robot"></i>
-</a>
-
-<style>
-.floating-chat-btn {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    width: 60px;
-    height: 60px;
-    background: linear-gradient(135deg, #2c5f66, #1a1a1a);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    font-size: 1.8rem;
-    box-shadow: 0 4px 20px rgba(44, 95, 102, 0.4);
-    cursor: pointer;
-    z-index: 999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-
-.floating-chat-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 25px rgba(44, 95, 102, 0.5);
-    color: white;
-}
-
-/* Animación de pulse */
-@keyframes pulse-btn {
-    0%, 100% { box-shadow: 0 4px 20px rgba(44, 95, 102, 0.4); }
-    50% { box-shadow: 0 4px 30px rgba(44, 95, 102, 0.7); }
-}
-
-.floating-chat-btn {
-    animation: pulse-btn 3s infinite;
-}
-</style>
+</body>
 </html>
