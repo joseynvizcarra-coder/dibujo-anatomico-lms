@@ -1328,5 +1328,47 @@
         // Auto-guardar progreso cada 2 minutos
         setInterval(saveProgress, 120000);
     </script>
-</body>
+</body><!-- Botón flotante para abrir el mentor -->
+<a href="mentor.html" class="floating-chat-btn" title="Mentor Anatómico">
+    <i class="bi bi-robot"></i>
+</a>
+
+<style>
+.floating-chat-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #2c5f66, #1a1a1a);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.8rem;
+    box-shadow: 0 4px 20px rgba(44, 95, 102, 0.4);
+    cursor: pointer;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.floating-chat-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(44, 95, 102, 0.5);
+    color: white;
+}
+
+/* Animación de pulse */
+@keyframes pulse-btn {
+    0%, 100% { box-shadow: 0 4px 20px rgba(44, 95, 102, 0.4); }
+    50% { box-shadow: 0 4px 30px rgba(44, 95, 102, 0.7); }
+}
+
+.floating-chat-btn {
+    animation: pulse-btn 3s infinite;
+}
+</style>
 </html>
