@@ -1,0 +1,2663 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentor Anatómico UAH - Chat</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-dark: #2c5f66;
+            --primary-light: #e8a2b8;
+            --dark: #1a1a1a;
+            --success: #4CAF50;
+            --warning: #FFC107;
+            --bg-light: #f8f9fa;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.1);
+            --border-radius: 18px;
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --bg-light: #1a1a1a;
+            --dark: #ffffff;
+            --primary-dark: #3d7d86;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-light);
+            color: var(--dark);
+            transition: var(--transition);
+        }
+
+        .chat-container {
+            max-width: 900px;
+            margin: 0 auto;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-light);
+        }
+
+        /* HEADER */
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--dark));
+            color: white;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar-bot {
+            width: 45px;
+            height: 45px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .header-text h1 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-icon:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        /* MÓDULO SELECTOR */
+        .module-selector {
+            background: white;
+            border-bottom: 2px solid #e0e7ff;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        [data-theme="dark"] .module-selector {
+            background: #2a2a2a;
+            border-bottom-color: #444;
+        }
+
+        .module-selector label {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .module-select {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--primary-light);
+            border-radius: 10px;
+            background: var(--bg-light);
+            color: var(--dark);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .module-select:hover {
+            border-color: var(--primary-dark);
+        }
+
+        /* QUICK REPLIES */
+        .quick-replies {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e0e7ff;
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+
+        [data-theme="dark"] .quick-replies {
+            background: #2a2a2a;
+            border-bottom-color: #444;
+        }
+
+        .quick-replies-label {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        [data-theme="dark"] .quick-replies-label {
+            color: #aaa;
+        }
+
+        .quick-replies-container {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            scrollbar-width: thin;
+        }
+
+        .quick-reply-btn {
+            background: white;
+            border: 2px solid var(--primary-dark);
+            color: var(--primary-dark);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        [data-theme="dark"] .quick-reply-btn {
+            background: #2a2a2a;
+        }
+
+        .quick-reply-btn:hover {
+            background: var(--primary-dark);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* CHAT MESSAGES */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            display: flex;
+            gap: 0.75rem;
+            animation: messageSlideIn 0.3s ease;
+        }
+
+        @keyframes messageSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .message.bot .message-avatar {
+            background: var(--primary-dark);
+            color: white;
+        }
+
+        .message.user .message-avatar {
+            background: var(--primary-light);
+            color: var(--dark);
+        }
+
+        .message-content {
+            max-width: 70%;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .message-bubble {
+            padding: 1rem 1.25rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            line-height: 1.6;
+        }
+
+        .message.bot .message-bubble {
+            background: var(--primary-dark);
+            color: white;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.user .message-bubble {
+            background: var(--primary-light);
+            color: var(--dark);
+            border-bottom-right-radius: 4px;
+        }
+
+        [data-theme="dark"] .message.user .message-bubble {
+            color: var(--dark);
+        }
+
+        .message-bubble h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .message-bubble ul {
+            margin: 0.75rem 0;
+            padding-left: 1.25rem;
+        }
+
+        .message-bubble li {
+            margin: 0.5rem 0;
+        }
+
+        .message-bubble strong {
+            font-weight: 600;
+        }
+
+        .message-section {
+            margin: 1rem 0;
+            padding-left: 0.75rem;
+            border-left: 3px solid rgba(255,255,255,0.3);
+        }
+
+        .message.user .message-section {
+            border-left-color: rgba(0,0,0,0.2);
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            align-self: flex-end;
+        }
+
+        .message.user .message-time {
+            align-self: flex-start;
+        }
+
+        /* TYPING INDICATOR */
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+        }
+
+        .typing-indicator.active {
+            display: flex;
+        }
+
+        .typing-dots {
+            background: var(--primary-dark);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: typingDot 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingDot {
+            0%, 60%, 100% { opacity: 0.3; transform: scale(0.8); }
+            30% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* FEEDBACK BUTTONS */
+        .message-feedback {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .btn-feedback-msg {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 0.4rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .message.user .btn-feedback-msg {
+            background: rgba(0,0,0,0.1);
+            border-color: rgba(0,0,0,0.2);
+            color: var(--dark);
+        }
+
+        .btn-feedback-msg:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+
+        /* RELATED TOPICS */
+        .related-topics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .message.user .related-topics {
+            border-top-color: rgba(0,0,0,0.2);
+        }
+
+        .related-topic-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 0.4rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .message.user .related-topic-btn {
+            background: rgba(0,0,0,0.1);
+            border-color: rgba(0,0,0,0.2);
+            color: var(--dark);
+        }
+
+        .related-topic-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-1px);
+        }
+
+        /* INPUT AREA */
+        .chat-input-container {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-top: 2px solid #e0e7ff;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+
+        [data-theme="dark"] .chat-input-container {
+            background: #2a2a2a;
+            border-top-color: #444;
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-end;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 0.875rem 1.25rem;
+            border: 2px solid var(--primary-light);
+            border-radius: 20px;
+            font-size: 1rem;
+            resize: none;
+            max-height: 120px;
+            background: var(--bg-light);
+            color: var(--dark);
+            font-family: inherit;
+            transition: var(--transition);
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--primary-dark);
+            box-shadow: 0 0 0 3px rgba(44, 95, 102, 0.1);
+        }
+
+        .btn-send {
+            width: 45px;
+            height: 45px;
+            background: var(--primary-dark);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1.2rem;
+        }
+
+        .btn-send:hover {
+            background: var(--primary-light);
+            color: var(--dark);
+            transform: scale(1.1);
+        }
+
+        .btn-send:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* WELCOME MESSAGE */
+        .welcome-message {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: #666;
+        }
+
+        [data-theme="dark"] .welcome-message {
+            color: #aaa;
+        }
+
+        .welcome-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-message h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .welcome-message p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* STATS PANEL */
+        .stats-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        [data-theme="dark"] .stats-panel {
+            background: #2a2a2a;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: var(--bg-light);
+            border-radius: 10px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        [data-theme="dark"] .stat-label {
+            color: #aaa;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .chat-header {
+                padding: 0.875rem 1rem;
+            }
+
+            .header-text h1 {
+                font-size: 1rem;
+            }
+
+            .status-badge {
+                font-size: 0.75rem;
+            }
+
+            .message-content {
+                max-width: 85%;
+            }
+
+            .chat-messages {
+                padding: 1rem;
+            }
+
+            .module-selector {
+                padding: 0.5rem 1rem;
+            }
+        }
+
+        /* SCROLLBAR */
+        .chat-messages::-webkit-scrollbar,
+        .quick-replies-container::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track,
+        .quick-replies-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb,
+        .quick-replies-container::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 10px;
+        }
+
+        /* FLOATING BUTTON (for integration) */
+        .floating-chat-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: var(--primary-dark);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 20px rgba(44, 95, 102, 0.4);
+            cursor: pointer;
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .floating-chat-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(44, 95, 102, 0.5);
+        }
+
+        .floating-chat-btn.show {
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <!-- HEADER -->
+        <div class="chat-header">
+            <div class="header-info">
+                <div class="avatar-bot">🤖</div>
+                <div class="header-text">
+                    <h1>Mentor Anatómico UAH</h1>
+                    <div class="status-badge">
+                        <span class="status-dot"></span>
+                        <span>Online · Respondiendo al instante</span>
+                    </div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn-icon" id="btn-theme" title="Cambiar tema">
+                    <i class="bi bi-moon-fill"></i>
+                </button>
+                <button class="btn-icon" id="btn-clear" title="Limpiar chat">
+                    <i class="bi bi-trash"></i>
+                </button>
+                <button class="btn-icon" id="btn-stats" title="Ver estadísticas">
+                    <i class="bi bi-graph-up"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- MODULE SELECTOR -->
+        <div class="module-selector">
+            <label for="module-select">📍 Contexto:</label>
+            <select class="module-select" id="module-select">
+                <option value="general">General / Todas las preguntas</option>
+                <option value="modulo1">Módulo 1: Observación y Gesto</option>
+                <option value="modulo2">Módulo 2: Anatomía Funcional</option>
+                <option value="modulo3">Módulo 3: Figura Completa</option>
+                <option value="sistema">Sistema LMS</option>
+            </select>
+        </div>
+
+        <!-- QUICK REPLIES -->
+        <div class="quick-replies">
+            <div class="quick-replies-label">💡 Preguntas frecuentes:</div>
+            <div class="quick-replies-container" id="quick-replies"></div>
+        </div>
+
+        <!-- MESSAGES -->
+        <div class="chat-messages" id="chat-messages">
+            <div class="welcome-message">
+                <div class="welcome-icon">👋</div>
+                <h3>¡Hola! Soy tu Mentor Anatómico</h3>
+                <p>Estoy aquí para ayudarte con dudas sobre anatomía, técnicas de dibujo, proporciones y todo lo relacionado con el curso.</p>
+                <p style="margin-top: 1rem;"><strong>Selecciona una pregunta rápida o escribe tu consulta abajo</strong></p>
+            </div>
+        </div>
+
+        <!-- TYPING INDICATOR -->
+        <div class="typing-indicator" id="typing-indicator">
+            <div class="message-avatar" style="background: var(--primary-dark); color: white;">🤖</div>
+            <div class="typing-dots">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+        </div>
+
+        <!-- INPUT -->
+        <div class="chat-input-container">
+            <div class="input-wrapper">
+                <textarea 
+                    class="chat-input" 
+                    id="chat-input"
+                    rows="1"
+                    placeholder="Pregúntame sobre anatomía, proporciones, técnicas..."
+                ></textarea>
+                <button class="btn-send" id="btn-send">
+                    <i class="bi bi-send-fill"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== BASE DE DATOS DE CONOCIMIENTO ==========
+        const knowledgeBase = {
+            // MÓDULO 1: OBSERVACIÓN Y GESTO
+            modulo1: [
+                {
+                    id: "linea-accion",
+                    keywords: ["línea", "acción", "gesto", "eje", "dirección", "movimiento"],
+                    question: "¿Qué es la línea de acción?",
+                    answer: {
+                        title: "Línea de Acción",
+                        content: `La <strong>línea de acción</strong> es el eje imaginario que atraviesa toda la figura, definiendo la dirección y energía del movimiento. <strong>NO es una línea que dibujes literalmente</strong>, sino una guía mental para capturar la esencia del gesto.
+
+<div class="message-section"><strong>🔑 Características clave:</strong>
+• <strong>Recorrido:</strong> Desde la cabeza hasta el pie de apoyo
+• <strong>Forma:</strong> Recta en poses estáticas, curva en poses dinámicas
+• <strong>Función:</strong> Define la dirección principal del movimiento
+• <strong>Prioridad:</strong> Es lo PRIMERO que debes identificar</div>
+
+<div class="message-section"><strong>💡 En tu croquis de 2 minutos:</strong>
+1. Observa 10-20 segundos SIN dibujar
+2. Identifica mentalmente esa línea invisible
+3. Trázala PRIMERO (0-30 seg)
+4. Luego agrega masa corporal (30-120 seg)</div>
+
+📚 <strong>Referencia:</strong> Loomis (1943) explica que la línea de acción es el primer paso antes de agregar masa o detalles.`,
+                        related: ["contrapposto", "punto de apoyo", "croquis rápidos"]
+                    }
+                },
+                {
+                    id: "medir-lapiz",
+                    keywords: ["medir", "proporciones", "lápiz", "medición", "método"],
+                    question: "¿Cómo mido proporciones con el lápiz?",
+                    answer: {
+                        title: "Método del Lápiz",
+                        content: `El <strong>método del lápiz</strong> te permite medir relaciones entre partes del cuerpo, NO tamaños exactos.
+
+<div class="message-section"><strong>📐 Paso a paso:</strong>
+1. <strong>Extiende el brazo completamente</strong> (codo bloqueado)
+2. <strong>Cierra un ojo</strong> para eliminar paralaje
+3. <strong>Alinea la punta del lápiz</strong> con el punto superior
+4. <strong>Marca con el pulgar</strong> el punto inferior
+5. <strong>Usa esa "unidad"</strong> para comparar otras partes</div>
+
+<div class="message-section"><strong>⚠️ Errores comunes:</strong>
+• Doblar el codo = medidas inconsistentes
+• No cerrar un ojo = distorsión
+• Cambiar la distancia del brazo entre mediciones</div>
+
+<div class="message-section"><strong>✅ Práctica (Lección 1.2):</strong>
+• Mide la cabeza como unidad base (1 unidad)
+• El cuerpo completo: ~7.5 cabezas
+• Torso: ~3 cabezas | Piernas: ~4 cabezas</div>
+
+🎯 <strong>Objetivo:</strong> 80% de precisión (OE2)`,
+                        related: ["canon 7.5 cabezas", "proporciones"]
+                    }
+                },
+                {
+                    id: "contrapposto",
+                    keywords: ["contrapposto", "balance", "peso", "apoyo", "distribución"],
+                    question: "¿Qué es el contrapposto?",
+                    answer: {
+                        title: "Contrapposto y Balance",
+                        content: `El <strong>contrapposto</strong> es una postura donde el peso del cuerpo está distribuido asimétricamente sobre una pierna, creando una postura natural y dinámica.
+
+<div class="message-section"><strong>🎯 Características:</strong>
+• <strong>Pierna de apoyo:</strong> Recibe el peso (línea recta)
+• <strong>Pierna libre:</strong> Relajada, flexionada
+• <strong>Cadera:</strong> Elevada del lado de apoyo
+• <strong>Hombros:</strong> Se inclinan en dirección opuesta
+• <strong>Columna:</strong> Forma curva en "S"</div>
+
+<div class="message-section"><strong>🔍 Cómo identificarlo:</strong>
+• Observa qué pie está completamente apoyado
+• Nota cómo la cadera de ese lado está más alta
+• Ve cómo los hombros compensan al lado contrario
+• La línea de acción será curva, no recta</div>
+
+<div class="message-section"><strong>✏️ En tu croquis de 5 min (Lección 1.3):</strong>
+1. Dibuja la línea de acción curva
+2. Marca el punto de apoyo en el suelo
+3. Indica la diferencia de altura entre caderas
+4. Muestra la inclinación opuesta de hombros</div>`,
+                        related: ["línea de acción", "punto de apoyo", "balance"]
+                    }
+                },
+                {
+                    id: "croquis-rapido",
+                    keywords: ["croquis", "rápido", "2 minutos", "dibujo rápido", "tiempo"],
+                    question: "¿Cómo hacer un croquis de 2 minutos?",
+                    answer: {
+                        title: "Croquis Rápidos (2 minutos)",
+                        content: `Los croquis de 2 minutos buscan <strong>capturar la esencia del gesto</strong>, NO crear un dibujo detallado.
+
+<div class="message-section"><strong>⏱️ Distribución del tiempo:</strong>
+• <strong>0-20 seg:</strong> OBSERVA sin dibujar (línea de acción, balance)
+• <strong>20-40 seg:</strong> Dibuja línea de acción y formas básicas
+• <strong>40-100 seg:</strong> Agrega masa corporal simple
+• <strong>100-120 seg:</strong> Último vistazo, ajustes mínimos</div>
+
+<div class="message-section"><strong>✅ Lo que DEBES hacer:</strong>
+• Usar trazos sueltos y seguros
+• Priorizar el gesto sobre detalles
+• Mantener el lápiz en movimiento
+• Capturar la energía y dirección</div>
+
+<div class="message-section"><strong>❌ Lo que NO hacer:</strong>
+• Borrar (no hay tiempo)
+• Dibujar contornos cuidadosos
+• Agregar detalles faciales o dedos
+• Preocuparte por la "perfección"</div>
+
+🎯 <strong>Meta:</strong> Capturar línea de acción con 80% precisión (OE1)
+
+💪 <strong>Recuerda:</strong> El 47% de tus compañeros siente ansiedad. Los croquis rápidos ayudan a superar el miedo al error.`,
+                        related: ["línea de acción", "gesto", "observación"]
+                    }
+                },
+                {
+                    id: "punto-apoyo",
+                    keywords: ["punto", "apoyo", "pie", "base", "equilibrio", "estabilidad"],
+                    question: "¿Qué es el punto de apoyo?",
+                    answer: {
+                        title: "Punto de Apoyo",
+                        content: `El <strong>punto de apoyo</strong> es donde el peso del cuerpo se transfiere al suelo. Identificarlo es crucial para que tus figuras se vean estables.
+
+<div class="message-section"><strong>🎯 Características:</strong>
+• Es el punto donde la figura toca el suelo
+• En contrapposto: usualmente un pie completo
+• En poses dinámicas: puede ser la punta del pie
+• Define la estabilidad visual de la figura</div>
+
+<div class="message-section"><strong>✅ Cómo identificarlo:</strong>
+• Observa qué pie está plano en el suelo
+• La línea de acción llega hasta este punto
+• El peso del cuerpo se distribuye desde aquí
+• En poses estáticas: centro entre ambos pies</div>
+
+<div class="message-section"><strong>💡 Tip importante:</strong>
+Si el punto de apoyo está mal ubicado, toda la figura se verá inestable, aunque las proporciones sean correctas.</div>`,
+                        related: ["contrapposto", "línea de acción", "balance"]
+                    }
+                }
+            ],
+
+            // MÓDULO 2: ANATOMÍA FUNCIONAL
+            modulo2: [
+                {
+                    id: "tres-masas",
+                    keywords: ["3 masas", "tres masas", "cabeza", "torso", "pelvis", "bloques"],
+                    question: "¿Qué son las 3 masas corporales?",
+                    answer: {
+                        title: "3 Masas Corporales",
+                        content: `Las <strong>3 masas corporales</strong> son una simplificación estructural del cuerpo que te permite construir figuras sólidas y volumétricas.
+
+<div class="message-section"><strong>🔷 Las 3 masas:</strong>
+1. <strong>CABEZA:</strong> Óvalo o esfera (incluye cuello)
+2. <strong>TORSO:</strong> Caja de costillas (hombros → cintura)
+3. <strong>PELVIS:</strong> Cuenco invertido (cintura → entrepierna)</div>
+
+<div class="message-section"><strong>🎯 Por qué funciona:</strong>
+• Cada masa puede rotar independientemente
+• Crea volumen 3D desde el inicio
+• Facilita entender la perspectiva
+• Establece proporciones antes de detalles</div>
+
+<div class="message-section"><strong>✏️ Aplicación (Lección 2.1, 15 min):</strong>
+<strong>Paso 1:</strong> Línea de acción
+<strong>Paso 2:</strong> Dibuja las 3 masas como formas 3D
+<strong>Paso 3:</strong> Define ángulo entre ellas
+<strong>Paso 4:</strong> Conecta con cuello y cintura
+<strong>Paso 5:</strong> Agrega extremidades</div>
+
+💡 <strong>Tips:</strong>
+• El torso NO es cilindro: tiene forma de barril
+• La pelvis se inclina en contrapposto
+• Piensa en cajas, NO siluetas planas`,
+                        related: ["anatomía", "volumen", "estructura"]
+                    }
+                },
+                {
+                    id: "manos-estructura",
+                    keywords: ["mano", "manos", "dedos", "palma", "estructura", "plana"],
+                    question: "Mi mano se ve plana, ¿qué hago?",
+                    answer: {
+                        title: "Estructura de las Manos",
+                        content: `Las manos planas ocurren cuando dibujas el <strong>contorno sin entender la estructura 3D</strong>.
+
+<div class="message-section"><strong>🛠️ Solución estructural:</strong>
+1. <strong>Palma = Bloque:</strong> Rectángulo con GROSOR (no plano)
+2. <strong>Dedos = Cilindros:</strong> Cada dedo: 3 falanges = 3 cilindros
+3. <strong>Articulaciones = Esferas:</strong> Marca las articulaciones
+4. <strong>Pulgar especial:</strong> 2 falanges, nace del LATERAL</div>
+
+<div class="message-section"><strong>📦 Piensa en volúmenes:</strong>
+• Palma: caja con altura, anchura Y profundidad
+• Dedos: cilindros que se estrechan
+• Cada articulación permite rotación
+• Los dedos se curvan hacia el pulgar</div>
+
+<div class="message-section"><strong>✏️ Ejercicio progresivo (Lección 2.3):</strong>
+<strong>Fase 1 (2 min):</strong> SOLO palma como volumen
+<strong>Fase 2 (2 min):</strong> Agrega UN dedo (3 segmentos)
+<strong>Fase 3 (3 min):</strong> Completa 4 dedos restantes
+<strong>Fase 4 (2 min):</strong> Agrega pulgar desde lateral
+<strong>Fase 5 (6 min):</strong> Refina proporciones</div>
+
+<div class="message-section"><strong>✅ Checklist:</strong>
+☐ ¿Palma tiene grosor visible?
+☐ ¿Cada dedo tiene 3 segmentos?
+☐ ¿Pulgar posicionado correctamente?
+☐ ¿Articulaciones marcadas?
+☐ ¿Dedos se curvan naturalmente?</div>
+
+📚 <strong>Hogarth (1996):</strong> "La mano es una pala con 5 palitos"`,
+                        related: ["anatomía dedos", "escorzo", "volumen"]
+                    }
+                },
+                {
+                    id: "grupos-musculares",
+                    keywords: ["músculos", "musculos", "grupos", "anatomía", "6 grupos"],
+                    question: "¿Cuáles son los 6 grupos musculares?",
+                    answer: {
+                        title: "6 Grupos Musculares",
+                        content: `El curso enseña los <strong>6 grupos musculares superficiales</strong> más importantes para representar la figura con volumen.
+
+<div class="message-section"><strong>💪 Los 6 grupos (vista frontal):</strong>
+1. <strong>PECTORALES:</strong> Músculos del pecho (abanico desde esternón)
+2. <strong>ABDOMINALES:</strong> "Six-pack" + oblicuos laterales
+3. <strong>DELTOIDES:</strong> Hombros (gota invertida)
+4. <strong>BÍCEPS/TRÍCEPS:</strong> Brazos (volumen brazo superior)
+5. <strong>CUÁDRICEPS:</strong> Muslos frontales (4 músculos)
+6. <strong>GEMELOS:</strong> Pantorrillas (forma diamante)</div>
+
+<div class="message-section"><strong>🎨 Aplicación (20 min, Lección 2.2):</strong>
+<strong>Primero:</strong> Dibuja las 3 masas corporales
+<strong>Segundo:</strong> Agrega los 6 grupos como formas simples
+<strong>Tercero:</strong> Define dirección según la pose
+<strong>Cuarto:</strong> Conecta los grupos naturalmente</div>
+
+<div class="message-section"><strong>⚠️ Errores comunes:</strong>
+• Dibujar músculos como líneas vs volúmenes
+• Agregar músculos sin tener las 3 masas
+• Músculos "flotantes" sin conexión
+• Exceso de detalle (el curso pide SIMPLIFICACIÓN)</div>
+
+💡 <strong>Principio clave:</strong> Los músculos siguen la forma y dirección del movimiento. NO dibujes anatomía de memoria.`,
+                        related: ["anatomía", "3 masas", "estructura"]
+                    }
+                },
+                {
+                    id: "proporciones-rostro",
+                    keywords: ["rostro", "cara", "proporciones", "faciales", "tercios"],
+                    question: "¿Cómo dibujar proporciones faciales?",
+                    answer: {
+                        title: "Regla de Tercios Faciales",
+                        content: `La <strong>regla de tercios</strong> divide el rostro en 3 secciones iguales para proporciones correctas.
+
+<div class="message-section"><strong>📏 Los 3 tercios (vista frontal):</strong>
+• <strong>Tercio superior:</strong> Línea de cabello → cejas
+• <strong>Tercio medio:</strong> Cejas → base de nariz
+• <strong>Tercio inferior:</strong> Base nariz → barbilla</div>
+
+<div class="message-section"><strong>👀 Ubicación de rasgos:</strong>
+• <strong>Ojos:</strong> En el ECUADOR del cráneo (mitad exacta)
+• <strong>Ancho entre ojos:</strong> Un ojo de separación
+• <strong>Ancho total cara:</strong> 5 ojos
+• <strong>Orejas:</strong> Desde cejas hasta base nariz
+• <strong>Boca:</strong> Entre nariz y barbilla, más cerca de nariz</div>
+
+<div class="message-section"><strong>✏️ Proceso (Lección 2.4):</strong>
+1. Dibuja óvalo para la cabeza
+2. Traza línea horizontal a la mitad (ojos)
+3. Divide mitad inferior en 3 partes
+4. Ubica rasgos según tercios
+5. Ajusta según características individuales</div>
+
+⚠️ <strong>Error más común:</strong> Colocar ojos demasiado arriba. Los ojos están en la MITAD del cráneo.
+
+📚 <strong>Loomis (1956):</strong> "Drawing the Head and Hands" - método completo`,
+                        related: ["cabeza", "construcción facial", "proporciones"]
+                    }
+                },
+                {
+                    id: "pies-estructura",
+                    keywords: ["pie", "pies", "estructura", "talón", "dedos pies"],
+                    question: "¿Cómo dibujar pies estructurados?",
+                    answer: {
+                        title: "Estructura de los Pies",
+                        content: `Los pies tienen una estructura similar a las manos pero más simplificada.
+
+<div class="message-section"><strong>🦶 Estructura básica:</strong>
+• <strong>Talón:</strong> Esfera o cilindro corto
+• <strong>Arco:</strong> Cuña triangular
+• <strong>Metatarso:</strong> Bloque rectangular
+• <strong>Dedos:</strong> 5 cilindros cortos</div>
+
+<div class="message-section"><strong>📐 Proporciones del pie:</strong>
+• Longitud: aproximadamente 1 cabeza
+• Ancho: mitad de la longitud
+• El dedo gordo es el más grande
+• Los otros dedos decrecen en tamaño</div>
+
+<div class="message-section"><strong>✏️ Proceso de construcción:</strong>
+1. Dibuja el talón como esfera
+2. Conecta con cuña del arco
+3. Agrega bloque del metatarso
+4. Marca los 5 dedos como cilindros
+5. Define el tobillo como esfera</div>
+
+💡 <strong>Tip:</strong> El pie tiene altura (no es plano). Piensa en una cuña desde el talón hasta los dedos.`,
+                        related: ["anatomía", "estructura", "proporciones"]
+                    }
+                }
+            ],
+
+            // MÓDULO 3: FIGURA COMPLETA
+            modulo3: [
+                {
+                    id: "proceso-capas",
+                    keywords: ["capas", "proceso", "4 capas", "workflow", "pasos"],
+                    question: "¿Cuál es el proceso por capas?",
+                    answer: {
+                        title: "Proceso de 4 Capas",
+                        content: `El <strong>proceso por capas</strong> es un método sistemático para figuras completas de 60-90 min, integrando todo lo aprendido.
+
+<div class="message-section"><strong>🎨 Las 4 capas secuenciales:</strong>
+
+<strong>Capa 1: GESTO (10-15 min)</strong>
+• Línea de acción
+• Formas básicas y balance
+• Proporciones generales
+
+<strong>Capa 2: ANATOMÍA (20-25 min)</strong>
+• 3 masas corporales
+• 6 grupos musculares
+• Estructura de manos y pies
+
+<strong>Capa 3: REFINAMIENTO (15-20 min)</strong>
+• Contornos precisos
+• Corrección de proporciones
+• Detalles anatómicos
+
+<strong>Capa 4: VOLUMEN (20-30 min)</strong>
+• 5 valores tonales
+• Sombras propias y proyectadas
+• Definición de volumen</div>
+
+<div class="message-section"><strong>🎯 Por qué funciona:</strong>
+• Construyes de general → específico
+• Cada capa depende de la anterior
+• Reduces errores estructurales tempranos
+• Mantienes el gesto hasta el final</div>
+
+⚠️ <strong>Error crítico:</strong> Empezar con detalles o sombreado SIN estructura sólida = figuras desproporcionadas irreparables.
+
+💡 <strong>Tip profesional:</strong> No borres las capas anteriores completamente. Las líneas estructurales ayudan a mantener coherencia.`,
+                        related: ["figura completa", "workflow", "metodología"]
+                    }
+                },
+                {
+                    id: "valores-tonales",
+                    keywords: ["valores", "tonales", "5 valores", "sombra", "luz", "sombreado"],
+                    question: "¿Cómo distribuir los valores tonales?",
+                    answer: {
+                        title: "5 Valores Tonales (Loomis)",
+                        content: `Los <strong>valores tonales</strong> definen volumen y profundidad. El curso requiere el sistema de <strong>5 valores de Loomis</strong>.
+
+<div class="message-section"><strong>🎨 Los 5 valores (claro → oscuro):</strong>
+1. <strong>Luz Directa (blanco):</strong> Luz golpea directamente
+2. <strong>Luz Reflejada:</strong> Zonas iluminadas indirectamente
+3. <strong>Medio Tono:</strong> Transición luz-sombra (neutral)
+4. <strong>Sombra Propia:</strong> Superficie SIN luz directa
+5. <strong>Sombra Proyectada (negro):</strong> Sombra en otra superficie</div>
+
+<div class="message-section"><strong>📍 Ubicación (luz lateral derecha):</strong>
+• <strong>Luz directa:</strong> Lado derecho (torso, hombro, muslo)
+• <strong>Luz reflejada:</strong> Luz rebotada del entorno
+• <strong>Medio tono:</strong> Centro del torso (transición)
+• <strong>Sombra propia:</strong> Lado izquierdo (opuesto a luz)
+• <strong>Sombra proyectada:</strong> En suelo o superficie</div>
+
+<div class="message-section"><strong>💡 Técnica (Lección 3.2):</strong>
+1. Identifica PRIMERO la fuente de luz
+2. Marca qué superficies reciben luz directa
+3. Aplica valores: claro → oscuro
+4. NO uses todos los valores en todo lado
+5. Mantén consistencia: 1 fuente = 1 sistema</div>
+
+<div class="message-section"><strong>⚠️ Errores:</strong>
+• Usar todos los valores uniformemente
+• Sombrear sin entender fuente de luz
+• Exceso de valores intermedios
+• Sombras inconsistentes</div>
+
+🎯 <strong>Meta:</strong> Usar mínimo 3 valores consistentemente. Si logras 5, excelente.`,
+                        related: ["volumen", "sombreado", "luz"]
+                    }
+                },
+                {
+                    id: "proyecto-final",
+                    keywords: ["proyecto", "final", "mercurio", "evaluación", "100 puntos"],
+                    question: "¿Qué requiere el proyecto final?",
+                    answer: {
+                        title: "Proyecto Final Integrador",
+                        content: `El <strong>proyecto final</strong> es una figura del Mercurio del David (1/4) que integra TODO. Necesitas ≥60/100 puntos.
+
+<div class="message-section"><strong>📊 Criterios (100 pts total):</strong>
+• <strong>Gesto y Línea de Acción (20):</strong> Energía y dirección
+• <strong>Anatomía Funcional (20):</strong> 3 masas + articulaciones + 6 grupos
+• <strong>Proporciones (20):</strong> Canon ~7.5 cabezas correcto
+• <strong>Volumen y Valores (20):</strong> Mínimo 3 valores consistentes
+• <strong>Detalles (10):</strong> Manos/pies estructurados
+• <strong>Composición (10):</strong> Uso del espacio, formato</div>
+
+<div class="message-section"><strong>✏️ Proceso (90-120 min):</strong>
+<strong>1. Observación (5 min):</strong> Analiza sin dibujar
+<strong>2. Capa 1 - Gesto (15 min):</strong> Línea + formas
+<strong>3. Capa 2 - Anatomía (25 min):</strong> 3 masas + 6 grupos
+<strong>4. Capa 3 - Refinamiento (20 min):</strong> Proporciones
+<strong>5. Capa 4 - Volumen (30 min):</strong> Valores
+<strong>6. Revisión (15 min):</strong> Ajustes</div>
+
+<div class="message-section"><strong>🎯 Estrategia para ≥60 pts:</strong>
+• Estructura ANTES que detalles (40 pts posibles)
+• Mínimo 3 valores bien aplicados (15-18 pts)
+• Manos/pies estructurados básicos (7-8 pts)
+• <strong>Total: 62-66 pts = APROBADO</strong></div>
+
+<div class="message-section"><strong>✅ Checklist pre-entrega:</strong>
+☐ ¿Línea de acción clara y dinámica?
+☐ ¿3 masas visibles y volumétricas?
+☐ ¿Proporciones ~7.5 cabezas?
+☐ ¿Mínimo 3 valores consistentes?
+☐ ¿Manos/pies con estructura?
+☐ ¿6 grupos musculares indicados?</div>`,
+                        related: ["proceso capas", "evaluación", "integración"]
+                    }
+                },
+                {
+                    id: "bloqueo-frustracion",
+                    keywords: ["bloqueado", "frustrado", "no puedo", "ansiedad", "miedo", "horrible"],
+                    question: "Estoy bloqueado/frustrado, ¿qué hago?",
+                    answer: {
+                        title: "Manejo de Bloqueos",
+                        content: `Sentir frustración es <strong>completamente normal</strong>. El 47% de tus compañeros reportó ansiedad similar al inicio.
+
+<div class="message-section"><strong>🌱 Perspectiva importante:</strong>
+• Los croquis NO buscan perfección
+• El objetivo es <strong>capturar la esencia</strong>, no obras maestras
+• Cada ejercicio es práctica, NO evaluación definitiva
+• El curso permite reintentos ilimitados</div>
+
+<div class="message-section"><strong>✅ Protocolo anti-bloqueo AHORA:</strong>
+1. <strong>RESPIRA:</strong> Descanso 5-10 min (camina, toma agua)
+2. <strong>REVISA objetivo:</strong> ¿Qué pide ESTA lección? (no todo)
+3. <strong>SIMPLIFICA:</strong> Enfócate en UN elemento
+4. <strong>INTENTA DE NUEVO:</strong> Hoja nueva, mente fresca
+5. <strong>AJUSTA expectativas:</strong> 80% del objetivo es EXCELENTE</div>
+
+📊 <strong>Dato motivacional:</strong> Estudiantes que completaron Módulo 1 reportaron <strong>reducción del 65% en ansiedad</strong>.
+
+<div class="message-section"><strong>🎯 Estrategia por módulo:</strong>
+• <strong>Módulo 1:</strong> Haz 5 croquis de 30 seg (súper rápidos)
+• <strong>Módulo 2:</strong> Dibuja SOLO las 3 masas (10 min, sin detalles)
+• <strong>Módulo 3:</strong> Revisa ejercicios anteriores (tu progreso real)</div>
+
+<div class="message-section"><strong>⚠️ Cuándo contactar al instructor:</strong>
+• Si frustración persiste después de 2-3 intentos
+• Si necesitas feedback personalizado
+• Si hay dudas conceptuales profundas</div>
+
+🌟 <strong>Verdad importante:</strong> Estás recuperando habilidades tras 4 semestres. El progreso NO es lineal.`,
+                        related: ["metacognición", "motivación", "proceso"]
+                    }
+                },
+                {
+                    id: "figura-sin-volumen",
+                    keywords: ["volumen", "plana", "plano", "sin profundidad", "bidimensional"],
+                    question: "Mi figura no tiene volumen, ¿qué hago?",
+                    answer: {
+                        title: "Crear Volumen en Figuras",
+                        content: `Las figuras planas ocurren cuando dibujas <strong>contornos sin pensar en masa 3D</strong>.
+
+<div class="message-section"><strong>🎯 Soluciones:</strong>
+
+<strong>1. Usa las 3 masas SIEMPRE</strong>
+• Cabeza, torso, pelvis como VOLÚMENES
+• Piensa en cajas, cilindros, esferas
+• Define el ángulo y perspectiva de cada masa
+
+<strong>2. Aplica valores tonales</strong>
+• Mínimo 3 valores (luz, medio, sombra)
+• Define de dónde viene la luz
+• Sombra propia crea sensación de volumen
+
+<strong>3. Marca las articulaciones</strong>
+• Hombros, codos, muñecas, caderas, rodillas
+• Son esferas que conectan cilindros
+• Dan sensación de estructura 3D</div>
+
+<div class="message-section"><strong>✏️ Ejercicio correctivo:</strong>
+1. Toma una figura que hiciste "plana"
+2. Dibújala de nuevo pensando SOLO en volúmenes
+3. Agrega 3 valores tonales
+4. Compara: nota la diferencia</div>
+
+💡 <strong>Tip clave:</strong> Antes de dibujar líneas, pregúntate: "¿Qué forma 3D es esto?"`,
+                        related: ["3 masas", "valores tonales", "estructura"]
+                    }
+                }
+            ],
+
+            // SISTEMA LMS
+            sistema: [
+                {
+                    id: "progreso-sistema",
+                    keywords: ["progreso", "avance", "seguimiento", "completado", "porcentaje"],
+                    question: "¿Cómo funciona el sistema de progreso?",
+                    answer: {
+                        title: "Sistema de Progreso",
+                        content: `El LMS rastrea automáticamente tu avance usando <strong>localStorage</strong> (guardado en tu navegador).
+
+<div class="message-section"><strong>📊 Qué se registra:</strong>
+• Lecciones visitadas/completadas
+• Evaluaciones formativas realizadas
+• Ejercicios entregados
+• Tiempo dedicado por módulo
+• Porcentaje de avance general</div>
+
+<div class="message-section"><strong>🎯 Cómo completar una lección:</strong>
+1. Lee todo el contenido teórico
+2. Completa la evaluación formativa (si tiene)
+3. Realiza los ejercicios prácticos
+4. Marca la lección como completada (botón verde)
+5. El sistema actualiza tu progreso automáticamente</div>
+
+<div class="message-section"><strong>💡 Ventajas:</strong>
+• <strong>Automático:</strong> No necesitas hacer nada manual
+• <strong>Visual:</strong> Barras de progreso en tiempo real
+• <strong>Persistente:</strong> Se guarda en tu navegador
+• <strong>Dashboard:</strong> Ve tu avance general y por módulo</div>
+
+⚠️ <strong>Importante:</strong> El progreso se guarda en TU navegador. Si cambias de dispositivo o borras caché, se reinicia.`,
+                        related: ["dashboard", "evaluaciones", "lecciones"]
+                    }
+                },
+                {
+                    id: "dashboard-personal",
+                    keywords: ["dashboard", "panel", "estadísticas", "mi progreso", "resumen"],
+                    question: "¿Dónde veo mi dashboard personal?",
+                    answer: {
+                        title: "Dashboard Personal",
+                        content: `Tu <strong>dashboard personal</strong> está en la página principal del LMS (index.html o home).
+
+<div class="message-section"><strong>📈 Información disponible:</strong>
+• <strong>Progreso general:</strong> % del curso completado
+• <strong>Progreso por módulo:</strong> Desglose M1, M2, M3
+• <strong>Lecciones completadas:</strong> X de 10 lecciones
+• <strong>Evaluaciones realizadas:</strong> Aprobadas/pendientes
+• <strong>Ejercicios entregados:</strong> Estado de tus dibujos
+• <strong>Tiempo estimado restante:</strong> Horas para completar</div>
+
+<div class="message-section"><strong>🎨 Visualizaciones:</strong>
+• Barras de progreso por módulo
+• Íconos de estado (✅ completado, ⏳ en progreso, ⭕ pendiente)
+• Gráfico circular de avance general
+• Timeline de actividades recientes</div>
+
+<div class="message-section"><strong>💡 Cómo acceder:</strong>
+• Desde cualquier página: click en "Inicio" o logo UAH
+• El dashboard se actualiza en tiempo real
+• Puedes volver cuando quieras para ver tu progreso</div>
+
+🎯 <strong>Tip:</strong> Revisa tu dashboard antes de cada sesión de estudio para planificar qué hacer.`,
+                        related: ["progreso", "lecciones", "evaluaciones"]
+                    }
+                },
+                {
+                    id: "volver-lecciones",
+                    keywords: ["volver", "regresar", "anterior", "repetir", "revisar"],
+                    question: "¿Puedo volver a lecciones anteriores?",
+                    answer: {
+                        title: "Navegación Flexible",
+                        content: `<strong>SÍ, puedes volver a cualquier lección</strong> cuando quieras. El LMS es completamente flexible.
+
+<div class="message-section"><strong>✅ Cómo navegar:</strong>
+
+<strong>Opción 1: Sidebar lateral</strong>
+• En cada módulo, el menú izquierdo muestra todas las lecciones
+• Click en cualquier lección para acceder
+• Las completadas tienen ícono ✅
+
+<strong>Opción 2: Breadcrumbs superiores</strong>
+• En la parte superior: Inicio > Módulo X > Lección Y
+• Click en cualquier nivel para regresar
+
+<strong>Opción 3: Dashboard</strong>
+• Desde el dashboard, click en el módulo
+• Luego selecciona la lección específica</div>
+
+<div class="message-section"><strong>🎯 Usos comunes:</strong>
+• Repasar conceptos antes de evaluaciones
+• Revisar ejemplos para ejercicios actuales
+• Refrescar memoria antes del proyecto final
+• Consultar referencias bibliográficas</div>
+
+💡 <strong>Sin restricciones:</strong> Puedes avanzar y retroceder libremente. No hay orden obligatorio (aunque se recomienda seguir la secuencia).`,
+                        related: ["navegación", "lecciones", "módulos"]
+                    }
+                },
+                {
+                    id: "subir-ejercicios",
+                    keywords: ["subir", "entregar", "ejercicios", "upload", "enviar", "cargar"],
+                    question: "¿Cómo subo mis ejercicios?",
+                    answer: {
+                        title: "Entrega de Ejercicios",
+                        content: `El LMS usa <strong>Google Forms embebidos</strong> para recibir tus ejercicios prácticos.
+
+<div class="message-section"><strong>📤 Proceso de entrega:</strong>
+
+<strong>Paso 1: Completa tu ejercicio</strong>
+• Dibuja según las especificaciones de la lección
+• Fotografía tu trabajo con buena luz
+• Asegúrate que la imagen sea clara
+
+<strong>Paso 2: Accede al formulario</strong>
+• En cada lección práctica hay un botón "Entregar Ejercicio"
+• Click para abrir el Google Form embebido
+
+<strong>Paso 3: Completa el formulario</strong>
+• Tu nombre y correo (autocompletado si estás logueado)
+• Módulo y lección correspondiente
+• Adjunta la imagen de tu dibujo
+• Comentarios opcionales (dudas, proceso, etc.)
+
+<strong>Paso 4: Envía</strong>
+• Click en "Enviar"
+• Recibirás confirmación automática
+• El ejercicio queda registrado para evaluación</div>
+
+<div class="message-section"><strong>📸 Tips para fotografiar:</strong>
+• Luz natural (cerca de ventana)
+• Fondo neutro (blanco o gris)
+• Dibujo centrado y completo
+• Sin sombras que distorsionen
+• Formato JPG o PNG (< 5MB)</div>
+
+⚠️ <strong>Importante:</strong> Guarda copia de tus ejercicios. Arma un portafolio digital.`,
+                        related: ["evaluación", "ejercicios", "google forms"]
+                    }
+                },
+                {
+                    id: "materiales-necesarios",
+                    keywords: ["materiales", "necesito", "lápiz", "papel", "herramientas"],
+                    question: "¿Qué materiales necesito?",
+                    answer: {
+                        title: "Materiales del Curso",
+                        content: `El curso requiere <strong>materiales básicos de dibujo</strong>. No necesitas nada costoso.
+
+<div class="message-section"><strong>✏️ Materiales esenciales:</strong>
+
+<strong>Para dibujar:</strong>
+• Lápices grafito: HB, 2B, 4B (mínimo)
+• Goma de borrar (blanca y amasable)
+• Sacapuntas de calidad
+• Papel de dibujo (90-120g) tamaño carta o A4
+
+<strong>Para medir:</strong>
+• Lápiz para método de medición
+• Regla (opcional, para verificar proporciones)
+
+<strong>Para documentar:</strong>
+• Cámara de celular (para fotografiar ejercicios)
+• Buena iluminación</div>
+
+<div class="message-section"><strong>📦 Cantidad recomendada:</strong>
+• 50-100 hojas de papel
+• Set de 3-5 lápices de diferentes durezas
+• El curso requiere ~23 dibujos totales</div>
+
+<div class="message-section"><strong>💰 Presupuesto estimado:</strong>
+• Papel: $3.000-5.000 CLP
+• Lápices: $2.000-4.000 CLP
+• Gomas: $1.000-2.000 CLP
+• <strong>Total: ~$6.000-11.000 CLP</strong></div>
+
+<div class="message-section"><strong>⚠️ NO necesitas:</strong>
+• Tableta gráfica (es analógico)
+• Papel especial costoso
+• Set de 50 lápices profesionales
+• Carboncillo u otros medios</div>
+
+💡 <strong>Tip:</strong> Usa papel económico para croquis rápidos (2-5 min) y reserva el mejor para ejercicios largos.`,
+                        related: ["ejercicios", "prácticas", "requisitos"]
+                    }
+                },
+                {
+                    id: "referencias-fotograficas",
+                    keywords: ["referencias", "fotos", "imágenes", "fotografías", "visual"],
+                    question: "¿Cómo uso las referencias fotográficas?",
+                    answer: {
+                        title: "Uso de Referencias",
+                        content: `El curso incluye <strong>26 referencias fotográficas</strong> específicas para cada ejercicio.
+
+<div class="message-section"><strong>📸 Dónde están:</strong>
+• Embebidas en cada lección
+• Carpeta "referencias/" en el repositorio
+• Organizadas por módulo y lección
+• Nombres descriptivos (ej: ref1_figura_pie.jpg)</div>
+
+<div class="message-section"><strong>🎯 Cómo usarlas:</strong>
+
+<strong>Opción 1: En pantalla</strong>
+• Abre la referencia en tu dispositivo
+• Observa antes de dibujar (NO calques mentalmente)
+• Usa para medir proporciones con el lápiz
+• Vuelve a mirar frecuentemente
+
+<strong>Opción 2: Impresa (recomendado)</strong>
+• Imprime las referencias que usarás
+• Coloca junto a tu papel
+• Facilita medición con el método del lápiz
+• Evita cansancio visual de pantalla</div>
+
+<div class="message-section"><strong>💡 Mejores prácticas:</strong>
+• <strong>NO copies pixel por pixel:</strong> Captura la esencia
+• <strong>Observa 30-60 seg ANTES de dibujar</strong>
+• Identifica: línea de acción, proporciones, balance
+• Usa la referencia como guía, no como imagen a calcar</div>
+
+<div class="message-section"><strong>⚠️ Error común:</strong>
+Copiar la foto exactamente = pierdes el propósito pedagógico. El objetivo es entrenar tu observación, no reproducir.`,
+                        related: ["ejercicios", "observación", "práctica"]
+                    }
+                },
+                {
+                    id: "videos-explicativos",
+                    keywords: ["videos", "vídeos", "explicativos", "tutoriales", "multimedia"],
+                    question: "¿Dónde están los videos explicativos?",
+                    answer: {
+                        title: "Videos del Curso",
+                        content: `El curso incluye <strong>4 videos explicativos</strong> (10 min totales) para demostrar procesos.
+
+<div class="message-section"><strong>🎬 Videos disponibles:</strong>
+
+<strong>Video 1: Croquis rápidos (2.5 min)</strong>
+• Demostración en tiempo real de croquis de 2 min
+• Explicación de línea de acción
+• Ubicación: Lección 1.1
+
+<strong>Video 2: Medición con lápiz (2 min)</strong>
+• Paso a paso del método del lápiz
+• Errores comunes y cómo evitarlos
+• Ubicación: Lección 1.2
+
+<strong>Video 3: Estructura de manos (3 min)</strong>
+• Construcción 3D de la mano
+• Falanges y articulaciones
+• Ubicación: Lección 2.3
+
+<strong>Video 4: Aplicación de valores (2.5 min)</strong>
+• Demostración de los 5 valores tonales
+• Identificación de fuente de luz
+• Ubicación: Lección 3.2</div>
+
+<div class="message-section"><strong>📍 Cómo acceder:</strong>
+• Embebidos directamente en las lecciones
+• Player de video en la sección multimedia
+• Puedes pausar/retroceder cuando quieras
+• Subtítulos disponibles</div>
+
+💡 <strong>Tip:</strong> Ve los videos ANTES de hacer el ejercicio, luego vuelve a verlos DURANTE si tienes dudas.`,
+                        related: ["lecciones", "multimedia", "tutoriales"]
+                    }
+                },
+                {
+                    id: "descargar-rubricas",
+                    keywords: ["rúbricas", "rubricas", "criterios", "evaluación", "PDF", "descargar"],
+                    question: "¿Puedo descargar las rúbricas?",
+                    answer: {
+                        title: "Rúbricas de Evaluación",
+                        content: `<strong>SÍ, todas las rúbricas están disponibles en PDF</strong> para descargar y consultar offline.
+
+<div class="message-section"><strong>📄 Rúbricas disponibles:</strong>
+
+<strong>Por módulo:</strong>
+• Rúbrica Módulo 1 (Observación y Gesto)
+• Rúbrica Módulo 2 (Anatomía Funcional)
+• Rúbrica Módulo 3 (Figura Completa)
+
+<strong>Proyecto final:</strong>
+• Rúbrica detallada del proyecto integrador
+• 100 puntos desglosados por criterio
+• Descriptores de logro por nivel</div>
+
+<div class="message-section"><strong>📥 Cómo descargar:</strong>
+1. Ve a la lección correspondiente
+2. Busca la sección "Evaluación"
+3. Click en botón "Descargar Rúbrica (PDF)"
+4. Se abre en nueva pestaña
+5. Guarda en tu dispositivo (Ctrl/Cmd + S)</div>
+
+<div class="message-section"><strong>💡 Uso recomendado:</strong>
+• Descarga ANTES de hacer ejercicios
+• Imprime y ten junto al papel mientras dibujas
+• Usa como checklist durante el trabajo
+• Autoevalúate antes de entregar
+• Revisa criterios específicos si pierdes puntos</div>
+
+🎯 <strong>Ubicaciones:</strong>
+• En cada módulo: sección "Criterios de Evaluación"
+• Dashboard: botón "Todas las Rúbricas"
+• Carpeta "docs/" en el repositorio GitHub`,
+                        related: ["evaluación", "criterios", "proyecto final"]
+                    }
+                }
+            ],
+
+            // PREGUNTAS GENERALES
+            general: [
+                {
+                    id: "tiempo-leccion",
+                    keywords: ["tiempo", "dedicar", "duración", "horas", "cuánto"],
+                    question: "¿Cuánto tiempo debo dedicar por lección?",
+                    answer: {
+                        title: "Tiempo por Lección",
+                        content: `El curso está diseñado para <strong>12 días intensivos</strong>. Cada lección tiene tiempos estimados.
+
+<div class="message-section"><strong>⏱️ Distribución general:</strong>
+
+<strong>Módulo 1 (3-4 días):</strong>
+• Lección 1.1: 2-3 horas
+• Lección 1.2: 2-3 horas
+• Lección 1.3: 2-3 horas
+• Evaluación M1: 30 min
+
+<strong>Módulo 2 (4-5 días):</strong>
+• Lección 2.1: 2-3 horas
+• Lección 2.2: 3-4 horas
+• Lección 2.3: 3-4 horas
+• Lección 2.4: 2-3 horas
+• Evaluación M2: 30 min
+
+<strong>Módulo 3 (4-5 días):</strong>
+• Lección 3.1: 3-4 horas
+• Lección 3.2: 3-4 horas
+• Lección 3.3 (Proyecto): 6-8 horas
+• Evaluación M3: 30 min</div>
+
+<div class="message-section"><strong>📊 Desglose tiempo/lección:</strong>
+• <strong>Teoría:</strong> 20% (lectura, videos)
+• <strong>Práctica:</strong> 80% (dibujar ejercicios)
+• Cada lección = múltiples ejercicios</div>
+
+💡 <strong>Recomendación:</strong> 2-4 horas diarias. Distribuye según tu disponibilidad real.`,
+                        related: ["planificación", "organización", "curso"]
+                    }
+                },
+                {
+                    id: "orden-ejercicios",
+                    keywords: ["orden", "secuencia", "primero", "qué hacer", "empezar"],
+                    question: "¿En qué orden hago los ejercicios?",
+                    answer: {
+                        title: "Secuencia de Ejercicios",
+                        content: `Sigue el <strong>orden secuencial del curso</strong>. Cada lección prepara para la siguiente.
+
+<div class="message-section"><strong>📚 Secuencia recomendada:</strong>
+
+<strong>1. Evaluación Diagnóstica (PRIMERO)</strong>
+• Antes de empezar cualquier módulo
+• Identifica tus fortalezas/debilidades
+• Personaliza tu ruta de aprendizaje
+
+<strong>2. Módulo 1 → 2 → 3 (en orden)</strong>
+• NO saltes módulos
+• Cada uno construye sobre el anterior
+• M1 = fundamentos, M2 = estructura, M3 = integración
+
+<strong>3. Dentro de cada módulo: orden numérico</strong>
+• Lección 1.1 → 1.2 → 1.3
+• Completa teoría ANTES de práctica
+• Haz evaluación formativa al terminar lecciones</div>
+
+<div class="message-section"><strong>⚠️ NO recomendado:</strong>
+• Saltar a Módulo 3 directamente
+• Hacer solo teoría sin práctica
+• Omitir evaluaciones formativas
+• Hacer ejercicios fuera de secuencia</div>
+
+<div class="message-section"><strong>💡 Excepción válida:</strong>
+Puedes REVISAR lecciones anteriores cuando necesites repasar conceptos. Pero para APRENDER nuevo contenido, sigue el orden.</div>
+
+🎯 <strong>Razón pedagógica:</strong> El curso usa <strong>práctica intercalada</strong> y <strong>espaciamiento</strong>. Romper el orden reduce efectividad.`,
+                        related: ["planificación", "metodología", "curso"]
+                    }
+                },
+                {
+                    id: "referencias-digitales",
+                    keywords: ["referencias digitales", "online", "internet", "pinterest", "google"],
+                    question: "¿Puedo usar referencias digitales?",
+                    answer: {
+                        title: "Referencias Digitales",
+                        content: `<strong>SÍ, pero con condiciones</strong>. El curso provee referencias específicas, pero puedes usar adicionales.
+
+<div class="message-section"><strong>✅ Permitido:</strong>
+• Usar las 26 referencias oficiales del curso
+• Complementar con referencias adicionales similares
+• Buscar ángulos/poses que te interesen
+• Usar bancos de imágenes (Pexels, Unsplash)
+• Line of Action (quickposes.com)</div>
+
+<div class="message-section"><strong>⚠️ NO permitido para evaluaciones:</strong>
+• Usar referencias completamente diferentes
+• Poses que no permitan aplicar los conceptos
+• Imágenes de baja calidad/distorsionadas
+• Dibujos de otros artistas (debe ser foto real)</div>
+
+<div class="message-section"><strong>💡 Mejores prácticas:</strong>
+• Prioriza las referencias oficiales para ejercicios evaluados
+• Usa referencias adicionales para PRÁCTICA EXTRA
+• Asegúrate que la pose permita practicar el concepto
+• Evita referencias con ropa compleja (dificulta ver anatomía)</div>
+
+<div class="message-section"><strong>🎯 Para proyecto final:</strong>
+• DEBES usar la referencia oficial (Mercurio del David)
+• Es parte de los requisitos de evaluación
+• No puedes sustituirla por otra escultura</div>
+
+📚 <strong>Recursos recomendados:</strong>
+• quickposes.com (poses cronometradas)
+• line-of-action.com
+• anatomy360.info`,
+                        related: ["ejercicios", "práctica", "recursos"]
+                    }
+                },
+                {
+                    id: "papel-especifico",
+                    keywords: ["papel", "tipo", "específico", "cuál", "gramaje"],
+                    question: "¿Necesito papel específico?",
+                    answer: {
+                        title: "Tipo de Papel",
+                        content: `NO necesitas papel costoso. <strong>Papel básico de dibujo</strong> es suficiente.
+
+<div class="message-section"><strong>📄 Especificaciones recomendadas:</strong>
+
+<strong>Para croquis rápidos (2-5 min):</strong>
+• Papel bond/fotocopia (75-80g)
+• Económico, permite practicar sin miedo
+• Tamaño carta (21.5 x 28 cm) o A4
+
+<strong>Para ejercicios largos (15+ min):</strong>
+• Papel de dibujo (90-120g)
+• Textura suave (no muy rugosa)
+• Blanco o marfil
+• Tamaño carta o A4</div>
+
+<div class="message-section"><strong>💰 Opciones por presupuesto:</strong>
+
+<strong>Económico:</strong>
+• Block de 50 hojas papel bond ($2.000)
+• Block de 20 hojas dibujo 90g ($3.000)
+
+<strong>Medio:</strong>
+• Block Canson 90g ($5.000-7.000)
+• Buen equilibrio calidad/precio
+
+<strong>Premium (opcional):</strong>
+• Strathmore 400 series ($10.000+)
+• Solo si ya tienes experiencia y quieres invertir</div>
+
+<div class="message-section"><strong>⚠️ NO necesitas:</strong>
+• Papel acuarela (muy caro y texturado)
+• Papel especial para carboncillo
+• Papel de marcas premium importadas
+• Gramaje > 120g</div>
+
+💡 <strong>Tip:</strong> Compra papel económico para practicar y papel medio para ejercicios que entregarás.`,
+                        related: ["materiales", "ejercicios", "práctica"]
+                    }
+                },
+                {
+                    id: "evaluaciones-formativas",
+                    keywords: ["evaluaciones formativas", "autoevaluación", "quiz", "test"],
+                    question: "¿Cómo funcionan las evaluaciones formativas?",
+                    answer: {
+                        title: "Evaluaciones Formativas",
+                        content: `Las <strong>evaluaciones formativas</strong> son quizzes de 3 preguntas al final de cada módulo. NO califican, solo verifican comprensión.
+
+<div class="message-section"><strong>📝 Características:</strong>
+• <strong>10 evaluaciones totales</strong> (aprox. 1 por lección)
+• <strong>3 preguntas cada una</strong>
+• <strong>Múltiple opción</strong> (selecciona la correcta)
+• <strong>Feedback inmediato</strong> (sabes si acertaste)
+• <strong>Reintentos ilimitados</strong></div>
+
+<div class="message-section"><strong>🎯 Propósito:</strong>
+• Verificar que entendiste conceptos clave
+• Identificar áreas que necesitas repasar
+• Reforzar aprendizaje mediante retrieval practice
+• NO afectan tu calificación final</div>
+
+<div class="message-section"><strong>✅ Cómo funcionan:</strong>
+1. Completas la lección (teoría + práctica)
+2. Click en "Evaluación Formativa"
+3. Respondes las 3 preguntas
+4. Recibes feedback inmediato
+5. Si fallas, puedes volver a intentar
+6. Se guarda tu mejor intento</div>
+
+<div class="message-section"><strong>💡 Tip de aprendizaje:</strong>
+• Si fallas una pregunta, vuelve a la lección
+• Lee específicamente esa sección
+• Intenta de nuevo
+• Este proceso refuerza la memoria</div>
+
+🎓 <strong>Meta:</strong> 100% correcto en cada evaluación formativa antes de avanzar.`,
+                        related: ["evaluación", "aprendizaje", "lecciones"]
+                    }
+                },
+                {
+                    id: "intentos-evaluacion",
+                    keywords: ["intentos", "reintentar", "volver", "repetir evaluación"],
+                    question: "¿Cuántas veces puedo intentar una evaluación?",
+                    answer: {
+                        title: "Reintentos de Evaluaciones",
+                        content: `Tienes <strong>REINTENTOS ILIMITADOS</strong> en las evaluaciones formativas. El objetivo es aprender, no castigar errores.
+
+<div class="message-section"><strong>📊 Sistema de reintentos:</strong>
+
+<strong>Evaluaciones formativas (10 quizzes):</strong>
+• <strong>Intentos:</strong> ILIMITADOS
+• <strong>Propósito:</strong> Verificar comprensión
+• <strong>Penalización por error:</strong> NINGUNA
+• Se guarda tu mejor intento
+
+<strong>Proyecto final:</strong>
+• <strong>Intentos:</strong> 1 entrega oficial
+• <strong>Retroalimentación:</strong> Del instructor
+• Si desapruebas (< 60 pts), puedes mejorar y re-entregar
+• Tiempo adicional según políticas del curso</div>
+
+<div class="message-section"><strong>💡 Filosofía pedagógica:</strong>
+El error es parte del aprendizaje. Los reintentos ilimitados te permiten:
+• Aprender de tus errores sin presión
+• Revisar contenido que no quedó claro
+• Alcanzar dominio real, no solo "pasar"</div>
+
+<div class="message-section"><strong>✅ Estrategia recomendada:</strong>
+1. Intenta la evaluación después de estudiar
+2. Si fallas, anota qué conceptos no entendiste
+3. Vuelve a esa sección de la lección
+4. Relee/revisa con atención
+5. Intenta de nuevo
+6. Repite hasta dominar</div>
+
+🎯 <strong>Meta:</strong> 100% en todas las evaluaciones formativas antes de avanzar al siguiente módulo.`,
+                        related: ["evaluaciones", "aprendizaje", "proceso"]
+                    }
+                },
+                {
+                    id: "aprobar-modulo",
+                    keywords: ["aprobar", "pasar", "completar módulo", "avanzar"],
+                    question: "¿Cuándo sé si aprobé el módulo?",
+                    answer: {
+                        title: "Aprobación de Módulos",
+                        content: `Cada módulo se considera <strong>aprobado</strong> cuando completas TODOS sus componentes.
+
+<div class="message-section"><strong>✅ Requisitos para aprobar un módulo:</strong>
+
+<strong>1. Completar todas las lecciones:</strong>
+• Leer todo el contenido teórico
+• Ver los videos explicativos
+• Marcar como "Completada" cada lección
+
+<strong>2. Realizar todos los ejercicios prácticos:</strong>
+• Hacer los dibujos requeridos
+• Fotografiar y subir cada ejercicio
+• Entregar vía Google Forms
+
+<strong>3. Aprobar la evaluación formativa:</strong>
+• Responder correctamente las 3 preguntas
+• 100% de aciertos (reintentos ilimitados)
+
+<strong>4. Sistema actualiza automáticamente:</strong>
+• Cuando cumples los 3 anteriores
+• El módulo se marca como ✅ COMPLETADO
+• Tu dashboard refleja el avance</div>
+
+<div class="message-section"><strong>📊 Indicadores visuales:</strong>
+• <strong>Barra de progreso:</strong> 100% en ese módulo
+• <strong>Badge verde:</strong> Módulo completado
+• <strong>Icono de candado:</strong> Se desbloquea siguiente módulo (si lo configuraste así)
+• <strong>Dashboard:</strong> Actualización en tiempo real</div>
+
+<div class="message-section"><strong>⚠️ Importante:</strong>
+• Aprobar módulos NO es lo mismo que la nota final
+• La nota final depende del PROYECTO FINAL (Lección 3.3)
+• Los módulos 1 y 2 son formativos (práctica)
+• Módulo 3 incluye evaluación sumativa (calificación)</div>
+
+🎯 <strong>Nota final del curso:</strong> Basada principalmente en el proyecto final (100 puntos). Necesitas ≥60 pts para aprobar el curso completo.`,
+                        related: ["evaluación", "progreso", "proyecto final"]
+                    }
+                },
+                {
+                    id: "porcentaje-aprobar",
+                    keywords: ["porcentaje", "nota", "calificación", "60", "aprobar curso"],
+                    question: "¿Qué porcentaje necesito para aprobar?",
+                    answer: {
+                        title: "Requisitos de Aprobación",
+                        content: `Necesitas <strong>≥60 puntos de 100</strong> en el proyecto final para aprobar el curso.
+
+<div class="message-section"><strong>📊 Sistema de calificación:</strong>
+
+<strong>Evaluaciones formativas (M1 y M2):</strong>
+• NO califican numéricamente
+• Son formativas (solo verifican comprensión)
+• Pero DEBES aprobarlas (100% correcto) para avanzar
+
+<strong>Proyecto Final (M3, Lección 3.3):</strong>
+• <strong>Calificación: 100 puntos totales</strong>
+• <strong>Aprobación: ≥60 puntos</strong>
+• Desglose:
+  - Gesto y Línea de Acción: 20 pts
+  - Anatomía Funcional: 20 pts
+  - Proporciones: 20 pts
+  - Volumen y Valores: 20 pts
+  - Detalles: 10 pts
+  - Composición: 10 pts</div>
+
+<div class="message-section"><strong>🎯 Escala de calificación:</strong>
+• <strong>90-100 pts:</strong> Excelente (dominio avanzado)
+• <strong>75-89 pts:</strong> Bueno (logro sólido)
+• <strong>60-74 pts:</strong> Suficiente (aprobado)
+• <strong>< 60 pts:</strong> Insuficiente (reprobado)</div>
+
+<div class="message-section"><strong>💡 Estrategia para ≥60 pts:</strong>
+• Enfócate en estructura (40 pts: gesto + anatomía + proporciones)
+• Aplica mínimo 3 valores consistentes (15-18 pts en volumen)
+• Manos/pies estructurados básicos (7-8 pts)
+• <strong>Total estimado: 62-66 pts = APROBADO</strong></div>
+
+<div class="message-section"><strong>🔄 Si desapruebas:</strong>
+• Recibes retroalimentación específica del instructor
+• Puedes mejorar el dibujo según feedback
+• Re-entrega con tiempo adicional
+• Se evalúa la nueva versión</div>`,
+                        related: ["proyecto final", "evaluación", "criterios"]
+                    }
+                },
+                {
+                    id: "formato-proyecto",
+                    keywords: ["formato", "tamaño", "proyecto final", "digital", "físico"],
+                    question: "¿Qué formato debe tener el proyecto final?",
+                    answer: {
+                        title: "Formato del Proyecto Final",
+                        content: `El proyecto final debe ser <strong>dibujo analógico en papel</strong>, no digital.
+
+<div class="message-section"><strong>📏 Especificaciones técnicas:</strong>
+
+<strong>Soporte:</strong>
+• Papel de dibujo 90-120g
+• Tamaño: mínimo Carta (21.5x28 cm), máximo A3
+• Blanco o marfil
+• NO papel cuadriculado
+
+<strong>Técnica:</strong>
+• Lápiz grafito (HB a 6B según necesites)
+• Dibujo analógico (NO digital, NO tableta)
+• Permitido: goma, difumino, lápices de diferentes durezas
+
+<strong>Composición:</strong>
+• Figura del Mercurio del David (vista 1/4)
+• Encuadre: figura completa visible
+• Márgenes adecuados
+• Horizontal u vertical según prefieras</div>
+
+<div class="message-section"><strong>📸 Para entrega:</strong>
+
+<strong>Fotografía del dibujo:</strong>
+• Alta resolución (mínimo 1920x1080px)
+• Luz natural uniforme (sin sombras)
+• Fondo neutro (blanco o gris)
+• Dibujo centrado y completamente visible
+• Formato: JPG o PNG
+• Peso: < 5MB
+
+<strong>Método de entrega:</strong>
+• Google Form embebido en Lección 3.3
+• Adjunta la fotografía
+• Completa datos solicitados
+• Envía antes de la fecha límite</div>
+
+<div class="message-section"><strong>⚠️ NO aceptado:</strong>
+• Dibujos digitales (Procreate, Photoshop, etc.)
+• Fotografías de baja calidad
+• Capturas de pantalla
+• Archivos corruptos o ilegibles
+• Formatos .PSD, .AI, etc.</div>
+
+💡 <strong>Tip:</strong> Conserva el original físico. Pide retroalimentación presencial si es posible.`,
+                        related: ["proyecto final", "entrega", "requisitos"]
+                    }
+                },
+                {
+                    id: "elegir-otra-escultura",
+                    keywords: ["otra escultura", "cambiar", "diferente", "elegir", "mercurio"],
+                    question: "¿Puedo elegir otra escultura?",
+                    answer: {
+                        title: "Escultura del Proyecto",
+                        content: `<strong>NO, debes usar la escultura especificada:</strong> el Mercurio del David de Miguel Ángel (vista 1/4).
+
+<div class="message-section"><strong>🎯 Razón pedagógica:</strong>
+
+<strong>Por qué esta escultura específica:</strong>
+• <strong>Contrapposto claro:</strong> Peso en una pierna, balance perfecto
+• <strong>Anatomía visible:</strong> Sin ropa que oculte estructura
+• <strong>Proporciones ideales:</strong> Canon clásico ~7.5 cabezas
+• <strong>Referencias uniformes:</strong> Todos usan la misma para comparación
+• <strong>Evaluación justa:</strong> Misma complejidad para todos</div>
+
+<div class="message-section"><strong>⚠️ Si cambias la escultura:</strong>
+• El instructor NO podrá evaluar objetivamente
+• Los criterios de la rúbrica no aplicarán
+• Podrías desaprobar por no seguir instrucciones
+• Pierdes la oportunidad de comparar con compañeros</div>
+
+<div class="message-section"><strong>💡 Alternativa válida:</strong>
+Si terminas el proyecto final antes de tiempo y quieres practicar MÁS:
+• Completa el Mercurio primero (obligatorio)
+• Luego puedes hacer ejercicios adicionales con otras esculturas
+• Estos son EXTRA y no se evalúan, solo para práctica</div>
+
+🎯 <strong>Referencia oficial:</strong> La imagen del Mercurio está en la carpeta "referencias/proyecto_final/" del repositorio.`,
+                        related: ["proyecto final", "requisitos", "evaluación"]
+                    }
+                },
+                {
+                    id: "cuando-entregar",
+                    keywords: ["cuándo", "cuando", "fecha", "entregar", "deadline", "límite"],
+                    question: "¿Cuándo debo entregar el proyecto?",
+                    answer: {
+                        title: "Fechas de Entrega",
+                        content: `El curso es <strong>autoinstruccional de 12 días</strong>. La fecha específica depende de cuándo empezaste.
+
+<div class="message-section"><strong>📅 Timeline general:</strong>
+
+<strong>Si empezaste el [Fecha de inicio]:</strong>
+• <strong>Día 1-4:</strong> Módulo 1 (Observación y Gesto)
+• <strong>Día 5-8:</strong> Módulo 2 (Anatomía Funcional)
+• <strong>Día 9-11:</strong> Módulo 3 (Proceso y Valores)
+• <strong>Día 12:</strong> Proyecto Final + Entrega
+
+<strong>Fecha límite oficial:</strong>
+• <strong>[Fecha de inicio + 12 días]</strong>
+• Hora: 23:59 del día 12
+• Zona horaria: Chile (CLT/CLST)</div>
+
+<div class="message-section"><strong>⏰ Gestión del tiempo:</strong>
+• <strong>Proyecto final:</strong> 6-8 horas de trabajo efectivo
+• <strong>Recomendación:</strong> Empieza en día 10 u 11
+• No dejes todo para el último día
+• Necesitas tiempo para correcciones</div>
+
+<div class="message-section"><strong>🚨 Entregas tardías:</strong>
+• Consulta políticas con el instructor
+• Generalmente: penalización o no aceptación
+• Si tienes problemas graves, contacta ANTES del deadline
+• Comunicación temprana es clave</div>
+
+💡 <strong>Tip:</strong> Marca en tu calendario la fecha límite y planifica trabajar el proyecto 2 días antes como buffer.`,
+                        related: ["proyecto final", "planificación", "organización"]
+                    }
+                },
+                {
+                    id: "como-califican",
+                    keywords: ["cómo", "como", "califican", "evalúan", "corrección", "revisar"],
+                    question: "¿Cómo me califican el proyecto?",
+                    answer: {
+                        title: "Proceso de Calificación",
+                        content: `El instructor evalúa tu proyecto usando la <strong>rúbrica de 100 puntos</strong> con criterios específicos.
+
+<div class="message-section"><strong>📊 Proceso de evaluación:</strong>
+
+<strong>1. Entrega (Estudiante):</strong>
+• Subes fotografía del dibujo vía Google Form
+• Sistema registra fecha/hora automáticamente
+• Recibes confirmación de entrega
+
+<strong>2. Revisión (Instructor):</strong>
+• Descarga todas las entregas desde Google Sheets
+• Revisa cada proyecto individualmente
+• Aplica la rúbrica criterio por criterio
+• Asigna puntaje por cada sección
+
+<strong>3. Retroalimentación:</strong>
+• Calificación numérica (X/100 pts)
+• Comentarios específicos por criterio
+• Fortalezas identificadas
+• Áreas de mejora señaladas
+• Sugerencias concretas</div>
+
+<div class="message-section"><strong>🎯 Criterios evaluados:</strong>
+
+Cada criterio se evalúa en escala:
+• <strong>Excelente (18-20 pts):</strong> Dominio completo
+• <strong>Bueno (15-17 pts):</strong> Logro sólido
+• <strong>Suficiente (12-14 pts):</strong> Logro básico
+• <strong>Insuficiente (0-11 pts):</strong> No logrado
+
+<strong>6 criterios × ~17 pts promedio = 100 pts</strong></div>
+
+<div class="message-section"><strong>⏱️ Tiempo de corrección:</strong>
+• Generalmente: 3-5 días hábiles
+• Recibes retroalimentación vía email
+• También se actualiza en el LMS
+• Puedes consultar dudas sobre la calificación</div>
+
+<div class="message-section"><strong>🔄 Si desapruebas (< 60 pts):</strong>
+• Recibes retroalimentación detallada
+• Puedes solicitar reunión con instructor
+• Opción de mejorar y re-entregar
+• Nueva evaluación sobre el trabajo mejorado</div>
+
+📚 <strong>Descarga la rúbrica</strong> desde la Lección 3.3 para saber exactamente qué se evalúa.`,
+                        related: ["proyecto final", "evaluación", "rúbrica"]
+                    }
+                },
+                {
+                    id: "libros-loomis",
+                    keywords: ["libros", "loomis", "conseguir", "comprar", "dónde"],
+                    question: "¿Dónde consigo los libros de Loomis?",
+                    answer: {
+                        title: "Referencias Bibliográficas",
+                        content: `Los libros de Loomis y otras referencias están disponibles en <strong>versión digital y física</strong>.
+
+<div class="message-section"><strong>📚 Libros principales del curso:</strong>
+
+<strong>Andrew Loomis:</strong>
+1. <strong>"Figure Drawing For All It's Worth" (1943)</strong>
+   • Disponible: Amazon, Book Depository
+   • PDF gratuito: archive.org
+   • Precio físico: $15.000-25.000 CLP
+
+2. <strong>"Drawing the Head and Hands" (1956)</strong>
+   • Mismo disponibilidad
+   • Precio similar
+
+<strong>Otros autores:</strong>
+• Nicolaïdes - "The Natural Way to Draw"
+• Bridgman - "Constructive Anatomy"
+• Hogarth - "Dynamic Anatomy"
+• Goldfinger - "Human Anatomy for Artists"</div>
+
+<div class="message-section"><strong>💻 Opciones digitales:</strong>
+
+<strong>Gratuitas:</strong>
+• Archive.org (muchos están en dominio público)
+• Librerías universitarias digitales
+• Repositorios académicos
+
+<strong>De pago:</strong>
+• Amazon Kindle
+• Google Books
+• Apple Books
+• Precio: $5-15 USD cada uno</div>
+
+<div class="message-section"><strong>📖 Físicos en Chile:</strong>
+• Librería Nacional (Alameda)
+• Antártica (mall/online)
+• Qué Leo (online)
+• Buscalibre.cl
+• Amazon con envío internacional</div>
+
+<div class="message-section"><strong>⚠️ Importante:</strong>
+• NO necesitas comprar todos los libros
+• El curso provee los conceptos clave
+• Los libros son para <strong>profundizar</strong> (opcional)
+• Si compras uno solo, que sea Loomis "Figure Drawing"</div>
+
+💡 <strong>Alternativa:</strong> La biblioteca de tu universidad puede tener algunos en préstamo.`,
+                        related: ["recursos", "bibliografía", "materiales"]
+                    }
+                },
+                {
+                    id: "libro-recomendado",
+                    keywords: ["libro", "recomiendas", "mejor", "empezar", "principiante"],
+                    question: "¿Qué libro me recomiendas para empezar?",
+                    answer: {
+                        title: "Libro Recomendado",
+                        content: `Si solo puedes conseguir UN libro, que sea <strong>"Figure Drawing For All It's Worth" de Andrew Loomis (1943)</strong>.
+
+<div class="message-section"><strong>🌟 Por qué Loomis:</strong>
+
+• <strong>Completo:</strong> Cubre desde fundamentos hasta figura completa
+• <strong>Didáctico:</strong> Explicaciones paso a paso muy claras
+• <strong>Visual:</strong> Diagramas y ejemplos en cada página
+• <strong>Progresivo:</strong> Estructura similar a este curso
+• <strong>Atemporal:</strong> Técnicas válidas desde hace 80 años
+• <strong>Accesible:</strong> Lenguaje claro, no excesivamente técnico</div>
+
+<div class="message-section"><strong>📖 Contenido del libro:</strong>
+
+<strong>Parte 1: Fundamentos</strong>
+• Línea de acción y gesto
+• Método del lápiz para proporciones
+• Balance y contrapposto
+
+<strong>Parte 2: Anatomía</strong>
+• 3 masas corporales
+• Grupos musculares principales
+• Manos y pies simplificados
+
+<strong>Parte 3: Luz y Forma</strong>
+• Sistema de 5 valores tonales
+• Aplicación de sombras
+• Creación de volumen
+
+<strong>Parte 4: Figura en Acción</strong>
+• Escorzo y perspectiva
+• Figuras dinámicas
+• Composición</div>
+
+<div class="message-section"><strong>🎯 Alineación con el curso:</strong>
+El curso UAH está <strong>basado directamente en Loomis</strong>:
+• Módulo 1 = Parte 1 de Loomis
+• Módulo 2 = Parte 2 de Loomis
+• Módulo 3 = Parte 3 de Loomis
+• Proyecto final = Aplicación integral</div>
+
+<div class="message-section"><strong>💰 Cómo conseguirlo:</strong>
+• <strong>Gratis:</strong> archive.org (PDF dominio público)
+• <strong>Físico:</strong> Amazon ~$20.000 CLP
+• <strong>Kindle:</strong> ~$10 USD</div>
+
+📚 <strong>Segundo recomendado:</strong> Si quieres un segundo libro, "The Natural Way to Draw" de Nicolaïdes complementa perfectamente.`,
+                        related: ["recursos", "bibliografía", "aprendizaje"]
+                    }
+                },
+                {
+                    id: "recursos-gratuitos",
+                    keywords: ["gratis", "gratuitos", "free", "sin costo", "económico"],
+                    question: "¿Hay recursos gratuitos disponibles?",
+                    answer: {
+                        title: "Recursos Gratuitos",
+                        content: `<strong>SÍ, hay muchos recursos gratuitos</strong> excelentes para complementar el curso.
+
+<div class="message-section"><strong>📚 Libros gratuitos (dominio público):</strong>
+
+• <strong>Archive.org:</strong>
+  - Loomis - Figure Drawing For All It's Worth
+  - Bridgman - Constructive Anatomy
+  - Vanderpoel - The Human Figure
+  - Richer - Artistic Anatomy
+
+• <strong>Gutenberg.org:</strong>
+  - Textos antiguos de anatomía artística</div>
+
+<div class="message-section"><strong>🎨 Sitios de práctica:</strong>
+
+• <strong>Line of Action (line-of-action.com):</strong>
+  - Referencias cronometradas gratis
+  - Poses de 30 seg a 30 min
+  - Filtros por tipo de pose
+
+• <strong>Quickposes (quickposes.com):</strong>
+  - Similar a Line of Action
+  - Interfaz simple y efectiva
+
+• <strong>Croquis Cafe (YouTube):</strong>
+  - Videos de modelos en vivo
+  - Sesiones completas gratuitas</div>
+
+<div class="message-section"><strong>📹 Canales de YouTube:</strong>
+
+• <strong>Proko (Stan Prokopenko):</strong>
+  - Anatomía detallada
+  - Figura humana paso a paso
+
+• <strong>Sycra:</strong>
+  - Fundamentos de dibujo
+  - Ejercicios prácticos
+
+• <strong>Moderndayjames:</strong>
+  - Croquis rápidos
+  - Técnicas de observación</div>
+
+<div class="message-section"><strong>🌐 Recursos web:</strong>
+
+• <strong>Anatomy360.info:</strong>
+  - Modelos 3D rotables
+  - Músculos por capas
+
+• <strong>JustSketchMe:</strong>
+  - Posador 3D gratuito
+  - Control total de pose
+
+• <strong>Posemaniacs:</strong>
+  - Modelos 3D en diversas poses</div>
+
+💡 <strong>Importante:</strong> Este curso UAH es completamente gratuito. No necesitas pagar nada extra para aprender efectivamente.`,
+                        related: ["recursos", "práctica", "materiales"]
+                    }
+                }
+            ]
+        };
+
+        // ========== SISTEMA DE GESTIÓN DEL CHAT ==========
+        class ChatMentor {
+            constructor() {
+                this.currentModule = 'general';
+                this.conversationHistory = [];
+                this.stats = {
+                    totalQueries: 0,
+                    helpfulResponses: 0,
+                    sessions: 0
+                };
+                
+                this.init();
+            }
+
+            init() {
+                this.loadHistory();
+                this.loadStats();
+                this.setupEventListeners();
+                this.updateQuickReplies();
+                this.stats.sessions++;
+                this.saveStats();
+            }
+
+            setupEventListeners() {
+                // Module selector
+                document.getElementById('module-select').addEventListener('change', (e) => {
+                    this.currentModule = e.target.value;
+                    this.updateQuickReplies();
+                });
+
+                // Input handling
+                const input = document.getElementById('chat-input');
+                input.addEventListener('input', () => this.autoResize(input));
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.sendMessage();
+                    }
+                });
+
+                // Send button
+                document.getElementById('btn-send').addEventListener('click', () => {
+                    this.sendMessage();
+                });
+
+                // Theme toggle
+                document.getElementById('btn-theme').addEventListener('click', () => {
+                    this.toggleTheme();
+                });
+
+                // Clear chat
+                document.getElementById('btn-clear').addEventListener('click', () => {
+                    this.clearChat();
+                });
+
+                // Stats toggle
+                document.getElementById('btn-stats').addEventListener('click', () => {
+                    this.showStats();
+                });
+            }
+
+            autoResize(textarea) {
+                textarea.style.height = 'auto';
+                textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+            }
+
+            updateQuickReplies() {
+                const container = document.getElementById('quick-replies');
+                const questions = this.getQuestionsForModule(this.currentModule);
+                
+                // Show first 6 questions
+                const quickQuestions = questions.slice(0, 6);
+                
+                container.innerHTML = quickQuestions.map(q => `
+                    <button class="quick-reply-btn" onclick="chatMentor.handleQuickReply('${q.id}')">
+                        ${q.question}
+                    </button>
+                `).join('');
+            }
+
+            getQuestionsForModule(module) {
+                if (module === 'general') {
+                    // Mix from all modules
+                    return [
+                        ...knowledgeBase.modulo1.slice(0, 2),
+                        ...knowledgeBase.modulo2.slice(0, 2),
+                        ...knowledgeBase.modulo3.slice(0, 1),
+                        ...knowledgeBase.sistema.slice(0, 1)
+                    ];
+                }
+                return knowledgeBase[module] || [];
+            }
+
+            handleQuickReply(questionId) {
+                // Find question in all modules
+                let question = null;
+                for (const module in knowledgeBase) {
+                    question = knowledgeBase[module].find(q => q.id === questionId);
+                    if (question) break;
+                }
+
+                if (question) {
+                    this.addUserMessage(question.question);
+                    this.showTypingIndicator();
+                    setTimeout(() => {
+                        this.hideTypingIndicator();
+                        this.addBotMessage(question.answer);
+                    }, 800);
+                }
+            }
+
+            sendMessage() {
+                const input = document.getElementById('chat-input');
+                const message = input.value.trim();
+                
+                if (!message) return;
+
+                this.addUserMessage(message);
+                input.value = '';
+                input.style.height = 'auto';
+                
+                // Search for answer
+                this.showTypingIndicator();
+                setTimeout(() => {
+                    this.hideTypingIndicator();
+                    const answer = this.searchAnswer(message);
+                    if (answer) {
+                        this.addBotMessage(answer);
+                    } else {
+                        this.addNotFoundMessage(message);
+                    }
+                }, 1000);
+
+                this.stats.totalQueries++;
+                this.saveStats();
+            }
+
+            searchAnswer(query) {
+                const queryLower = query.toLowerCase();
+                let bestMatch = null;
+                let bestScore = 0;
+
+                // Search in all modules
+                for (const module in knowledgeBase) {
+                    for (const question of knowledgeBase[module]) {
+                        const score = this.calculateMatchScore(queryLower, question.keywords);
+                        if (score > bestScore) {
+                            bestScore = score;
+                            bestMatch = question;
+                        }
+                    }
+                }
+
+                return bestScore > 0.3 ? bestMatch.answer : null;
+            }
+
+            calculateMatchScore(query, keywords) {
+                let score = 0;
+                const queryWords = query.split(/\s+/);
+                
+                queryWords.forEach(word => {
+                    keywords.forEach(keyword => {
+                        if (keyword.includes(word) || word.includes(keyword)) {
+                            score += word.length / query.length;
+                        }
+                    });
+                });
+
+                return Math.min(score, 1);
+            }
+
+            addUserMessage(text) {
+                const messagesContainer = document.getElementById('chat-messages');
+                const welcomeMsg = messagesContainer.querySelector('.welcome-message');
+                if (welcomeMsg) welcomeMsg.remove();
+
+                const time = new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
+                
+                const messageHTML = `
+                    <div class="message user">
+                        <div class="message-content">
+                            <div class="message-bubble">${this.escapeHtml(text)}</div>
+                            <div class="message-time">${time}</div>
+                        </div>
+                        <div class="message-avatar">👤</div>
+                    </div>
+                `;
+
+                messagesContainer.insertAdjacentHTML('beforeend', messageHTML);
+                this.scrollToBottom();
+
+                this.conversationHistory.push({
+                    type: 'user',
+                    content: text,
+                    time: new Date().toISOString()
+                });
+                this.saveHistory();
+            }
+
+            addBotMessage(answer) {
+                const messagesContainer = document.getElementById('chat-messages');
+                const time = new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
+                
+                const relatedTopics = answer.related ? answer.related.map(topic => 
+                    `<button class="related-topic-btn" onclick="chatMentor.searchByTopic('${topic}')">${topic}</button>`
+                ).join('') : '';
+
+                const messageHTML = `
+                    <div class="message bot">
+                        <div class="message-avatar">🤖</div>
+                        <div class="message-content">
+                            <div class="message-bubble">
+                                <h4>${answer.title}</h4>
+                                ${answer.content}
+                                ${relatedTopics ? `
+                                    <div class="related-topics">
+                                        <strong>📌 También te puede interesar:</strong><br>
+                                        ${relatedTopics}
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <div class="message-feedback">
+                                <button class="btn-feedback-msg" onclick="chatMentor.registerFeedback(true, this)">
+                                    👍 Útil
+                                </button>
+                                <button class="btn-feedback-msg" onclick="chatMentor.registerFeedback(false, this)">
+                                    👎 No útil
+                                </button>
+                            </div>
+                            <div class="message-time">${time}</div>
+                        </div>
+                    </div>
+                `;
+
+                messagesContainer.insertAdjacentHTML('beforeend', messageHTML);
+                this.scrollToBottom();
+
+                this.conversationHistory.push({
+                    type: 'bot',
+                    content: answer,
+                    time: new Date().toISOString()
+                });
+                this.saveHistory();
+            }
+
+            addNotFoundMessage(query) {
+                const answer = {
+                    title: "🔍 No encontré respuesta exacta",
+                    content: `
+                        <p>No pude encontrar una respuesta específica para: <strong>"${this.escapeHtml(query)}"</strong></p>
+                        
+                        <div class="message-section"><strong>💡 Sugerencias:</strong>
+                        • Intenta reformular con otras palabras
+                        • Usa términos clave: línea de acción, proporciones, anatomía, valores
+                        • Explora las preguntas rápidas arriba
+                        • Cambia el contexto del módulo si buscas algo específico</div>
+
+                        <p><strong>📧 Para dudas no cubiertas:</strong> Contacta al instructor del curso para consultas más específicas o personalizadas.</p>
+                    `,
+                    related: []
+                };
+
+                this.addBotMessage(answer);
+            }
+
+            searchByTopic(topic) {
+                document.getElementById('chat-input').value = topic;
+                this.sendMessage();
+            }
+
+            showTypingIndicator() {
+                document.getElementById('typing-indicator').classList.add('active');
+                this.scrollToBottom();
+            }
+
+            hideTypingIndicator() {
+                document.getElementById('typing-indicator').classList.remove('active');
+            }
+
+            registerFeedback(helpful, button) {
+                if (helpful) {
+                    this.stats.helpfulResponses++;
+                    button.parentElement.innerHTML = '<span style="color: var(--success); font-weight: 600;">✅ ¡Gracias por tu feedback!</span>';
+                } else {
+                    button.parentElement.innerHTML = '<span style="color: var(--warning); font-weight: 600;">❌ Gracias. Trabajaremos en mejorar.</span>';
+                }
+                this.saveStats();
+            }
+
+            toggleTheme() {
+                const html = document.documentElement;
+                const currentTheme = html.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                html.setAttribute('data-theme', newTheme);
+                localStorage.setItem('chat-theme', newTheme);
+                
+                const icon = document.querySelector('#btn-theme i');
+                icon.className = newTheme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-fill';
+            }
+
+            clearChat() {
+                if (!confirm('¿Seguro que quieres limpiar el chat? Se perderá el historial de esta sesión.')) {
+                    return;
+                }
+
+                const messagesContainer = document.getElementById('chat-messages');
+                messagesContainer.innerHTML = `
+                    <div class="welcome-message">
+                        <div class="welcome-icon">👋</div>
+                        <h3>¡Hola! Soy tu Mentor Anatómico</h3>
+                        <p>Estoy aquí para ayudarte con dudas sobre anatomía, técnicas de dibujo, proporciones y todo lo relacionado con el curso.</p>
+                        <p style="margin-top: 1rem;"><strong>Selecciona una pregunta rápida o escribe tu consulta abajo</strong></p>
+                    </div>
+                `;
+
+                this.conversationHistory = [];
+                this.saveHistory();
+            }
+
+            showStats() {
+                const satisfaction = this.stats.totalQueries > 0 
+                    ? Math.round((this.stats.helpfulResponses / this.stats.totalQueries) * 100)
+                    : 0;
+
+                const statsHTML = `
+                    <div class="message bot">
+                        <div class="message-avatar">📊</div>
+                        <div class="message-content">
+                            <div class="message-bubble">
+                                <h4>Estadísticas de Uso</h4>
+                                <div class="stats-panel">
+                                    <div class="stats-grid">
+                                        <div class="stat-item">
+                                            <div class="stat-number">${this.stats.totalQueries}</div>
+                                            <div class="stat-label">Consultas</div>
+                                        </div>
+                                        <div class="stat-item">
+                                            <div class="stat-number">${this.stats.helpfulResponses}</div>
+                                            <div class="stat-label">Útiles</div>
+                                        </div>
+                                        <div class="stat-item">
+                                            <div class="stat-number">${satisfaction}%</div>
+                                            <div class="stat-label">Satisfacción</div>
+                                        </div>
+                                        <div class="stat-item">
+                                            <div class="stat-number">${this.stats.sessions}</div>
+                                            <div class="stat-label">Sesiones</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="message-time">${new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })}</div>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('chat-messages').insertAdjacentHTML('beforeend', statsHTML);
+                this.scrollToBottom();
+            }
+
+            scrollToBottom() {
+                const container = document.getElementById('chat-messages');
+                setTimeout(() => {
+                    container.scrollTop = container.scrollHeight;
+                }, 100);
+            }
+
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            saveHistory() {
+                localStorage.setItem('chat-history', JSON.stringify(this.conversationHistory));
+            }
+
+            loadHistory() {
+                const saved = localStorage.getItem('chat-history');
+                if (saved) {
+                    this.conversationHistory = JSON.parse(saved);
+                    // Optionally reload messages in UI
+                }
+            }
+
+            saveStats() {
+                localStorage.setItem('chat-stats', JSON.stringify(this.stats));
+            }
+
+            loadStats() {
+                const saved = localStorage.getItem('chat-stats');
+                if (saved) {
+                    this.stats = JSON.parse(saved);
+                }
+            }
+        }
+
+        // Initialize chat
+        const chatMentor = new ChatMentor();
+
+        // Load theme preference
+        const savedTheme = localStorage.getItem('chat-theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            const icon = document.querySelector('#btn-theme i');
+            icon.className = savedTheme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-fill';
+        }
+    </script>
+</body>
+</html>
