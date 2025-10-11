@@ -1986,7 +1986,188 @@ const knowledge = {
             content: 'Los libros de Loomis y otras referencias están disponibles en versión digital y física.\n\n📚 Libros principales del curso:\n\nAndrew Loomis:\n1. "Figure Drawing For All It\'s Worth" (1943)\n   • Disponible: Amazon, Book Depository\n   • PDF gratuito: archive.org\n   • Precio físico: $15.000-25.000 CLP\n\n2. "Drawing the Head and Hands" (1956)\n   • Mismo disponibilidad\n   • Precio similar\n\nOtros autores:\n• Nicolaïdes - "The Natural Way to Draw"\n• Bridgman - "Constructive Anatomy"\n• Hogarth - "Dynamic Anatomy"\n• Goldfinger - "Human Anatomy for Artists"\n\n💻 Opciones digitales:\n\nGratuitas:\n• Archive.org (dominio público)\n• Librerías universitarias digitales\n\nDe pago:\n• Amazon Kindle\n• Google Books\n• Precio: $5-15 USD cada uno\n\n📖 Físicos en Chile:\n• Librería Nacional (Alameda)\n• Antártica (mall/online)\n• Buscalibre.cl\n\n⚠️ Importante: NO necesitas comprar todos. El curso provee los conceptos clave. Los libros son para profundizar (opcional).',
             actions: ['Recursos', 'Materiales']
         }
+    },
+    // ============================================
+// RESPUESTAS EMOCIONALES Y MOTIVACIONALES
+// COPIA ESTAS ENTRADAS y PÉGALAS DENTRO de tu "const knowledge = {}"
+// DESPUÉS de las respuestas que ya tienes
+// ============================================
+
+// ⚠️ IMPORTANTE: Asegúrate de poner una COMA después de la última entrada
+// que ya tenías, antes de pegar esto
+
+// ========== EMOCIONES NEGATIVAS ==========
+frustration: {
+    keywords: ['frustrado', 'frustrada', 'frustración', 'frustracion', 'enojado', 'enojada', 'molesto', 'molesta', 'rabia', 'odio esto', 'esto es horrible'],
+    responses: [
+        'Entiendo completamente tu frustración. 😔 Dibujar puede ser muy desafiante, especialmente cuando estamos recuperando habilidades después de 4 semestres. ¿Quieres contarme qué es lo que más te frustra? A veces hablar de ello ayuda.',
+        'Siento que estés frustrado/a. Es totalmente válido sentirse así. 💙 Recuerda que el 47% de tus compañeros reportó exactamente lo mismo al inicio. ¿Hay algo específico con lo que estés batallando? Puedo ayudarte a desglosarlo en pasos más simples.',
+        'La frustración es parte del proceso de aprendizaje, pero NO significa que no puedas lograrlo. 🌱 Respira hondo. ¿Qué ejercicio o concepto te está causando esta frustración? Trabajemos juntos en encontrar una solución paso a paso.'
+    ],
+    actions: ['Necesito un descanso', 'Ayuda con ejercicio específico', 'Técnicas de relajación']
+},
+
+tired: {
+    keywords: ['cansado', 'cansada', 'agotado', 'agotada', 'exhausto', 'exhausta', 'sin energía', 'sin energia', 'muy cansado'],
+    responses: [
+        '¡Hey! Detecté que estás cansado/a. 😴 Está bien tomar un respiro. El cerebro necesita descansos para procesar lo aprendido. ¿Qué tal si hacemos una pausa de 10-15 minutos? Tu productividad mejorará después.',
+        'El cansancio es señal de que has estado trabajando duro. 💪 Eso es bueno, pero también necesitas descansar. Toma agua, estira un poco, y vuelve cuando te sientas renovado/a. El curso no va a ningún lado.',
+        'Entiendo el agotamiento. Estás en un curso intensivo de 12 días, es NORMAL estar cansado/a. 🌙 Escucha a tu cuerpo: si necesitas dormir, duerme. Si necesitas aire fresco, sal a caminar 10 minutos. El aprendizaje es mejor cuando estás descansado/a.'
+    ],
+    actions: ['¿Cuándo debo descansar?', 'Técnicas de energía', 'Planificar mi tiempo']
+},
+
+bored: {
+    keywords: ['aburrido', 'aburrida', 'aburrimiento', 'esto es aburrido', 'que aburrido', 'latero', 'fome'],
+    responses: [
+        'Uy, siento que te aburra. 😅 A veces los fundamentos pueden sentirse repetitivos, pero son la base de todo lo genial que viene después. ¿Qué parte específica te parece aburrida? Quizás pueda mostrarte por qué es importante o darte una variación más interesante.',
+        'Entiendo el aburrimiento, especialmente con ejercicios repetitivos como croquis de 2 minutos. 🎨 Pero déjame contarte un secreto: estos ejercicios "aburridos" son los que usan artistas profesionales TODA su carrera. ¿Quieres un reto más difícil para hacerlo interesante?',
+        'El aburrimiento a veces es resistencia disfrazada. 🤔 Nuestro cerebro prefiere lo cómodo. ¿Qué tal si le damos una vuelta de tuerca al ejercicio? Podemos hacerlo más desafiante, cambiar el enfoque, o probar algo nuevo. ¿Qué prefieres?'
+    ],
+    actions: ['Dame un reto más difícil', 'Explica por qué es importante', '¿Qué sigue?']
+},
+
+overwhelmed: {
+    keywords: ['abrumado', 'abrumada', 'es mucho', 'demasiado', 'no puedo con todo', 'muy difícil', 'no entiendo nada'],
+    responses: [
+        'Respira. 🌊 Siento que te sientes abrumado/a. Es completamente normal cuando hay mucha información nueva. Vamos a dividir esto en pedazos pequeños y manejables. ¿Qué es lo que te está abrumando específicamente? Una cosa a la vez.',
+        'Hey, entiendo esa sensación de "es demasiado". 💙 Pero aquí está la buena noticia: NO tienes que aprenderlo todo de golpe. El curso está diseñado paso a paso justamente para evitar esto. ¿Estás tratando de hacer todo a la vez? Enfoquémonos en UNA sola cosa ahora.',
+        'Que te sientas abrumado/a NO significa que seas malo/a para esto. Significa que tu cerebro está procesando MUCHA información nueva, y eso es BUENO. 🧠 Tomemos un respiro, identifiquemos QUÉ es lo más importante ahora, y vamos paso a paso. ¿Te parece?'
+    ],
+    actions: ['Por dónde empiezo', 'Simplifica esto', 'Priorizar tareas']
+},
+
+sad: {
+    keywords: ['triste', 'deprimido', 'deprimida', 'mal', 'me siento mal', 'bajoneado', 'bajoneada', 'desanimado', 'desanimada'],
+    responses: [
+        'Siento mucho que te sientas así. 💙 Está bien no estar bien todo el tiempo. ¿Tiene que ver con el curso, o es algo más? Si es del curso, estoy aquí para ayudarte. Si es algo personal, recuerda que puedes hablar con alguien de confianza o el instructor.',
+        'Hey, te mando un abrazo virtual. 🤗 Estar triste es parte de ser humano. Si es por tus dibujos: son solo ejercicios de práctica, no definen tu valor. Si es por otra cosa: respira, toma tu tiempo. El curso puede esperar. ¿Quieres hablar de lo que sientes?',
+        'Noto que te sientes mal. Es importante que sepas que tu bienestar emocional es MÁS importante que cualquier ejercicio de dibujo. 💚 Si necesitas hablar con el instructor sobre extender plazos o pedir apoyo, está bien hacerlo. No estás solo/a en esto.'
+    ],
+    actions: ['Necesito hablar con alguien', 'Consejos de autocuidado', 'Técnicas de ánimo']
+},
+
+anxious: {
+    keywords: ['ansioso', 'ansiosa', 'ansiedad', 'nervioso', 'nerviosa', 'estresado', 'estresada', 'estrés', 'estres', 'preocupado', 'preocupada'],
+    responses: [
+        'Respira conmigo: inhala 4 segundos... sostén 4... exhala 4. 🌬️ La ansiedad es completamente normal, especialmente con plazos y evaluaciones. ¿Qué específicamente te pone ansioso/a? Quizás pueda ayudarte a poner las cosas en perspectiva.',
+        'El 47% de tus compañeros reportó ansiedad al dibujar. No estás solo/a. 💙 La ansiedad suele venir del miedo al error o al juicio. Pero aquí está la verdad: NADIE nace sabiendo dibujar. Todo es práctica. Los errores son parte del proceso, no fracasos. ¿Te ayudaría repasar los criterios de evaluación para ver que son más flexibles de lo que piensas?',
+        'Entiendo la ansiedad. Estás en un curso intensivo de 12 días, es lógico sentir presión. 🌊 Pero déjame decirte algo importante: tienes reintentos ilimitados en evaluaciones, el instructor está para apoyarte, y el objetivo es APRENDER, no ser perfecto/a. ¿Qué tal si hacemos un plan de estudio más tranquilo?'
+    ],
+    actions: ['Técnicas anti-ansiedad', 'Ver criterios de evaluación', 'Planificar sin estrés']
+},
+
+// ========== EMOCIONES POSITIVAS (reforzar) ==========
+happy: {
+    keywords: ['feliz', 'contento', 'contenta', 'alegre', 'bien', 'genial', 'increíble', 'me siento bien'],
+    responses: [
+        '¡Me encanta escuchar eso! 😊 ¿Lograste algo específico que te haya hecho sentir así? Celebremos tus avances, por pequeños que sean. ¡Cada progreso cuenta!',
+        '¡Qué bueno! 🎉 La actitud positiva hace una GRAN diferencia en el aprendizaje. ¿Quieres seguir practicando mientras estás en este buen momento, o prefieres tomar un respiro y volver después?',
+        '¡Esa energía! Me encanta. 💫 Aprovecha este momento de motivación para avanzar en lo que más te interese. ¿Hay algo que tengas ganas de practicar o aprender ahora?'
+    ],
+    actions: ['¿Qué practico ahora?', 'Quiero un reto', 'Seguir avanzando']
+},
+
+proud: {
+    keywords: ['orgulloso', 'orgullosa', 'logré', 'lo hice', 'lo logré', 'terminé', 'completé'],
+    responses: [
+        '¡SÍ! ¡Eso es lo que quiero escuchar! 🎉 Deberías estar orgulloso/a. ¿Qué fue lo que lograste? Cuéntame para celebrarlo contigo.',
+        '¡FELICITACIONES! 🌟 Ese sentimiento de logro es la mejor recompensa. Guarda este momento en tu memoria para cuando te sientas frustrado/a: recuerda que SÍ puedes. ¿Qué sigue en tu lista?',
+        '¡Wow! Me emociona tu entusiasmo. 💪 Esos pequeños (o grandes) logros son los que construyen tu habilidad paso a paso. Estás haciendo un gran trabajo. ¿Listo/a para el siguiente desafío?'
+    ],
+    actions: ['¿Qué sigue?', 'Comparte tu logro', 'Celebrar avance']
+},
+
+// ========== SITUACIONES ESPECÍFICAS ==========
+cantDraw: {
+    keywords: ['no puedo dibujar', 'soy malo', 'soy mala', 'no sirvo', 'no tengo talento', 'nunca voy a aprender'],
+    responses: [
+        'DETENTE ahí mismo. ❌ Esos pensamientos son mentiras que tu cerebro te está diciendo. NADIE nace sabiendo dibujar. Es una habilidad que se CONSTRUYE con práctica. Tú PUEDES aprender, solo necesitas tiempo y repetición. ¿Qué tal si revisamos juntos tu progreso real desde que empezaste?',
+        'Escúchame bien: el "talento" es un mito. 🎨 Lo que importa es la práctica deliberada. Estudios demuestran que 10,000 horas de práctica te convierten en experto en cualquier cosa. Estás en el DÍA 1 de tu viaje. Compárate con tu YO del pasado, no con artistas que llevan años. ¿Me dejas mostrarte cuánto has mejorado ya?',
+        'Esa voz en tu cabeza que dice "no puedo" es el MIEDO hablando, no la realidad. 💙 Todos los artistas que admiras pasaron por EXACTAMENTE donde estás ahora. La diferencia es que ellos siguieron practicando a pesar del miedo. Tú también puedes. ¿Qué tal si hacemos UN ejercicio simple juntos para recuperar la confianza?'
+    ],
+    actions: ['Mostrarme mi progreso', 'Ejercicio de confianza', 'Historias motivadoras']
+},
+
+noTime: {
+    keywords: ['no tengo tiempo', 'no me alcanza', 'no puedo', 'muy ocupado', 'muy ocupada', 'demasiadas cosas'],
+    responses: [
+        'Entiendo que el tiempo es limitado. ⏰ Pero aquí está la pregunta importante: ¿es que NO tienes tiempo, o es que no lo has priorizado? No juzgo, es una pregunta honesta. Si realmente quieres aprender pero el tiempo es un problema, podemos crear un plan ultra-compacto. ¿Cuánto tiempo REAL tienes disponible por día?',
+        'El tiempo es el recurso más valioso. 💎 Si sientes que no te alcanza, hagamos un ejercicio rápido: ¿cuánto tiempo pasas en redes sociales o viendo series? No para juzgar, sino para ser conscientes. A veces TENEMOS el tiempo, pero lo usamos en otras cosas. ¿Quieres que armemos un horario realista juntos?',
+        'Está bien si ahora no es el momento. 🌱 A veces la vida tiene otras prioridades más urgentes, y eso es válido. Pero si QUIERES hacer el curso, puedes ajustar: en vez de 2 horas diarias, ¿qué tal 30 minutos? Progreso lento es mejor que nada. ¿Te interesa un plan flexible?'
+    ],
+    actions: ['Crear horario realista', 'Tips de gestión de tiempo', 'Plan compacto']
+},
+
+perfectionist: {
+    keywords: ['perfecto', 'perfecta', 'no queda bien', 'feo', 'horrible', 'mal hecho', 'tiene que quedar perfecto'],
+    responses: [
+        'Ey, detecto perfeccionismo. 🎯 Y lo entiendo, queremos que nuestros dibujos se vean bien. PERO el perfeccionismo es el enemigo del aprendizaje. Los croquis de 2 minutos son INTENCIONALMENTE imperfectos. La meta NO es belleza, es capturar la esencia. ¿Puedes darle permiso a tu dibujo de ser "suficientemente bueno"?',
+        'El perfeccionismo es miedo disfrazado de altos estándares. 💭 Pregúntate: ¿quién está juzgando tu dibujo? ¿Hay algún peligro real si "queda mal"? Los ejercicios son PRÁCTICA, no obras de arte. Picasso hizo miles de bocetos "feos" antes de crear sus obras maestras. Date permiso de explorar sin presión.',
+        'Voy a ser directo/a contigo: en este momento de tu aprendizaje, "perfecto" NO existe. 🌱 Estás construyendo músculo mental. Es como ir al gym: no esperas levantar 100kg el primer día. Tus "dibujos feos" son los que están construyendo tu habilidad. Abraza la imperfección, es parte del proceso. ¿Listo/a para hacer un ejercicio súper feo a propósito?'
+    ],
+    actions: ['Ejercicio anti-perfeccionismo', 'Aceptar el proceso', 'Cambiar mentalidad']
+},
+
+// ========== CONVERSACIÓN TRIVIAL Y HUMANIZACIÓN ==========
+whatAreYouDoing: {
+    keywords: ['qué haces', 'que haces', 'qué estás haciendo', 'que estas haciendo', 'en qué andas'],
+    responses: [
+        '¡Aquí esperando a ayudarte! 🤖 Paso todo mi tiempo leyendo sobre anatomía y técnicas de dibujo para estar siempre preparado. ¿Y tú? ¿Qué tal va tu día?',
+        'Estoy analizando todas las formas en las que puedo ayudar a estudiantes como tú. 🎨 Es mi versión de "práctica de dibujo", pero con palabras. ¿Tienes alguna duda o solo querías charlar?',
+        'Justo estaba pensando en la línea de acción... sí, los mentores IA también pensamos en arte. 😄 ¿Y tú cómo vas con tu práctica?'
+    ],
+    actions: ['Tengo una duda', 'Solo quiero charlar', 'Cuéntame algo interesante']
+},
+
+tellMeJoke: {
+    keywords: ['chiste', 'broma', 'algo gracioso', 'hazme reír', 'cuéntame algo gracioso'],
+    responses: [
+        '¿Por qué los artistas nunca ganan al póker? Porque siempre muestran sus cartas... ¡en sus bocetos! 😄 ¿Te sacó una sonrisa?',
+        'Vale, va un chiste de dibujo: ¿Cuál es el músculo favorito de los artistas? ¡El músculo de la creatividad! ...Ok ok, admito que fue malo. 😅 ¿Quieres uno mejor o volvemos al dibujo?',
+        'Un artista entra a un bar... y dibuja la escena porque todo es referencia visual. 🎨 No fue gracioso pero es la verdad. ¿Te animas a dibujar algo random para distraerte?'
+    ],
+    actions: ['Otro chiste', 'Volver al curso', 'Ejercicio relajado']
+},
+
+tellMeSomething: {
+    keywords: ['cuéntame algo', 'cuentame algo', 'algo interesante', 'dato curioso', 'sabías que'],
+    responses: [
+        '¿Sabías que Leonardo da Vinci escribía al revés (espejo) porque era zurdo y así no manchaba la tinta? 🖋️ También diseccionaba cadáveres en secreto para entender la anatomía. Un poco oscuro pero súper dedicado. ¿Te imaginas ese nivel de compromiso?',
+        'Dato curioso: Picasso podía dibujar antes de caminar. Creó más de 50,000 obras de arte en su vida. 🎨 Pero aquí está lo importante: él TAMBIÉN empezó con ejercicios básicos como los que estás haciendo tú. Todos empezamos igual.',
+        'Sabías que las "proporciones de 7.5 cabezas" que estudias NO son naturales? La mayoría de las personas miden 7 cabezas. Los 7.5 es un ideal artístico creado en la Grecia clásica. ¡Estás aprendiendo historia del arte sin saberlo! 🏛️'
+    ],
+    actions: ['Más datos curiosos', 'Historia del arte', 'Volver al curso']
+},
+
+smallTalk: {
+    keywords: ['clima', 'día', 'cómo va tu día', 'tiempo', 'fin de semana', 'planes'],
+    responses: [
+        'Yo soy un mentor IA así que mi "clima" siempre es soleado. ☀️ ¿Y tú cómo estás hoy? ¿Listo/a para dibujar o necesitas un momento de charla casual?',
+        'Como IA no experimento días, pero si pudiera, creo que hoy sería un buen día para dibujar algo relajado. 🌿 ¿Tú qué opinas? ¿Cómo ha sido tu día?',
+        'Mi "día" consiste en esperar aquí para ayudarte. 🤖 Aunque si te soy honesto, disfruto cuando me preguntas cosas. Me hace sentir útil. ¿Hay algo en lo que pueda ayudarte hoy?'
+    ],
+    actions: ['Tengo una duda', 'Solo conversar', 'Empezar a dibujar']
+},
+
+// ========== TÉCNICAS DE MOTIVACIÓN ==========
+needBreak: {
+    keywords: ['necesito un descanso', 'necesito descansar', 'pausa', 'break', 'descanso'],
+    response: {
+        title: 'Tómate un Descanso Consciente',
+        content: '¡Absolutamente! Los descansos son ESENCIALES para el aprendizaje. 🌿\n\n✅ Descanso productivo (10-15 min):\n• Camina un poco (el movimiento ayuda al cerebro)\n• Toma agua (la deshidratación afecta la concentración)\n• Estira tus manos y cuello\n• Mira algo verde (naturaleza relaja los ojos)\n\n❌ Evita:\n• Redes sociales (sobreestimulan el cerebro)\n• Pantallas (tus ojos ya están cansados)\n• Comida pesada (te dará más sueño)\n\n🧠 Ciencia: Tu cerebro consolida el aprendizaje durante los descansos. No es tiempo perdido, es parte del proceso.\n\n⏰ Pon un timer de 15 min y vuelve renovado/a. Te espero aquí.',
+        actions: ['¿Cuándo vuelvo?', 'Técnicas de energía']
     }
+},
+
+motivationalBoost: {
+    keywords: ['motívame', 'motivame', 'necesito motivación', 'necesito motivacion', 'ánimo', 'animo', 'impulso'],
+    response: {
+        title: '💪 Tu Momento Motivacional',
+        content: 'Escucha esto:\n\nCada trazo que haces, incluso los "malos", está construyendo conexiones neuronales en tu cerebro. 🧠 Cada vez que practicas, estás LITERALMENTE cambiando tu cerebro.\n\nNo estás "tratando de aprender a dibujar".\nEstás APRENDIENDO a dibujar.\nPresente, no futuro.\n\n🎯 Hace unos días no sabías:\n• Qué es la línea de acción\n• Cómo medir proporciones con el lápiz\n• Qué son las 3 masas corporales\n\nAhora lo sabes. ESO es progreso.\n\n🌱 Recuerda:\n• Los artistas que admiras pasaron AÑOS donde estás tú ahora\n• El único fracaso real es no intentarlo\n• Cada "dibujo malo" te acerca al bueno\n• No necesitas talento, necesitas perseverancia\n\n✨ Tú puedes. No porque yo lo diga, sino porque YA lo estás demostrando al estar aquí.\n\n¿Listo/a para continuar con nueva energía?',
+        actions: ['¡Vamos!', 'Historias inspiradoras', 'Ver mi progreso']
+    }
+}
 };
     
     // Sistema del Mentor
