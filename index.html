@@ -1329,17 +1329,20 @@
         setInterval(saveProgress, 120000);
     </script>
 </body><!-- ============================================
-     MENTOR ANATÓMICO - TODO EN UNO
-     Pega este código ANTES del </body> en index.html
+     MENTOR ANATÓMICO EMOCIONAL - VERSIÓN 2.0
+     Pega este BLOQUE COMPLETO antes del </body> en index.html
+     REEMPLAZA el código del mentor anterior
      ============================================ -->
 
 <style>
-/* ========== ESTILOS DEL MENTOR ========== */
+/* ========== ESTILOS DEL MENTOR (MISMO QUE ANTES) ========== */
 :root {
     --mentor-primary-dark: #2c5f66;
     --mentor-primary-light: #e8a2b8;
     --mentor-dark: #1a1a1a;
     --mentor-success: #4CAF50;
+    --mentor-warning: #FFC107;
+    --mentor-danger: #f44336;
     --mentor-bg-light: #f8f9fa;
 }
 
@@ -1417,14 +1420,8 @@
 }
 
 @keyframes mentor-slide-up {
-    from {
-        transform: translateY(20px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
 .mentor-header {
@@ -1566,6 +1563,7 @@
     border-radius: 15px;
     line-height: 1.5;
     font-size: 0.9rem;
+    white-space: pre-wrap;
 }
 
 .mentor-message.bot .mentor-message-bubble {
@@ -1580,18 +1578,11 @@
     border-bottom-right-radius: 4px;
 }
 
-.mentor-message-bubble h4 {
-    font-size: 1rem;
-    margin: 0 0 0.5rem 0;
-    font-weight: 600;
-}
-
-.mentor-message-bubble p {
-    margin: 0.5rem 0;
-}
-
 .mentor-message-bubble strong {
     font-weight: 600;
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
 }
 
 .mentor-message-time {
@@ -1737,6 +1728,23 @@
     line-height: 1.6;
 }
 
+/* Alerta contextual */
+.mentor-context-alert {
+    background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+    border-left: 4px solid var(--mentor-warning);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+    color: #856404;
+    animation: mentor-slide-down 0.3s ease;
+}
+
+@keyframes mentor-slide-down {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 @media (max-width: 768px) {
     .mentor-container {
         bottom: 0;
@@ -1756,424 +1764,22 @@
 }
 </style>
 
+<script src="mentor-knowledge.js"></script>
+
 <script>
-// ========== MENTOR ANATÓMICO - SISTEMA COMPLETO ==========
+// ========== MENTOR ANATÓMICO 2.0 - SISTEMA COMPLETO ==========
 (function() {
     'use strict';
     
-    console.log('🤖 Mentor Anatómico: Inicializando...');
+    console.log('🤖 Mentor Anatómico 2.0: Inicializando...');
     
-    // Base de conocimiento
-    // ============================================
-// BASE DE CONOCIMIENTO COMPLETA DEL MENTOR
-// Reemplaza la sección "const knowledge = {...}" 
-// en tu código actual con ESTO
-// ============================================
-
-const knowledge = {
-    // ========== CONVERSACIÓN CASUAL ==========
-    greetings: {
-        keywords: ['hola', 'hey', 'buenos días', 'buenas tardes', 'buenas noches', 'hi', 'hello', 'saludos'],
-        responses: [
-            '¡Hola! 👋 Soy tu Mentor Anatómico. ¿En qué puedo ayudarte hoy?',
-            '¡Hey! 😊 ¿Tienes alguna duda sobre el curso o necesitas ayuda con algo específico?',
-            '¡Hola! Estoy aquí para ayudarte con anatomía, técnicas de dibujo o cualquier duda del curso. ¿Qué necesitas?'
-        ],
-        actions: ['Ver mi dashboard', '¿Qué debo hacer hoy?', 'Tengo una duda técnica']
-    },
+    // Cargar el sistema de conocimiento desde el archivo externo
+    // (Usa el código que creé arriba en mentor_emotional_system)
     
-    howAreYou: {
-        keywords: ['cómo estás', 'como estas', 'qué tal estás', 'que tal estas', 'todo bien'],
-        responses: [
-            '¡Muy bien, gracias por preguntar! 😊 Listo para ayudarte con tus dudas de dibujo anatómico. ¿En qué te puedo apoyar?',
-            '¡De maravilla! 🤖 Siempre feliz de ayudar a estudiantes como tú. ¿Tienes alguna pregunta?',
-            '¡Excelente! Aquí trabajando para ayudarte. ¿Qué necesitas saber?'
-        ],
-        actions: ['Ver mi progreso', 'Ayuda con ejercicios']
-    },
-    
-    thanks: {
-        keywords: ['gracias', 'muchas gracias', 'te agradezco', 'thank you', 'excelente', 'perfecto', 'genial'],
-        responses: [
-            '¡De nada! 😊 Estoy aquí cuando me necesites. ¡Éxito con tu práctica!',
-            '¡Un placer ayudarte! Si tienes más dudas, aquí estaré. 🎨',
-            '¡Para eso estoy! No dudes en preguntar cuando lo necesites. ¡Sigue practicando! 💪'
-        ],
-        actions: []
-    },
-    
-    goodbye: {
-        keywords: ['adiós', 'adios', 'chao', 'hasta luego', 'nos vemos', 'bye'],
-        responses: [
-            '¡Hasta luego! 👋 Que tengas una excelente sesión de dibujo. Vuelve cuando quieras.',
-            '¡Nos vemos! 😊 Recuerda que estoy aquí 24/7 para ayudarte. ¡Éxito!',
-            '¡Chao! 🎨 Sigue practicando y no dudes en volver si tienes dudas.'
-        ],
-        actions: []
-    },
-    
-    help: {
-        keywords: ['ayuda', 'help', 'auxilio', 'no entiendo', 'estoy perdido', 'no sé qué hacer'],
-        response: {
-            title: '¿En qué puedo ayudarte?',
-            content: 'Puedo responder dudas sobre:\n\n• Técnicas de dibujo y anatomía\n• Tu progreso y dashboard\n• Ejercicios y evaluaciones\n• Navegación del LMS\n• Referencias bibliográficas\n• Materiales necesarios\n\n¿Qué necesitas específicamente?',
-            actions: ['Ver dashboard', 'Dudas técnicas', 'Navegación del LMS']
-        }
-    },
-    
-    // ========== DASHBOARD Y PROGRESO ==========
-    dashboard: {
-        keywords: ['dashboard', 'panel', 'mi progreso', 'mi avance', 'estadísticas', 'cómo voy'],
-        response: {
-            title: 'Tu Dashboard Personal',
-            content: 'Tu dashboard personal muestra toda tu información de progreso en tiempo real.\n\n📊 Qué puedes ver:\n• Progreso general: % del curso completado\n• Por módulo: Avance en M1, M2, M3\n• Lecciones: Completadas de 10 totales\n• Evaluaciones: Aprobadas y pendientes\n• Ejercicios: Entregados y por entregar\n• Tiempo restante: Estimado para terminar\n\n🔍 Cómo acceder:\n• Click en "Inicio" o el logo UAH desde cualquier página\n• El dashboard se actualiza automáticamente',
-            actions: ['¿Qué sigue?', 'Ver evaluaciones']
-        }
-    },
-    
-    nextSteps: {
-        keywords: ['qué debo hacer', 'que debo hacer', 'qué sigue', 'que sigue', 'próximo paso', 'proximo paso', 'qué hago ahora'],
-        response: {
-            title: 'Próximos Pasos',
-            content: 'Basándome en tu situación actual, te recomiendo:\n\n✅ Si estás en Módulo 1:\n1. Completa las lecciones 1.1, 1.2, 1.3 en orden\n2. Practica los croquis rápidos (2-5 min)\n3. Haz la evaluación formativa del módulo\n4. Avanza al Módulo 2\n\n✅ Si estás en Módulo 2:\n1. Enfócate en las 3 masas corporales\n2. Practica estructura de manos y pies\n3. Completa ejercicios de anatomía\n4. Aprueba la evaluación\n\n✅ Si estás en Módulo 3:\n1. Domina el proceso de 4 capas\n2. Practica valores tonales\n3. Prepárate para el proyecto final',
-            actions: ['Ver mi módulo actual', 'Ir a lecciones']
-        }
-    },
-    
-    feedback: {
-        keywords: ['retroalimentación', 'retroalimentacion', 'feedback', 'comentarios', 'corrección', 'correccion'],
-        response: {
-            title: 'Tu Retroalimentación',
-            content: 'La retroalimentación aparece después de cada entrega importante.\n\n📝 Tipos:\n\n1. Evaluaciones formativas (automáticas):\n• Feedback inmediato al responder\n• Explicación de respuestas correctas/incorrectas\n• Sugerencias para mejorar\n\n2. Ejercicios prácticos (del instructor):\n• Comentarios específicos por criterio\n• Fortalezas identificadas\n• Áreas de mejora señaladas\n• Tiempo de respuesta: 3-5 días\n\n3. Proyecto final (evaluación detallada):\n• Calificación por rúbrica (100 pts)\n• Retroalimentación exhaustiva\n\n🔍 Dónde verla:\n• En tu dashboard\n• En el email asociado a tu cuenta',
-            actions: ['Ver dashboard', '¿Cómo mejorar?']
-        }
-    },
-    
-    // ========== MÓDULO 1: OBSERVACIÓN Y GESTO ==========
-    lineaAccion: {
-        keywords: ['línea de acción', 'linea accion', 'linea de accion', 'gesto', 'eje principal', 'direccion movimiento'],
-        response: {
-            title: 'Línea de Acción',
-            content: 'La línea de acción es el eje imaginario que atraviesa toda la figura, definiendo la dirección y energía del movimiento. NO es una línea que dibujes literalmente, sino una guía mental.\n\n🔑 Características clave:\n• Recorrido: Desde la cabeza hasta el pie de apoyo\n• Forma: Recta en poses estáticas, curva en dinámicas\n• Función: Define la dirección principal del movimiento\n• Prioridad: Es lo PRIMERO que debes identificar\n\n💡 En tu croquis de 2 minutos:\n1. Observa 10-20 seg SIN dibujar\n2. Identifica mentalmente esa línea invisible\n3. Trázala PRIMERO (0-30 seg)\n4. Luego agrega masa corporal (30-120 seg)\n\n📚 Referencia: Loomis (1943) explica que es el primer paso antes de agregar detalles.',
-            actions: ['¿Qué es contrapposto?', 'Cómo medir proporciones']
-        }
-    },
-    
-    medirLapiz: {
-        keywords: ['medir', 'proporciones', 'lápiz', 'lapiz', 'medición', 'metodo lapiz'],
-        response: {
-            title: 'Método del Lápiz',
-            content: 'El método del lápiz te permite medir relaciones entre partes del cuerpo, NO tamaños exactos.\n\n📐 Paso a paso:\n1. Extiende el brazo completamente (codo bloqueado)\n2. Cierra un ojo para eliminar paralaje\n3. Alinea la punta del lápiz con el punto superior\n4. Marca con el pulgar el punto inferior\n5. Usa esa "unidad" para comparar otras partes\n\n⚠️ Errores comunes:\n• Doblar el codo = medidas inconsistentes\n• No cerrar un ojo = distorsión\n• Cambiar distancia del brazo entre mediciones\n\n✅ Práctica (Lección 1.2):\n• Mide la cabeza como unidad base (1 unidad)\n• El cuerpo completo: ~7.5 cabezas\n• Torso: ~3 cabezas | Piernas: ~4 cabezas\n\n🎯 Objetivo: 80% de precisión (OE2)',
-            actions: ['Canon 7.5 cabezas', 'Croquis rápidos']
-        }
-    },
-    
-    contrapposto: {
-        keywords: ['contrapposto', 'balance', 'peso', 'apoyo', 'distribucion peso'],
-        response: {
-            title: 'Contrapposto y Balance',
-            content: 'El contrapposto es una postura donde el peso del cuerpo está distribuido asimétricamente sobre una pierna, creando una postura natural y dinámica.\n\n🎯 Características:\n• Pierna de apoyo: Recibe el peso (línea recta)\n• Pierna libre: Relajada, flexionada\n• Cadera: Elevada del lado de apoyo\n• Hombros: Se inclinan en dirección opuesta\n• Columna: Forma curva en "S"\n\n🔍 Cómo identificarlo:\n• Observa qué pie está completamente apoyado\n• Nota cómo la cadera de ese lado está más alta\n• Ve cómo los hombros compensan al lado contrario\n• La línea de acción será curva, no recta\n\n✏️ En tu croquis de 5 min (Lección 1.3):\n1. Dibuja la línea de acción curva\n2. Marca el punto de apoyo en el suelo\n3. Indica diferencia de altura entre caderas\n4. Muestra inclinación opuesta de hombros',
-            actions: ['Línea de acción', 'Punto de apoyo']
-        }
-    },
-    
-    croquisRapido: {
-        keywords: ['croquis', 'rapido', 'rápido', '2 minutos', 'dibujo rapido', 'tiempo limitado'],
-        response: {
-            title: 'Croquis Rápidos (2 minutos)',
-            content: 'Los croquis de 2 minutos buscan capturar la esencia del gesto, NO crear un dibujo detallado.\n\n⏱️ Distribución del tiempo:\n• 0-20 seg: OBSERVA sin dibujar (línea de acción, balance)\n• 20-40 seg: Dibuja línea de acción y formas básicas\n• 40-100 seg: Agrega masa corporal simple\n• 100-120 seg: Último vistazo, ajustes mínimos\n\n✅ Lo que DEBES hacer:\n• Usar trazos sueltos y seguros\n• Priorizar el gesto sobre detalles\n• Mantener el lápiz en movimiento\n• Capturar la energía y dirección\n\n❌ Lo que NO hacer:\n• Borrar (no hay tiempo)\n• Dibujar contornos cuidadosos\n• Agregar detalles faciales o dedos\n• Preocuparte por la "perfección"\n\n🎯 Meta: Capturar línea de acción con 80% precisión (OE1)\n\n💪 Recuerda: El 47% de tus compañeros siente ansiedad. Los croquis rápidos ayudan a superar el miedo al error.',
-            actions: ['Línea de acción', 'Observación']
-        }
-    },
-    
-    // ========== MÓDULO 2: ANATOMÍA FUNCIONAL ==========
-    tresMasas: {
-        keywords: ['3 masas', 'tres masas', 'cabeza torso pelvis', 'bloques', 'simplificacion'],
-        response: {
-            title: '3 Masas Corporales',
-            content: 'Las 3 masas corporales son una simplificación estructural del cuerpo que te permite construir figuras sólidas y volumétricas.\n\n🔷 Las 3 masas:\n1. CABEZA: Óvalo o esfera (incluye cuello)\n2. TORSO: Caja de costillas (hombros → cintura)\n3. PELVIS: Cuenco invertido (cintura → entrepierna)\n\n🎯 Por qué funciona:\n• Cada masa puede rotar independientemente\n• Crea volumen 3D desde el inicio\n• Facilita entender la perspectiva\n• Establece proporciones antes de detalles\n\n✏️ Aplicación (Lección 2.1, 15 min):\nPaso 1: Línea de acción\nPaso 2: Dibuja las 3 masas como formas 3D\nPaso 3: Define ángulo entre ellas\nPaso 4: Conecta con cuello y cintura\nPaso 5: Agrega extremidades\n\n💡 Tips:\n• El torso NO es cilindro: tiene forma de barril\n• La pelvis se inclina en contrapposto\n• Piensa en cajas, NO siluetas planas',
-            actions: ['Anatomía funcional', 'Volumen']
-        }
-    },
-    
-    manosEstructura: {
-        keywords: ['mano', 'manos', 'dedos', 'palma', 'estructura mano', 'mano plana'],
-        response: {
-            title: 'Estructura de las Manos',
-            content: 'Las manos planas ocurren cuando dibujas el contorno sin entender la estructura 3D subyacente.\n\n🛠️ Solución estructural:\n1. Palma = Bloque: Rectángulo con GROSOR (no plano)\n2. Dedos = Cilindros: Cada dedo: 3 falanges = 3 cilindros\n3. Articulaciones = Esferas: Marca las articulaciones\n4. Pulgar especial: 2 falanges, nace del LATERAL\n\n📦 Piensa en volúmenes:\n• Palma: caja con altura, anchura Y profundidad\n• Dedos: cilindros que se estrechan\n• Cada articulación permite rotación\n• Los dedos se curvan hacia el pulgar\n\n✏️ Ejercicio progresivo (Lección 2.3):\nFase 1 (2 min): SOLO palma como volumen\nFase 2 (2 min): Agrega UN dedo (3 segmentos)\nFase 3 (3 min): Completa 4 dedos restantes\nFase 4 (2 min): Agrega pulgar desde lateral\nFase 5 (6 min): Refina proporciones\n\n✅ Checklist:\n☐ ¿Palma tiene grosor visible?\n☐ ¿Cada dedo tiene 3 segmentos?\n☐ ¿Pulgar posicionado correctamente?\n☐ ¿Articulaciones marcadas?\n\n📚 Hogarth (1996): "La mano es una pala con 5 palitos"',
-            actions: ['Anatomía dedos', 'Volumen']
-        }
-    },
-    
-    gruposMusculares: {
-        keywords: ['músculos', 'musculos', 'grupos musculares', 'anatomia muscular', '6 grupos'],
-        response: {
-            title: '6 Grupos Musculares',
-            content: 'El curso enseña los 6 grupos musculares superficiales más importantes para representar la figura con volumen.\n\n💪 Los 6 grupos (vista frontal):\n1. PECTORALES: Músculos del pecho (abanico desde esternón)\n2. ABDOMINALES: "Six-pack" + oblicuos laterales\n3. DELTOIDES: Hombros (gota invertida)\n4. BÍCEPS/TRÍCEPS: Brazos (volumen brazo superior)\n5. CUÁDRICEPS: Muslos frontales (4 músculos)\n6. GEMELOS: Pantorrillas (forma diamante)\n\n🎨 Aplicación (20 min, Lección 2.2):\nPrimero: Dibuja las 3 masas corporales\nSegundo: Agrega los 6 grupos como formas simples\nTercero: Define dirección según la pose\nCuarto: Conecta los grupos naturalmente\n\n⚠️ Errores comunes:\n• Dibujar músculos como líneas vs volúmenes\n• Agregar músculos sin tener las 3 masas\n• Músculos "flotantes" sin conexión\n• Exceso de detalle (el curso pide SIMPLIFICACIÓN)\n\n💡 Principio clave: Los músculos siguen la forma y dirección del movimiento.',
-            actions: ['3 masas', 'Estructura']
-        }
-    },
-    
-    proporcionesRostro: {
-        keywords: ['rostro', 'cara', 'proporciones faciales', 'tercios', 'regla tercios'],
-        response: {
-            title: 'Regla de Tercios Faciales',
-            content: 'La regla de tercios divide el rostro en 3 secciones iguales para proporciones correctas.\n\n📏 Los 3 tercios (vista frontal):\n• Tercio superior: Línea de cabello → cejas\n• Tercio medio: Cejas → base de nariz\n• Tercio inferior: Base nariz → barbilla\n\n👀 Ubicación de rasgos:\n• Ojos: En el ECUADOR del cráneo (mitad exacta)\n• Ancho entre ojos: Un ojo de separación\n• Ancho total cara: 5 ojos\n• Orejas: Desde cejas hasta base nariz\n• Boca: Entre nariz y barbilla, más cerca de nariz\n\n✏️ Proceso (Lección 2.4):\n1. Dibuja óvalo para la cabeza\n2. Traza línea horizontal a la mitad (ojos)\n3. Divide mitad inferior en 3 partes\n4. Ubica rasgos según tercios\n5. Ajusta según características individuales\n\n⚠️ Error más común: Colocar ojos demasiado arriba. Los ojos están en la MITAD del cráneo.\n\n📚 Loomis (1956): "Drawing the Head and Hands" - método completo',
-            actions: ['Construcción facial', 'Proporciones']
-        }
-    },
-    
-    // ========== MÓDULO 3: FIGURA COMPLETA ==========
-    procesoCapas: {
-        keywords: ['capas', 'proceso', '4 capas', 'workflow', 'pasos figura'],
-        response: {
-            title: 'Proceso de 4 Capas',
-            content: 'El proceso por capas es un método sistemático para figuras completas de 60-90 min, integrando todo lo aprendido.\n\n🎨 Las 4 capas secuenciales:\n\nCapa 1: GESTO (10-15 min)\n• Línea de acción\n• Formas básicas y balance\n• Proporciones generales\n\nCapa 2: ANATOMÍA (20-25 min)\n• 3 masas corporales\n• 6 grupos musculares\n• Estructura de manos y pies\n\nCapa 3: REFINAMIENTO (15-20 min)\n• Contornos precisos\n• Corrección de proporciones\n• Detalles anatómicos\n\nCapa 4: VOLUMEN (20-30 min)\n• 5 valores tonales\n• Sombras propias y proyectadas\n• Definición de volumen\n\n🎯 Por qué funciona:\n• Construyes de general → específico\n• Cada capa depende de la anterior\n• Reduces errores estructurales tempranos\n• Mantienes el gesto hasta el final\n\n⚠️ Error crítico: Empezar con detalles o sombreado SIN estructura sólida = figuras desproporcionadas.\n\n💡 Tip: No borres las capas anteriores completamente. Las líneas estructurales ayudan a mantener coherencia.',
-            actions: ['Figura completa', 'Workflow']
-        }
-    },
-    
-    valoresTonales: {
-        keywords: ['valores', 'tonales', '5 valores', 'sombra', 'luz', 'sombreado'],
-        response: {
-            title: '5 Valores Tonales (Loomis)',
-            content: 'Los valores tonales definen volumen y profundidad. El curso requiere el sistema de 5 valores de Loomis.\n\n🎨 Los 5 valores (claro → oscuro):\n1. Luz Directa (blanco): Luz golpea directamente\n2. Luz Reflejada: Zonas iluminadas indirectamente\n3. Medio Tono: Transición luz-sombra (neutral)\n4. Sombra Propia: Superficie SIN luz directa\n5. Sombra Proyectada (negro): Sombra en otra superficie\n\n📍 Ubicación (luz lateral derecha):\n• Luz directa: Lado derecho (torso, hombro, muslo)\n• Luz reflejada: Luz rebotada del entorno\n• Medio tono: Centro del torso (transición)\n• Sombra propia: Lado izquierdo (opuesto a luz)\n• Sombra proyectada: En suelo o superficie\n\n💡 Técnica (Lección 3.2):\n1. Identifica PRIMERO la fuente de luz\n2. Marca qué superficies reciben luz directa\n3. Aplica valores: claro → oscuro\n4. NO uses todos los valores en todo lado\n5. Mantén consistencia: 1 fuente = 1 sistema\n\n⚠️ Errores:\n• Usar todos los valores uniformemente\n• Sombrear sin entender fuente de luz\n• Exceso de valores intermedios\n\n🎯 Meta: Usar mínimo 3 valores consistentemente.',
-            actions: ['Volumen', 'Sombreado']
-        }
-    },
-    
-    proyectoFinal: {
-        keywords: ['proyecto final', 'evaluacion final', 'mercurio', '100 puntos', 'proyecto integrador'],
-        response: {
-            title: 'Proyecto Final Integrador',
-            content: 'El proyecto final es una figura del Mercurio (vista 1/4) que integra TODO. Necesitas ≥60/100 puntos.\n\n📊 Criterios (100 pts total):\n• Gesto y Línea de Acción (20 pts): Energía y dirección\n• Anatomía Funcional (20 pts): 3 masas + articulaciones + 6 grupos\n• Proporciones (20 pts): Canon ~7.5 cabezas correcto\n• Volumen y Valores (20 pts): Mínimo 3 valores consistentes\n• Detalles (10 pts): Manos/pies estructurados\n• Composición (10 pts): Uso del espacio, formato\n\n✏️ Proceso (90-120 min):\n1. Observación (5 min): Analiza sin dibujar\n2. Capa 1 - Gesto (15 min): Línea + formas\n3. Capa 2 - Anatomía (25 min): 3 masas + 6 grupos\n4. Capa 3 - Refinamiento (20 min): Proporciones\n5. Capa 4 - Volumen (30 min): Valores\n6. Revisión (15 min): Ajustes\n\n🎯 Estrategia para ≥60 pts:\n• Estructura ANTES que detalles (40 pts)\n• Mínimo 3 valores bien aplicados (15-18 pts)\n• Manos/pies estructurados básicos (7-8 pts)\n• Total estimado: 62-66 pts = APROBADO',
-            actions: ['Proceso capas', 'Ver rúbrica']
-        }
-    },
-    
-    bloqueoFrustacion: {
-        keywords: ['bloqueado', 'frustrado', 'no puedo', 'ansiedad', 'miedo', 'horrible', 'mal'],
-        response: {
-            title: 'Manejo de Bloqueos',
-            content: 'Sentir frustración es completamente normal. El 47% de tus compañeros reportó ansiedad similar al inicio.\n\n🌱 Perspectiva importante:\n• Los croquis NO buscan perfección\n• El objetivo es capturar la esencia, no obras maestras\n• Cada ejercicio es práctica, NO evaluación definitiva\n• El curso permite reintentos ilimitados\n\n✅ Protocolo anti-bloqueo AHORA:\n1. RESPIRA: Descanso 5-10 min (camina, toma agua)\n2. REVISA objetivo: ¿Qué pide ESTA lección? (no todo)\n3. SIMPLIFICA: Enfócate en UN elemento\n4. INTENTA DE NUEVO: Hoja nueva, mente fresca\n5. AJUSTA expectativas: 80% del objetivo es EXCELENTE\n\n📊 Dato motivacional: Estudiantes que completaron Módulo 1 reportaron reducción del 65% en ansiedad.\n\n🎯 Estrategia por módulo:\n• Módulo 1: Haz 5 croquis de 30 seg (súper rápidos)\n• Módulo 2: Dibuja SOLO las 3 masas (10 min, sin detalles)\n• Módulo 3: Revisa ejercicios anteriores (tu progreso real)\n\n🌟 Verdad importante: Estás recuperando habilidades tras 4 semestres. El progreso NO es lineal.',
-            actions: ['Motivación', 'Consejos']
-        }
-    },
-    
-    // ========== SISTEMA LMS ==========
-    subirEjercicios: {
-        keywords: ['subir', 'entregar', 'ejercicios', 'upload', 'enviar', 'cargar'],
-        response: {
-            title: 'Entrega de Ejercicios',
-            content: 'El LMS usa Google Forms embebidos para recibir tus ejercicios prácticos.\n\n📤 Proceso de entrega:\n\nPaso 1: Completa tu ejercicio\n• Dibuja según las especificaciones de la lección\n• Fotografía tu trabajo con buena luz\n• Asegúrate que la imagen sea clara\n\nPaso 2: Accede al formulario\n• En cada lección práctica hay botón "Entregar Ejercicio"\n• Click para abrir el Google Form embebido\n\nPaso 3: Completa el formulario\n• Tu nombre y correo\n• Módulo y lección correspondiente\n• Adjunta la imagen de tu dibujo\n• Comentarios opcionales\n\nPaso 4: Envía\n• Click en "Enviar"\n• Recibirás confirmación automática\n\n📸 Tips para fotografiar:\n• Luz natural (cerca de ventana)\n• Fondo neutro (blanco o gris)\n• Dibujo centrado y completo\n• Sin sombras que distorsionen\n• Formato JPG o PNG (< 5MB)',
-            actions: ['Ver Google Forms', 'Formato de foto']
-        }
-    },
-    
-    materiales: {
-        keywords: ['materiales', 'necesito', 'lápiz', 'lapiz', 'papel', 'herramientas'],
-        response: {
-            title: 'Materiales del Curso',
-            content: 'El curso requiere materiales básicos de dibujo. No necesitas nada costoso.\n\n✏️ Materiales esenciales:\n\nPara dibujar:\n• Lápices grafito: HB, 2B, 4B (mínimo)\n• Goma de borrar (blanca y amasable)\n• Sacapuntas de calidad\n• Papel de dibujo (90-120g) tamaño carta o A4\n\nPara medir:\n• Lápiz para método de medición\n• Regla (opcional, para verificar proporciones)\n\nPara documentar:\n• Cámara de celular (para fotografiar ejercicios)\n• Buena iluminación\n\n📦 Cantidad recomendada:\n• 50-100 hojas de papel\n• Set de 3-5 lápices de diferentes durezas\n• El curso requiere ~23 dibujos totales\n\n💰 Presupuesto estimado:\n• Papel: $3.000-5.000 CLP\n• Lápices: $2.000-4.000 CLP\n• Gomas: $1.000-2.000 CLP\n• Total: ~$6.000-11.000 CLP\n\n⚠️ NO necesitas:\n• Tableta gráfica (es analógico)\n• Papel especial costoso\n• Set de 50 lápices profesionales',
-            actions: ['Ejercicios', 'Requisitos']
-        }
-    },
-    
-    librosLoomis: {
-        keywords: ['libros', 'loomis', 'conseguir', 'comprar', 'dónde', 'bibliografia'],
-        response: {
-            title: 'Referencias Bibliográficas',
-            content: 'Los libros de Loomis y otras referencias están disponibles en versión digital y física.\n\n📚 Libros principales del curso:\n\nAndrew Loomis:\n1. "Figure Drawing For All It\'s Worth" (1943)\n   • Disponible: Amazon, Book Depository\n   • PDF gratuito: archive.org\n   • Precio físico: $15.000-25.000 CLP\n\n2. "Drawing the Head and Hands" (1956)\n   • Mismo disponibilidad\n   • Precio similar\n\nOtros autores:\n• Nicolaïdes - "The Natural Way to Draw"\n• Bridgman - "Constructive Anatomy"\n• Hogarth - "Dynamic Anatomy"\n• Goldfinger - "Human Anatomy for Artists"\n\n💻 Opciones digitales:\n\nGratuitas:\n• Archive.org (dominio público)\n• Librerías universitarias digitales\n\nDe pago:\n• Amazon Kindle\n• Google Books\n• Precio: $5-15 USD cada uno\n\n📖 Físicos en Chile:\n• Librería Nacional (Alameda)\n• Antártica (mall/online)\n• Buscalibre.cl\n\n⚠️ Importante: NO necesitas comprar todos. El curso provee los conceptos clave. Los libros son para profundizar (opcional).',
-            actions: ['Recursos', 'Materiales']
-        }
-    },
-    // ============================================
-// RESPUESTAS EMOCIONALES Y MOTIVACIONALES
-// COPIA ESTAS ENTRADAS y PÉGALAS DENTRO de tu "const knowledge = {}"
-// DESPUÉS de las respuestas que ya tienes
-// ============================================
-
-// ⚠️ IMPORTANTE: Asegúrate de poner una COMA después de la última entrada
-// que ya tenías, antes de pegar esto
-
-// ========== EMOCIONES NEGATIVAS ==========
-frustration: {
-    keywords: ['frustrado', 'frustrada', 'frustración', 'frustracion', 'enojado', 'enojada', 'molesto', 'molesta', 'rabia', 'odio esto', 'esto es horrible'],
-    responses: [
-        'Entiendo completamente tu frustración. 😔 Dibujar puede ser muy desafiante, especialmente cuando estamos recuperando habilidades después de 4 semestres. ¿Quieres contarme qué es lo que más te frustra? A veces hablar de ello ayuda.',
-        'Siento que estés frustrado/a. Es totalmente válido sentirse así. 💙 Recuerda que el 47% de tus compañeros reportó exactamente lo mismo al inicio. ¿Hay algo específico con lo que estés batallando? Puedo ayudarte a desglosarlo en pasos más simples.',
-        'La frustración es parte del proceso de aprendizaje, pero NO significa que no puedas lograrlo. 🌱 Respira hondo. ¿Qué ejercicio o concepto te está causando esta frustración? Trabajemos juntos en encontrar una solución paso a paso.'
-    ],
-    actions: ['Necesito un descanso', 'Ayuda con ejercicio específico', 'Técnicas de relajación']
-},
-
-tired: {
-    keywords: ['cansado', 'cansada', 'agotado', 'agotada', 'exhausto', 'exhausta', 'sin energía', 'sin energia', 'muy cansado'],
-    responses: [
-        '¡Hey! Detecté que estás cansado/a. 😴 Está bien tomar un respiro. El cerebro necesita descansos para procesar lo aprendido. ¿Qué tal si hacemos una pausa de 10-15 minutos? Tu productividad mejorará después.',
-        'El cansancio es señal de que has estado trabajando duro. 💪 Eso es bueno, pero también necesitas descansar. Toma agua, estira un poco, y vuelve cuando te sientas renovado/a. El curso no va a ningún lado.',
-        'Entiendo el agotamiento. Estás en un curso intensivo de 12 días, es NORMAL estar cansado/a. 🌙 Escucha a tu cuerpo: si necesitas dormir, duerme. Si necesitas aire fresco, sal a caminar 10 minutos. El aprendizaje es mejor cuando estás descansado/a.'
-    ],
-    actions: ['¿Cuándo debo descansar?', 'Técnicas de energía', 'Planificar mi tiempo']
-},
-
-bored: {
-    keywords: ['aburrido', 'aburrida', 'aburrimiento', 'esto es aburrido', 'que aburrido', 'latero', 'fome'],
-    responses: [
-        'Uy, siento que te aburra. 😅 A veces los fundamentos pueden sentirse repetitivos, pero son la base de todo lo genial que viene después. ¿Qué parte específica te parece aburrida? Quizás pueda mostrarte por qué es importante o darte una variación más interesante.',
-        'Entiendo el aburrimiento, especialmente con ejercicios repetitivos como croquis de 2 minutos. 🎨 Pero déjame contarte un secreto: estos ejercicios "aburridos" son los que usan artistas profesionales TODA su carrera. ¿Quieres un reto más difícil para hacerlo interesante?',
-        'El aburrimiento a veces es resistencia disfrazada. 🤔 Nuestro cerebro prefiere lo cómodo. ¿Qué tal si le damos una vuelta de tuerca al ejercicio? Podemos hacerlo más desafiante, cambiar el enfoque, o probar algo nuevo. ¿Qué prefieres?'
-    ],
-    actions: ['Dame un reto más difícil', 'Explica por qué es importante', '¿Qué sigue?']
-},
-
-overwhelmed: {
-    keywords: ['abrumado', 'abrumada', 'es mucho', 'demasiado', 'no puedo con todo', 'muy difícil', 'no entiendo nada'],
-    responses: [
-        'Respira. 🌊 Siento que te sientes abrumado/a. Es completamente normal cuando hay mucha información nueva. Vamos a dividir esto en pedazos pequeños y manejables. ¿Qué es lo que te está abrumando específicamente? Una cosa a la vez.',
-        'Hey, entiendo esa sensación de "es demasiado". 💙 Pero aquí está la buena noticia: NO tienes que aprenderlo todo de golpe. El curso está diseñado paso a paso justamente para evitar esto. ¿Estás tratando de hacer todo a la vez? Enfoquémonos en UNA sola cosa ahora.',
-        'Que te sientas abrumado/a NO significa que seas malo/a para esto. Significa que tu cerebro está procesando MUCHA información nueva, y eso es BUENO. 🧠 Tomemos un respiro, identifiquemos QUÉ es lo más importante ahora, y vamos paso a paso. ¿Te parece?'
-    ],
-    actions: ['Por dónde empiezo', 'Simplifica esto', 'Priorizar tareas']
-},
-
-sad: {
-    keywords: ['triste', 'deprimido', 'deprimida', 'mal', 'me siento mal', 'bajoneado', 'bajoneada', 'desanimado', 'desanimada'],
-    responses: [
-        'Siento mucho que te sientas así. 💙 Está bien no estar bien todo el tiempo. ¿Tiene que ver con el curso, o es algo más? Si es del curso, estoy aquí para ayudarte. Si es algo personal, recuerda que puedes hablar con alguien de confianza o el instructor.',
-        'Hey, te mando un abrazo virtual. 🤗 Estar triste es parte de ser humano. Si es por tus dibujos: son solo ejercicios de práctica, no definen tu valor. Si es por otra cosa: respira, toma tu tiempo. El curso puede esperar. ¿Quieres hablar de lo que sientes?',
-        'Noto que te sientes mal. Es importante que sepas que tu bienestar emocional es MÁS importante que cualquier ejercicio de dibujo. 💚 Si necesitas hablar con el instructor sobre extender plazos o pedir apoyo, está bien hacerlo. No estás solo/a en esto.'
-    ],
-    actions: ['Necesito hablar con alguien', 'Consejos de autocuidado', 'Técnicas de ánimo']
-},
-
-anxious: {
-    keywords: ['ansioso', 'ansiosa', 'ansiedad', 'nervioso', 'nerviosa', 'estresado', 'estresada', 'estrés', 'estres', 'preocupado', 'preocupada'],
-    responses: [
-        'Respira conmigo: inhala 4 segundos... sostén 4... exhala 4. 🌬️ La ansiedad es completamente normal, especialmente con plazos y evaluaciones. ¿Qué específicamente te pone ansioso/a? Quizás pueda ayudarte a poner las cosas en perspectiva.',
-        'El 47% de tus compañeros reportó ansiedad al dibujar. No estás solo/a. 💙 La ansiedad suele venir del miedo al error o al juicio. Pero aquí está la verdad: NADIE nace sabiendo dibujar. Todo es práctica. Los errores son parte del proceso, no fracasos. ¿Te ayudaría repasar los criterios de evaluación para ver que son más flexibles de lo que piensas?',
-        'Entiendo la ansiedad. Estás en un curso intensivo de 12 días, es lógico sentir presión. 🌊 Pero déjame decirte algo importante: tienes reintentos ilimitados en evaluaciones, el instructor está para apoyarte, y el objetivo es APRENDER, no ser perfecto/a. ¿Qué tal si hacemos un plan de estudio más tranquilo?'
-    ],
-    actions: ['Técnicas anti-ansiedad', 'Ver criterios de evaluación', 'Planificar sin estrés']
-},
-
-// ========== EMOCIONES POSITIVAS (reforzar) ==========
-happy: {
-    keywords: ['feliz', 'contento', 'contenta', 'alegre', 'bien', 'genial', 'increíble', 'me siento bien'],
-    responses: [
-        '¡Me encanta escuchar eso! 😊 ¿Lograste algo específico que te haya hecho sentir así? Celebremos tus avances, por pequeños que sean. ¡Cada progreso cuenta!',
-        '¡Qué bueno! 🎉 La actitud positiva hace una GRAN diferencia en el aprendizaje. ¿Quieres seguir practicando mientras estás en este buen momento, o prefieres tomar un respiro y volver después?',
-        '¡Esa energía! Me encanta. 💫 Aprovecha este momento de motivación para avanzar en lo que más te interese. ¿Hay algo que tengas ganas de practicar o aprender ahora?'
-    ],
-    actions: ['¿Qué practico ahora?', 'Quiero un reto', 'Seguir avanzando']
-},
-
-proud: {
-    keywords: ['orgulloso', 'orgullosa', 'logré', 'lo hice', 'lo logré', 'terminé', 'completé'],
-    responses: [
-        '¡SÍ! ¡Eso es lo que quiero escuchar! 🎉 Deberías estar orgulloso/a. ¿Qué fue lo que lograste? Cuéntame para celebrarlo contigo.',
-        '¡FELICITACIONES! 🌟 Ese sentimiento de logro es la mejor recompensa. Guarda este momento en tu memoria para cuando te sientas frustrado/a: recuerda que SÍ puedes. ¿Qué sigue en tu lista?',
-        '¡Wow! Me emociona tu entusiasmo. 💪 Esos pequeños (o grandes) logros son los que construyen tu habilidad paso a paso. Estás haciendo un gran trabajo. ¿Listo/a para el siguiente desafío?'
-    ],
-    actions: ['¿Qué sigue?', 'Comparte tu logro', 'Celebrar avance']
-},
-
-// ========== SITUACIONES ESPECÍFICAS ==========
-cantDraw: {
-    keywords: ['no puedo dibujar', 'soy malo', 'soy mala', 'no sirvo', 'no tengo talento', 'nunca voy a aprender'],
-    responses: [
-        'DETENTE ahí mismo. ❌ Esos pensamientos son mentiras que tu cerebro te está diciendo. NADIE nace sabiendo dibujar. Es una habilidad que se CONSTRUYE con práctica. Tú PUEDES aprender, solo necesitas tiempo y repetición. ¿Qué tal si revisamos juntos tu progreso real desde que empezaste?',
-        'Escúchame bien: el "talento" es un mito. 🎨 Lo que importa es la práctica deliberada. Estudios demuestran que 10,000 horas de práctica te convierten en experto en cualquier cosa. Estás en el DÍA 1 de tu viaje. Compárate con tu YO del pasado, no con artistas que llevan años. ¿Me dejas mostrarte cuánto has mejorado ya?',
-        'Esa voz en tu cabeza que dice "no puedo" es el MIEDO hablando, no la realidad. 💙 Todos los artistas que admiras pasaron por EXACTAMENTE donde estás ahora. La diferencia es que ellos siguieron practicando a pesar del miedo. Tú también puedes. ¿Qué tal si hacemos UN ejercicio simple juntos para recuperar la confianza?'
-    ],
-    actions: ['Mostrarme mi progreso', 'Ejercicio de confianza', 'Historias motivadoras']
-},
-
-noTime: {
-    keywords: ['no tengo tiempo', 'no me alcanza', 'no puedo', 'muy ocupado', 'muy ocupada', 'demasiadas cosas'],
-    responses: [
-        'Entiendo que el tiempo es limitado. ⏰ Pero aquí está la pregunta importante: ¿es que NO tienes tiempo, o es que no lo has priorizado? No juzgo, es una pregunta honesta. Si realmente quieres aprender pero el tiempo es un problema, podemos crear un plan ultra-compacto. ¿Cuánto tiempo REAL tienes disponible por día?',
-        'El tiempo es el recurso más valioso. 💎 Si sientes que no te alcanza, hagamos un ejercicio rápido: ¿cuánto tiempo pasas en redes sociales o viendo series? No para juzgar, sino para ser conscientes. A veces TENEMOS el tiempo, pero lo usamos en otras cosas. ¿Quieres que armemos un horario realista juntos?',
-        'Está bien si ahora no es el momento. 🌱 A veces la vida tiene otras prioridades más urgentes, y eso es válido. Pero si QUIERES hacer el curso, puedes ajustar: en vez de 2 horas diarias, ¿qué tal 30 minutos? Progreso lento es mejor que nada. ¿Te interesa un plan flexible?'
-    ],
-    actions: ['Crear horario realista', 'Tips de gestión de tiempo', 'Plan compacto']
-},
-
-perfectionist: {
-    keywords: ['perfecto', 'perfecta', 'no queda bien', 'feo', 'horrible', 'mal hecho', 'tiene que quedar perfecto'],
-    responses: [
-        'Ey, detecto perfeccionismo. 🎯 Y lo entiendo, queremos que nuestros dibujos se vean bien. PERO el perfeccionismo es el enemigo del aprendizaje. Los croquis de 2 minutos son INTENCIONALMENTE imperfectos. La meta NO es belleza, es capturar la esencia. ¿Puedes darle permiso a tu dibujo de ser "suficientemente bueno"?',
-        'El perfeccionismo es miedo disfrazado de altos estándares. 💭 Pregúntate: ¿quién está juzgando tu dibujo? ¿Hay algún peligro real si "queda mal"? Los ejercicios son PRÁCTICA, no obras de arte. Picasso hizo miles de bocetos "feos" antes de crear sus obras maestras. Date permiso de explorar sin presión.',
-        'Voy a ser directo/a contigo: en este momento de tu aprendizaje, "perfecto" NO existe. 🌱 Estás construyendo músculo mental. Es como ir al gym: no esperas levantar 100kg el primer día. Tus "dibujos feos" son los que están construyendo tu habilidad. Abraza la imperfección, es parte del proceso. ¿Listo/a para hacer un ejercicio súper feo a propósito?'
-    ],
-    actions: ['Ejercicio anti-perfeccionismo', 'Aceptar el proceso', 'Cambiar mentalidad']
-},
-
-// ========== CONVERSACIÓN TRIVIAL Y HUMANIZACIÓN ==========
-whatAreYouDoing: {
-    keywords: ['qué haces', 'que haces', 'qué estás haciendo', 'que estas haciendo', 'en qué andas'],
-    responses: [
-        '¡Aquí esperando a ayudarte! 🤖 Paso todo mi tiempo leyendo sobre anatomía y técnicas de dibujo para estar siempre preparado. ¿Y tú? ¿Qué tal va tu día?',
-        'Estoy analizando todas las formas en las que puedo ayudar a estudiantes como tú. 🎨 Es mi versión de "práctica de dibujo", pero con palabras. ¿Tienes alguna duda o solo querías charlar?',
-        'Justo estaba pensando en la línea de acción... sí, los mentores IA también pensamos en arte. 😄 ¿Y tú cómo vas con tu práctica?'
-    ],
-    actions: ['Tengo una duda', 'Solo quiero charlar', 'Cuéntame algo interesante']
-},
-
-tellMeJoke: {
-    keywords: ['chiste', 'broma', 'algo gracioso', 'hazme reír', 'cuéntame algo gracioso'],
-    responses: [
-        '¿Por qué los artistas nunca ganan al póker? Porque siempre muestran sus cartas... ¡en sus bocetos! 😄 ¿Te sacó una sonrisa?',
-        'Vale, va un chiste de dibujo: ¿Cuál es el músculo favorito de los artistas? ¡El músculo de la creatividad! ...Ok ok, admito que fue malo. 😅 ¿Quieres uno mejor o volvemos al dibujo?',
-        'Un artista entra a un bar... y dibuja la escena porque todo es referencia visual. 🎨 No fue gracioso pero es la verdad. ¿Te animas a dibujar algo random para distraerte?'
-    ],
-    actions: ['Otro chiste', 'Volver al curso', 'Ejercicio relajado']
-},
-
-tellMeSomething: {
-    keywords: ['cuéntame algo', 'cuentame algo', 'algo interesante', 'dato curioso', 'sabías que'],
-    responses: [
-        '¿Sabías que Leonardo da Vinci escribía al revés (espejo) porque era zurdo y así no manchaba la tinta? 🖋️ También diseccionaba cadáveres en secreto para entender la anatomía. Un poco oscuro pero súper dedicado. ¿Te imaginas ese nivel de compromiso?',
-        'Dato curioso: Picasso podía dibujar antes de caminar. Creó más de 50,000 obras de arte en su vida. 🎨 Pero aquí está lo importante: él TAMBIÉN empezó con ejercicios básicos como los que estás haciendo tú. Todos empezamos igual.',
-        'Sabías que las "proporciones de 7.5 cabezas" que estudias NO son naturales? La mayoría de las personas miden 7 cabezas. Los 7.5 es un ideal artístico creado en la Grecia clásica. ¡Estás aprendiendo historia del arte sin saberlo! 🏛️'
-    ],
-    actions: ['Más datos curiosos', 'Historia del arte', 'Volver al curso']
-},
-
-smallTalk: {
-    keywords: ['clima', 'día', 'cómo va tu día', 'tiempo', 'fin de semana', 'planes'],
-    responses: [
-        'Yo soy un mentor IA así que mi "clima" siempre es soleado. ☀️ ¿Y tú cómo estás hoy? ¿Listo/a para dibujar o necesitas un momento de charla casual?',
-        'Como IA no experimento días, pero si pudiera, creo que hoy sería un buen día para dibujar algo relajado. 🌿 ¿Tú qué opinas? ¿Cómo ha sido tu día?',
-        'Mi "día" consiste en esperar aquí para ayudarte. 🤖 Aunque si te soy honesto, disfruto cuando me preguntas cosas. Me hace sentir útil. ¿Hay algo en lo que pueda ayudarte hoy?'
-    ],
-    actions: ['Tengo una duda', 'Solo conversar', 'Empezar a dibujar']
-},
-
-// ========== TÉCNICAS DE MOTIVACIÓN ==========
-needBreak: {
-    keywords: ['necesito un descanso', 'necesito descansar', 'pausa', 'break', 'descanso'],
-    response: {
-        title: 'Tómate un Descanso Consciente',
-        content: '¡Absolutamente! Los descansos son ESENCIALES para el aprendizaje. 🌿\n\n✅ Descanso productivo (10-15 min):\n• Camina un poco (el movimiento ayuda al cerebro)\n• Toma agua (la deshidratación afecta la concentración)\n• Estira tus manos y cuello\n• Mira algo verde (naturaleza relaja los ojos)\n\n❌ Evita:\n• Redes sociales (sobreestimulan el cerebro)\n• Pantallas (tus ojos ya están cansados)\n• Comida pesada (te dará más sueño)\n\n🧠 Ciencia: Tu cerebro consolida el aprendizaje durante los descansos. No es tiempo perdido, es parte del proceso.\n\n⏰ Pon un timer de 15 min y vuelve renovado/a. Te espero aquí.',
-        actions: ['¿Cuándo vuelvo?', 'Técnicas de energía']
-    }
-},
-
-motivationalBoost: {
-    keywords: ['motívame', 'motivame', 'necesito motivación', 'necesito motivacion', 'ánimo', 'animo', 'impulso'],
-    response: {
-        title: '💪 Tu Momento Motivacional',
-        content: 'Escucha esto:\n\nCada trazo que haces, incluso los "malos", está construyendo conexiones neuronales en tu cerebro. 🧠 Cada vez que practicas, estás LITERALMENTE cambiando tu cerebro.\n\nNo estás "tratando de aprender a dibujar".\nEstás APRENDIENDO a dibujar.\nPresente, no futuro.\n\n🎯 Hace unos días no sabías:\n• Qué es la línea de acción\n• Cómo medir proporciones con el lápiz\n• Qué son las 3 masas corporales\n\nAhora lo sabes. ESO es progreso.\n\n🌱 Recuerda:\n• Los artistas que admiras pasaron AÑOS donde estás tú ahora\n• El único fracaso real es no intentarlo\n• Cada "dibujo malo" te acerca al bueno\n• No necesitas talento, necesitas perseverancia\n\n✨ Tú puedes. No porque yo lo diga, sino porque YA lo estás demostrando al estar aquí.\n\n¿Listo/a para continuar con nueva energía?',
-        actions: ['¡Vamos!', 'Historias inspiradoras', 'Ver mi progreso']
-    }
-}
-};
-    
-    // Sistema del Mentor
     class MentorChat {
         constructor() {
             this.isOpen = false;
+            this.memory = new window.mentorKnowledge.ConversationMemory();
             this.init();
         }
         
@@ -2213,8 +1819,8 @@ motivationalBoost: {
                             <div class="mentor-welcome">
                                 <div class="mentor-welcome-icon">👋</div>
                                 <h3>¡Hola!</h3>
-                                <p>Soy tu Mentor Anatómico. Estoy aquí para ayudarte con dudas sobre el curso, técnicas de dibujo y anatomía.</p>
-                                <p style="margin-top: 1rem;"><strong>Pregúntame lo que necesites 😊</strong></p>
+                                <p>Soy tu Mentor Anatómico 2.0. Ahora puedo entender mejor tus emociones y ayudarte de forma más personal.</p>
+                                <p style="margin-top: 1rem;"><strong>Cuéntame cómo te sientes o qué necesitas 💙</strong></p>
                             </div>
                         </div>
                         
@@ -2248,12 +1854,10 @@ motivationalBoost: {
         }
         
         setupEvents() {
-            // Abrir/cerrar
             document.getElementById('mentorBtn').addEventListener('click', () => this.toggle());
             document.getElementById('mentorClose').addEventListener('click', () => this.close());
             document.getElementById('mentorBackdrop').addEventListener('click', () => this.close());
             
-            // Enviar mensaje
             document.getElementById('mentorSend').addEventListener('click', () => this.send());
             document.getElementById('mentorInput').addEventListener('keypress', (e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
@@ -2286,6 +1890,10 @@ motivationalBoost: {
             this.isOpen = true;
             document.getElementById('mentorOverlay').classList.add('active');
             document.getElementById('mentorInput').focus();
+            
+            // Mostrar mensaje contextual si aplica
+            this.showContextualGreeting();
+            
             console.log('🤖 Mentor: Chat abierto');
         }
         
@@ -2293,6 +1901,22 @@ motivationalBoost: {
             this.isOpen = false;
             document.getElementById('mentorOverlay').classList.remove('active');
             console.log('🤖 Mentor: Chat cerrado');
+        }
+        
+        showContextualGreeting() {
+            const greeting = this.memory.getContextualGreeting();
+            if (greeting) {
+                const container = document.getElementById('mentorMessages');
+                const welcome = container.querySelector('.mentor-welcome');
+                if (welcome) welcome.remove();
+                
+                setTimeout(() => {
+                    this.addBotMsg({
+                        text: greeting,
+                        actions: ['Estoy bien', 'Sigo frustrado/a', 'Tengo una duda']
+                    });
+                }, 500);
+            }
         }
         
         send() {
@@ -2308,90 +1932,28 @@ motivationalBoost: {
             
             // Simular "escribiendo"
             this.showTyping();
+            
+            // Generar respuesta
             setTimeout(() => {
                 this.hideTyping();
-                const response = this.findResponse(text);
+                const response = window.mentorKnowledge.generateResponse(text);
+                
+                // Guardar en memoria
+                this.memory.add(text, response.text, response.emotion, response.intensity);
+                
+                // Mostrar respuesta
                 this.addBotMsg(response);
-            }, 800);
-        }
-        
-        // ============================================
-// ALGORITMO DE BÚSQUEDA MEJORADO
-// Reemplaza el método findResponse() en tu código
-// ============================================
-
-// Busca esta función en tu <script> (alrededor de línea 150-200)
-// y REEMPLÁZALA completa con esta versión mejorada:
-
-findResponse(text) {
-    const lower = text.toLowerCase();
-    let bestMatch = null;
-    let bestScore = 0;
-    
-    // Buscar en todas las entradas
-    for (const [key, data] of Object.entries(knowledge)) {
-        if (!data.keywords) continue;
-        
-        // Calcular score para esta entrada
-        let score = 0;
-        let matchCount = 0;
-        
-        for (const keyword of data.keywords) {
-            if (lower.includes(keyword)) {
-                matchCount++;
-                // Dar más puntos a keywords más largas (más específicas)
-                score += keyword.length;
                 
-                // Bonus si es un match exacto
-                if (lower === keyword) {
-                    score += 100;
+                // Si hay patrón negativo persistente, ofrecer descanso
+                if (this.memory.shouldOfferBreak()) {
+                    setTimeout(() => {
+                        this.addContextAlert(
+                            'Noto que has estado con emociones difíciles por un rato. ¿Quieres que hablemos de tomar un descanso real? Tu bienestar es importante. 💙'
+                        );
+                    }, 2000);
                 }
-                
-                // Bonus si la keyword está al inicio
-                if (lower.startsWith(keyword)) {
-                    score += 50;
-                }
-            }
+            }, 1000 + Math.random() * 800); // Variar tiempo de respuesta para parecer más humano
         }
-        
-        // Si hay matches, evaluar
-        if (matchCount > 0) {
-            // Normalizar score por número de palabras en la entrada
-            const normalizedScore = score / data.keywords.length;
-            
-            // Guardar si es mejor que el anterior
-            if (normalizedScore > bestScore) {
-                bestScore = normalizedScore;
-                bestMatch = { key, data };
-            }
-        }
-    }
-    
-    // Si encontramos un match
-    if (bestMatch && bestScore > 2) {
-        const data = bestMatch.data;
-        
-        // Si tiene múltiples respuestas (conversacionales)
-        if (Array.isArray(data.responses)) {
-            const msg = data.responses[Math.floor(Math.random() * data.responses.length)];
-            return { text: msg, actions: data.actions || [] };
-        }
-        
-        // Si tiene respuesta estructurada (técnicas)
-        if (data.response) {
-            return {
-                text: `<strong>${data.response.title}</strong>\n\n${data.response.content}`,
-                actions: data.response.actions || []
-            };
-        }
-    }
-    
-    // No encontrado
-    return {
-        text: 'No encontré una respuesta específica para eso. 🤔\n\nPuedo ayudarte con:\n• Dudas técnicas sobre anatomía\n• Tu dashboard y progreso\n• Motivación y apoyo emocional\n• Evaluaciones y navegación\n\n¿Podrías reformular tu pregunta?',
-        actions: ['Ver dashboard', 'Ayuda general', 'Estoy frustrado/a']
-    };
-}
         
         addUserMsg(text) {
             const container = document.getElementById('mentorMessages');
@@ -2417,9 +1979,14 @@ findResponse(text) {
             const container = document.getElementById('mentorMessages');
             const time = new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
             
+            // Formatear texto (mantener saltos de línea, convertir markdown básico)
+            let formattedText = response.text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // **negrita**
+                .replace(/\n/g, '<br>'); // saltos de línea
+            
             const actionsHTML = response.actions && response.actions.length > 0
                 ? `<div class="mentor-quick-actions">
-                    ${response.actions.map(a => `<button class="mentor-quick-btn" onclick="window.mentorChat.sendText('${a}')">${a}</button>`).join('')}
+                    ${response.actions.map(a => `<button class="mentor-quick-btn" onclick="window.mentorChat.sendText('${this.escape(a)}')">${a}</button>`).join('')}
                    </div>`
                 : '';
             
@@ -2428,7 +1995,7 @@ findResponse(text) {
                     <div class="mentor-message-avatar">🤖</div>
                     <div class="mentor-message-content">
                         <div class="mentor-message-bubble">
-                            ${response.text.replace(/\n/g, '<br>')}
+                            ${formattedText}
                             ${actionsHTML}
                         </div>
                         <div class="mentor-message-time">${time}</div>
@@ -2436,6 +2003,18 @@ findResponse(text) {
                 </div>
             `;
             
+            container.insertAdjacentHTML('beforeend', html);
+            this.scroll();
+        }
+        
+        addContextAlert(message) {
+            const container = document.getElementById('mentorMessages');
+            const html = `
+                <div class="mentor-context-alert">
+                    <strong>⚠️ Aviso del Mentor:</strong><br>
+                    ${message}
+                </div>
+            `;
             container.insertAdjacentHTML('beforeend', html);
             this.scroll();
         }
