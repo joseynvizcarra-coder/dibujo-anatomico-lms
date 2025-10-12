@@ -1,4 +1,98 @@
 // ============================================
+    // 7. EXPORTAR AL SCOPE GLOBAL CON NAVEGACIÓN
+    // ============================================
+    window.mentorKnowledge = {
+        // Función principal
+        generateResponse,
+        
+        // Clases
+        ConversationMemory,
+        
+        // Utilidades
+        detectQuery,
+        handleAction: function(actionText, context = {}) {
+            // Esta función maneja clicks en botones de acción
+            return generateResponse(actionText, context);
+        },
+        
+        // Datos exportados (debugging)
+        _emotional: emotionalKnowledge,
+        _technical: technicalKnowledge,
+        _basic: basicConversation,
+        
+        // Estadísticas
+        getEmotionalCount: () => Object.keys(emotionalKnowledge).length,
+        getTechnicalCount: () => Object.keys(technicalKnowledge).length,
+        getBasicCount: () => Object.keys(basicConversation).length,
+        getTotalResponses: () => {
+            return Object.keys(emotionalKnowledge).length + 
+                   Object.keys(technicalKnowledge).length +
+                   Object.keys(basicConversation).length;
+        },
+        getAllKeywords: () => {
+            const emotional = Object.values(emotionalKnowledge).flatMap(e => e.keywords);
+            const technical = Object.values(technicalKnowledge).flatMap(t => t.keywords);
+            const basic = Object.values(basicConversation).flatMap(b => b.keywords);
+            return [...emotional, ...technical, ...basic];
+        },
+        
+        // Test de respuestas
+        testResponse: function(message) {
+            console.log('🧪 Testing:', message);
+            const response = generateResponse(message);
+            console.log('📤 Response:', response);
+            return response;
+        },
+        
+        // Lista de ejemplos de consultas
+        getExamples: () => ({
+            emocional: [
+                'me siento frustrado',
+                'estoy bloqueado',
+                'tengo miedo de entregar',
+                'no puedo dibujar esto',
+                'otros dibujan mejor que yo'
+            ],
+            tecnico: [
+                '¿cómo dibujar línea de acción?',
+                'no me salen las manos',
+                '¿qué son los valores tonales?',
+                'proporciones del cuerpo',
+                'anatomía muscular'
+            ],
+            sistema: [
+                '¿cómo subo ejercicios?',
+                '¿qué materiales necesito?',
+                '¿dónde veo mi progreso?',
+                'referencias digitales',
+                'libros de loomis'
+            ],
+            basico: [
+                'hola',
+                'gracias',
+                'ayuda',
+                'adiós'
+            ]
+        })
+    };
+
+    // ============================================
+    // 8. INICIALIZACIÓN Y LOGS
+    // ============================================
+    console.log('✅ mentor-knowledge.js v2.0 MEJORADO: Cargado exitosamente');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('📊 ESTADÍSTICAS:');
+    console.log('  💙 Respuestas emocionales:', Object.keys(emotionalKnowledge).length);
+    console.log('  🎨 Respuestas técnicas:', Object.keys(technicalKnowledge).length);
+    console.log('  💬 Conversación básica:', Object.keys(basicConversation).length);
+    console.log('  📝 Total respuestas:', window.mentorKnowledge.getTotalResponses());
+    console.log('  🔑 Keywords totales:', window.mentorKnowledge.getAllKeywords().length);
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('💙 MEJORAS v2.0:');
+    console.log('  ✅ Saludos y conversación básica');
+    console.log('  ✅ Navegación de botones funcional');
+    console.log('  ✅ Handlers de acciones contextuales');
+    console.log('  ✅// ============================================
 // MENTOR ANATÓMICO v2.0 - BASE DE CONOCIMIENTO COMPLETA
 // Integra: ChatGPT JSON emocional + mentor.html técnico + conocimiento original
 // ============================================
@@ -684,8 +778,79 @@
     // ============================================
     // 3. SISTEMA DE DETECCIÓN INTELIGENTE MEJORADO
     // ============================================
+
+    // 3.1 Saludos y conversación básica
+    const basicConversation = {
+        saludos: {
+            keywords: ['hola', 'hi', 'hey', 'buenos dias', 'buenas tardes', 'buenas noches', 'saludos', 'que tal'],
+            responses: [
+                {
+                    text: "¡Hola! 👋 Soy tu Mentor Anatómico.\n\n**¿En qué puedo ayudarte hoy?**\n\n💙 **Emocional:**\n- Me siento frustrado/a\n- Estoy bloqueado/a\n- Tengo ansiedad por la evaluación\n\n🎨 **Técnico:**\n- Cómo dibujar línea de acción\n- Proporciones del cuerpo\n- Manos y pies\n- Valores tonales\n\n📚 **Sistema:**\n- Cómo subir ejercicios\n- Ver mi progreso\n- Materiales necesarios\n\n**Escribe tu duda o elige un tema de las opciones rápidas arriba** ⬆️",
+                    actions: ['Duda técnica', 'Necesito apoyo emocional', 'Pregunta sobre el curso']
+                }
+            ]
+        },
+        
+        gracias: {
+            keywords: ['gracias', 'thanks', 'thank you', 'te lo agradezco', 'muy util', 'me ayudo'],
+            responses: [
+                {
+                    text: "¡De nada! 💙 Me alegra haberte ayudado.\n\n**¿Necesitas algo más?**\n\n- ¿Otra duda técnica?\n- ¿Apoyo emocional?\n- ¿Información del curso?\n\nEstoy aquí para ti. Sigue practicando, vas por buen camino ✨",
+                    actions: ['Tengo otra duda', 'Estoy bien, gracias', 'Ver mi progreso']
+                }
+            ]
+        },
+        
+        despedida: {
+            keywords: ['chao', 'adios', 'nos vemos', 'hasta luego', 'bye', 'me voy'],
+            responses: [
+                {
+                    text: "¡Hasta pronto! 👋✨\n\n**Recuerda:**\n- Practica un poco cada día (mejor que mucho de una vez)\n- El progreso es acumulativo\n- Cada línea cuenta\n\n**Nos vemos cuando vuelvas. ¡Sigue dibujando!** 🎨",
+                    actions: ['Ver estadísticas', 'Cerrar chat']
+                }
+            ]
+        },
+
+        ayuda: {
+            keywords: ['ayuda', 'help', 'que puedes hacer', 'que sabes', 'como funciona', 'comandos'],
+            responses: [
+                {
+                    text: "**¿Cómo puedo ayudarte?** 🤖\n\n**Puedo responder sobre:**\n\n💙 **EMOCIONAL (15 situaciones):**\n- Frustración, bloqueo, ansiedad\n- Comparación con otros\n- Síndrome del impostor\n- Desmotivación, cansancio\n- Desánimo nocturno\n\n🎨 **TÉCNICO (40 respuestas):**\n\n**Módulo 1:** Línea de acción, medición, contrapposto, croquis rápidos, observación\n\n**Módulo 2:** 3 masas, anatomía muscular, manos/pies, rostro, escorzo\n\n**Módulo 3:** Proceso por capas, valores tonales, proyecto final, composición\n\n📚 **SISTEMA (12 respuestas):**\n- Cómo usar el curso\n- Subir ejercicios\n- Materiales necesarios\n- Referencias y recursos\n\n**Escribe tu duda en lenguaje natural.** Ejemplos:\n- \"Me siento frustrado\"\n- \"¿Cómo dibujar manos?\"\n- \"¿Cómo subo mi ejercicio?\"",
+                    actions: ['Ver todas las categorías', 'Tengo una duda', 'Gracias']
+                }
+            ]
+        }
+    };
+
+    // 3.2 Función para detectar conversación básica
+    function detectBasicConversation(text) {
+        const lowerText = text.toLowerCase().trim();
+        
+        for (const [type, data] of Object.entries(basicConversation)) {
+            for (const keyword of data.keywords) {
+                if (lowerText.includes(keyword) || lowerText === keyword) {
+                    return {
+                        type: 'basic',
+                        subtype: type,
+                        response: data.responses[0]
+                    };
+                }
+            }
+        }
+        
+        return null;
+    }
+
+    // 3.3 Función principal de detección
     function detectQuery(text) {
         const lowerText = text.toLowerCase();
+        
+        // 0. DETECTAR CONVERSACIÓN BÁSICA (prioridad máxima)
+        const basicMatch = detectBasicConversation(text);
+        if (basicMatch) {
+            return basicMatch;
+        }
+
         let bestMatch = null;
         let bestScore = 0;
         let type = null;
@@ -745,17 +910,36 @@
     }
 
     // ============================================
-    // 4. GENERADOR DE RESPUESTAS MEJORADO
+    // 4. GENERADOR DE RESPUESTAS MEJORADO CON NAVEGACIÓN
     // ============================================
-    function generateResponse(userMessage) {
+    function generateResponse(userMessage, context = {}) {
         const detected = detectQuery(userMessage);
 
+        // MANEJO DE CONVERSACIÓN BÁSICA
+        if (detected && detected.type === 'basic') {
+            return {
+                type: 'basic',
+                subtype: detected.subtype,
+                title: getBasicTitle(detected.subtype),
+                text: detected.response.text,
+                actions: detected.response.actions || [],
+                actionHandlers: getActionHandlers(detected.subtype)
+            };
+        }
+
+        // SI NO ENCONTRÓ NADA
         if (!detected) {
             return {
                 type: 'notfound',
-                title: "🔍 No encontré respuesta exacta",
-                text: `No pude encontrar una respuesta específica para tu consulta.\n\n**💡 Sugerencias:**\n- Intenta reformular con otras palabras\n- Usa términos clave: línea de acción, proporciones, anatomía, valores\n- Explora las preguntas rápidas arriba\n- Cambia el módulo si buscas algo específico\n\n**Puedo ayudarte con:**\n- 💙 **Emocional:** frustración, bloqueo, ansiedad, comparación\n- 🎨 **Técnico:** gesto, anatomía, proporciones, valores\n- 📚 **Sistema:** cómo usar el curso, materiales, referencias\n\n**📧 Para dudas no cubiertas:** Contacta al instructor.`,
-                actions: ['Tengo duda técnica', 'Me siento frustrado/a', 'Pregunta sobre curso']
+                title: "🔍 Mmm, no entendí bien tu pregunta",
+                text: `No pude entender exactamente qué necesitas, pero estoy aquí para ayudarte 💙.\n\n**Ejemplos de cosas que puedo responder:**\n\n💙 **Emocional:**\n- "Me siento frustrado"\n- "Estoy bloqueado"\n- "Tengo miedo de entregar"\n\n🎨 **Técnico:**\n- "¿Cómo dibujar línea de acción?"\n- "No me salen las manos"\n- "¿Qué son los valores tonales?"\n\n📚 **Sistema:**\n- "¿Cómo subo ejercicios?"\n- "¿Qué materiales necesito?"\n- "¿Dónde veo mi progreso?"\n\n**Intenta reformular tu pregunta o elige una opción:**`,
+                actions: ['Duda técnica', 'Apoyo emocional', 'Info del curso', 'Ver ayuda completa'],
+                actionHandlers: {
+                    'Duda técnica': () => generateResponse('ayuda tecnica'),
+                    'Apoyo emocional': () => generateResponse('ayuda emocional'),
+                    'Info del curso': () => generateResponse('ayuda sistema'),
+                    'Ver ayuda completa': () => generateResponse('ayuda')
+                }
             };
         }
 
@@ -769,7 +953,8 @@
                 text: emotionData.responses.text,
                 microDialogo: emotionData.responses.microDialogo || null,
                 accionConcreta: emotionData.responses.accionConcreta || null,
-                actions: emotionData.responses.actions || []
+                actions: emotionData.responses.actions || [],
+                actionHandlers: getEmotionalActionHandlers(detected.match, emotionData.responses.actions)
             };
         }
 
@@ -782,9 +967,195 @@
                 module: techData.module || 'general',
                 title: techData.responses.title || 'Respuesta Técnica',
                 text: techData.responses.text,
-                actions: techData.responses.actions || []
+                actions: techData.responses.actions || [],
+                actionHandlers: getTechnicalActionHandlers(detected.match, techData.responses.actions)
             };
         }
+    }
+
+    // ============================================
+    // 5. MANEJADORES DE ACCIONES (navegación de botones)
+    // ============================================
+    
+    function getBasicTitle(subtype) {
+        const titles = {
+            saludos: '👋 ¡Hola!',
+            gracias: '💙 De nada',
+            despedida: '👋 ¡Hasta pronto!',
+            ayuda: '❓ Ayuda del Mentor'
+        };
+        return titles[subtype] || 'Mentor Anatómico';
+    }
+
+    function getActionHandlers(subtype) {
+        const handlers = {
+            saludos: {
+                'Duda técnica': () => generateResponse('dame ayuda tecnica'),
+                'Necesito apoyo emocional': () => generateResponse('necesito apoyo'),
+                'Pregunta sobre el curso': () => generateResponse('como funciona el curso')
+            },
+            gracias: {
+                'Tengo otra duda': () => generateResponse('ayuda'),
+                'Estoy bien, gracias': () => generateResponse('adios'),
+                'Ver mi progreso': () => ({
+                    type: 'action',
+                    action: 'showStats',
+                    title: '📊 Ver Estadísticas',
+                    text: 'Redirigiendo al dashboard de progreso...'
+                })
+            },
+            despedida: {
+                'Ver estadísticas': () => ({
+                    type: 'action',
+                    action: 'showStats',
+                    title: '📊 Estadísticas',
+                    text: 'Mostrando tu progreso...'
+                }),
+                'Cerrar chat': () => ({
+                    type: 'action',
+                    action: 'closeChat',
+                    title: '👋 Chat cerrado',
+                    text: 'Vuelve cuando necesites ayuda. ¡Sigue practicando!'
+                })
+            },
+            ayuda: {
+                'Ver todas las categorías': () => generateResponse('muestrame todas las categorias'),
+                'Tengo una duda': () => generateResponse('ayuda'),
+                'Gracias': () => generateResponse('gracias')
+            }
+        };
+        return handlers[subtype] || {};
+    }
+
+    function getEmotionalActionHandlers(emotion, actions) {
+        const handlers = {};
+        
+        actions.forEach(action => {
+            const lowerAction = action.toLowerCase();
+            
+            // Patrones comunes de respuesta
+            if (lowerAction.includes('dame') && lowerAction.includes('ejercicio')) {
+                handlers[action] = () => generateExerciseSuggestion(emotion);
+            } else if (lowerAction.includes('necesito') && lowerAction.includes('ayuda')) {
+                handlers[action] = () => generateResponse('necesito mas ayuda');
+            } else if (lowerAction.includes('estoy mejor') || lowerAction.includes('lo haré') || lowerAction.includes('voy a')) {
+                handlers[action] = () => ({
+                    type: 'emotional',
+                    title: '💪 ¡Excelente actitud!',
+                    text: 'Me alegra mucho que te sientas mejor 💙.\n\nRecuerda:\n- El progreso es acumulativo\n- Cada línea cuenta\n- Está bien tener días difíciles\n\n**¿Necesitas algo más o seguimos con el dibujo?**',
+                    actions: ['Tengo otra duda', 'Voy a practicar', 'Gracias']
+                });
+            } else if (lowerAction.includes('gracias') || lowerAction.includes('ok') || lowerAction.includes('entendido')) {
+                handlers[action] = () => generateResponse('gracias');
+            } else {
+                // Handler genérico
+                handlers[action] = () => ({
+                    type: 'followup',
+                    title: '💙 Entendido',
+                    text: `Perfecto. ${action}.\n\n¿En qué más puedo ayudarte?`,
+                    actions: ['Otra duda técnica', 'Necesito más apoyo', 'Estoy bien']
+                });
+            }
+        });
+        
+        return handlers;
+    }
+
+    function getTechnicalActionHandlers(topic, actions) {
+        const handlers = {};
+        
+        actions.forEach(action => {
+            const lowerAction = action.toLowerCase();
+            
+            // Mapeo de acciones comunes a temas relacionados
+            if (lowerAction.includes('ejemplo') || lowerAction.includes('visual')) {
+                handlers[action] = () => ({
+                    type: 'technical',
+                    title: '🎨 Ejemplo Visual',
+                    text: `Para ${topic}, te recomiendo:\n\n1. Busca referencias en Line of Action (line-of-action.com)\n2. Observa videos de Proko en YouTube\n3. Revisa las referencias del curso en la carpeta correspondiente\n\n**¿Necesitas más ayuda con esto?**`,
+                    actions: ['Referencias digitales', 'Otra duda', 'Gracias']
+                });
+            } else if (lowerAction.includes('ejercicio') || lowerAction.includes('practicar')) {
+                handlers[action] = () => generatePracticeSuggestion(topic);
+            } else if (lowerAction.includes('entendido') || lowerAction.includes('ok') || lowerAction.includes('claro')) {
+                handlers[action] = () => generateResponse('gracias');
+            } else {
+                // Intentar buscar el tema relacionado
+                const relatedTopic = findRelatedTopic(action);
+                if (relatedTopic) {
+                    handlers[action] = () => generateResponse(action);
+                } else {
+                    handlers[action] = () => ({
+                        type: 'followup',
+                        title: '🎨 Continuando',
+                        text: `Sobre ${action}...\n\n¿Qué aspecto específico te interesa?`,
+                        actions: ['Explicación básica', 'Ejercicio práctico', 'Otra cosa']
+                    });
+                }
+            }
+        });
+        
+        return handlers;
+    }
+
+    // ============================================
+    // 6. FUNCIONES AUXILIARES
+    // ============================================
+    
+    function generateExerciseSuggestion(emotion) {
+        const exercises = {
+            frustracionGeneral: {
+                text: "**Ejercicio anti-frustración (5 min):**\n\n1. **Respira** 4-4-6 (3 veces)\n2. **Dibuja 5 círculos rápidos** sin levantar el lápiz\n3. **Dibuja 5 líneas fluidas** de un lado a otro\n4. **Croquis de 2 min** sin borrar NADA\n5. **Observa sin juzgar** qué salió\n\nEste ejercicio resetea tu cerebro. No busca perfección, busca MOVIMIENTO.\n\n**¿Te sientes mejor para continuar?**"
+            },
+            bloqueoCreativo: {
+                text: "**Ejercicio anti-bloqueo (10 min):**\n\n1. Ve 10 fotos de poses en Pinterest/Line of Action\n2. Elige la que MÁS te llame (no pienses mucho)\n3. Dibújala EN 3 MINUTOS (sí, mal hecho)\n4. Elige otra\n5. Repite\n\nEl bloqueo se rompe con VOLUMEN, no con perfección.\n\n**Hazlo ahora y cuéntame cómo te fue.**"
+            },
+            default: {
+                text: "**Ejercicio rápido (5 min):**\n\n1. Dibuja 10 líneas de acción (30 seg cada una)\n2. Sin levantar el lápiz\n3. Cada línea = una pose diferente\n4. No borres NADA\n\nEste ejercicio libera tensión y entrena tu ojo.\n\n**¿Listo para intentarlo?**"
+            }
+        };
+        
+        const exercise = exercises[emotion] || exercises.default;
+        
+        return {
+            type: 'exercise',
+            title: '💪 Ejercicio Práctico',
+            text: exercise.text,
+            actions: ['Lo hice, ¿qué sigue?', 'Necesito otra cosa', 'Gracias']
+        };
+    }
+
+    function generatePracticeSuggestion(topic) {
+        const practices = {
+            lineaAccion: "**Práctica: Línea de Acción (15 min)**\n\n1. Ve a line-of-action.com\n2. Configura 30 segundos por pose\n3. Dibuja SOLO la línea de acción (una línea curva)\n4. Haz 20 poses\n5. NO agregues cuerpo, solo la línea\n\nEsto entrena tu ojo para capturar el gesto esencial.",
+            manosPies: "**Práctica: Manos (20 min)**\n\n1. Dibuja TU MANO (está ahí, úsala)\n2. Solo la palma como bloque 3D (5 min)\n3. Agrega UN dedo con 3 cilindros (5 min)\n4. Completa los demás dedos (10 min)\n\nNo busques perfección, busca ESTRUCTURA 3D.",
+            tresMasas: "**Práctica: 3 Masas (15 min)**\n\n1. Busca 5 referencias de poses diferentes\n2. Dibuja solo las 3 masas en cada una:\n   - Cabeza (óvalo)\n   - Torso (caja)\n   - Pelvis (cubo)\n3. Ignora brazos, piernas, detalles\n4. 3 minutos por pose\n\nEsto solidifica tu comprensión de estructura base.",
+            default: "**Práctica General (15 min)**\n\n1. Croquis de 2 minutos\n2. Haz 5 poses diferentes\n3. Enfócate en lo que estás aprendiendo\n4. Sin borrar\n\nLa práctica constante es más importante que la perfección."
+        };
+        
+        const practice = practices[topic] || practices.default;
+        
+        return {
+            type: 'practice',
+            title: '📝 Ejercicio Práctico',
+            text: practice,
+            actions: ['Entendido', 'Dame otro ejercicio', 'Otra duda']
+        };
+    }
+
+    function findRelatedTopic(actionText) {
+        const lowerAction = actionText.toLowerCase();
+        
+        // Buscar en keywords de conocimiento técnico
+        for (const [topic, data] of Object.entries(technicalKnowledge)) {
+            for (const keyword of data.keywords) {
+                if (lowerAction.includes(keyword)) {
+                    return topic;
+                }
+            }
+        }
+        
+        return null;
     }
 
     // ============================================
@@ -875,32 +1246,14 @@
         }
     }
 
-    // ============================================
-    // 6. EXPORTAR AL SCOPE GLOBAL
-    // ============================================
-    window.mentorKnowledge = {
-        generateResponse,
-        ConversationMemory,
-        detectQuery,
-        // Exportar knowledge para debugging
-        _emotional: emotionalKnowledge,
-        _technical: technicalKnowledge,
-        // Utilidades
-        getEmotionalCount: () => Object.keys(emotionalKnowledge).length,
-        getTechnicalCount: () => Object.keys(technicalKnowledge).length,
-        getAllKeywords: () => {
-            const emotional = Object.values(emotionalKnowledge).flatMap(e => e.keywords);
-            const technical = Object.values(technicalKnowledge).flatMap(t => t.keywords);
-            return [...emotional, ...technical];
-        }
-    };
-
-    console.log('✅ mentor-knowledge.js v2.0: Base de conocimiento cargada');
-    console.log('📊 Respuestas emocionales:', Object.keys(emotionalKnowledge).length);
-    console.log('🎨 Respuestas técnicas:', Object.keys(technicalKnowledge).length);
-    console.log('🔑 Keywords totales:', window.mentorKnowledge.getAllKeywords().length);
-    console.log('💙 Emocional: Tono tierno + microDialogos + acciones concretas');
-    console.log('🎨 Técnico: Ampliado con contenido de mentor.html');
-    console.log('🚀 Listo para usar!');
+    console.log('  ✅ Respuestas "no encontrado" mejoradas');
+    console.log('  ✅ Sugerencias de ejercicios contextuales');
+    console.log('  ✅ Sistema de memoria conversacional');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('🧪 TESTING:');
+    console.log('  Prueba: window.mentorKnowledge.testResponse("hola")');
+    console.log('  Ejemplos: window.mentorKnowledge.getExamples()');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('🚀 Sistema listo para usar!');
 
 })();
