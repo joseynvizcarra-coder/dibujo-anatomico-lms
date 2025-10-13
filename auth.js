@@ -260,13 +260,15 @@ async function updateModuleProgress(moduleNumber, progressData) {
     currentProgress.totalTimeSpent = Object.values(currentProgress.modules).reduce((sum, m) => sum + (m.timeSpent || 0), 0);
     currentProgress.lastActivity = new Date().toISOString();
 
-    // Guardar en localStorage
+    // Guardar en localStorage SIEMPRE
     const progressKey = STORAGE_KEYS.progress(currentUser.username);
     localStorage.setItem(progressKey, JSON.stringify(currentProgress));
     console.log(`💾 Progreso guardado en localStorage`);
 
-    // Intentar guardar en Google Sheets
+    // ✅ GUARDAR EN GOOGLE SHEETS SIEMPRE (para que el dashboard tenga datos actualizados)
     try {
+      console.log(`📤 Guardando progreso en Google Sheets...`);
+      
       const result = await makeJSONPRequest('saveProgress', {
         username: currentUser.username,
         progressData: JSON.stringify(currentProgress)
@@ -275,7 +277,9 @@ async function updateModuleProgress(moduleNumber, progressData) {
       if (result.success) {
         console.log(`✅ Progreso módulo ${moduleNumber} guardado en Sheets`);
         
-        await logUserActivity('progress_update', currentUser, {
+        // Registrar actividad según el estado
+        const activityType = progressData.completed ? 'module_completed' : 'progress_update';
+        await logUserActivity(activityType, currentUser, {
           moduleId: moduleNumber,
           progress: currentProgress.modules[moduleNumber].progress,
           completed: currentProgress.modules[moduleNumber].completed
@@ -284,11 +288,11 @@ async function updateModuleProgress(moduleNumber, progressData) {
         return true;
       } else {
         console.warn('⚠️ No se pudo guardar en Sheets:', result.error);
-        return true; // Aún así retornar true porque se guardó en localStorage
+        return true; // localStorage guardado es suficiente para continuar
       }
     } catch (sheetError) {
-      console.warn('⚠️ Error guardando en Sheets (progreso local guardado):', sheetError);
-      return true; // localStorage guardado es suficiente
+      console.warn('⚠️ Error guardando en Sheets (progreso local OK):', sheetError);
+      return true; // No fallar si Sheets no responde
     }
   } catch (err) {
     console.error('❌ Error en updateModuleProgress:', err);
