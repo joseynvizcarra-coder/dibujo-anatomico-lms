@@ -1,7 +1,7 @@
 // =====================================================
-// auth.js v3.2 - LMS Dibujo Anatómico (UAH)
+// auth.js v3.3 - LMS Dibujo Anatómico (UAH)
 // Universidad Alberto Hurtado - Joselyn Vizcarra
-// SISTEMA CORREGIDO CON MIGRACIÓN AUTOMÁTICA
+// SISTEMA CORREGIDO - activityType funcionando
 // =====================================================
 
 const API_URL = 'https://script.google.com/macros/s/AKfycbwTOCRqlmssB095rOHJrGswLF25e1DFk8fZDkbziw1g4_JomibsX0OfWY8xmNPOiHt8/exec';
@@ -19,7 +19,7 @@ const STORAGE_KEYS = {
   progress: (username) => `progress_${username}`
 };
 
-console.log('✅ auth.js v3.2 cargado correctamente');
+console.log('✅ auth.js v3.3 cargado correctamente');
 
 // =========================
 // AUTENTICACIÓN
@@ -37,7 +37,7 @@ async function authenticateUser(username, password) {
       localStorage.setItem(STORAGE_KEYS.authenticated, 'true');
       localStorage.setItem(STORAGE_KEYS.sessionStart, userData.loginTime || new Date().toISOString());
 
-      await logUserActivity('login', userData, { timestamp: new Date().toISOString() });
+      await logUserActivity('login', '', '', { timestamp: new Date().toISOString() });
 
       showLoading(false);
       return { success: true, user: userData };
@@ -55,7 +55,7 @@ async function authenticateUser(username, password) {
 function logout() {
   const user = getCurrentUser();
   if (user) {
-    logUserActivity('logout', user);
+    logUserActivity('logout', '', '');
   }
   localStorage.clear();
   window.location.href = 'login.html';
@@ -279,8 +279,7 @@ async function updateModuleProgress(moduleNumber, progressData) {
         
         // Registrar actividad según el estado
         const activityType = progressData.completed ? 'module_completed' : 'progress_update';
-        await logUserActivity(activityType, currentUser, {
-          moduleId: moduleNumber,
+        await logUserActivity(activityType, moduleNumber.toString(), '', {
           progress: currentProgress.modules[moduleNumber].progress,
           completed: currentProgress.modules[moduleNumber].completed
         });
@@ -300,25 +299,30 @@ async function updateModuleProgress(moduleNumber, progressData) {
   }
 }
 
-// ✅ CORREGIDO: Registrar actividad
-async function logUserActivity(action, moduleId = '', lessonId = '', details = {}) {
+// ✅ FUNCIÓN CORREGIDA: Registrar actividad del usuario
+async function logUserActivity(activityType, moduleId = '', lessonId = '', details = {}) {
   try {
-    // ... código ...
-    
+    const user = getCurrentUser();
+    if (!user) {
+      console.warn('⚠️ No hay usuario para registrar actividad');
+      return false;
+    }
+
     const params = {
-      action: 'logActivity',
-      userId: user.id,
-      username: user.username,
-      activityType: action,  // ✅ CORREGIDO: activityType en lugar de action
-      moduleId: moduleId,
-      lessonId: lessonId,
-      // ...
+      action: 'logActivity',           // Para el switch en Google Sheets
+      userId: user.id || '',
+      username: user.username || '',
+      activityType: activityType,      // ✅ CRÍTICO: activityType (no "action")
+      moduleId: moduleId.toString(),
+      lessonId: lessonId.toString(),
+      details: typeof details === 'string' ? details : JSON.stringify(details),
+      sessionId: user.sessionId || ''
     };
 
     const result = await makeJSONPRequest('logActivity', params);
 
     if (result.success) {
-      console.log(`📝 Actividad registrada: ${activityType}`);
+      console.log(`✅ Actividad registrada: ${activityType}`);
       return true;
     } else {
       console.warn('⚠️ No se registró actividad:', result.error);
@@ -439,7 +443,7 @@ async function testGoogleSheetsConnection() {
     const result3 = await makeJSONPRequest('logActivity', {
       userId: user.id || '',
       username: user.username,
-      action: 'test',
+      activityType: 'test',  // ✅ CORREGIDO: activityType
       moduleId: '1',
       lessonId: '1',
       details: JSON.stringify({ test: true }),
@@ -451,8 +455,8 @@ async function testGoogleSheetsConnection() {
 
     if (result2.success && result3.success) {
       alert('✅ CONEXIÓN EXITOSA\n\n' +
-            '✓ getProgress funciona\n' +
-            '✓ logActivity funciona\n\n' +
+            '✔ getProgress funciona\n' +
+            '✔ logActivity funciona\n\n' +
             'Revisa la consola para más detalles.');
     } else {
       alert('⚠️ PROBLEMAS DETECTADOS\n\nRevisa la consola para más detalles.');
@@ -473,10 +477,10 @@ window.testGoogleSheetsConnection = testGoogleSheetsConnection;
 
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    console.log('✅ auth.js v3.2 inicializado completamente');
+    console.log('✅ auth.js v3.3 inicializado completamente');
     console.log('🧪 Para probar conexión: testGoogleSheetsConnection()');
   });
 } else {
-  console.log('✅ auth.js v3.2 inicializado completamente');
+  console.log('✅ auth.js v3.3 inicializado completamente');
   console.log('🧪 Para probar conexión: testGoogleSheetsConnection()');
 }
