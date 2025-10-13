@@ -4,7 +4,7 @@
 // SISTEMA CORREGIDO CON MIGRACIÓN AUTOMÁTICA
 // =====================================================
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbyC7a8awiUuJaRb_WQkEeldYCmn1r6ToTF4rL0KW6eHVGmM3SdeQtYpY7A9N4unFDum/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbwTOCRqlmssB095rOHJrGswLF25e1DFk8fZDkbziw1g4_JomibsX0OfWY8xmNPOiHt8/exec';
 const TOTAL_MODULES = 3;
 const SESSION_TIMEOUT = 24 * 60 * 60 * 1000; // 24 horas
 
