@@ -1,7 +1,7 @@
 // =====================================================
-// auth.js v3.0 - LMS Dibujo Anatómico (UAH)
+// auth.js v3.1 - LMS Dibujo Anatómico (UAH)
 // Universidad Alberto Hurtado - Joselyn Vizcarra
-// SISTEMA UNIFICADO - Octubre 2025
+// SISTEMA CORREGIDO - Octubre 2025
 // =====================================================
 
 const API_URL = 'https://script.google.com/macros/s/AKfycbyC7a8awiUuJaRb_WQkEeldYCmn1r6ToTF4rL0KW6eHVGmM3SdeQtYpY7A9N4unFDum/exec';
@@ -12,15 +12,14 @@ const SESSION_TIMEOUT = 24 * 60 * 60 * 1000; // 24 horas
 // CONFIGURACIÓN UNIFICADA
 // =========================
 
-// ✅ CLAVE: Sistema de keys unificado
 const STORAGE_KEYS = {
   user: 'currentUser',
   authenticated: 'isAuthenticated',
   sessionStart: 'sessionStart',
-  progress: (username) => `progress_${username}` // ← FORMATO UNIFICADO
+  progress: (username) => `progress_${username}`
 };
 
-console.log('✅ auth.js v3.0 cargado correctamente');
+console.log('✅ auth.js v3.1 cargado correctamente');
 
 // =========================
 // AUTENTICACIÓN
@@ -29,7 +28,9 @@ console.log('✅ auth.js v3.0 cargado correctamente');
 async function authenticateUser(username, password) {
   try {
     showLoading(true, 'Verificando credenciales...');
-    const result = await makeJSONPRequest('authenticate', { username, password });
+    
+    // ✅ CORREGIDO: Cambiado de 'authenticate' a 'login'
+    const result = await makeJSONPRequest('login', { username, password });
 
     if (result.success) {
       const userData = result.data;
@@ -136,12 +137,10 @@ function makeJSONPRequest(action, params = {}) {
 // GESTIÓN DE PROGRESO
 // =========================
 
-// ✅ FUNCIÓN PRINCIPAL: Obtener progreso del estudiante
 async function getStudentProgress() {
   const currentUser = getCurrentUser();
   if (!currentUser) return null;
 
-  // 1. Intentar leer desde localStorage primero (más rápido)
   const progressKey = STORAGE_KEYS.progress(currentUser.username);
   const localProgress = localStorage.getItem(progressKey);
 
@@ -153,7 +152,17 @@ async function getStudentProgress() {
     }
   }
 
-  // 2. Si no hay local, inicializar estructura vacía
+  // ✅ CORREGIDO: Obtener progreso desde Google Sheets
+  try {
+    const result = await makeJSONPRequest('getProgress', { username: currentUser.username });
+    if (result.success && result.data) {
+      localStorage.setItem(progressKey, JSON.stringify(result.data));
+      return result.data;
+    }
+  } catch (error) {
+    console.error('❌ Error obteniendo progreso:', error);
+  }
+
   return initializeEmptyProgress();
 }
 
@@ -170,7 +179,7 @@ function initializeEmptyProgress() {
   };
 }
 
-// ✅ FUNCIÓN CORREGIDA: Actualizar progreso de módulo
+// ✅ CORREGIDO: Actualizar progreso
 async function updateModuleProgress(moduleNumber, progressData) {
   try {
     const currentUser = getCurrentUser();
@@ -179,60 +188,46 @@ async function updateModuleProgress(moduleNumber, progressData) {
       return false;
     }
 
-    // Validar rol
     if (!['estudiante', 'evaluador'].includes(currentUser.role)) {
       console.warn(`⚠️ Rol sin permisos para guardar: ${currentUser.role}`);
       return false;
     }
 
-    // Validar número de módulo
     if (moduleNumber < 1 || moduleNumber > TOTAL_MODULES) {
       console.error(`❌ Número de módulo inválido: ${moduleNumber}`);
       return false;
     }
 
-    // 1. Obtener progreso actual
     let currentProgress = await getStudentProgress();
     if (!currentProgress) currentProgress = initializeEmptyProgress();
 
-    // 2. Actualizar módulo específico
     currentProgress.modules[moduleNumber] = {
       ...currentProgress.modules[moduleNumber],
       ...progressData,
       lastUpdate: new Date().toISOString()
     };
 
-    // 3. Recalcular progreso general
     const completedModules = Object.values(currentProgress.modules).filter(m => m.completed).length;
     currentProgress.overallProgress = Math.round((completedModules / TOTAL_MODULES) * 100);
     currentProgress.totalTimeSpent = Object.values(currentProgress.modules).reduce((sum, m) => sum + (m.timeSpent || 0), 0);
     currentProgress.lastActivity = new Date().toISOString();
 
-    // 4. Guardar en localStorage (backup local)
     const progressKey = STORAGE_KEYS.progress(currentUser.username);
     localStorage.setItem(progressKey, JSON.stringify(currentProgress));
-    console.log('✅ Progreso guardado en localStorage');
 
-    // 5. Sincronizar con Google Sheets
-    const mod = currentProgress.modules[moduleNumber];
-    const result = await makeJSONPRequest('updateProgress', { // ← CORREGIDO: era 'saveProgress'
+    // ✅ CORREGIDO: Llamar a 'saveProgress' con la estructura completa
+    const result = await makeJSONPRequest('saveProgress', {
       username: currentUser.username,
-      module: moduleNumber,
-      completed: mod.completed ? 1 : 0,
-      progress: mod.progress || 0,
-      timeSpent: mod.timeSpent || 0,
-      lessons: (mod.completedLessons || []).join(','),
-      timestamp: Date.now()
+      progressData: JSON.stringify(currentProgress) // Enviar todo el objeto
     });
 
     if (result.success) {
       console.log(`✅ Progreso módulo ${moduleNumber} guardado en Sheets`);
       
-      // Registrar actividad
       await logUserActivity('progress_update', currentUser, {
         moduleId: moduleNumber,
-        progress: mod.progress,
-        completed: mod.completed
+        progress: currentProgress.modules[moduleNumber].progress,
+        completed: currentProgress.modules[moduleNumber].completed
       });
       
       return true;
@@ -246,7 +241,7 @@ async function updateModuleProgress(moduleNumber, progressData) {
   }
 }
 
-// ✅ FUNCIÓN CORREGIDA: Registrar actividad del usuario
+// ✅ CORREGIDO: Registrar actividad
 async function logUserActivity(activityType, userData, details = {}) {
   try {
     if (!userData || !userData.username) {
@@ -255,15 +250,16 @@ async function logUserActivity(activityType, userData, details = {}) {
     }
 
     const params = {
+      userId: userData.id || '',
       username: userData.username,
-      activityType: activityType,
+      action: activityType,
       moduleId: details.moduleId || '',
       lessonId: details.lessonId || '',
       details: JSON.stringify(details),
-      timestamp: Date.now()
+      sessionId: userData.sessionId || ''
     };
 
-    const result = await makeJSONPRequest('logActivity', params); // ← Este caso debe existir en Apps Script
+    const result = await makeJSONPRequest('logActivity', params);
 
     if (result.success) {
       console.log(`📝 Actividad registrada: ${activityType}`);
@@ -370,45 +366,43 @@ async function testGoogleSheetsConnection() {
   showLoading(true, 'Probando conexión con Google Sheets...');
 
   try {
-    // Test 1: Guardar progreso
-    console.log('Test 1: updateProgress...');
-    const result1 = await makeJSONPRequest('updateProgress', {
+    console.log('Test 1: login...');
+    const result1 = await makeJSONPRequest('login', {
       username: user.username,
-      module: 1,
-      completed: 0,
-      progress: 5,
-      timeSpent: 1,
-      lessons: '1',
-      timestamp: Date.now()
+      password: 'test'
     });
-
     console.log('Resultado Test 1:', result1);
 
-    // Test 2: Registrar actividad
-    console.log('Test 2: logActivity...');
-    const result2 = await makeJSONPRequest('logActivity', {
+    console.log('Test 2: getProgress...');
+    const result2 = await makeJSONPRequest('getProgress', {
+      username: user.username
+    });
+    console.log('Resultado Test 2:', result2);
+
+    console.log('Test 3: logActivity...');
+    const result3 = await makeJSONPRequest('logActivity', {
+      userId: user.id || '',
       username: user.username,
-      activityType: 'test_connection',
+      action: 'test',
       moduleId: '1',
       lessonId: '1',
       details: JSON.stringify({ test: true }),
-      timestamp: Date.now()
+      sessionId: user.sessionId || ''
     });
-
-    console.log('Resultado Test 2:', result2);
+    console.log('Resultado Test 3:', result3);
 
     showLoading(false);
 
-    if (result1.success && result2.success) {
+    if (result2.success && result3.success) {
       alert('✅ CONEXIÓN EXITOSA\n\n' +
-            '✓ updateProgress funciona\n' +
-            '✓ logActivity funciona\n\n' +
+            '✔ getProgress funciona\n' +
+            '✔ logActivity funciona\n\n' +
             'Revisa la consola para más detalles.');
       showToast('Conexión exitosa con Google Sheets', 'success');
     } else {
       alert('⚠️ CONEXIÓN PARCIAL\n\n' +
-            (result1.success ? '✓' : '✗') + ' updateProgress\n' +
-            (result2.success ? '✓' : '✗') + ' logActivity\n\n' +
+            (result2.success ? '✔' : '✗') + ' getProgress\n' +
+            (result3.success ? '✔' : '✗') + ' logActivity\n\n' +
             'Revisa la consola para más detalles.');
       showToast('Algunos endpoints fallaron', 'warning');
     }
@@ -421,7 +415,6 @@ async function testGoogleSheetsConnection() {
   }
 }
 
-// Hacer función disponible globalmente para testing desde consola
 window.testGoogleSheetsConnection = testGoogleSheetsConnection;
 
 // =========================
@@ -441,5 +434,5 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-console.log('✅ auth.js v3.0 inicializado completamente');
+console.log('✅ auth.js v3.1 inicializado completamente');
 console.log('🧪 Para probar conexión: testGoogleSheetsConnection()');
