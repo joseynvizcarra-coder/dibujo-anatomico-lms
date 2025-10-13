@@ -1,10 +1,10 @@
 // =====================================================
-// auth.js v3.1 - LMS Dibujo Anatómico (UAH)
+// auth.js v3.2 - LMS Dibujo Anatómico (UAH)
 // Universidad Alberto Hurtado - Joselyn Vizcarra
-// SISTEMA CORREGIDO - Octubre 2025
+// SISTEMA CORREGIDO CON MIGRACIÓN AUTOMÁTICA
 // =====================================================
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbxwh_2REV51UCEBEYHFAomVkAakCLwYpQ4koz2v-3negIzZCf6ILYtGgTd5A3Bffa8i/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbyC7a8awiUuJaRb_WQkEeldYCmn1r6ToTF4rL0KW6eHVGmM3SdeQtYpY7A9N4unFDum/exec';
 const TOTAL_MODULES = 3;
 const SESSION_TIMEOUT = 24 * 60 * 60 * 1000; // 24 horas
 
@@ -19,7 +19,7 @@ const STORAGE_KEYS = {
   progress: (username) => `progress_${username}`
 };
 
-console.log('✅ auth.js v3.1 cargado correctamente');
+console.log('✅ auth.js v3.2 cargado correctamente');
 
 // =========================
 // AUTENTICACIÓN
@@ -29,7 +29,6 @@ async function authenticateUser(username, password) {
   try {
     showLoading(true, 'Verificando credenciales...');
     
-    // ✅ CORREGIDO: Cambiado de 'authenticate' a 'login'
     const result = await makeJSONPRequest('login', { username, password });
 
     if (result.success) {
@@ -148,57 +147,40 @@ async function getStudentProgress() {
     try {
       const parsed = JSON.parse(localProgress);
       
-      // ✅ NUEVO: Validar y migrar formato viejo
+      // ✅ CRÍTICO: Validar y migrar formato viejo
       if (!parsed.modules) {
-        console.warn('⚠️ Formato viejo detectado, migrando...');
+        console.warn('⚠️ Formato viejo detectado, migrando automáticamente...');
         
-        // Migrar formato viejo a nuevo
-        const migratedProgress = {
-          modules: {
-            1: { 
-              completed: false, 
-              progress: 0, 
-              timeSpent: 0, 
-              completedLessons: [],
-              evaluations: {},
-              lastUpdate: null 
-            },
-            2: { 
-              completed: false, 
-              progress: 0, 
-              timeSpent: 0, 
-              completedLessons: [],
-              evaluations: {},
-              lastUpdate: null 
-            },
-            3: { 
-              completed: false, 
-              progress: 0, 
-              timeSpent: 0, 
-              completedLessons: [],
-              evaluations: {},
-              lastUpdate: null 
-            }
-          },
-          overallProgress: 0,
-          totalTimeSpent: 0,
-          lastActivity: new Date().toISOString()
-        };
+        // Crear estructura nueva vacía
+        const migratedProgress = initializeEmptyProgress();
         
         // Guardar formato nuevo
         localStorage.setItem(progressKey, JSON.stringify(migratedProgress));
-        console.log('✅ Progreso migrado a nuevo formato');
+        console.log('✅ Progreso migrado al nuevo formato');
         
         return migratedProgress;
+      }
+      
+      // ✅ Validar que modules tenga la estructura correcta
+      if (!parsed.modules[1] || !parsed.modules[2] || !parsed.modules[3]) {
+        console.warn('⚠️ Estructura de modules incompleta, inicializando...');
+        const fixed = initializeEmptyProgress();
+        // Copiar datos existentes si hay
+        if (parsed.modules[1]) fixed.modules[1] = parsed.modules[1];
+        if (parsed.modules[2]) fixed.modules[2] = parsed.modules[2];
+        if (parsed.modules[3]) fixed.modules[3] = parsed.modules[3];
+        localStorage.setItem(progressKey, JSON.stringify(fixed));
+        return fixed;
       }
       
       return parsed;
     } catch (error) {
       console.error('❌ Error parseando progreso local:', error);
+      return initializeEmptyProgress();
     }
   }
 
-  // ✅ CORREGIDO: Obtener progreso desde Google Sheets
+  // Intentar obtener desde Google Sheets
   try {
     const result = await makeJSONPRequest('getProgress', { username: currentUser.username });
     if (result.success && result.data) {
@@ -215,9 +197,9 @@ async function getStudentProgress() {
 function initializeEmptyProgress() {
   return {
     modules: {
-      1: { completed: false, progress: 0, timeSpent: 0, completedLessons: [], lastUpdate: null },
-      2: { completed: false, progress: 0, timeSpent: 0, completedLessons: [], lastUpdate: null },
-      3: { completed: false, progress: 0, timeSpent: 0, completedLessons: [], lastUpdate: null }
+      1: { completed: false, progress: 0, timeSpent: 0, completedLessons: [], evaluations: {}, lastUpdate: null },
+      2: { completed: false, progress: 0, timeSpent: 0, completedLessons: [], evaluations: {}, lastUpdate: null },
+      3: { completed: false, progress: 0, timeSpent: 0, completedLessons: [], evaluations: {}, lastUpdate: null }
     },
     overallProgress: 0,
     totalTimeSpent: 0,
@@ -225,7 +207,7 @@ function initializeEmptyProgress() {
   };
 }
 
-// ✅ CORREGIDO: Actualizar progreso
+// ✅ CORREGIDO: Actualizar progreso con validación robusta
 async function updateModuleProgress(moduleNumber, progressData) {
   try {
     const currentUser = getCurrentUser();
@@ -245,41 +227,68 @@ async function updateModuleProgress(moduleNumber, progressData) {
     }
 
     let currentProgress = await getStudentProgress();
-    if (!currentProgress) currentProgress = initializeEmptyProgress();
+    
+    // ✅ CRÍTICO: Asegurar que currentProgress tenga la estructura correcta
+    if (!currentProgress || !currentProgress.modules) {
+      console.warn('⚠️ currentProgress no válido, inicializando...');
+      currentProgress = initializeEmptyProgress();
+    }
 
+    // ✅ Validar que el módulo específico exista
+    if (!currentProgress.modules[moduleNumber]) {
+      console.warn(`⚠️ Módulo ${moduleNumber} no existe, inicializando...`);
+      currentProgress.modules[moduleNumber] = {
+        completed: false,
+        progress: 0,
+        timeSpent: 0,
+        completedLessons: [],
+        evaluations: {},
+        lastUpdate: null
+      };
+    }
+
+    // Actualizar datos del módulo
     currentProgress.modules[moduleNumber] = {
       ...currentProgress.modules[moduleNumber],
       ...progressData,
       lastUpdate: new Date().toISOString()
     };
 
+    // Recalcular progreso general
     const completedModules = Object.values(currentProgress.modules).filter(m => m.completed).length;
     currentProgress.overallProgress = Math.round((completedModules / TOTAL_MODULES) * 100);
     currentProgress.totalTimeSpent = Object.values(currentProgress.modules).reduce((sum, m) => sum + (m.timeSpent || 0), 0);
     currentProgress.lastActivity = new Date().toISOString();
 
+    // Guardar en localStorage
     const progressKey = STORAGE_KEYS.progress(currentUser.username);
     localStorage.setItem(progressKey, JSON.stringify(currentProgress));
+    console.log(`💾 Progreso guardado en localStorage`);
 
-    // ✅ CORREGIDO: Llamar a 'saveProgress' con la estructura completa
-    const result = await makeJSONPRequest('saveProgress', {
-      username: currentUser.username,
-      progressData: JSON.stringify(currentProgress) // Enviar todo el objeto
-    });
-
-    if (result.success) {
-      console.log(`✅ Progreso módulo ${moduleNumber} guardado en Sheets`);
-      
-      await logUserActivity('progress_update', currentUser, {
-        moduleId: moduleNumber,
-        progress: currentProgress.modules[moduleNumber].progress,
-        completed: currentProgress.modules[moduleNumber].completed
+    // Intentar guardar en Google Sheets
+    try {
+      const result = await makeJSONPRequest('saveProgress', {
+        username: currentUser.username,
+        progressData: JSON.stringify(currentProgress)
       });
-      
-      return true;
-    } else {
-      console.error('❌ Error guardando en Sheets:', result.error);
-      return false;
+
+      if (result.success) {
+        console.log(`✅ Progreso módulo ${moduleNumber} guardado en Sheets`);
+        
+        await logUserActivity('progress_update', currentUser, {
+          moduleId: moduleNumber,
+          progress: currentProgress.modules[moduleNumber].progress,
+          completed: currentProgress.modules[moduleNumber].completed
+        });
+        
+        return true;
+      } else {
+        console.warn('⚠️ No se pudo guardar en Sheets:', result.error);
+        return true; // Aún así retornar true porque se guardó en localStorage
+      }
+    } catch (sheetError) {
+      console.warn('⚠️ Error guardando en Sheets (progreso local guardado):', sheetError);
+      return true; // localStorage guardado es suficiente
     }
   } catch (err) {
     console.error('❌ Error en updateModuleProgress:', err);
@@ -441,44 +450,32 @@ async function testGoogleSheetsConnection() {
 
     if (result2.success && result3.success) {
       alert('✅ CONEXIÓN EXITOSA\n\n' +
-            '✔ getProgress funciona\n' +
-            '✔ logActivity funciona\n\n' +
+            '✓ getProgress funciona\n' +
+            '✓ logActivity funciona\n\n' +
             'Revisa la consola para más detalles.');
-      showToast('Conexión exitosa con Google Sheets', 'success');
     } else {
-      alert('⚠️ CONEXIÓN PARCIAL\n\n' +
-            (result2.success ? '✔' : '✗') + ' getProgress\n' +
-            (result3.success ? '✔' : '✗') + ' logActivity\n\n' +
-            'Revisa la consola para más detalles.');
-      showToast('Algunos endpoints fallaron', 'warning');
+      alert('⚠️ PROBLEMAS DETECTADOS\n\nRevisa la consola para más detalles.');
     }
-
-  } catch (err) {
+  } catch (error) {
     showLoading(false);
-    console.error('❌ Error en test:', err);
-    alert('❌ ERROR DE CONEXIÓN\n\n' + err.message);
-    showToast('Error de conexión', 'error');
+    alert('❌ ERROR EN LA PRUEBA\n\n' + error.message);
+    console.error('Error en test:', error);
   }
 }
 
+// Hacer disponible globalmente para testing
 window.testGoogleSheetsConnection = testGoogleSheetsConnection;
 
 // =========================
-// ANIMACIONES CSS
+// INICIALIZACIÓN
 // =========================
 
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes slideIn {
-    from { transform: translateX(400px); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-  }
-  @keyframes slideOut {
-    from { transform: translateX(0); opacity: 1; }
-    to { transform: translateX(400px); opacity: 0; }
-  }
-`;
-document.head.appendChild(style);
-
-console.log('✅ auth.js v3.1 inicializado completamente');
-console.log('🧪 Para probar conexión: testGoogleSheetsConnection()');
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('✅ auth.js v3.2 inicializado completamente');
+    console.log('🧪 Para probar conexión: testGoogleSheetsConnection()');
+  });
+} else {
+  console.log('✅ auth.js v3.2 inicializado completamente');
+  console.log('🧪 Para probar conexión: testGoogleSheetsConnection()');
+}
