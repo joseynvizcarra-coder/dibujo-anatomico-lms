@@ -1194,7 +1194,7 @@
             grid.innerHTML = '';
             
             modulesData.forEach(module => {
-                const moduleProgress = progress ? 
+                const moduleProgress = (progress && progress.modules) ? 
                     (progress.modules[module.id] || {}) : {};
                 
                 const card = createModuleCard(module, moduleProgress);
