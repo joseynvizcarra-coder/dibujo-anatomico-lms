@@ -1671,12 +1671,22 @@
             let completedModules = 0;
 
             const moduleDetails = modules.map(moduleNum => {
-                const key = `module${moduleNum}_progress`;
-                const saved = localStorage.getItem(key);
-                
-                if (saved) {
-                    try {
-                        const data = JSON.parse(saved);
+                const currentUser = getCurrentUser();
+if (!currentUser) continue;
+const progressKey = `progress_${currentUser.username}`;
+const allProgress = localStorage.getItem(progressKey);
+
+let data = null;
+if (allProgress) {
+    try {
+        const parsed = JSON.parse(allProgress);
+        data = parsed.modules ? parsed.modules[moduleNum] : null;
+    } catch (e) {
+        console.error('Error parsing progress:', e);
+    }
+}
+
+if (data && data.completedLessons) {
                         const completed = data.completedLessons || [];
                         const evaluations = data.evaluations || {};
                         
