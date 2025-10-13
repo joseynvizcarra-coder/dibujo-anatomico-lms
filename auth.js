@@ -6,8 +6,7 @@
 // CONFIGURACIÓN API
 // ========================
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbzPAp02xSdupXQE_LDrJdhPnh0mX1DRiYDfYTPCzQankJvsQ0YVTAJ8T1rooBd6N8J0gQ/exec';
-
+const API_URL = 'https://script.google.com/macros/s/AKfycbygraW83QphICTmm9KdASa7Qax2TXABGmqLkYx5zruenWG45WeBGGFn8MnwXIscwrK4/exec';
 // ========================
 // FUNCIONES DE AUTENTICACIÓN
 // ========================
