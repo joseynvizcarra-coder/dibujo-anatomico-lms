@@ -4,7 +4,7 @@
 // SISTEMA UNIFICADO - Octubre 2025
 // =====================================================
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbygraW83QphICTmm9KdASa7Qax2TXABGmqLkYx5zruenWG45WeBGGFn8MnwXIscwrK4/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbyC7a8awiUuJaRb_WQkEeldYCmn1r6ToTF4rL0KW6eHVGmM3SdeQtYpY7A9N4unFDum/exec';
 const TOTAL_MODULES = 3;
 const SESSION_TIMEOUT = 24 * 60 * 60 * 1000; // 24 horas
 
