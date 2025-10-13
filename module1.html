@@ -563,7 +563,7 @@
         let moduleStartTime = Date.now();
         let lessonStartTime = Date.now();
 
-        const STORAGE_KEY = 'module1_progress';
+        const STORAGE_KEY = `progress_${getCurrentUser().username}`;
         const MODULE_NUMBER = 1;
         const TOTAL_LESSONS = 3;
         const DEBUG_MODE = true;
