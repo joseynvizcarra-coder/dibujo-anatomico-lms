@@ -121,10 +121,6 @@
             box-shadow: 0 0 0 0.25rem rgba(44, 95, 102, 0.25);
         }
 
-        .form-control:focus ~ .input-group-text {
-            border-color: var(--primary-dark);
-        }
-
         .btn-login {
             background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
             border: none;
@@ -211,7 +207,6 @@
             text-decoration: underline;
         }
 
-        /* Responsive */
         @media (max-width: 576px) {
             .main-wrapper {
                 padding: 1rem 0.5rem;
@@ -236,7 +231,7 @@
     </style>
 </head>
 <body>
-    <!-- Cargar auth.js -->
+    <!-- ✅ Cargar auth.js CORREGIDO -->
     <script src="auth.js"></script>
 
     <div class="main-wrapper">
@@ -277,7 +272,7 @@
                                             type="text" 
                                             class="form-control form-control-lg" 
                                             id="username" 
-                                            placeholder="Ej: Joselyn.INSTRUCTOR"
+                                            placeholder="Ej: JuanPablo.Bascunan"
                                             required
                                             autocomplete="username"
                                         >
@@ -381,7 +376,7 @@
     <script>
         // Verificar sesión existente al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🔐 Inicializando página de login...');
+            console.log('🔍 Inicializando página de login...');
             
             const currentUser = getCurrentUser();
             if (currentUser && isAuthenticated()) {
@@ -392,14 +387,13 @@
                 console.log('ℹ️ No hay sesión activa');
             }
 
-            // Focus en campo usuario
             document.getElementById('username').focus();
         });
 
         // Manejar login
         async function handleLogin(event) {
             event.preventDefault();
-            console.log('🔑 Intentando autenticación...');
+            console.log('🔐 Intentando autenticación...');
             
             const form = event.target;
             const username = document.getElementById('username').value.trim();
@@ -409,16 +403,12 @@
             const loginBtnLoading = document.getElementById('loginBtnLoading');
             const errorAlert = document.getElementById('errorAlert');
             
-            // Validación básica
             if (!username || !password) {
                 showError('Por favor completa todos los campos');
                 return;
             }
 
-            // Ocultar errores previos
             errorAlert.classList.add('d-none');
-            
-            // Deshabilitar botón y mostrar loading
             loginBtn.disabled = true;
             loginBtnText.classList.add('d-none');
             loginBtnLoading.classList.remove('d-none');
@@ -445,14 +435,12 @@
                 showError('Error de conexión. Verifica tu internet.');
                 showNotification('Error de conexión. Verifica tu internet.', 'error');
             } finally {
-                // Rehabilitar botón
                 loginBtn.disabled = false;
                 loginBtnText.classList.remove('d-none');
                 loginBtnLoading.classList.add('d-none');
             }
         }
 
-        // Redireccionar según rol
         function redirectUser(role) {
             console.log('🚀 Redirigiendo usuario con rol:', role);
             switch(role) {
@@ -468,7 +456,6 @@
             }
         }
 
-        // Mostrar error en la página
         function showError(message) {
             const errorAlert = document.getElementById('errorAlert');
             const errorMessage = document.getElementById('errorMessage');
@@ -476,19 +463,16 @@
             errorMessage.textContent = message;
             errorAlert.classList.remove('d-none');
             
-            // Auto-ocultar después de 5 segundos
             setTimeout(() => {
                 errorAlert.classList.add('d-none');
             }, 5000);
         }
 
-        // Mostrar notificación Toast
         function showNotification(message, type = 'success') {
             const toastEl = document.getElementById('notificationToast');
             const toastHeader = document.getElementById('toastHeader');
             const toastBody = document.getElementById('toastBody');
             
-            // Configurar estilo según tipo
             if (type === 'success') {
                 toastHeader.className = 'toast-header bg-success text-white';
                 toastHeader.querySelector('i').className = 'bi bi-check-circle-fill me-2';
@@ -506,21 +490,12 @@
             toast.show();
         }
 
-        // Limpiar errores al escribir
         document.getElementById('username').addEventListener('input', function() {
             document.getElementById('errorAlert').classList.add('d-none');
         });
 
         document.getElementById('password').addEventListener('input', function() {
             document.getElementById('errorAlert').classList.add('d-none');
-        });
-
-        // Permitir login con Enter en password
-        document.getElementById('password').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                document.getElementById('loginForm').dispatchEvent(new Event('submit'));
-            }
         });
     </script>
 </body>
