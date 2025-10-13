@@ -146,7 +146,53 @@ async function getStudentProgress() {
 
   if (localProgress) {
     try {
-      return JSON.parse(localProgress);
+      const parsed = JSON.parse(localProgress);
+      
+      // ✅ NUEVO: Validar y migrar formato viejo
+      if (!parsed.modules) {
+        console.warn('⚠️ Formato viejo detectado, migrando...');
+        
+        // Migrar formato viejo a nuevo
+        const migratedProgress = {
+          modules: {
+            1: { 
+              completed: false, 
+              progress: 0, 
+              timeSpent: 0, 
+              completedLessons: [],
+              evaluations: {},
+              lastUpdate: null 
+            },
+            2: { 
+              completed: false, 
+              progress: 0, 
+              timeSpent: 0, 
+              completedLessons: [],
+              evaluations: {},
+              lastUpdate: null 
+            },
+            3: { 
+              completed: false, 
+              progress: 0, 
+              timeSpent: 0, 
+              completedLessons: [],
+              evaluations: {},
+              lastUpdate: null 
+            }
+          },
+          overallProgress: 0,
+          totalTimeSpent: 0,
+          lastActivity: new Date().toISOString()
+        };
+        
+        // Guardar formato nuevo
+        localStorage.setItem(progressKey, JSON.stringify(migratedProgress));
+        console.log('✅ Progreso migrado a nuevo formato');
+        
+        return migratedProgress;
+      }
+      
+      return parsed;
     } catch (error) {
       console.error('❌ Error parseando progreso local:', error);
     }
