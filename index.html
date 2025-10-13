@@ -1558,7 +1558,7 @@
             const currentUser = getCurrentUser();
             if (!currentUser) return;
             
-            const progressKey = `progress_${currentUser.email || currentUser.username}`;
+            const progressKey = `progress_${currentUser.username}`;
             const progress = getStudentProgress();
             
             if (progress) {
