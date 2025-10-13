@@ -1,7 +1,6 @@
 // =====================================================
-// auth.js v3.0 - LMS Dibujo Anatómico (UAH)
+// auth.js v3.1 - FIX CONEXIÓN - LMS Dibujo Anatómico
 // Universidad Alberto Hurtado - Joselyn Vizcarra
-// SISTEMA UNIFICADO - Compatible con Google Apps Script
 // =====================================================
 
 const API_URL = 'https://script.google.com/macros/s/AKfycbygraW83QphICTmm9KdASa7Qax2TXABGmqLkYx5zruenWG45WeBGGFn8MnwXIscwrK4/exec';
@@ -9,26 +8,34 @@ const TOTAL_MODULES = 3;
 const SESSION_TIMEOUT = 24 * 60 * 60 * 1000; // 24 horas
 
 // =========================
-// 🔑 SISTEMA DE KEYS UNIFICADO
+// 🔧 DEBUG MODE - ACTIVA PARA VER LOS LOGS
 // =========================
-// CRITICAL: Todos los módulos usan el mismo formato
-function getProgressKey(username) {
-  return `progress_${username}`;
+const DEBUG_MODE = true;
+
+function debugLog(message, data = null) {
+  if (DEBUG_MODE) {
+    console.log('🔍 [DEBUG]', message);
+    if (data) console.log('📦 Data:', data);
+  }
 }
 
 // =========================
-// AUTENTICACIÓN
+// 🔐 AUTENTICACIÓN
 // =========================
 
 async function authenticateUser(username, password) {
   try {
     showLoading(true, 'Verificando credenciales...');
     
-    // Llamada a Google Apps Script
+    debugLog('Iniciando autenticación', { username });
+    
+    // ✅ CORREGIDO: Usar 'authenticate' como action
     const result = await makeJSONPRequest('authenticate', { 
       username, 
       password 
     });
+
+    debugLog('Respuesta del servidor', result);
 
     if (result.success) {
       const userData = result.user;
@@ -37,6 +44,8 @@ async function authenticateUser(username, password) {
       localStorage.setItem('currentUser', JSON.stringify(userData));
       localStorage.setItem('isAuthenticated', 'true');
       localStorage.setItem('sessionStart', new Date().toISOString());
+
+      debugLog('✅ Sesión guardada', userData);
 
       // Registrar login
       await logUserActivity('login', userData, { 
@@ -47,24 +56,29 @@ async function authenticateUser(username, password) {
       return { success: true, user: userData };
     } else {
       showLoading(false);
+      console.error('❌ Error de autenticación:', result.error);
       return { success: false, error: result.error || 'Credenciales incorrectas' };
     }
   } catch (err) {
     showLoading(false);
-    console.error('❌ Error autenticando:', err);
-    return { success: false, error: 'Error de conexión con Google Sheets.' };
+    console.error('❌ Error en authenticateUser:', err);
+    return { success: false, error: 'Error de conexión: ' + err.message };
   }
 }
 
 // =========================
-// JSONP REQUEST
+// 📡 JSONP REQUEST - CON DEBUGGING MEJORADO
 // =========================
 
 function makeJSONPRequest(action, params = {}) {
   return new Promise((resolve, reject) => {
     const callbackName = 'jsonp_cb_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 
+    debugLog(`📡 Iniciando JSONP Request`, { action, params });
+
     window[callbackName] = function (data) {
+      debugLog(`📥 Respuesta recibida para ${action}`, data);
+      
       delete window[callbackName];
       if (document.head.contains(script)) {
         document.head.removeChild(script);
@@ -79,18 +93,34 @@ function makeJSONPRequest(action, params = {}) {
     });
     
     const url = `${API_URL}?${queryParams.toString()}`;
-    console.log('📡 JSONP Request →', action, params);
+    
+    // 🔍 IMPORTANTE: Este log te muestra el URL exacto que se está llamando
+    console.log('🌐 URL completa:', url);
 
     const script = document.createElement('script');
     script.src = url;
     script.async = true;
-    script.onerror = () => reject(new Error('Error de conexión con el servidor'));
+    
+    script.onerror = (error) => {
+      console.error('❌ Error cargando script:', error);
+      console.error('URL que falló:', url);
+      delete window[callbackName];
+      if (document.head.contains(script)) {
+        document.head.removeChild(script);
+      }
+      reject(new Error('Error de conexión con Google Apps Script'));
+    };
+
+    script.onload = () => {
+      debugLog('✅ Script cargado correctamente');
+    };
 
     document.head.appendChild(script);
     
     // Timeout de 30 segundos
     setTimeout(() => {
       if (window[callbackName]) {
+        console.error('⏱️ Timeout: El servidor no respondió en 30s');
         delete window[callbackName];
         if (document.head.contains(script)) {
           document.head.removeChild(script);
@@ -102,7 +132,7 @@ function makeJSONPRequest(action, params = {}) {
 }
 
 // =========================
-// SESIÓN Y USUARIO
+// 👤 SESIÓN Y USUARIO
 // =========================
 
 function isAuthenticated() {
@@ -167,8 +197,12 @@ function protectPage(requiredRole = null) {
 }
 
 // =========================
-// PROGRESO - SISTEMA UNIFICADO
+// 📊 PROGRESO - SISTEMA UNIFICADO
 // =========================
+
+function getProgressKey(username) {
+  return `progress_${username}`;
+}
 
 function initializeEmptyProgress() {
   return {
@@ -183,7 +217,6 @@ function initializeEmptyProgress() {
   };
 }
 
-// ✅ FUNCIÓN CORREGIDA: Lee progreso del localStorage usando KEY UNIFICADA
 function getStudentProgressLocal() {
   const currentUser = getCurrentUser();
   if (!currentUser) return initializeEmptyProgress();
@@ -202,7 +235,6 @@ function getStudentProgressLocal() {
   return initializeEmptyProgress();
 }
 
-// ✅ FUNCIÓN CORREGIDA: Guarda progreso en localStorage usando KEY UNIFICADA
 function saveStudentProgressLocal(progressData) {
   const currentUser = getCurrentUser();
   if (!currentUser) return false;
@@ -211,7 +243,7 @@ function saveStudentProgressLocal(progressData) {
   
   try {
     localStorage.setItem(progressKey, JSON.stringify(progressData));
-    console.log('✅ Progreso guardado en localStorage');
+    debugLog('✅ Progreso guardado en localStorage');
     return true;
   } catch (error) {
     console.error('❌ Error guardando en localStorage:', error);
@@ -219,7 +251,6 @@ function saveStudentProgressLocal(progressData) {
   }
 }
 
-// ✅ FUNCIÓN CORREGIDA: Sincroniza con Google Sheets
 async function updateModuleProgress(moduleNumber, progressData) {
   try {
     const currentUser = getCurrentUser();
@@ -227,6 +258,8 @@ async function updateModuleProgress(moduleNumber, progressData) {
       console.warn('❌ No hay usuario autenticado');
       return false;
     }
+
+    debugLog('Actualizando progreso del módulo', { moduleNumber, progressData });
 
     // Validar número de módulo
     if (moduleNumber < 1 || moduleNumber > TOTAL_MODULES) {
@@ -264,6 +297,13 @@ async function updateModuleProgress(moduleNumber, progressData) {
     // 2. Sincronizar con Google Sheets
     const mod = currentProgress.modules[moduleNumber];
     
+    debugLog('Enviando a Google Sheets', {
+      username: currentUser.username,
+      module: moduleNumber,
+      completed: mod.completed,
+      progress: mod.progress
+    });
+
     const result = await makeJSONPRequest('updateProgress', {
       username: currentUser.username,
       module: moduleNumber,
@@ -275,7 +315,7 @@ async function updateModuleProgress(moduleNumber, progressData) {
     });
 
     if (result.success) {
-      console.log(`✅ Progreso módulo ${moduleNumber} guardado en Sheets`);
+      debugLog(`✅ Progreso módulo ${moduleNumber} guardado en Sheets`);
       
       // Registrar actividad
       await logUserActivity('progress_update', currentUser, {
@@ -296,16 +336,17 @@ async function updateModuleProgress(moduleNumber, progressData) {
 }
 
 // =========================
-// LOG DE ACTIVIDADES
+// 📝 LOG DE ACTIVIDADES
 // =========================
 
-// ✅ FUNCIÓN CORREGIDA: Registra actividades en Google Sheets
 async function logUserActivity(activityType, userData, details = {}) {
   try {
     if (!userData || !userData.username) {
       console.warn('⚠️ No se puede registrar actividad sin usuario');
       return false;
     }
+
+    debugLog('Registrando actividad', { activityType, details });
 
     const result = await makeJSONPRequest('logActivity', {
       username: userData.username,
@@ -317,7 +358,7 @@ async function logUserActivity(activityType, userData, details = {}) {
     });
 
     if (result.success) {
-      console.log(`📝 Actividad registrada: ${activityType}`);
+      debugLog(`✅ Actividad registrada: ${activityType}`);
       return true;
     } else {
       console.warn('⚠️ No se registró actividad:', result.error);
@@ -330,7 +371,7 @@ async function logUserActivity(activityType, userData, details = {}) {
 }
 
 // =========================
-// UTILIDADES
+// 🛠️ UTILIDADES
 // =========================
 
 function showLoading(show, message = 'Cargando...') {
@@ -384,50 +425,98 @@ function updateUIForRole() {
 }
 
 // =========================
-// 🧪 TEST DE CONEXIÓN
+// 🧪 TEST DE CONEXIÓN MEJORADO
 // =========================
 
 async function testGoogleSheetsConnection() {
+  console.log('='.repeat(50));
+  console.log('🧪 INICIANDO TEST DE CONEXIÓN');
+  console.log('='.repeat(50));
+
+  // Test 1: Verificar usuario
   const user = getCurrentUser();
   if (!user) {
-    alert('❌ Inicia sesión primero.');
-    return;
+    alert('❌ ERROR: Debes iniciar sesión primero.');
+    return false;
   }
+  console.log('✅ Usuario autenticado:', user.username);
 
-  showLoading(true, 'Verificando conexión con Google Sheets...');
+  // Test 2: Verificar URL
+  console.log('📡 API URL:', API_URL);
+  console.log('🔗 Verifica que este URL corresponda al deployment de tu Apps Script');
+
+  showLoading(true, 'Probando conexión con Google Sheets...');
   
   try {
-    // Test 1: Guardar progreso
-    const result = await makeJSONPRequest('updateProgress', {
+    // Test 3: Autenticación
+    console.log('\n--- TEST 1: Autenticación ---');
+    const authResult = await makeJSONPRequest('authenticate', { 
+      username: user.username, 
+      password: 'test' 
+    });
+    console.log('Resultado autenticación:', authResult);
+
+    // Test 4: Guardar progreso
+    console.log('\n--- TEST 2: Guardar Progreso ---');
+    const progressResult = await makeJSONPRequest('updateProgress', {
       username: user.username,
       module: 1,
       completed: 0,
       progress: 5,
       timeSpent: 1,
-      lessons: '1',
+      lessons: 'test',
       timestamp: Date.now()
     });
+    console.log('Resultado guardar progreso:', progressResult);
+
+    // Test 5: Log actividad
+    console.log('\n--- TEST 3: Log Actividad ---');
+    const activityResult = await makeJSONPRequest('logActivity', {
+      username: user.username,
+      activityType: 'test_connection',
+      moduleId: '',
+      lessonId: '',
+      details: '{"test": true}',
+      timestamp: Date.now()
+    });
+    console.log('Resultado log actividad:', activityResult);
 
     showLoading(false);
     
-    console.log('🧪 Resultado test conexión:', result);
-    
-    if (result.success) {
-      alert('✅ CONEXIÓN EXITOSA\n\nGoogle Sheets está sincronizando correctamente.');
+    console.log('\n' + '='.repeat(50));
+    console.log('🏁 TEST COMPLETADO');
+    console.log('='.repeat(50));
+
+    // Resumen
+    if (progressResult.success || activityResult.success) {
+      alert('✅ CONEXIÓN EXITOSA\n\nGoogle Sheets está sincronizando correctamente.\n\nRevisa la consola para más detalles.');
       return true;
     } else {
-      alert('⚠️ CONEXIÓN CON ERRORES\n\n' + result.error);
+      alert('⚠️ CONEXIÓN CON PROBLEMAS\n\n' + 
+            'El servidor responde pero hay errores.\n' +
+            'Revisa la consola y verifica:\n' +
+            '1. Las hojas de Google Sheets\n' +
+            '2. Los permisos del script\n' +
+            '3. El deployment del Apps Script');
       return false;
     }
   } catch (err) {
     showLoading(false);
-    alert('❌ ERROR DE CONEXIÓN\n\n' + err.message);
-    console.error('❌ Error test:', err);
+    console.error('\n❌ ERROR CRÍTICO:', err);
+    alert('❌ ERROR DE CONEXIÓN\n\n' + 
+          err.message + '\n\n' +
+          'Posibles causas:\n' +
+          '1. URL del API incorrecta\n' +
+          '2. Apps Script no desplegado correctamente\n' +
+          '3. Problemas de red/CORS\n\n' +
+          'Revisa la consola para más detalles.');
     return false;
   }
 }
 
-// Hacer disponible globalmente para testing
+// Hacer disponible globalmente
 window.testGoogleSheetsConnection = testGoogleSheetsConnection;
 
-console.log('✅ auth.js v3.0 cargado correctamente - Sistema Unificado');
+console.log('✅ auth.js v3.1 - CORREGIDO - Sistema con Debug Mejorado');
+console.log('🔧 DEBUG_MODE:', DEBUG_MODE ? 'ACTIVADO' : 'DESACTIVADO');
+console.log('📡 API URL:', API_URL);
