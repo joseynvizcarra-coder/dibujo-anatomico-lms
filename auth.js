@@ -301,21 +301,18 @@ async function updateModuleProgress(moduleNumber, progressData) {
 }
 
 // ✅ CORREGIDO: Registrar actividad
-async function logUserActivity(activityType, userData, details = {}) {
+async function logUserActivity(action, moduleId = '', lessonId = '', details = {}) {
   try {
-    if (!userData || !userData.username) {
-      console.warn('⚠️ No se puede registrar actividad sin usuario');
-      return false;
-    }
-
+    // ... código ...
+    
     const params = {
-      userId: userData.id || '',
-      username: userData.username,
-      action: activityType,
-      moduleId: details.moduleId || '',
-      lessonId: details.lessonId || '',
-      details: JSON.stringify(details),
-      sessionId: userData.sessionId || ''
+      action: 'logActivity',
+      userId: user.id,
+      username: user.username,
+      activityType: action,  // ✅ CORREGIDO: activityType en lugar de action
+      moduleId: moduleId,
+      lessonId: lessonId,
+      // ...
     };
 
     const result = await makeJSONPRequest('logActivity', params);
