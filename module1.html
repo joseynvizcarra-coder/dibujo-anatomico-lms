@@ -563,7 +563,6 @@
         let moduleStartTime = Date.now();
         let lessonStartTime = Date.now();
 
-        const STORAGE_KEY = `progress_${getCurrentUser().username}`;
         const MODULE_NUMBER = 1;
         const TOTAL_LESSONS = 3;
         const DEBUG_MODE = true;
@@ -572,6 +571,40 @@
             if (DEBUG_MODE) {
                 console.log(`🔍 [M1] ${message}`);
                 if (data) console.log(data);
+            }
+        }
+
+        // ✅ FUNCIÓN DE MIGRACIÓN AUTOMÁTICA
+        function migrateOldProgress() {
+            const currentUser = getCurrentUser();
+            if (!currentUser) return;
+            
+            const storageKey = `progress_${currentUser.username}`;
+            const saved = localStorage.getItem(storageKey);
+            
+            if (!saved) return;
+            
+            try {
+                const data = JSON.parse(saved);
+                let needsMigration = false;
+                
+                // Detectar formato viejo
+                if (typeof data.completedLessons === 'number') {
+                    console.warn('🔄 Migrando formato viejo (number) -> array');
+                    data.completedLessons = [];
+                    needsMigration = true;
+                } else if (!Array.isArray(data.completedLessons)) {
+                    console.warn('🔄 Migrando formato inválido -> array vacío');
+                    data.completedLessons = [];
+                    needsMigration = true;
+                }
+                
+                if (needsMigration) {
+                    localStorage.setItem(storageKey, JSON.stringify(data));
+                    console.log('✅ Migración completada');
+                }
+            } catch (error) {
+                console.error('❌ Error en migración:', error);
             }
         }
 
@@ -585,13 +618,21 @@
                 return;
             }
 
+            // ✅ Validar que completedLessons sea array
+            if (!Array.isArray(completedLessons)) {
+                console.warn('⚠️ completedLessons no es array, corrigiendo...');
+                completedLessons = [];
+            }
+
             const timeSpent = Math.round((Date.now() - moduleStartTime) / 60000);
             const progress = Math.round((completedLessons.length / TOTAL_LESSONS) * 100);
             const isCompleted = completedLessons.length === TOTAL_LESSONS;
 
+            const storageKey = `progress_${currentUser.username}`;
+
             // 1. localStorage
             try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                localStorage.setItem(storageKey, JSON.stringify({
                     completedLessons,
                     evaluations: evaluationAnswers,
                     currentLesson,
@@ -629,6 +670,12 @@
 
         // ===== FUNCIÓN: completeLesson() =====
         async function completeLesson(lessonNum) {
+            // ✅ Validar que completedLessons sea array
+            if (!Array.isArray(completedLessons)) {
+                console.warn('⚠️ completedLessons no es array, inicializando...');
+                completedLessons = [];
+            }
+
             if (completedLessons.includes(lessonNum)) return;
 
             const currentUser = getCurrentUser();
@@ -640,9 +687,7 @@
             await saveProgress();
             
             try {
-                await logUserActivity('lesson_completed', currentUser, {
-                    moduleId: MODULE_NUMBER,
-                    lessonId: lessonNum,
+                await logUserActivity('lesson_completed', MODULE_NUMBER.toString(), lessonNum.toString(), {
                     timeSpent: lessonTime
                 });
                 console.log(`✅ Lección ${lessonNum} completada`);
@@ -666,10 +711,7 @@
             const currentUser = getCurrentUser();
             if (currentUser) {
                 try {
-                    await logUserActivity('lesson_view', currentUser, {
-                        moduleId: MODULE_NUMBER,
-                        lessonId: lessonNum
-                    });
+                    await logUserActivity('lesson_view', MODULE_NUMBER.toString(), lessonNum.toString(), {});
                 } catch (error) {}
             }
             
@@ -707,10 +749,19 @@
             
             console.log('✅ Usuario:', currentUser.username);
             
+            // ✅ Migrar progreso viejo ANTES de cargar
+            migrateOldProgress();
+            
             loadProgress();
             
+            // ✅ Validar después de cargar
+            if (!Array.isArray(completedLessons)) {
+                console.warn('⚠️ Después de loadProgress, completedLessons no es array. Forzando array vacío.');
+                completedLessons = [];
+            }
+            
             try {
-                await logUserActivity('module_access', currentUser, { moduleId: MODULE_NUMBER });
+                await logUserActivity('module_access', MODULE_NUMBER.toString(), '', {});
             } catch (error) {}
             
             loadLesson(currentLesson);
@@ -719,6 +770,7 @@
             setInterval(() => saveProgress(), 120000);
             
             console.log('✅ INICIALIZADO');
+            console.log('completedLessons:', completedLessons);
             console.log('='.repeat(60));
         }
 
@@ -745,24 +797,66 @@
 
         // ===== FUNCIONES AUXILIARES =====
         function loadProgress() {
-            const saved = localStorage.getItem(STORAGE_KEY);
+            const currentUser = getCurrentUser();
+            if (!currentUser) return;
+
+            const storageKey = `progress_${currentUser.username}`;
+            const saved = localStorage.getItem(storageKey);
+            
             if (saved) {
-                const data = JSON.parse(saved);
-                completedLessons = data.completedLessons || [];
-                evaluationAnswers = data.evaluations || {};
-                currentLesson = data.currentLesson || 1;
+                try {
+                    const data = JSON.parse(saved);
+                    
+                    // ✅ VALIDACIÓN ROBUSTA
+                    if (Array.isArray(data.completedLessons)) {
+                        completedLessons = data.completedLessons;
+                    } else if (typeof data.completedLessons === 'number') {
+                        // Migrar formato viejo: número -> array vacío
+                        console.warn('⚠️ Formato viejo detectado (number), migrando...');
+                        completedLessons = [];
+                    } else {
+                        console.warn('⚠️ completedLessons inválido, inicializando array vacío');
+                        completedLessons = [];
+                    }
+                    
+                    evaluationAnswers = data.evaluations || {};
+                    currentLesson = data.currentLesson || 1;
+                    
+                } catch (error) {
+                    console.error('❌ Error parseando localStorage:', error);
+                    completedLessons = [];
+                    evaluationAnswers = {};
+                    currentLesson = 1;
+                }
+            } else {
+                // No hay datos guardados
+                completedLessons = [];
+                evaluationAnswers = {};
+                currentLesson = 1;
             }
+            
             updateProgressBar();
         }
 
         function updateProgressBar() {
+            // ✅ VALIDACIÓN DEFENSIVA
+            if (!Array.isArray(completedLessons)) {
+                console.warn('⚠️ updateProgressBar: completedLessons no es array, corrigiendo...');
+                completedLessons = [];
+            }
+            
             const completed = completedLessons.length;
             const percentage = Math.round((completed / TOTAL_LESSONS) * 100);
             
-            document.getElementById('progressBar').style.width = percentage + '%';
-            document.getElementById('progressText').textContent = percentage + '%';
-            document.getElementById('progressDetail').textContent = `${completed} de ${TOTAL_LESSONS} lecciones completadas`;
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const progressDetail = document.getElementById('progressDetail');
             
+            if (progressBar) progressBar.style.width = percentage + '%';
+            if (progressText) progressText.textContent = percentage + '%';
+            if (progressDetail) progressDetail.textContent = `${completed} de ${TOTAL_LESSONS} lecciones completadas`;
+            
+            // ✅ PROTEGER EL forEach
             completedLessons.forEach(num => {
                 const link = document.querySelector(`[data-lesson="${num}"]`);
                 if (link) link.classList.add('completed');
@@ -790,27 +884,42 @@
         }
 
         function saveChecklistState() {
+            const currentUser = getCurrentUser();
+            if (!currentUser) return;
+
+            const storageKey = `progress_${currentUser.username}`;
             const checklists = document.querySelectorAll('.checklist-item');
             const state = {};
+            
             checklists.forEach((item, index) => {
                 state[`checklist_${currentLesson}_${index}`] = item.classList.contains('checked');
             });
-            localStorage.setItem(`${STORAGE_KEY}_checklists`, JSON.stringify(state));
+            
+            localStorage.setItem(`${storageKey}_checklists`, JSON.stringify(state));
         }
 
         function loadChecklistState() {
-            const saved = localStorage.getItem(`${STORAGE_KEY}_checklists`);
+            const currentUser = getCurrentUser();
+            if (!currentUser) return;
+
+            const storageKey = `progress_${currentUser.username}`;
+            const saved = localStorage.getItem(`${storageKey}_checklists`);
+            
             if (!saved) return;
             
-            const state = JSON.parse(saved);
-            document.querySelectorAll('.checklist-item').forEach((item, index) => {
-                const key = `checklist_${currentLesson}_${index}`;
-                if (state[key]) {
-                    item.classList.add('checked');
-                    const icon = item.querySelector('i');
-                    if (icon) icon.className = 'bi bi-check-circle-fill';
-                }
-            });
+            try {
+                const state = JSON.parse(saved);
+                document.querySelectorAll('.checklist-item').forEach((item, index) => {
+                    const key = `checklist_${currentLesson}_${index}`;
+                    if (state[key]) {
+                        item.classList.add('checked');
+                        const icon = item.querySelector('i');
+                        if (icon) icon.className = 'bi bi-check-circle-fill';
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading checklist state:', error);
+            }
         }
 
         function updateEvalProgress(lessonNum) {
@@ -888,9 +997,7 @@
                 const passed = score >= 2;
                 
                 try {
-                    await logUserActivity('evaluation_submitted', currentUser, {
-                        moduleId: MODULE_NUMBER,
-                        lessonId: lessonNum,
+                    await logUserActivity('evaluation_submitted', MODULE_NUMBER.toString(), lessonNum.toString(), {
                         score: percentage,
                         passed
                     });
@@ -970,7 +1077,7 @@
             }, 3000);
         }
 
-        // ===== CONTENIDO DE LECCIONES (COMPLETO) =====
+        // ===== CONTENIDO DE LECCIONES =====
         const lessons = {
             lesson1: `
                 <div class="lesson-header">
