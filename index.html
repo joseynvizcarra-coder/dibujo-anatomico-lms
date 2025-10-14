@@ -537,7 +537,7 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            z-index: 1040;
+            z-index: 9998;
             transition: all 0.3s ease;
             border: none;
         }
@@ -588,7 +588,7 @@
             display: none;
             flex-direction: column;
             overflow: hidden;
-            z-index: 1041;
+            z-index: 9999;
             animation: slideUp 0.3s ease-out;
         }
 
@@ -1166,9 +1166,75 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="mentor-knowledge.js"></script>
 
     <script>
+        // ============================================
+        // BASE DE CONOCIMIENTO DEL MENTOR (INLINE)
+        // ============================================
+        const mentorKnowledgeBase = {
+            saludos: {
+                keywords: ['hola', 'hi', 'hey', 'buenos dias', 'buenas tardes', 'buenas noches'],
+                response: "¡Hola! 👋 Soy tu Mentor Anatómico.\n\n**¿En qué puedo ayudarte?**\n\n💙 **Emocional:** Frustración, bloqueo, ansiedad\n🎨 **Técnico:** Línea de acción, proporciones, manos\n📚 **Sistema:** Subir ejercicios, ver progreso",
+                actions: ['Duda técnica', 'Apoyo emocional', 'Info del curso']
+            },
+            gracias: {
+                keywords: ['gracias', 'thanks', 'te lo agradezco'],
+                response: "¡De nada! 💙 Me alegra haberte ayudado.\n\n¿Necesitas algo más?"
+            },
+            frustracion: {
+                keywords: ['frustrado', 'frustrada', 'no puedo', 'no me sale', 'mal'],
+                response: "Respira 💙. La frustración es señal de aprendizaje.\n\n**Técnica rápida:**\n- Inhala 4 segundos\n- Sostén 4 segundos\n- Exhala 6 segundos\n\nRepite 3 veces. Luego vuelve con curiosidad.",
+                actions: ['Estoy mejor', 'Necesito más ayuda']
+            },
+            lineaAccion: {
+                keywords: ['linea de accion', 'linea accion', 'gesto', 'movimiento'],
+                response: "**Línea de acción:** Curva que atraviesa el cuerpo mostrando movimiento.\n\n**Cómo encontrarla:**\n1. Ignora detalles\n2. Busca curva cabeza-pies\n3. Dibújala en 1 segundo\n\n**Formas:** 'S', 'C' o recta.",
+                actions: ['Entendido', '¿Otro tema?']
+            },
+            manos: {
+                keywords: ['manos', 'dedos', 'mano'],
+                response: "**Manos simplificadas:**\n\n- Palma = rectángulo con grosor\n- Dedos = 3 cilindros c/u\n- Pulgar = LATERAL\n\n**Error #1:** Contorno sin estructura 3D.\n\nPractica dibujando TUS manos.",
+                actions: ['Voy a practicar', 'Otra duda']
+            },
+            proporciones: {
+                keywords: ['proporcion', 'proporciones', 'medir'],
+                response: "**Proporciones básicas:**\n\n- Adulto: 7.5-8 cabezas\n- Ombligo: mitad del cuerpo\n- Brazos extendidos = altura\n- Manos: mentón a cejas\n\n**Tu ojo > cualquier regla**",
+                actions: ['OK', 'Gracias']
+            },
+            subir: {
+                keywords: ['subir ejercicio', 'como subir', 'entregar', 'enviar'],
+                response: "**Subir ejercicios:**\n\n1. Ve a lección\n2. Botón 'Subir ejercicio'\n3. Foto CLARA (buena luz, enfocado)\n4. Sube imagen\n5. ✓ Confirmación\n\n**Tip:** Puedes subir varias veces.",
+                actions: ['Entendido']
+            },
+            progreso: {
+                keywords: ['progreso', 'avance', 'donde veo', 'estadisticas'],
+                response: "**Ver progreso:**\n\n- Dashboard principal: Barra general\n- Cada módulo: % completado\n- Dentro lecciones: Checkmarks ✓\n\n**No obsesiones con %. Obsesiónate con PRACTICAR.**",
+                actions: ['OK', 'Claro']
+            }
+        };
+
+        function detectIntentAndRespond(userMessage) {
+            const lowerText = userMessage.toLowerCase();
+            
+            // Buscar en base de conocimiento
+            for (const [key, data] of Object.entries(mentorKnowledgeBase)) {
+                for (const keyword of data.keywords) {
+                    if (lowerText.includes(keyword)) {
+                        return {
+                            text: data.response,
+                            actions: data.actions || []
+                        };
+                    }
+                }
+            }
+            
+            // Respuesta por defecto
+            return {
+                text: "Interesante pregunta 🤔. ¿Podrías darme más detalles?\n\nPuedo ayudarte con:\n💙 **Emociones** (frustración, bloqueo)\n🎨 **Técnica** (gesto, anatomía, proporciones)\n📚 **Sistema** (cómo usar el curso)",
+                actions: ['Tengo duda técnica', 'Apoyo emocional', 'Info del curso']
+            };
+        }
+
         const modulesData = [
             {
                 id: 1,
