@@ -1,7 +1,7 @@
 // =====================================================
-// auth.js v4.0 - LMS Dibujo Anatómico (UAH)
+// auth.js v4.1 - LMS Dibujo Anatómico (UAH)
 // Universidad Alberto Hurtado - Joselyn Vizcarra
-// SISTEMA CON SINCRONIZACIÓN INTELIGENTE
+// SISTEMA CON SINCRONIZACIÓN INTELIGENTE - FIX BORRADO DE DATOS
 // =====================================================
 
 const API_URL = 'https://script.google.com/macros/s/AKfycbwTOCRqlmssB095rOHJrGswLF25e1DFk8fZDkbziw1g4_JomibsX0OfWY8xmNPOiHt8/exec';
@@ -27,7 +27,7 @@ const STORAGE_KEYS = {
 let syncInterval = null;
 let isSyncing = false;
 
-console.log('✅ auth.js v4.0 cargado - Sistema de sincronización inteligente activo');
+console.log('✅ auth.js v4.1 cargado - Fix para borrado de datos implementado');
 
 // =========================
 // AUTENTICACIÓN
@@ -157,7 +157,7 @@ function stopAutoSync() {
   }
 }
 
-// ✅ NUEVO: Sincronizar progreso desde Google Sheets
+// ✅ MEJORADO: Sincronizar progreso desde Google Sheets con protección contra borrado
 async function syncProgressFromSheets(username, force = false, retries = 0) {
   if (isSyncing && !force) {
     console.log('⏳ Sincronización ya en progreso, saltando...');
@@ -168,7 +168,10 @@ async function syncProgressFromSheets(username, force = false, retries = 0) {
   updateSyncStatus('syncing', 'Sincronizando...');
   
   try {
+    console.log(`🔍 Consultando progreso de ${username} en Sheets...`);
     const result = await makeJSONPRequestWithRetry('getProgress', { username }, MAX_RETRIES);
+    
+    console.log('📦 Respuesta de Sheets:', result); // ✅ LOG CRÍTICO para depuración
     
     if (result.success && result.data) {
       const progressKey = STORAGE_KEYS.progress(username);
@@ -178,79 +181,93 @@ async function syncProgressFromSheets(username, force = false, retries = 0) {
       const localProgress = localStorage.getItem(progressKey);
       let shouldUpdate = true;
       
+      // ✅ CRÍTICO: Validar que result.data tenga estructura mínima
+      if (!result.data.modules) {
+        console.warn('⚠️ Respuesta de Sheets sin estructura modules, ignorando...');
+        updateSyncStatus('error', 'Datos incompletos');
+        isSyncing = false;
+        return false;
+      }
+      
+      // Calcular progreso remoto
+      const remoteCompleted = Object.values(result.data.modules || {}).filter(m => m.completed).length;
+      const remoteLessons = Object.values(result.data.modules || {}).reduce((sum, m) => 
+        sum + (Array.isArray(m.completedLessons) ? m.completedLessons.length : 0), 0);
+      
+      console.log(`📊 Progreso remoto: ${remoteCompleted} módulos, ${remoteLessons} lecciones`);
+      
       if (localProgress && !force) {
         try {
           const localData = JSON.parse(localProgress);
-          const remoteData = result.data;
           
-          // ✅ DETECCIÓN DE CONFLICTOS MEJORADA: Comparar progreso real, no solo timestamps
-          const localTime = new Date(localData.lastActivity || 0).getTime();
-          const remoteTime = new Date(remoteData.lastActivity || 0).getTime();
-          
-          // Calcular progreso real (módulos completados)
+          // Calcular progreso local
           const localCompleted = Object.values(localData.modules || {}).filter(m => m.completed).length;
-          const remoteCompleted = Object.values(remoteData.modules || {}).filter(m => m.completed).length;
-          
-          // Contar lecciones completadas
           const localLessons = Object.values(localData.modules || {}).reduce((sum, m) => 
-            sum + (Array.isArray(m.completedLessons) ? m.completedLessons.length : 0), 0);
-          const remoteLessons = Object.values(remoteData.modules || {}).reduce((sum, m) => 
             sum + (Array.isArray(m.completedLessons) ? m.completedLessons.length : 0), 0);
           
           console.log(`🔍 Comparando progreso:
-            Local: ${localCompleted} módulos, ${localLessons} lecciones, timestamp: ${localTime}
-            Remoto: ${remoteCompleted} módulos, ${remoteLessons} lecciones, timestamp: ${remoteTime}`);
+            Local: ${localCompleted} módulos, ${localLessons} lecciones
+            Remoto: ${remoteCompleted} módulos, ${remoteLessons} lecciones`);
           
-          // CRITERIO: Priorizar el que tenga MÁS progreso real
-          if (localCompleted > remoteCompleted || (localCompleted === remoteCompleted && localLessons > remoteLessons)) {
+          // ✅ CRITERIO 1: Si Sheets está vacío pero hay datos locales, SUBIR
+          if (remoteCompleted === 0 && remoteLessons === 0 && (localCompleted > 0 || localLessons > 0)) {
+            console.log('⚠️ PROTECCIÓN ACTIVADA: Sheets vacío pero local tiene datos, SUBIENDO...');
+            await updateModuleProgress(null, localData, true);
+            shouldUpdate = false;
+          }
+          // ✅ CRITERIO 2: Local tiene más progreso
+          else if (localCompleted > remoteCompleted || (localCompleted === remoteCompleted && localLessons > remoteLessons)) {
             console.log('⚠️ Datos locales tienen más progreso, subiendo a Sheets...');
             await updateModuleProgress(null, localData, true);
             shouldUpdate = false;
-          } else if (remoteCompleted > localCompleted || (remoteCompleted === localCompleted && remoteLessons > localLessons)) {
+          }
+          // ✅ CRITERIO 3: Remoto tiene más progreso
+          else if (remoteCompleted > localCompleted || (remoteCompleted === localCompleted && remoteLessons > localLessons)) {
             console.log('📥 Datos de Sheets tienen más progreso, descargando...');
             shouldUpdate = true;
-          } else if (localTime === remoteTime) {
-            console.log('✅ Datos ya sincronizados (mismo progreso y timestamp)');
-            shouldUpdate = false;
-          } else if (localTime > remoteTime) {
-            console.log('⚠️ Mismo progreso pero timestamp local más reciente, subiendo...');
-            await updateModuleProgress(null, localData, true);
-            shouldUpdate = false;
-          } else {
-            console.log('📥 Mismo progreso pero timestamp remoto más reciente, descargando...');
-            shouldUpdate = true;
+          }
+          // ✅ CRITERIO 4: Mismo progreso, comparar timestamps
+          else {
+            const localTime = new Date(localData.lastActivity || 0).getTime();
+            const remoteTime = new Date(result.data.lastActivity || 0).getTime();
+            
+            if (localTime === remoteTime) {
+              console.log('✅ Datos ya sincronizados (mismo progreso y timestamp)');
+              shouldUpdate = false;
+            } else if (localTime > remoteTime) {
+              console.log('⚠️ Mismo progreso pero timestamp local más reciente, subiendo...');
+              await updateModuleProgress(null, localData, true);
+              shouldUpdate = false;
+            } else {
+              console.log('📥 Mismo progreso pero timestamp remoto más reciente, descargando...');
+              shouldUpdate = true;
+            }
           }
         } catch (e) {
-          console.warn('⚠️ Error comparando datos, usando Sheets por seguridad:', e);
+          console.warn('⚠️ Error comparando datos:', e);
+          // ✅ FIX: Solo actualizar si Sheets tiene datos reales
+          shouldUpdate = remoteCompleted > 0 || remoteLessons > 0;
+          if (!shouldUpdate) {
+            console.log('🛡️ PROTECCIÓN: Error al comparar pero Sheets vacío, conservando local');
+          }
+        }
+      } else {
+        // No hay datos locales o es forzado
+        // ✅ FIX CRÍTICO: Si Sheets está vacío, NO sobrescribir localStorage
+        if (remoteCompleted === 0 && remoteLessons === 0) {
+          console.log('ℹ️ Sheets vacío y no hay datos locales, no sobrescribir');
+          shouldUpdate = false;
+        } else {
+          console.log('📥 No hay datos locales, descargando desde Sheets...');
           shouldUpdate = true;
         }
       }
       
       if (shouldUpdate) {
-        // ✅ Validar que los datos remotos tengan contenido real
-        const remoteCompleted = Object.values(result.data.modules || {}).filter(m => m.completed).length;
-        const remoteLessons = Object.values(result.data.modules || {}).reduce((sum, m) => 
-          sum + (Array.isArray(m.completedLessons) ? m.completedLessons.length : 0), 0);
-        
-        // Si los datos remotos están vacíos y hay datos locales, no sobrescribir
-        if (remoteCompleted === 0 && remoteLessons === 0 && localProgress) {
-          const localData = JSON.parse(localProgress);
-          const localCompleted = Object.values(localData.modules || {}).filter(m => m.completed).length;
-          const localLessons = Object.values(localData.modules || {}).reduce((sum, m) => 
-            sum + (Array.isArray(m.completedLessons) ? m.completedLessons.length : 0), 0);
-          
-          if (localCompleted > 0 || localLessons > 0) {
-            console.log('⚠️ Sheets tiene progreso vacío pero local tiene datos, conservando local');
-            shouldUpdate = false;
-          }
-        }
-        
-        if (shouldUpdate) {
-          // ✅ Validar y migrar si es necesario
-          const validatedData = validateAndMigrateProgress(result.data);
-          localStorage.setItem(progressKey, JSON.stringify(validatedData));
-          console.log('✅ Progreso sincronizado desde Google Sheets');
-        }
+        // Validar y migrar si es necesario
+        const validatedData = validateAndMigrateProgress(result.data);
+        localStorage.setItem(progressKey, JSON.stringify(validatedData));
+        console.log('✅ Progreso sincronizado desde Google Sheets');
       }
       
       // Guardar timestamp de última sincronización
@@ -313,7 +330,7 @@ function updateSyncStatus(status, message) {
       synced: '✅',
       syncing: '🔄',
       error: '⚠️',
-      offline: '📴'
+      offline: '🔴'
     };
     
     const colors = {
@@ -433,7 +450,7 @@ async function getStudentProgress(forceSync = false) {
   return initializeEmptyProgress();
 }
 
-// ✅ NUEVO: Validar y migrar progreso
+// ✅ MEJORADO: Validar y migrar progreso
 function validateAndMigrateProgress(progress) {
   // Crear estructura nueva si no tiene modules
   if (!progress.modules) {
@@ -473,6 +490,7 @@ function validateAndMigrateProgress(progress) {
   return progress;
 }
 
+// ✅ MEJORADO: Inicializar progreso vacío sin timestamp
 function initializeEmptyProgress() {
   return {
     modules: {
@@ -482,7 +500,7 @@ function initializeEmptyProgress() {
     },
     overallProgress: 0,
     totalTimeSpent: 0,
-    lastActivity: null // ✅ CRÍTICO: null en vez de timestamp actual para no sobrescribir
+    lastActivity: null // ✅ CRÍTICO: null para no sobrescribir datos existentes
   };
 }
 
@@ -823,6 +841,40 @@ window.forceSyncProgress = async function() {
   }
 };
 
+// ✅ NUEVO: Debug function para ver estado actual
+window.debugProgress = function() {
+  const user = getCurrentUser();
+  if (!user) {
+    console.log('❌ No hay usuario autenticado');
+    return;
+  }
+  
+  const progressKey = STORAGE_KEYS.progress(user.username);
+  const localProgress = localStorage.getItem(progressKey);
+  
+  if (localProgress) {
+    try {
+      const parsed = JSON.parse(localProgress);
+      console.log('📊 PROGRESO LOCAL:', parsed);
+      console.log('📈 Progreso general:', parsed.overallProgress + '%');
+      console.log('📚 Módulos:', parsed.modules);
+      
+      // Calcular stats
+      const completed = Object.values(parsed.modules || {}).filter(m => m.completed).length;
+      const lessons = Object.values(parsed.modules || {}).reduce((sum, m) => 
+        sum + (Array.isArray(m.completedLessons) ? m.completedLessons.length : 0), 0);
+      
+      console.log(`✅ ${completed} módulos completados`);
+      console.log(`📝 ${lessons} lecciones completadas`);
+      console.log(`⏰ Última actividad: ${parsed.lastActivity}`);
+    } catch (e) {
+      console.error('❌ Error parseando progreso:', e);
+    }
+  } else {
+    console.log('ℹ️ No hay progreso local guardado');
+  }
+};
+
 // Hacer disponible globalmente
 window.testGoogleSheetsConnection = testGoogleSheetsConnection;
 
@@ -832,10 +884,14 @@ window.testGoogleSheetsConnection = testGoogleSheetsConnection;
 
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    console.log('✅ auth.js v4.0 inicializado completamente');
+    console.log('✅ auth.js v4.1 inicializado completamente');
     console.log('🔄 Sistema de sincronización inteligente activo');
-    console.log('🧪 Para probar: testGoogleSheetsConnection()');
-    console.log('🔄 Para sincronizar: forceSyncProgress()');
+    console.log('🛡️ Protección contra borrado de datos activada');
+    console.log('');
+    console.log('🧪 Funciones de testing disponibles:');
+    console.log('   • testGoogleSheetsConnection() - Probar conexión');
+    console.log('   • forceSyncProgress() - Forzar sincronización');
+    console.log('   • debugProgress() - Ver estado actual del progreso');
     
     // Inyectar indicador de sincronización
     setTimeout(injectSyncIndicator, 500);
@@ -849,10 +905,14 @@ if (document.readyState === 'loading') {
     }
   });
 } else {
-  console.log('✅ auth.js v4.0 inicializado completamente');
+  console.log('✅ auth.js v4.1 inicializado completamente');
   console.log('🔄 Sistema de sincronización inteligente activo');
-  console.log('🧪 Para probar: testGoogleSheetsConnection()');
-  console.log('🔄 Para sincronizar: forceSyncProgress()');
+  console.log('🛡️ Protección contra borrado de datos activada');
+  console.log('');
+  console.log('🧪 Funciones de testing disponibles:');
+  console.log('   • testGoogleSheetsConnection() - Probar conexión');
+  console.log('   • forceSyncProgress() - Forzar sincronización');
+  console.log('   • debugProgress() - Ver estado actual del progreso');
   
   // Inyectar indicador de sincronización
   setTimeout(injectSyncIndicator, 500);
