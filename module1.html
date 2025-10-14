@@ -557,223 +557,267 @@
     
     <script>
         // ===== VARIABLES GLOBALES =====
-        let currentLesson = 1;
-        let evaluationAnswers = {};
-        let completedLessons = [];
-        let moduleStartTime = Date.now();
-        let lessonStartTime = Date.now();
+let currentLesson = 1;
+let evaluationAnswers = {};
+let completedLessons = [];
+let moduleStartTime = Date.now();
+let lessonStartTime = Date.now();
 
-        const MODULE_NUMBER = 1;
-        const TOTAL_LESSONS = 3;
-        const DEBUG_MODE = true;
+const MODULE_NUMBER = 1;
+const TOTAL_LESSONS = 3;
+const DEBUG_MODE = true;
 
-        function debugLog(message, data = null) {
-            if (DEBUG_MODE) {
-                console.log(`🔍 [M1] ${message}`);
-                if (data) console.log(data);
-            }
+function debugLog(message, data = null) {
+    if (DEBUG_MODE) {
+        console.log(`🔍 [M${MODULE_NUMBER}] ${message}`);
+        if (data) console.log(data);
+    }
+}
+
+// ✅ FUNCIÓN CORREGIDA: loadProgress() con ASYNC
+async function loadProgress() {
+    debugLog('loadProgress() INICIADO - ESPERANDO SYNC...');
+    
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+        debugLog('❌ No hay usuario, cancelando loadProgress');
+        return;
+    }
+
+    // ✅ CRÍTICO: ESPERAR a que syncProgressFromSheets termine
+    if (window.isSyncInProgress) {
+        debugLog('⏳ Sync en progreso, esperando...');
+        let waitTime = 0;
+        while (window.isSyncInProgress && waitTime < 10000) {
+            await new Promise(resolve => setTimeout(resolve, 500));
+            waitTime += 500;
         }
+        debugLog('✅ Sync terminó o timeout alcanzado');
+    }
 
-        // ✅ FUNCIÓN DE MIGRACIÓN AUTOMÁTICA
-        function migrateOldProgress() {
-            const currentUser = getCurrentUser();
-            if (!currentUser) return;
+    const storageKey = `progress_${currentUser.username}`;
+    const saved = localStorage.getItem(storageKey);
+    
+    if (saved) {
+        try {
+            const data = JSON.parse(saved);
             
-            const storageKey = `progress_${currentUser.username}`;
-            const saved = localStorage.getItem(storageKey);
-            
-            if (!saved) return;
-            
-            try {
-                const data = JSON.parse(saved);
-                let needsMigration = false;
+            if (data.modules && data.modules[MODULE_NUMBER]) {
+                const moduleData = data.modules[MODULE_NUMBER];
                 
-                // Detectar formato viejo
-                if (typeof data.completedLessons === 'number') {
-                    console.warn('🔄 Migrando formato viejo (number) -> array');
-                    data.completedLessons = [];
-                    needsMigration = true;
-                } else if (!Array.isArray(data.completedLessons)) {
-                    console.warn('🔄 Migrando formato inválido -> array vacío');
-                    data.completedLessons = [];
-                    needsMigration = true;
+                if (Array.isArray(moduleData.completedLessons)) {
+                    completedLessons = moduleData.completedLessons;
+                    debugLog(`✅ Lecciones cargadas: ${completedLessons.length}`, completedLessons);
+                } else if (typeof moduleData.completedLessons === 'number') {
+                    debugLog('⚠️ Formato viejo (number), migrando...');
+                    completedLessons = [];
+                } else {
+                    debugLog('⚠️ completedLessons inválido, inicializando array vacío');
+                    completedLessons = [];
                 }
                 
-                if (needsMigration) {
-                    localStorage.setItem(storageKey, JSON.stringify(data));
-                    console.log('✅ Migración completada');
-                }
-            } catch (error) {
-                console.error('❌ Error en migración:', error);
-            }
-        }
-
-        // ===== FUNCIÓN: saveProgress() =====
-        async function saveProgress() {
-            debugLog('saveProgress()');
-            
-            const currentUser = getCurrentUser();
-            if (!currentUser) {
-                console.warn('❌ No hay usuario');
-                return;
-            }
-
-            // ✅ Validar que completedLessons sea array
-            if (!Array.isArray(completedLessons)) {
-                console.warn('⚠️ completedLessons no es array, corrigiendo...');
+                evaluationAnswers = moduleData.evaluations || {};
+                debugLog(`✅ Evaluaciones cargadas: ${Object.keys(evaluationAnswers).length}`);
+                
+                currentLesson = data.currentLesson || 1;
+                
+            } else {
+                debugLog('⚠️ Módulo no encontrado en estructura, inicializando vacío');
                 completedLessons = [];
+                evaluationAnswers = {};
+                currentLesson = 1;
             }
+            
+        } catch (error) {
+            console.error('❌ Error parseando localStorage:', error);
+            completedLessons = [];
+            evaluationAnswers = {};
+            currentLesson = 1;
+        }
+    } else {
+        debugLog('ℹ️ No hay datos guardados, inicializando vacío');
+        completedLessons = [];
+        evaluationAnswers = {};
+        currentLesson = 1;
+    }
+    
+    updateProgressBar();
+    debugLog('✅ loadProgress() COMPLETADO');
+}
 
-            const timeSpent = Math.round((Date.now() - moduleStartTime) / 60000);
-            const progress = Math.round((completedLessons.length / TOTAL_LESSONS) * 100);
-            const isCompleted = completedLessons.length === TOTAL_LESSONS;
+// ✅ FUNCIÓN MEJORADA: saveProgress()
+async function saveProgress() {
+    debugLog('saveProgress() INICIADO');
+    
+    if (window.isSyncInProgress) {
+        debugLog('⏳ Sync en progreso, posponiendo guardado...');
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        if (window.isSyncInProgress) {
+            debugLog('⚠️ Sync sigue en progreso, guardando solo en localStorage');
+            return saveProgressLocalOnly();
+        }
+    }
+    
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+        console.warn('❌ No hay usuario');
+        return;
+    }
 
-            const storageKey = `progress_${currentUser.username}`;
+    if (!Array.isArray(completedLessons)) {
+        console.warn('⚠️ completedLessons no es array, corrigiendo...');
+        completedLessons = [];
+    }
 
-            // 1. localStorage
-            try {
-                localStorage.setItem(storageKey, JSON.stringify({
-                    completedLessons,
-                    evaluations: evaluationAnswers,
-                    currentLesson,
-                    timeSpent,
-                    lastUpdate: new Date().toISOString()
-                }));
-                console.log('✅ localStorage guardado');
-            } catch (error) {
-                console.error('❌ Error localStorage:', error);
-            }
+    const timeSpent = Math.round((Date.now() - moduleStartTime) / 60000);
+    const progress = Math.round((completedLessons.length / TOTAL_LESSONS) * 100);
+    const isCompleted = completedLessons.length === TOTAL_LESSONS;
 
-            // 2. Google Sheets
-            try {
-                const progressData = {
-                    completed: isCompleted,
-                    progress,
-                    timeSpent,
-                    completedLessons,
-                    lastUpdate: new Date().toISOString()
-                };
+    const progressData = {
+        completed: isCompleted,
+        progress,
+        timeSpent,
+        completedLessons,
+        evaluations: evaluationAnswers,
+        lastUpdate: new Date().toISOString()
+    };
 
-                if (typeof updateModuleProgress !== 'function') {
-                    console.error('❌ updateModuleProgress no existe');
-                    return;
-                }
+    const storageKey = `progress_${currentUser.username}`;
+    try {
+        const allProgress = JSON.parse(localStorage.getItem(storageKey) || '{}');
+        if (!allProgress.modules) allProgress.modules = {};
+        allProgress.modules[MODULE_NUMBER] = progressData;
+        allProgress.lastActivity = new Date().toISOString();
+        
+        localStorage.setItem(storageKey, JSON.stringify(allProgress));
+        debugLog('✅ localStorage guardado');
+    } catch (error) {
+        console.error('❌ Error localStorage:', error);
+    }
 
-                const success = await updateModuleProgress(MODULE_NUMBER, progressData);
-                console.log(success ? '✅ Sheets guardado' : '⚠️ Sheets falló');
-            } catch (error) {
-                console.error('❌ Error Sheets:', error);
-            }
-
-            updateProgressBar();
+    try {
+        if (typeof updateModuleProgress !== 'function') {
+            console.error('❌ updateModuleProgress no existe');
+            return;
         }
 
-        // ===== FUNCIÓN: completeLesson() =====
-        async function completeLesson(lessonNum) {
-            // ✅ Validar que completedLessons sea array
-            if (!Array.isArray(completedLessons)) {
-                console.warn('⚠️ completedLessons no es array, inicializando...');
-                completedLessons = [];
-            }
+        const success = await updateModuleProgress(MODULE_NUMBER, progressData);
+        debugLog(success ? '✅ Sheets guardado' : '⚠️ Sheets falló');
+    } catch (error) {
+        console.error('❌ Error Sheets:', error);
+    }
 
-            if (completedLessons.includes(lessonNum)) return;
+    updateProgressBar();
+}
 
-            const currentUser = getCurrentUser();
-            if (!currentUser) return;
+function saveProgressLocalOnly() {
+    const currentUser = getCurrentUser();
+    if (!currentUser) return;
 
-            const lessonTime = Math.round((Date.now() - lessonStartTime) / 60000);
-            completedLessons.push(lessonNum);
-            
-            await saveProgress();
-            
-            try {
-                await logUserActivity('lesson_completed', MODULE_NUMBER.toString(), lessonNum.toString(), {
-                    timeSpent: lessonTime
-                });
-                console.log(`✅ Lección ${lessonNum} completada`);
-            } catch (error) {
-                console.error('Error:', error);
-            }
-            
-            showToast('¡Lección completada!', 'success');
-        }
+    if (!Array.isArray(completedLessons)) {
+        completedLessons = [];
+    }
 
-        // ===== FUNCIÓN: loadLesson() =====
-        async function loadLesson(lessonNum) {
-            showLoading(true);
-            lessonStartTime = Date.now();
-            currentLesson = lessonNum;
-            
-            document.getElementById('breadcrumbLesson').textContent = `Lección ${lessonNum}`;
-            document.querySelectorAll('.lesson-link').forEach(l => l.classList.remove('active'));
-            document.querySelector(`[data-lesson="${lessonNum}"]`).classList.add('active');
-            
-            const currentUser = getCurrentUser();
-            if (currentUser) {
-                try {
-                    await logUserActivity('lesson_view', MODULE_NUMBER.toString(), lessonNum.toString(), {});
-                } catch (error) {}
-            }
-            
-            setTimeout(() => {
-                document.getElementById('lessonContent').innerHTML = lessons[`lesson${lessonNum}`];
-                document.getElementById('lessonContent').classList.add('fade-in');
-                restoreEvaluationState(lessonNum);
-                loadChecklistState();
-                showLoading(false);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                saveProgress();
-            }, 400);
-        }
+    const storageKey = `progress_${currentUser.username}`;
+    try {
+        const allProgress = JSON.parse(localStorage.getItem(storageKey) || '{}');
+        if (!allProgress.modules) allProgress.modules = {};
+        
+        allProgress.modules[MODULE_NUMBER] = {
+            completedLessons,
+            evaluations: evaluationAnswers,
+            currentLesson,
+            lastUpdate: new Date().toISOString()
+        };
+        
+        localStorage.setItem(storageKey, JSON.stringify(allProgress));
+        debugLog('✅ localStorage guardado (solo local)');
+    } catch (error) {
+        console.error('❌ Error:', error);
+    }
+}
 
-        // ===== FUNCIÓN: initializeModule() =====
-        async function initializeModule() {
-            console.log('='.repeat(60));
-            console.log('🚀 MÓDULO 1 - DEBUG');
-            console.log('='.repeat(60));
-            
-            const funcs = ['getCurrentUser', 'updateModuleProgress', 'logUserActivity'];
-            const missing = funcs.filter(f => typeof window[f] !== 'function');
-            
-            if (missing.length > 0) {
-                console.error('❌ Funciones faltantes:', missing);
-                alert('Error: auth.js no cargado');
-                return;
-            }
-            
-            const currentUser = getCurrentUser();
-            if (!currentUser) {
-                window.location.href = 'login.html';
-                return;
-            }
-            
-            console.log('✅ Usuario:', currentUser.username);
-            
-            // ✅ Migrar progreso viejo ANTES de cargar
-            migrateOldProgress();
-            
-            loadProgress();
-            
-            // ✅ Validar después de cargar
-            if (!Array.isArray(completedLessons)) {
-                console.warn('⚠️ Después de loadProgress, completedLessons no es array. Forzando array vacío.');
-                completedLessons = [];
-            }
-            
-            try {
-                await logUserActivity('module_access', MODULE_NUMBER.toString(), '', {});
-            } catch (error) {}
-            
-            loadLesson(currentLesson);
-            moduleStartTime = Date.now();
-            
-            setInterval(() => saveProgress(), 120000);
-            
-            console.log('✅ INICIALIZADO');
-            console.log('completedLessons:', completedLessons);
-            console.log('='.repeat(60));
-        }
+function updateProgressBar() {
+    if (!Array.isArray(completedLessons)) {
+        console.warn('⚠️ updateProgressBar: completedLessons no es array, corrigiendo...');
+        completedLessons = [];
+    }
+    
+    const completed = completedLessons.length;
+    const percentage = Math.round((completed / TOTAL_LESSONS) * 100);
+    
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    const progressDetail = document.getElementById('progressDetail');
+    
+    if (progressBar) progressBar.style.width = percentage + '%';
+    if (progressText) progressText.textContent = percentage + '%';
+    if (progressDetail) progressDetail.textContent = `${completed} de ${TOTAL_LESSONS} lecciones completadas`;
+    
+    completedLessons.forEach(num => {
+        const link = document.querySelector(`[data-lesson="${num}"]`);
+        if (link) link.classList.add('completed');
+    });
+}
 
+// ✅ FUNCIÓN CRÍTICA CORREGIDA: initializeModule()
+async function initializeModule() {
+    console.log('='.repeat(60));
+    console.log('🚀 MÓDULO 1 - INICIALIZACIÓN v4.2');
+    console.log('='.repeat(60));
+    
+    const funcs = ['getCurrentUser', 'updateModuleProgress', 'logUserActivity', 'syncProgressFromSheets'];
+    const missing = funcs.filter(f => typeof window[f] !== 'function');
+    
+    if (missing.length > 0) {
+        console.error('❌ Funciones faltantes:', missing);
+        alert('Error: auth.js no cargado correctamente');
+        return;
+    }
+    
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+        console.warn('❌ Usuario no autenticado, redirigiendo...');
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    console.log('✅ Usuario:', currentUser.username);
+    
+    // ✅ CRÍTICO: SINCRONIZAR ANTES DE CARGAR
+    console.log('🔄 Iniciando sincronización ANTES de cargar progreso...');
+    await syncProgressFromSheets(currentUser.username, true);
+    
+    // ✅ Ahora sí, cargar progreso
+    await loadProgress();
+    
+    if (!Array.isArray(completedLessons)) {
+        console.warn('⚠️ Después de loadProgress, completedLessons no es array. Corrigiendo...');
+        completedLessons = [];
+    }
+    
+    console.log('✅ Estado cargado:');
+    console.log('   - Lecciones completadas:', completedLessons);
+    console.log('   - Evaluaciones:', Object.keys(evaluationAnswers).length);
+    console.log('   - Lección actual:', currentLesson);
+    
+    try {
+        await logUserActivity('module_access', MODULE_NUMBER.toString(), '', {});
+    } catch (error) {
+        console.warn('⚠️ No se pudo registrar actividad:', error);
+    }
+    
+    loadLesson(currentLesson);
+    moduleStartTime = Date.now();
+    
+    setInterval(() => {
+        debugLog('⏰ Auto-guardado periódico');
+        saveProgress();
+    }, 120000);
+    
+    console.log('✅ MÓDULO 1 INICIALIZADO CORRECTAMENTE');
+    console.log('='.repeat(60));
+}
         // ===== TEST =====
         async function testGoogleSheetsConnection() {
             console.log('🧪 TEST CONEXIÓN');
