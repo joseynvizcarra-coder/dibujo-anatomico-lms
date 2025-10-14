@@ -1852,11 +1852,15 @@ async function initializeModule() {
         };
 
         // ===== INICIALIZACIÓN =====
-        document.addEventListener('DOMContentLoaded', initializeModule);
-        window.addEventListener('beforeunload', saveProgress);
+        if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeModule);
+} else {
+    initializeModule();
+}
 
-        console.log('%c🔍 DEBUG MODE', 'color: #4CAF50; font-size: 16px; font-weight: bold;');
-        console.log('%cTest: testGoogleSheetsConnection()', 'color: #FFC107;');
+window.addEventListener('beforeunload', function() {
+    saveProgress();
+});
     </script>
 </body>
 </html>
