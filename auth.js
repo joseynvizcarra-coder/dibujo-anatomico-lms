@@ -1,7 +1,7 @@
 // =====================================================
-// auth.js v4.0 - LMS Dibujo Anatómico (UAH)
+// auth.js v4.1 - LMS Dibujo Anatómico (UAH)
 // Universidad Alberto Hurtado - Joselyn Vizcarra
-// SISTEMA CON SINCRONIZACIÓN INTELIGENTE
+// SISTEMA CON SINCRONIZACIÓN INTELIGENTE - CORREGIDO
 // =====================================================
 
 const API_URL = 'https://script.google.com/macros/s/AKfycbwTOCRqlmssB095rOHJrGswLF25e1DFk8fZDkbziw1g4_JomibsX0OfWY8xmNPOiHt8/exec';
@@ -27,7 +27,7 @@ const STORAGE_KEYS = {
 let syncInterval = null;
 let isSyncing = false;
 
-console.log('✅ auth.js v4.0 cargado - Sistema de sincronización inteligente activo');
+console.log('✅ auth.js v4.1 cargado - Sistema de sincronización inteligente activo');
 
 // =========================
 // AUTENTICACIÓN
@@ -45,11 +45,11 @@ async function authenticateUser(username, password) {
       localStorage.setItem(STORAGE_KEYS.authenticated, 'true');
       localStorage.setItem(STORAGE_KEYS.sessionStart, userData.loginTime || new Date().toISOString());
 
-      // ✅ NUEVO: Sincronizar progreso inmediatamente después del login
+      // ✅ Sincronizar progreso inmediatamente después del login
       console.log('🔄 Sincronizando progreso desde Google Sheets...');
-      await syncProgressFromSheets(username, true); // force=true
+      await syncProgressFromSheets(username, true);
 
-      // ✅ NUEVO: Iniciar sincronización automática en segundo plano
+      // ✅ Iniciar sincronización automática en segundo plano
       startAutoSync();
 
       await logUserActivity('login', '', '', { timestamp: new Date().toISOString() });
@@ -74,9 +74,7 @@ function logout() {
     logUserActivity('logout', '', '');
   }
   
-  // ✅ NUEVO: Detener sincronización automática
   stopAutoSync();
-  
   localStorage.clear();
   window.location.href = 'login.html';
 }
@@ -126,7 +124,6 @@ function protectPage(requiredRole = null) {
 // SISTEMA DE SINCRONIZACIÓN
 // =========================
 
-// ✅ NUEVO: Iniciar sincronización automática en segundo plano
 function startAutoSync() {
   const user = getCurrentUser();
   if (!user || user.role === 'instructor') {
@@ -148,7 +145,6 @@ function startAutoSync() {
   }, SYNC_INTERVAL);
 }
 
-// ✅ NUEVO: Detener sincronización automática
 function stopAutoSync() {
   if (syncInterval) {
     clearInterval(syncInterval);
@@ -157,7 +153,7 @@ function stopAutoSync() {
   }
 }
 
-// ✅ NUEVO: Sincronizar progreso desde Google Sheets
+// ✅ CORREGIDO: Sincronizar progreso desde Google Sheets
 async function syncProgressFromSheets(username, force = false, retries = 0) {
   if (isSyncing && !force) {
     console.log('⏳ Sincronización ya en progreso, saltando...');
@@ -183,7 +179,7 @@ async function syncProgressFromSheets(username, force = false, retries = 0) {
           const localData = JSON.parse(localProgress);
           const remoteData = result.data;
           
-          // ✅ DETECCIÓN DE CONFLICTOS MEJORADA: Comparar progreso real, no solo timestamps
+          // ✅ DETECCIÓN DE CONFLICTOS MEJORADA
           const localTime = new Date(localData.lastActivity || 0).getTime();
           const remoteTime = new Date(remoteData.lastActivity || 0).getTime();
           
@@ -302,7 +298,7 @@ async function makeJSONPRequestWithRetry(action, params = {}, maxRetries = 3) {
   throw lastError;
 }
 
-// ✅ NUEVO: Actualizar indicador visual de sincronización
+// ✅ Actualizar indicador visual de sincronización
 function updateSyncStatus(status, message) {
   localStorage.setItem(STORAGE_KEYS.syncStatus, JSON.stringify({ status, message, timestamp: new Date().toISOString() }));
   
@@ -313,7 +309,7 @@ function updateSyncStatus(status, message) {
       synced: '✅',
       syncing: '🔄',
       error: '⚠️',
-      offline: '📴'
+      offline: '🔴'
     };
     
     const colors = {
@@ -326,7 +322,7 @@ function updateSyncStatus(status, message) {
     syncIndicator.innerHTML = `<span style="color: ${colors[status]}">${icons[status]} ${message}</span>`;
   }
   
-  // Emitir evento personalizado para que otras partes de la app puedan reaccionar
+  // Emitir evento personalizado
   window.dispatchEvent(new CustomEvent('syncStatusChanged', { detail: { status, message } }));
 }
 
@@ -411,7 +407,7 @@ async function getStudentProgress(forceSync = false) {
     }
   }
 
-  // ✅ CRÍTICO: Si no hay localStorage, SIEMPRE consultar Sheets primero
+  // ✅ Si no hay localStorage, SIEMPRE consultar Sheets primero
   console.log('📥 No hay progreso local, consultando Google Sheets...');
   await syncProgressFromSheets(currentUser.username, true);
   
@@ -433,7 +429,7 @@ async function getStudentProgress(forceSync = false) {
   return initializeEmptyProgress();
 }
 
-// ✅ NUEVO: Validar y migrar progreso
+// ✅ Validar y migrar progreso
 function validateAndMigrateProgress(progress) {
   // Crear estructura nueva si no tiene modules
   if (!progress.modules) {
@@ -482,11 +478,11 @@ function initializeEmptyProgress() {
     },
     overallProgress: 0,
     totalTimeSpent: 0,
-    lastActivity: null // ✅ CRÍTICO: null en vez de timestamp actual para no sobrescribir
+    lastActivity: null
   };
 }
 
-// ✅ MEJORADO: Actualizar progreso con sincronización inteligente
+// ✅ MEJORADO: Actualizar progreso con verificación de éxito
 async function updateModuleProgress(moduleNumber, progressData, skipSync = false) {
   try {
     const currentUser = getCurrentUser();
@@ -500,7 +496,7 @@ async function updateModuleProgress(moduleNumber, progressData, skipSync = false
       return false;
     }
 
-    // ✅ NUEVO: Sincronizar antes de guardar para evitar conflictos
+    // ✅ Sincronizar antes de guardar si no es skip
     if (!skipSync) {
       console.log('🔄 Sincronizando antes de guardar...');
       await syncProgressFromSheets(currentUser.username, false);
@@ -514,7 +510,7 @@ async function updateModuleProgress(moduleNumber, progressData, skipSync = false
       currentProgress = initializeEmptyProgress();
     }
 
-    // Si moduleNumber es null, actualizar todo el progreso (usado por syncProgressFromSheets)
+    // Si moduleNumber es null, actualizar todo el progreso
     if (moduleNumber === null) {
       currentProgress = { ...currentProgress, ...progressData };
     } else {
@@ -536,10 +532,14 @@ async function updateModuleProgress(moduleNumber, progressData, skipSync = false
         };
       }
 
+      // ✅ CRÍTICO: Mantener evaluations si no viene en progressData
+      const currentEvaluations = currentProgress.modules[moduleNumber].evaluations || {};
+      
       // Actualizar datos del módulo
       currentProgress.modules[moduleNumber] = {
         ...currentProgress.modules[moduleNumber],
         ...progressData,
+        evaluations: progressData.evaluations || currentEvaluations,
         lastUpdate: new Date().toISOString()
       };
     }
@@ -555,7 +555,7 @@ async function updateModuleProgress(moduleNumber, progressData, skipSync = false
     localStorage.setItem(progressKey, JSON.stringify(currentProgress));
     console.log(`💾 Progreso guardado en localStorage`);
 
-    // ✅ GUARDAR EN GOOGLE SHEETS SIEMPRE
+    // ✅ GUARDAR EN GOOGLE SHEETS CON VERIFICACIÓN
     if (!skipSync) {
       try {
         updateSyncStatus('syncing', 'Guardando en la nube...');
@@ -567,8 +567,12 @@ async function updateModuleProgress(moduleNumber, progressData, skipSync = false
         }, MAX_RETRIES);
 
         if (result.success) {
-          console.log(`✅ Progreso guardado en Sheets`);
+          console.log(`✅ Progreso confirmado en Sheets`);
           updateSyncStatus('synced', 'Guardado correctamente');
+          
+          // ✅ Guardar timestamp de última sincronización exitosa
+          const lastSyncKey = STORAGE_KEYS.lastSync(currentUser.username);
+          localStorage.setItem(lastSyncKey, new Date().toISOString());
           
           // Registrar actividad según el estado
           if (moduleNumber !== null) {
@@ -579,16 +583,16 @@ async function updateModuleProgress(moduleNumber, progressData, skipSync = false
             });
           }
           
-          return true;
+          return true; // ✅ Éxito confirmado
         } else {
           console.warn('⚠️ No se pudo guardar en Sheets:', result.error);
           updateSyncStatus('error', 'Error guardando');
-          return true; // localStorage guardado es suficiente
+          return false; // ✅ Falló
         }
       } catch (sheetError) {
-        console.warn('⚠️ Error guardando en Sheets (progreso local OK):', sheetError);
+        console.warn('⚠️ Error guardando en Sheets:', sheetError);
         updateSyncStatus('error', 'Error de conexión');
-        return true;
+        return false; // ✅ Falló
       }
     }
     
@@ -600,7 +604,7 @@ async function updateModuleProgress(moduleNumber, progressData, skipSync = false
   }
 }
 
-// ✅ FUNCIÓN CORREGIDA: Registrar actividad del usuario
+// ✅ Registrar actividad del usuario
 async function logUserActivity(activityType, moduleId = '', lessonId = '', details = {}) {
   try {
     const user = getCurrentUser();
@@ -712,16 +716,13 @@ function updateUIForRole() {
   if (roleEl) roleEl.textContent = getRoleDisplayName(user.role);
 }
 
-// ✅ NUEVO: Agregar indicador de sincronización al DOM automáticamente
+// ✅ Agregar indicador de sincronización al DOM automáticamente
 function injectSyncIndicator() {
-  // Solo si el usuario NO es instructor
   const user = getCurrentUser();
   if (!user || user.role === 'instructor') return;
   
-  // Buscar si ya existe
   if (document.getElementById('syncIndicator')) return;
   
-  // Crear indicador flotante
   const indicator = document.createElement('div');
   indicator.id = 'syncIndicator';
   indicator.style.cssText = `
@@ -739,7 +740,6 @@ function injectSyncIndicator() {
   
   document.body.appendChild(indicator);
   
-  // Actualizar con estado actual
   const syncStatus = localStorage.getItem(STORAGE_KEYS.syncStatus);
   if (syncStatus) {
     try {
@@ -790,8 +790,8 @@ async function testGoogleSheetsConnection() {
 
     if (result2.success && result3.success) {
       alert('✅ CONEXIÓN EXITOSA\n\n' +
-            '✓ getProgress funciona\n' +
-            '✓ logActivity funciona\n\n' +
+            '✔ getProgress funciona\n' +
+            '✔ logActivity funciona\n\n' +
             'Revisa la consola para más detalles.');
     } else {
       alert('⚠️ PROBLEMAS DETECTADOS\n\nRevisa la consola para más detalles.');
@@ -803,7 +803,7 @@ async function testGoogleSheetsConnection() {
   }
 }
 
-// ✅ NUEVO: Forzar sincronización manual
+// ✅ Forzar sincronización manual
 window.forceSyncProgress = async function() {
   const user = getCurrentUser();
   if (!user) {
@@ -816,14 +816,12 @@ window.forceSyncProgress = async function() {
   
   if (success) {
     showToast('✅ Progreso sincronizado correctamente', 'success');
-    // Recargar página para mostrar datos actualizados
     setTimeout(() => window.location.reload(), 1000);
   } else {
     showToast('Error al sincronizar', 'error');
   }
 };
 
-// Hacer disponible globalmente
 window.testGoogleSheetsConnection = testGoogleSheetsConnection;
 
 // =========================
@@ -832,15 +830,13 @@ window.testGoogleSheetsConnection = testGoogleSheetsConnection;
 
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    console.log('✅ auth.js v4.0 inicializado completamente');
+    console.log('✅ auth.js v4.1 inicializado completamente');
     console.log('🔄 Sistema de sincronización inteligente activo');
     console.log('🧪 Para probar: testGoogleSheetsConnection()');
     console.log('🔄 Para sincronizar: forceSyncProgress()');
     
-    // Inyectar indicador de sincronización
     setTimeout(injectSyncIndicator, 500);
     
-    // Si hay usuario autenticado, iniciar sincronización automática
     if (isAuthenticated()) {
       const user = getCurrentUser();
       if (user && user.role !== 'instructor') {
@@ -849,15 +845,9 @@ if (document.readyState === 'loading') {
     }
   });
 } else {
-  console.log('✅ auth.js v4.0 inicializado completamente');
-  console.log('🔄 Sistema de sincronización inteligente activo');
-  console.log('🧪 Para probar: testGoogleSheetsConnection()');
-  console.log('🔄 Para sincronizar: forceSyncProgress()');
-  
-  // Inyectar indicador de sincronización
+  console.log('✅ auth.js v4.1 inicializado completamente');
   setTimeout(injectSyncIndicator, 500);
   
-  // Si hay usuario autenticado, iniciar sincronización automática
   if (isAuthenticated()) {
     const user = getCurrentUser();
     if (user && user.role !== 'instructor') {
@@ -870,7 +860,6 @@ if (document.readyState === 'loading') {
 // MANEJO DE VISIBILIDAD DE PÁGINA
 // =========================
 
-// ✅ NUEVO: Sincronizar cuando el usuario regresa a la pestaña
 document.addEventListener('visibilitychange', async function() {
   if (!document.hidden && isAuthenticated()) {
     const user = getCurrentUser();
@@ -881,10 +870,8 @@ document.addEventListener('visibilitychange', async function() {
   }
 });
 
-// ✅ NUEVO: Sincronizar antes de cerrar la pestaña
 window.addEventListener('beforeunload', function(e) {
   if (isAuthenticated() && isSyncing) {
-    // Si hay sincronización en progreso, advertir al usuario
     e.preventDefault();
     e.returnValue = 'Hay una sincronización en progreso. ¿Seguro que quieres salir?';
   }
