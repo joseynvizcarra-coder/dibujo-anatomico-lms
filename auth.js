@@ -482,67 +482,60 @@ function initializeEmptyProgress() {
   };
 }
 
-// ✅ MEJORADO: Actualizar progreso con verificación de éxito
-async function updateModuleProgress(moduleNumber, progressData, skipSync = false) {
+// =====================================================
+// FUNCIÓN: updateModuleProgress (con fusión de datos)
+// =====================================================
+async function updateModuleProgress(moduleNumber, progressData) {
   try {
     const currentUser = getCurrentUser();
-    if (!currentUser) {
-      console.warn('❌ No hay usuario autenticado');
+    if (!currentUser || !currentUser.username) {
+      console.warn("⚠️ No hay usuario activo");
       return false;
     }
 
-    if (!['estudiante', 'evaluador'].includes(currentUser.role)) {
-      console.warn(`⚠️ Rol sin permisos para guardar: ${currentUser.role}`);
-      return false;
+    const username = currentUser.username.trim().toLowerCase();
+
+    // 1️⃣ Leer progreso anterior desde Google Sheets
+    const response = await fetch(`${API_URL}?action=getUserProgress&username=${encodeURIComponent(username)}&module=${moduleNumber}`);
+    const prevData = await response.json().catch(() => ({}));
+
+    // 2️⃣ Fusión segura: combinar arrays y mantener último timestamp
+    let merged = { ...prevData, ...progressData };
+
+    // Si hay arrays, unir sin duplicar
+    if (Array.isArray(prevData.completedLessons) && Array.isArray(progressData.completedLessons)) {
+      const mergedLessons = Array.from(new Set([...prevData.completedLessons, ...progressData.completedLessons]));
+      merged.completedLessons = mergedLessons;
     }
 
-    // ✅ Sincronizar antes de guardar si no es skip
-    if (!skipSync) {
-      console.log('🔄 Sincronizando antes de guardar...');
-      await syncProgressFromSheets(currentUser.username, false);
+    // Si existen evaluaciones parciales, fusionarlas también
+    if (prevData.evaluations && progressData.evaluations) {
+      merged.evaluations = { ...prevData.evaluations, ...progressData.evaluations };
     }
 
-    let currentProgress = await getStudentProgress(false);
-    
-    // Validar estructura
-    if (!currentProgress || !currentProgress.modules) {
-      console.warn('⚠️ currentProgress no válido, inicializando...');
-      currentProgress = initializeEmptyProgress();
-    }
+    // Asegurar timestamp más reciente
+    merged.lastUpdate = progressData.lastUpdate || new Date().toISOString();
 
-    // Si moduleNumber es null, actualizar todo el progreso
-    if (moduleNumber === null) {
-      currentProgress = { ...currentProgress, ...progressData };
-    } else {
-      if (moduleNumber < 1 || moduleNumber > TOTAL_MODULES) {
-        console.error(`❌ Número de módulo inválido: ${moduleNumber}`);
-        return false;
-      }
+    // 3️⃣ Enviar datos fusionados al servidor
+    const saveRes = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "updateModuleProgress",
+        username,
+        module: moduleNumber,
+        data: merged
+      }),
+    });
 
-      // Validar que el módulo específico exista
-      if (!currentProgress.modules[moduleNumber]) {
-        console.warn(`⚠️ Módulo ${moduleNumber} no existe, inicializando...`);
-        currentProgress.modules[moduleNumber] = {
-          completed: false,
-          progress: 0,
-          timeSpent: 0,
-          completedLessons: [],
-          evaluations: {},
-          lastUpdate: null
-        };
-      }
-
-      // ✅ CRÍTICO: Mantener evaluations si no viene en progressData
-      const currentEvaluations = currentProgress.modules[moduleNumber].evaluations || {};
-      
-      // Actualizar datos del módulo
-      currentProgress.modules[moduleNumber] = {
-        ...currentProgress.modules[moduleNumber],
-        ...progressData,
-        evaluations: progressData.evaluations || currentEvaluations,
-        lastUpdate: new Date().toISOString()
-      };
-    }
+    const result = await saveRes.json();
+    console.log("✅ Progreso fusionado guardado correctamente");
+    return result.success || true;
+  } catch (error) {
+    console.error("❌ Error al fusionar progreso:", error);
+    return false;
+  }
+}
 
     // Recalcular progreso general
     const completedModules = Object.values(currentProgress.modules).filter(m => m.completed).length;
