@@ -237,48 +237,6 @@
             color: var(--gray-medium);
         }
 
-        .diagnostic-alert {
-            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
-            border-left: 4px solid var(--warning);
-            padding: 1.5rem;
-            border-radius: 12px;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 12px rgba(255,193,7,0.2);
-        }
-
-        .diagnostic-alert h5 {
-            color: #856404;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .diagnostic-alert p {
-            color: #856404;
-            margin-bottom: 1rem;
-        }
-
-        .btn-diagnostic {
-            background: var(--warning);
-            color: var(--dark);
-            padding: 0.75rem 2rem;
-            border-radius: 25px;
-            border: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-diagnostic:hover {
-            background: #e0a800;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255,193,7,0.4);
-            color: var(--dark);
-        }
-
         .progress-card {
             background: white;
             border-radius: 15px;
@@ -656,20 +614,6 @@
         </section>
 
         <div class="container">
-            <div class="diagnostic-alert fade-in-up" id="diagnosticAlert" style="display: none;">
-                <h5>
-                    <i class="bi bi-clipboard-check"></i>
-                    ¡Comienza con una Evaluación Diagnóstica!
-                </h5>
-                <p class="mb-3">
-                    Antes de empezar el curso, ayúdanos a conocer tu nivel inicial. 
-                    Esto nos permitirá personalizar tu experiencia de aprendizaje.
-                </p>
-                <a href="diagnostic.html" class="btn-diagnostic">
-                    <i class="bi bi-play-fill me-2"></i>Realizar Evaluación (5 min)
-                </a>
-            </div>
-
             <div class="student-dashboard fade-in-up" id="studentDashboard" style="display: none;">
                 <div class="dashboard-header">
                     <h3>
@@ -1003,24 +947,17 @@
             const currentUser = getCurrentUser();
             if (!currentUser) return;
 
+            // Instructores no ven dashboard de estudiante
             if (currentUser.role === 'instructor' || currentUser.role === 'profesor') {
                 return;
             }
 
-            const diagnosticCompleted = localStorage.getItem('student_diagnostic');
-            const diagnosticAlert = document.getElementById('diagnosticAlert');
+            // Siempre mostrar dashboard para estudiantes
             const studentDashboard = document.getElementById('studentDashboard');
             const simpleProgressCard = document.getElementById('simpleProgressCard');
-
-            if (!diagnosticCompleted) {
-                diagnosticAlert.style.display = 'block';
-                studentDashboard.style.display = 'none';
-                simpleProgressCard.style.display = 'block';
-            } else {
-                diagnosticAlert.style.display = 'none';
-                studentDashboard.style.display = 'block';
-                simpleProgressCard.style.display = 'none';
-            }
+            
+            studentDashboard.style.display = 'block';
+            simpleProgressCard.style.display = 'none';
         }
 
         function loadStudentDashboard() {
@@ -1028,9 +965,6 @@
             if (!currentUser || currentUser.role === 'instructor' || currentUser.role === 'profesor') {
                 return;
             }
-
-            const diagnosticCompleted = localStorage.getItem('student_diagnostic');
-            if (!diagnosticCompleted) return;
 
             // Obtener progreso del nuevo sistema unificado
             const progressKey = `progress_${currentUser.username}`;
