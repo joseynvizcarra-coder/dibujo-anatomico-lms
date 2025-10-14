@@ -1,12 +1,14 @@
 // =====================================================
-// auth.js v3.3 - LMS Dibujo Anatómico (UAH)
+// auth.js v4.0 - LMS Dibujo Anatómico (UAH)
 // Universidad Alberto Hurtado - Joselyn Vizcarra
-// SISTEMA CORREGIDO - activityType funcionando
+// SISTEMA CON SINCRONIZACIÓN INTELIGENTE
 // =====================================================
 
 const API_URL = 'https://script.google.com/macros/s/AKfycbwTOCRqlmssB095rOHJrGswLF25e1DFk8fZDkbziw1g4_JomibsX0OfWY8xmNPOiHt8/exec';
 const TOTAL_MODULES = 3;
 const SESSION_TIMEOUT = 24 * 60 * 60 * 1000; // 24 horas
+const SYNC_INTERVAL = 2 * 60 * 1000; // 2 minutos
+const MAX_RETRIES = 3;
 
 // =========================
 // CONFIGURACIÓN UNIFICADA
@@ -16,10 +18,16 @@ const STORAGE_KEYS = {
   user: 'currentUser',
   authenticated: 'isAuthenticated',
   sessionStart: 'sessionStart',
-  progress: (username) => `progress_${username}`
+  progress: (username) => `progress_${username}`,
+  lastSync: (username) => `lastSync_${username}`,
+  syncStatus: 'syncStatus'
 };
 
-console.log('✅ auth.js v3.3 cargado correctamente');
+// Estado global de sincronización
+let syncInterval = null;
+let isSyncing = false;
+
+console.log('✅ auth.js v4.0 cargado - Sistema de sincronización inteligente activo');
 
 // =========================
 // AUTENTICACIÓN
@@ -37,9 +45,17 @@ async function authenticateUser(username, password) {
       localStorage.setItem(STORAGE_KEYS.authenticated, 'true');
       localStorage.setItem(STORAGE_KEYS.sessionStart, userData.loginTime || new Date().toISOString());
 
+      // ✅ NUEVO: Sincronizar progreso inmediatamente después del login
+      console.log('🔄 Sincronizando progreso desde Google Sheets...');
+      await syncProgressFromSheets(username, true); // force=true
+
+      // ✅ NUEVO: Iniciar sincronización automática en segundo plano
+      startAutoSync();
+
       await logUserActivity('login', '', '', { timestamp: new Date().toISOString() });
 
       showLoading(false);
+      updateSyncStatus('synced', 'Datos sincronizados');
       return { success: true, user: userData };
     } else {
       showLoading(false);
@@ -57,6 +73,10 @@ function logout() {
   if (user) {
     logUserActivity('logout', '', '');
   }
+  
+  // ✅ NUEVO: Detener sincronización automática
+  stopAutoSync();
+  
   localStorage.clear();
   window.location.href = 'login.html';
 }
@@ -103,6 +123,171 @@ function protectPage(requiredRole = null) {
 }
 
 // =========================
+// SISTEMA DE SINCRONIZACIÓN
+// =========================
+
+// ✅ NUEVO: Iniciar sincronización automática en segundo plano
+function startAutoSync() {
+  const user = getCurrentUser();
+  if (!user || user.role === 'instructor') {
+    console.log('⏭️ Sincronización automática no necesaria para instructor');
+    return;
+  }
+  
+  if (syncInterval) {
+    clearInterval(syncInterval);
+  }
+  
+  console.log(`🔄 Sincronización automática iniciada (cada ${SYNC_INTERVAL / 60000} minutos)`);
+  
+  syncInterval = setInterval(async () => {
+    if (!isSyncing) {
+      console.log('🔄 Sincronización automática en progreso...');
+      await syncProgressFromSheets(user.username, false);
+    }
+  }, SYNC_INTERVAL);
+}
+
+// ✅ NUEVO: Detener sincronización automática
+function stopAutoSync() {
+  if (syncInterval) {
+    clearInterval(syncInterval);
+    syncInterval = null;
+    console.log('⏹️ Sincronización automática detenida');
+  }
+}
+
+// ✅ NUEVO: Sincronizar progreso desde Google Sheets
+async function syncProgressFromSheets(username, force = false, retries = 0) {
+  if (isSyncing && !force) {
+    console.log('⏳ Sincronización ya en progreso, saltando...');
+    return false;
+  }
+  
+  isSyncing = true;
+  updateSyncStatus('syncing', 'Sincronizando...');
+  
+  try {
+    const result = await makeJSONPRequestWithRetry('getProgress', { username }, MAX_RETRIES);
+    
+    if (result.success && result.data) {
+      const progressKey = STORAGE_KEYS.progress(username);
+      const lastSyncKey = STORAGE_KEYS.lastSync(username);
+      
+      // Obtener progreso local actual
+      const localProgress = localStorage.getItem(progressKey);
+      let shouldUpdate = true;
+      
+      if (localProgress && !force) {
+        try {
+          const localData = JSON.parse(localProgress);
+          const remoteData = result.data;
+          
+          // ✅ DETECCIÓN DE CONFLICTOS: Comparar timestamps
+          const localTime = new Date(localData.lastActivity || 0).getTime();
+          const remoteTime = new Date(remoteData.lastActivity || 0).getTime();
+          
+          if (localTime > remoteTime) {
+            console.log('⚠️ Datos locales más recientes que Sheets, subiendo...');
+            // Subir datos locales a Sheets
+            await updateModuleProgress(null, localData, true); // skipSync=true para evitar loop
+            shouldUpdate = false;
+          } else if (localTime === remoteTime) {
+            console.log('✅ Datos ya sincronizados');
+            shouldUpdate = false;
+          } else {
+            console.log('📥 Datos de Sheets más recientes, actualizando local...');
+          }
+        } catch (e) {
+          console.warn('⚠️ Error comparando timestamps, usando datos de Sheets:', e);
+        }
+      }
+      
+      if (shouldUpdate) {
+        // ✅ Validar y migrar si es necesario
+        const validatedData = validateAndMigrateProgress(result.data);
+        localStorage.setItem(progressKey, JSON.stringify(validatedData));
+        console.log('✅ Progreso sincronizado desde Google Sheets');
+      }
+      
+      // Guardar timestamp de última sincronización
+      localStorage.setItem(lastSyncKey, new Date().toISOString());
+      
+      updateSyncStatus('synced', 'Sincronizado hace instantes');
+      isSyncing = false;
+      return true;
+      
+    } else {
+      throw new Error(result.error || 'No se pudo obtener progreso');
+    }
+    
+  } catch (error) {
+    console.error('❌ Error sincronizando progreso:', error);
+    
+    // ✅ RETRY con backoff exponencial
+    if (retries < MAX_RETRIES) {
+      const delay = Math.pow(2, retries) * 1000; // 1s, 2s, 4s
+      console.log(`🔄 Reintentando en ${delay/1000}s... (intento ${retries + 1}/${MAX_RETRIES})`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+      isSyncing = false;
+      return syncProgressFromSheets(username, force, retries + 1);
+    }
+    
+    updateSyncStatus('error', 'Error de sincronización');
+    isSyncing = false;
+    return false;
+  }
+}
+
+// ✅ NUEVO: makeJSONPRequest con retry automático
+async function makeJSONPRequestWithRetry(action, params = {}, maxRetries = 3) {
+  let lastError;
+  
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      const result = await makeJSONPRequest(action, params);
+      return result;
+    } catch (error) {
+      lastError = error;
+      if (i < maxRetries - 1) {
+        const delay = Math.pow(2, i) * 500; // 500ms, 1s, 2s
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+  }
+  
+  throw lastError;
+}
+
+// ✅ NUEVO: Actualizar indicador visual de sincronización
+function updateSyncStatus(status, message) {
+  localStorage.setItem(STORAGE_KEYS.syncStatus, JSON.stringify({ status, message, timestamp: new Date().toISOString() }));
+  
+  // Actualizar UI si existe el elemento
+  const syncIndicator = document.getElementById('syncIndicator');
+  if (syncIndicator) {
+    const icons = {
+      synced: '✅',
+      syncing: '🔄',
+      error: '⚠️',
+      offline: '📴'
+    };
+    
+    const colors = {
+      synced: '#4CAF50',
+      syncing: '#2196F3',
+      error: '#f44336',
+      offline: '#9E9E9E'
+    };
+    
+    syncIndicator.innerHTML = `<span style="color: ${colors[status]}">${icons[status]} ${message}</span>`;
+  }
+  
+  // Emitir evento personalizado para que otras partes de la app puedan reaccionar
+  window.dispatchEvent(new CustomEvent('syncStatusChanged', { detail: { status, message } }));
+}
+
+// =========================
 // JSONP REQUEST
 // =========================
 
@@ -125,8 +310,18 @@ function makeJSONPRequest(action, params = {}) {
     script.async = true;
     script.onerror = () => {
       delete window[callbackName];
+      if (document.head.contains(script)) document.head.removeChild(script);
       reject(new Error('Error de conexión con el servidor'));
     };
+
+    // Timeout de 30 segundos
+    setTimeout(() => {
+      if (window[callbackName]) {
+        delete window[callbackName];
+        if (document.head.contains(script)) document.head.removeChild(script);
+        reject(new Error('Timeout: El servidor no respondió a tiempo'));
+      }
+    }, 30000);
 
     document.head.appendChild(script);
   });
@@ -136,62 +331,87 @@ function makeJSONPRequest(action, params = {}) {
 // GESTIÓN DE PROGRESO
 // =========================
 
-async function getStudentProgress() {
+async function getStudentProgress(forceSync = false) {
   const currentUser = getCurrentUser();
   if (!currentUser) return null;
 
   const progressKey = STORAGE_KEYS.progress(currentUser.username);
+  
+  // ✅ Si se fuerza sincronización, consultar Sheets
+  if (forceSync) {
+    console.log('🔄 Sincronización forzada solicitada...');
+    await syncProgressFromSheets(currentUser.username, true);
+  }
+  
   const localProgress = localStorage.getItem(progressKey);
 
   if (localProgress) {
     try {
       const parsed = JSON.parse(localProgress);
       
-      // ✅ CRÍTICO: Validar y migrar formato viejo
-      if (!parsed.modules) {
-        console.warn('⚠️ Formato viejo detectado, migrando automáticamente...');
-        
-        // Crear estructura nueva vacía
-        const migratedProgress = initializeEmptyProgress();
-        
-        // Guardar formato nuevo
-        localStorage.setItem(progressKey, JSON.stringify(migratedProgress));
-        console.log('✅ Progreso migrado al nuevo formato');
-        
-        return migratedProgress;
-      }
+      // ✅ Validar y migrar formato viejo
+      return validateAndMigrateProgress(parsed);
       
-      // ✅ Validar que modules tenga la estructura correcta
-      if (!parsed.modules[1] || !parsed.modules[2] || !parsed.modules[3]) {
-        console.warn('⚠️ Estructura de modules incompleta, inicializando...');
-        const fixed = initializeEmptyProgress();
-        // Copiar datos existentes si hay
-        if (parsed.modules[1]) fixed.modules[1] = parsed.modules[1];
-        if (parsed.modules[2]) fixed.modules[2] = parsed.modules[2];
-        if (parsed.modules[3]) fixed.modules[3] = parsed.modules[3];
-        localStorage.setItem(progressKey, JSON.stringify(fixed));
-        return fixed;
-      }
-      
-      return parsed;
     } catch (error) {
       console.error('❌ Error parseando progreso local:', error);
       return initializeEmptyProgress();
     }
   }
 
-  // Intentar obtener desde Google Sheets
-  try {
-    const result = await makeJSONPRequest('getProgress', { username: currentUser.username });
-    if (result.success && result.data) {
-      localStorage.setItem(progressKey, JSON.stringify(result.data));
-      return result.data;
+  // Si no hay localStorage, intentar obtener desde Google Sheets
+  await syncProgressFromSheets(currentUser.username, true);
+  
+  // Intentar leer nuevamente después de sincronizar
+  const syncedProgress = localStorage.getItem(progressKey);
+  if (syncedProgress) {
+    try {
+      return JSON.parse(syncedProgress);
+    } catch (e) {
+      return initializeEmptyProgress();
     }
-  } catch (error) {
-    console.error('❌ Error obteniendo progreso:', error);
   }
 
   return initializeEmptyProgress();
+}
+
+// ✅ NUEVO: Validar y migrar progreso
+function validateAndMigrateProgress(progress) {
+  // Crear estructura nueva si no tiene modules
+  if (!progress.modules) {
+    console.warn('⚠️ Formato viejo detectado, migrando automáticamente...');
+    return initializeEmptyProgress();
+  }
+  
+  // Validar que modules tenga la estructura correcta
+  for (let i = 1; i <= TOTAL_MODULES; i++) {
+    if (!progress.modules[i]) {
+      console.warn(`⚠️ Módulo ${i} no existe, inicializando...`);
+      progress.modules[i] = {
+        completed: false,
+        progress: 0,
+        timeSpent: 0,
+        completedLessons: [],
+        evaluations: {},
+        lastUpdate: null
+      };
+    }
+    
+    // ✅ CRÍTICO: Asegurar que completedLessons sea array
+    if (typeof progress.modules[i].completedLessons === 'number') {
+      progress.modules[i].completedLessons = [];
+    }
+    
+    if (!Array.isArray(progress.modules[i].completedLessons)) {
+      progress.modules[i].completedLessons = [];
+    }
+    
+    // Asegurar que evaluations existe
+    if (!progress.modules[i].evaluations) {
+      progress.modules[i].evaluations = {};
+    }
+  }
+  
+  return progress;
 }
 
 function initializeEmptyProgress() {
@@ -207,8 +427,8 @@ function initializeEmptyProgress() {
   };
 }
 
-// ✅ CORREGIDO: Actualizar progreso con validación robusta
-async function updateModuleProgress(moduleNumber, progressData) {
+// ✅ MEJORADO: Actualizar progreso con sincronización inteligente
+async function updateModuleProgress(moduleNumber, progressData, skipSync = false) {
   try {
     const currentUser = getCurrentUser();
     if (!currentUser) {
@@ -221,38 +441,49 @@ async function updateModuleProgress(moduleNumber, progressData) {
       return false;
     }
 
-    if (moduleNumber < 1 || moduleNumber > TOTAL_MODULES) {
-      console.error(`❌ Número de módulo inválido: ${moduleNumber}`);
-      return false;
+    // ✅ NUEVO: Sincronizar antes de guardar para evitar conflictos
+    if (!skipSync) {
+      console.log('🔄 Sincronizando antes de guardar...');
+      await syncProgressFromSheets(currentUser.username, false);
     }
 
-    let currentProgress = await getStudentProgress();
+    let currentProgress = await getStudentProgress(false);
     
-    // ✅ CRÍTICO: Asegurar que currentProgress tenga la estructura correcta
+    // Validar estructura
     if (!currentProgress || !currentProgress.modules) {
       console.warn('⚠️ currentProgress no válido, inicializando...');
       currentProgress = initializeEmptyProgress();
     }
 
-    // ✅ Validar que el módulo específico exista
-    if (!currentProgress.modules[moduleNumber]) {
-      console.warn(`⚠️ Módulo ${moduleNumber} no existe, inicializando...`);
+    // Si moduleNumber es null, actualizar todo el progreso (usado por syncProgressFromSheets)
+    if (moduleNumber === null) {
+      currentProgress = { ...currentProgress, ...progressData };
+    } else {
+      if (moduleNumber < 1 || moduleNumber > TOTAL_MODULES) {
+        console.error(`❌ Número de módulo inválido: ${moduleNumber}`);
+        return false;
+      }
+
+      // Validar que el módulo específico exista
+      if (!currentProgress.modules[moduleNumber]) {
+        console.warn(`⚠️ Módulo ${moduleNumber} no existe, inicializando...`);
+        currentProgress.modules[moduleNumber] = {
+          completed: false,
+          progress: 0,
+          timeSpent: 0,
+          completedLessons: [],
+          evaluations: {},
+          lastUpdate: null
+        };
+      }
+
+      // Actualizar datos del módulo
       currentProgress.modules[moduleNumber] = {
-        completed: false,
-        progress: 0,
-        timeSpent: 0,
-        completedLessons: [],
-        evaluations: {},
-        lastUpdate: null
+        ...currentProgress.modules[moduleNumber],
+        ...progressData,
+        lastUpdate: new Date().toISOString()
       };
     }
-
-    // Actualizar datos del módulo
-    currentProgress.modules[moduleNumber] = {
-      ...currentProgress.modules[moduleNumber],
-      ...progressData,
-      lastUpdate: new Date().toISOString()
-    };
 
     // Recalcular progreso general
     const completedModules = Object.values(currentProgress.modules).filter(m => m.completed).length;
@@ -265,36 +496,47 @@ async function updateModuleProgress(moduleNumber, progressData) {
     localStorage.setItem(progressKey, JSON.stringify(currentProgress));
     console.log(`💾 Progreso guardado en localStorage`);
 
-    // ✅ GUARDAR EN GOOGLE SHEETS SIEMPRE (para que el dashboard tenga datos actualizados)
-    try {
-      console.log(`📤 Guardando progreso en Google Sheets...`);
-      
-      const result = await makeJSONPRequest('saveProgress', {
-        username: currentUser.username,
-        progressData: JSON.stringify(currentProgress)
-      });
+    // ✅ GUARDAR EN GOOGLE SHEETS SIEMPRE
+    if (!skipSync) {
+      try {
+        updateSyncStatus('syncing', 'Guardando en la nube...');
+        console.log(`📤 Guardando progreso en Google Sheets...`);
+        
+        const result = await makeJSONPRequestWithRetry('saveProgress', {
+          username: currentUser.username,
+          progressData: JSON.stringify(currentProgress)
+        }, MAX_RETRIES);
 
-      if (result.success) {
-        console.log(`✅ Progreso módulo ${moduleNumber} guardado en Sheets`);
-        
-        // Registrar actividad según el estado
-        const activityType = progressData.completed ? 'module_completed' : 'progress_update';
-        await logUserActivity(activityType, moduleNumber.toString(), '', {
-          progress: currentProgress.modules[moduleNumber].progress,
-          completed: currentProgress.modules[moduleNumber].completed
-        });
-        
+        if (result.success) {
+          console.log(`✅ Progreso guardado en Sheets`);
+          updateSyncStatus('synced', 'Guardado correctamente');
+          
+          // Registrar actividad según el estado
+          if (moduleNumber !== null) {
+            const activityType = progressData.completed ? 'module_completed' : 'progress_update';
+            await logUserActivity(activityType, moduleNumber.toString(), '', {
+              progress: currentProgress.modules[moduleNumber].progress,
+              completed: currentProgress.modules[moduleNumber].completed
+            });
+          }
+          
+          return true;
+        } else {
+          console.warn('⚠️ No se pudo guardar en Sheets:', result.error);
+          updateSyncStatus('error', 'Error guardando');
+          return true; // localStorage guardado es suficiente
+        }
+      } catch (sheetError) {
+        console.warn('⚠️ Error guardando en Sheets (progreso local OK):', sheetError);
+        updateSyncStatus('error', 'Error de conexión');
         return true;
-      } else {
-        console.warn('⚠️ No se pudo guardar en Sheets:', result.error);
-        return true; // localStorage guardado es suficiente para continuar
       }
-    } catch (sheetError) {
-      console.warn('⚠️ Error guardando en Sheets (progreso local OK):', sheetError);
-      return true; // No fallar si Sheets no responde
     }
+    
+    return true;
   } catch (err) {
     console.error('❌ Error en updateModuleProgress:', err);
+    updateSyncStatus('error', 'Error guardando');
     return false;
   }
 }
@@ -309,10 +551,10 @@ async function logUserActivity(activityType, moduleId = '', lessonId = '', detai
     }
 
     const params = {
-      action: 'logActivity',           // Para el switch en Google Sheets
+      action: 'logActivity',
       userId: user.id || '',
       username: user.username || '',
-      activityType: activityType,      // ✅ CRÍTICO: activityType (no "action")
+      activityType: activityType,
       moduleId: moduleId.toString(),
       lessonId: lessonId.toString(),
       details: typeof details === 'string' ? details : JSON.stringify(details),
@@ -411,6 +653,47 @@ function updateUIForRole() {
   if (roleEl) roleEl.textContent = getRoleDisplayName(user.role);
 }
 
+// ✅ NUEVO: Agregar indicador de sincronización al DOM automáticamente
+function injectSyncIndicator() {
+  // Solo si el usuario NO es instructor
+  const user = getCurrentUser();
+  if (!user || user.role === 'instructor') return;
+  
+  // Buscar si ya existe
+  if (document.getElementById('syncIndicator')) return;
+  
+  // Crear indicador flotante
+  const indicator = document.createElement('div');
+  indicator.id = 'syncIndicator';
+  indicator.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: white;
+    padding: 0.75rem 1.25rem;
+    border-radius: 25px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-size: 0.85rem;
+    z-index: 9998;
+    transition: all 0.3s ease;
+  `;
+  
+  document.body.appendChild(indicator);
+  
+  // Actualizar con estado actual
+  const syncStatus = localStorage.getItem(STORAGE_KEYS.syncStatus);
+  if (syncStatus) {
+    try {
+      const status = JSON.parse(syncStatus);
+      updateSyncStatus(status.status, status.message);
+    } catch (e) {
+      updateSyncStatus('synced', 'Sincronizado');
+    }
+  } else {
+    updateSyncStatus('synced', 'Sincronizado');
+  }
+}
+
 // =========================
 // FUNCIONES DE TESTING
 // =========================
@@ -426,37 +709,30 @@ async function testGoogleSheetsConnection() {
   showLoading(true, 'Probando conexión con Google Sheets...');
 
   try {
-    console.log('Test 1: login...');
-    const result1 = await makeJSONPRequest('login', {
-      username: user.username,
-      password: 'test'
-    });
-    console.log('Resultado Test 1:', result1);
-
-    console.log('Test 2: getProgress...');
+    console.log('Test 1: getProgress...');
     const result2 = await makeJSONPRequest('getProgress', {
       username: user.username
     });
-    console.log('Resultado Test 2:', result2);
+    console.log('Resultado Test 1:', result2);
 
-    console.log('Test 3: logActivity...');
+    console.log('Test 2: logActivity...');
     const result3 = await makeJSONPRequest('logActivity', {
       userId: user.id || '',
       username: user.username,
-      activityType: 'test',  // ✅ CORREGIDO: activityType
+      activityType: 'test',
       moduleId: '1',
       lessonId: '1',
       details: JSON.stringify({ test: true }),
       sessionId: user.sessionId || ''
     });
-    console.log('Resultado Test 3:', result3);
+    console.log('Resultado Test 2:', result3);
 
     showLoading(false);
 
     if (result2.success && result3.success) {
       alert('✅ CONEXIÓN EXITOSA\n\n' +
-            '✔ getProgress funciona\n' +
-            '✔ logActivity funciona\n\n' +
+            '✓ getProgress funciona\n' +
+            '✓ logActivity funciona\n\n' +
             'Revisa la consola para más detalles.');
     } else {
       alert('⚠️ PROBLEMAS DETECTADOS\n\nRevisa la consola para más detalles.');
@@ -468,7 +744,27 @@ async function testGoogleSheetsConnection() {
   }
 }
 
-// Hacer disponible globalmente para testing
+// ✅ NUEVO: Forzar sincronización manual
+window.forceSyncProgress = async function() {
+  const user = getCurrentUser();
+  if (!user) {
+    showToast('No hay sesión activa', 'error');
+    return;
+  }
+  
+  showToast('Sincronizando...', 'info');
+  const success = await syncProgressFromSheets(user.username, true);
+  
+  if (success) {
+    showToast('✅ Progreso sincronizado correctamente', 'success');
+    // Recargar página para mostrar datos actualizados
+    setTimeout(() => window.location.reload(), 1000);
+  } else {
+    showToast('Error al sincronizar', 'error');
+  }
+};
+
+// Hacer disponible globalmente
 window.testGoogleSheetsConnection = testGoogleSheetsConnection;
 
 // =========================
@@ -477,10 +773,60 @@ window.testGoogleSheetsConnection = testGoogleSheetsConnection;
 
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    console.log('✅ auth.js v3.3 inicializado completamente');
-    console.log('🧪 Para probar conexión: testGoogleSheetsConnection()');
+    console.log('✅ auth.js v4.0 inicializado completamente');
+    console.log('🔄 Sistema de sincronización inteligente activo');
+    console.log('🧪 Para probar: testGoogleSheetsConnection()');
+    console.log('🔄 Para sincronizar: forceSyncProgress()');
+    
+    // Inyectar indicador de sincronización
+    setTimeout(injectSyncIndicator, 500);
+    
+    // Si hay usuario autenticado, iniciar sincronización automática
+    if (isAuthenticated()) {
+      const user = getCurrentUser();
+      if (user && user.role !== 'instructor') {
+        startAutoSync();
+      }
+    }
   });
 } else {
-  console.log('✅ auth.js v3.3 inicializado completamente');
-  console.log('🧪 Para probar conexión: testGoogleSheetsConnection()');
+  console.log('✅ auth.js v4.0 inicializado completamente');
+  console.log('🔄 Sistema de sincronización inteligente activo');
+  console.log('🧪 Para probar: testGoogleSheetsConnection()');
+  console.log('🔄 Para sincronizar: forceSyncProgress()');
+  
+  // Inyectar indicador de sincronización
+  setTimeout(injectSyncIndicator, 500);
+  
+  // Si hay usuario autenticado, iniciar sincronización automática
+  if (isAuthenticated()) {
+    const user = getCurrentUser();
+    if (user && user.role !== 'instructor') {
+      startAutoSync();
+    }
+  }
 }
+
+// =========================
+// MANEJO DE VISIBILIDAD DE PÁGINA
+// =========================
+
+// ✅ NUEVO: Sincronizar cuando el usuario regresa a la pestaña
+document.addEventListener('visibilitychange', async function() {
+  if (!document.hidden && isAuthenticated()) {
+    const user = getCurrentUser();
+    if (user && user.role !== 'instructor') {
+      console.log('👁️ Usuario regresó a la pestaña, sincronizando...');
+      await syncProgressFromSheets(user.username, false);
+    }
+  }
+});
+
+// ✅ NUEVO: Sincronizar antes de cerrar la pestaña
+window.addEventListener('beforeunload', function(e) {
+  if (isAuthenticated() && isSyncing) {
+    // Si hay sincronización en progreso, advertir al usuario
+    e.preventDefault();
+    e.returnValue = 'Hay una sincronización en progreso. ¿Seguro que quieres salir?';
+  }
+});
