@@ -183,31 +183,74 @@ async function syncProgressFromSheets(username, force = false, retries = 0) {
           const localData = JSON.parse(localProgress);
           const remoteData = result.data;
           
-          // ✅ DETECCIÓN DE CONFLICTOS: Comparar timestamps
+          // ✅ DETECCIÓN DE CONFLICTOS MEJORADA: Comparar progreso real, no solo timestamps
           const localTime = new Date(localData.lastActivity || 0).getTime();
           const remoteTime = new Date(remoteData.lastActivity || 0).getTime();
           
-          if (localTime > remoteTime) {
-            console.log('⚠️ Datos locales más recientes que Sheets, subiendo...');
-            // Subir datos locales a Sheets
-            await updateModuleProgress(null, localData, true); // skipSync=true para evitar loop
+          // Calcular progreso real (módulos completados)
+          const localCompleted = Object.values(localData.modules || {}).filter(m => m.completed).length;
+          const remoteCompleted = Object.values(remoteData.modules || {}).filter(m => m.completed).length;
+          
+          // Contar lecciones completadas
+          const localLessons = Object.values(localData.modules || {}).reduce((sum, m) => 
+            sum + (Array.isArray(m.completedLessons) ? m.completedLessons.length : 0), 0);
+          const remoteLessons = Object.values(remoteData.modules || {}).reduce((sum, m) => 
+            sum + (Array.isArray(m.completedLessons) ? m.completedLessons.length : 0), 0);
+          
+          console.log(`🔍 Comparando progreso:
+            Local: ${localCompleted} módulos, ${localLessons} lecciones, timestamp: ${localTime}
+            Remoto: ${remoteCompleted} módulos, ${remoteLessons} lecciones, timestamp: ${remoteTime}`);
+          
+          // CRITERIO: Priorizar el que tenga MÁS progreso real
+          if (localCompleted > remoteCompleted || (localCompleted === remoteCompleted && localLessons > remoteLessons)) {
+            console.log('⚠️ Datos locales tienen más progreso, subiendo a Sheets...');
+            await updateModuleProgress(null, localData, true);
             shouldUpdate = false;
+          } else if (remoteCompleted > localCompleted || (remoteCompleted === localCompleted && remoteLessons > localLessons)) {
+            console.log('📥 Datos de Sheets tienen más progreso, descargando...');
+            shouldUpdate = true;
           } else if (localTime === remoteTime) {
-            console.log('✅ Datos ya sincronizados');
+            console.log('✅ Datos ya sincronizados (mismo progreso y timestamp)');
+            shouldUpdate = false;
+          } else if (localTime > remoteTime) {
+            console.log('⚠️ Mismo progreso pero timestamp local más reciente, subiendo...');
+            await updateModuleProgress(null, localData, true);
             shouldUpdate = false;
           } else {
-            console.log('📥 Datos de Sheets más recientes, actualizando local...');
+            console.log('📥 Mismo progreso pero timestamp remoto más reciente, descargando...');
+            shouldUpdate = true;
           }
         } catch (e) {
-          console.warn('⚠️ Error comparando timestamps, usando datos de Sheets:', e);
+          console.warn('⚠️ Error comparando datos, usando Sheets por seguridad:', e);
+          shouldUpdate = true;
         }
       }
       
       if (shouldUpdate) {
-        // ✅ Validar y migrar si es necesario
-        const validatedData = validateAndMigrateProgress(result.data);
-        localStorage.setItem(progressKey, JSON.stringify(validatedData));
-        console.log('✅ Progreso sincronizado desde Google Sheets');
+        // ✅ Validar que los datos remotos tengan contenido real
+        const remoteCompleted = Object.values(result.data.modules || {}).filter(m => m.completed).length;
+        const remoteLessons = Object.values(result.data.modules || {}).reduce((sum, m) => 
+          sum + (Array.isArray(m.completedLessons) ? m.completedLessons.length : 0), 0);
+        
+        // Si los datos remotos están vacíos y hay datos locales, no sobrescribir
+        if (remoteCompleted === 0 && remoteLessons === 0 && localProgress) {
+          const localData = JSON.parse(localProgress);
+          const localCompleted = Object.values(localData.modules || {}).filter(m => m.completed).length;
+          const localLessons = Object.values(localData.modules || {}).reduce((sum, m) => 
+            sum + (Array.isArray(m.completedLessons) ? m.completedLessons.length : 0), 0);
+          
+          if (localCompleted > 0 || localLessons > 0) {
+            console.log('⚠️ Sheets tiene progreso vacío pero local tiene datos, conservando local');
+            shouldUpdate = false;
+          }
+        }
+        
+        if (shouldUpdate) {
+          // ✅ Validar y migrar si es necesario
+          const validatedData = validateAndMigrateProgress(result.data);
+          localStorage.setItem(progressKey, JSON.stringify(validatedData));
+          console.log('✅ Progreso sincronizado desde Google Sheets');
+        }
       }
       
       // Guardar timestamp de última sincronización
@@ -337,7 +380,7 @@ async function getStudentProgress(forceSync = false) {
 
   const progressKey = STORAGE_KEYS.progress(currentUser.username);
   
-  // ✅ Si se fuerza sincronización, consultar Sheets
+  // ✅ Si se fuerza sincronización, consultar Sheets primero
   if (forceSync) {
     console.log('🔄 Sincronización forzada solicitada...');
     await syncProgressFromSheets(currentUser.username, true);
@@ -354,23 +397,39 @@ async function getStudentProgress(forceSync = false) {
       
     } catch (error) {
       console.error('❌ Error parseando progreso local:', error);
+      // Si hay error, intentar sincronizar desde Sheets
+      await syncProgressFromSheets(currentUser.username, true);
+      const syncedProgress = localStorage.getItem(progressKey);
+      if (syncedProgress) {
+        try {
+          return JSON.parse(syncedProgress);
+        } catch (e) {
+          return initializeEmptyProgress();
+        }
+      }
       return initializeEmptyProgress();
     }
   }
 
-  // Si no hay localStorage, intentar obtener desde Google Sheets
+  // ✅ CRÍTICO: Si no hay localStorage, SIEMPRE consultar Sheets primero
+  console.log('📥 No hay progreso local, consultando Google Sheets...');
   await syncProgressFromSheets(currentUser.username, true);
   
-  // Intentar leer nuevamente después de sincronizar
+  // Intentar leer después de sincronizar
   const syncedProgress = localStorage.getItem(progressKey);
   if (syncedProgress) {
     try {
-      return JSON.parse(syncedProgress);
+      const parsed = JSON.parse(syncedProgress);
+      console.log('✅ Progreso cargado desde Sheets:', parsed.overallProgress + '%');
+      return validateAndMigrateProgress(parsed);
     } catch (e) {
+      console.error('❌ Error parseando progreso sincronizado:', e);
       return initializeEmptyProgress();
     }
   }
 
+  // Si después de sincronizar no hay nada, el usuario realmente no tiene progreso
+  console.log('ℹ️ Usuario sin progreso previo, inicializando...');
   return initializeEmptyProgress();
 }
 
@@ -423,7 +482,7 @@ function initializeEmptyProgress() {
     },
     overallProgress: 0,
     totalTimeSpent: 0,
-    lastActivity: new Date().toISOString()
+    lastActivity: null // ✅ CRÍTICO: null en vez de timestamp actual para no sobrescribir
   };
 }
 
