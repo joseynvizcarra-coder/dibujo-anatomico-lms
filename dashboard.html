@@ -637,8 +637,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // ✅ TOTAL_MODULES ya está definido en auth.js (no duplicar)
+        
         // Variables globales
-        // TOTAL_MODULES ya está definido en auth.js
         let dashboardData = {
             students: [],
             activities: [],
@@ -648,7 +649,7 @@
 
         // Inicializar dashboard
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Inicializando dashboard...');
+            console.log('🚀 Inicializando dashboard...');
             
             // Verificar autenticación
             if (!protectPage('instructor')) {
@@ -676,6 +677,8 @@
             try {
                 showLoading(true);
                 
+                console.log('📊 Cargando datos del dashboard...');
+                
                 // Cargar estudiantes y sus progresos
                 await loadStudentsData();
                 
@@ -694,9 +697,10 @@
                 document.getElementById('lastUpdate').textContent = new Date().toLocaleString();
                 
                 showLoading(false);
+                console.log('✅ Dashboard cargado exitosamente');
                 
             } catch (error) {
-                console.error('Error cargando dashboard:', error);
+                console.error('❌ Error cargando dashboard:', error);
                 showError('Error cargando datos del dashboard. Verifica tu conexión.');
                 showLoading(false);
             }
@@ -705,10 +709,14 @@
         // Cargar datos de estudiantes desde Google Sheets
         async function loadStudentsData() {
             try {
+                console.log('👥 Cargando estudiantes...');
                 const result = await makeJSONPRequest('getAllStudents');
                 
                 if (result.success) {
                     dashboardData.students = result.data;
+                    console.log('✅ Estudiantes cargados:', dashboardData.students.length);
+                    console.log('🔍 Datos de ejemplo:', dashboardData.students[0]);
+                    
                     document.getElementById('totalRegistered').textContent = result.data.length;
                     updateStudentsTable();
                     document.getElementById('studentsSection').style.display = 'none';
@@ -717,7 +725,7 @@
                     throw new Error(result.error || 'Error obteniendo estudiantes');
                 }
             } catch (error) {
-                console.error('Error cargando estudiantes:', error);
+                console.error('❌ Error cargando estudiantes:', error);
                 showError('Error cargando datos de estudiantes: ' + error.message);
             }
         }
@@ -725,44 +733,57 @@
         // Cargar actividades recientes
         async function loadRecentActivities() {
             try {
+                console.log('📋 Cargando actividades...');
                 const result = await makeJSONPRequest('getActivities', { limit: 20 });
                 
                 if (result.success) {
                     dashboardData.activities = result.data;
+                    console.log('✅ Actividades cargadas:', dashboardData.activities.length);
                     updateActivityLog();
                 } else {
                     throw new Error(result.error || 'Error obteniendo actividades');
                 }
             } catch (error) {
-                console.error('Error cargando actividades:', error);
+                console.error('❌ Error cargando actividades:', error);
             }
         }
 
         // Cargar datos de evaluaciones
         async function loadEvaluationsData() {
             try {
+                console.log('📝 Procesando evaluaciones...');
                 const evaluations = {};
                 
                 dashboardData.students.forEach(student => {
-                    evaluations[student.username] = {
-                        module1: getModuleEvaluations(student, 1),
-                        module2: getModuleEvaluations(student, 2),
-                        module3: getModuleEvaluations(student, 3)
+                    const evals = {
+                        module1: {},
+                        module2: {},
+                        module3: {}
                     };
+                    
+                    // ✅ CORREGIDO: Verificar estructura correcta
+                    if (student.progress && student.progress.modules) {
+                        if (student.progress.modules[1] && student.progress.modules[1].evaluations) {
+                            evals.module1 = student.progress.modules[1].evaluations;
+                        }
+                        if (student.progress.modules[2] && student.progress.modules[2].evaluations) {
+                            evals.module2 = student.progress.modules[2].evaluations;
+                        }
+                        if (student.progress.modules[3] && student.progress.modules[3].evaluations) {
+                            evals.module3 = student.progress.modules[3].evaluations;
+                        }
+                    }
+                    
+                    evaluations[student.username] = evals;
                 });
                 
                 dashboardData.evaluations = evaluations;
+                console.log('✅ Evaluaciones procesadas:', Object.keys(evaluations).length, 'estudiantes');
+                console.log('🔍 Ejemplo evaluaciones:', evaluations[Object.keys(evaluations)[0]]);
+                
             } catch (error) {
-                console.error('Error cargando evaluaciones:', error);
+                console.error('❌ Error cargando evaluaciones:', error);
             }
-        }
-
-        // Obtener evaluaciones de un módulo específico
-        function getModuleEvaluations(student, moduleNum) {
-            if (student.progress && student.progress.modules && student.progress.modules[moduleNum]) {
-                return student.progress.modules[moduleNum].evaluations || {};
-            }
-            return {};
         }
 
         // Actualizar tabla de estudiantes
@@ -853,8 +874,29 @@
             }
         }
 
+        // ✅ FUNCIÓN CORREGIDA: Verificar si una evaluación fue aprobada
+        function isEvaluationPassed(moduleEvals, lessonNum) {
+            // moduleEvals tiene estructura: { 1: {q1: 2, q2: 3}, 2: {q1: 1, q2: 2}, ... }
+            // lessonNum es el número de lección (1, 2, 3, 4)
+            
+            if (!moduleEvals || typeof moduleEvals !== 'object') {
+                return false;
+            }
+            
+            const lessonEval = moduleEvals[lessonNum];
+            if (!lessonEval || typeof lessonEval !== 'object') {
+                return false;
+            }
+            
+            // Contar respuestas válidas (mínimo 2 de 3 preguntas)
+            const answersCount = Object.keys(lessonEval).length;
+            return answersCount >= 2;
+        }
+
         // Actualizar estadísticas de evaluaciones
         function updateEvaluationStats() {
+            console.log('📊 Actualizando estadísticas de evaluaciones...');
+            
             const evalCounts = {
                 m1: { l1: 0, l2: 0, l3: 0, total: 0 },
                 m2: { l1: 0, l2: 0, l3: 0, l4: 0, total: 0 },
@@ -862,22 +904,24 @@
             };
 
             // Contar evaluaciones aprobadas
-            Object.values(dashboardData.evaluations).forEach(studentEvals => {
-                // Módulo 1
-                if (studentEvals.module1) {
+            Object.values(dashboardData.evaluations).forEach((studentEvals, index) => {
+                // Módulo 1 (3 lecciones)
+                if (studentEvals.module1 && Object.keys(studentEvals.module1).length > 0) {
                     if (isEvaluationPassed(studentEvals.module1, 1)) evalCounts.m1.l1++;
                     if (isEvaluationPassed(studentEvals.module1, 2)) evalCounts.m1.l2++;
                     if (isEvaluationPassed(studentEvals.module1, 3)) evalCounts.m1.l3++;
                 }
-                // Módulo 2
-                if (studentEvals.module2) {
+                
+                // Módulo 2 (4 lecciones)
+                if (studentEvals.module2 && Object.keys(studentEvals.module2).length > 0) {
                     if (isEvaluationPassed(studentEvals.module2, 1)) evalCounts.m2.l1++;
                     if (isEvaluationPassed(studentEvals.module2, 2)) evalCounts.m2.l2++;
                     if (isEvaluationPassed(studentEvals.module2, 3)) evalCounts.m2.l3++;
                     if (isEvaluationPassed(studentEvals.module2, 4)) evalCounts.m2.l4++;
                 }
-                // Módulo 3
-                if (studentEvals.module3) {
+                
+                // Módulo 3 (3 lecciones)
+                if (studentEvals.module3 && Object.keys(studentEvals.module3).length > 0) {
                     if (isEvaluationPassed(studentEvals.module3, 1)) evalCounts.m3.l1++;
                     if (isEvaluationPassed(studentEvals.module3, 2)) evalCounts.m3.l2++;
                     if (isEvaluationPassed(studentEvals.module3, 3)) evalCounts.m3.l3++;
@@ -888,6 +932,8 @@
             evalCounts.m1.total = evalCounts.m1.l1 + evalCounts.m1.l2 + evalCounts.m1.l3;
             evalCounts.m2.total = evalCounts.m2.l1 + evalCounts.m2.l2 + evalCounts.m2.l3 + evalCounts.m2.l4;
             evalCounts.m3.total = evalCounts.m3.l1 + evalCounts.m3.l2 + evalCounts.m3.l3;
+
+            console.log('📈 Conteo de evaluaciones:', evalCounts);
 
             // Actualizar UI
             document.getElementById('eval_m1l1').textContent = evalCounts.m1.l1;
@@ -910,11 +956,22 @@
             updateEvaluationDetailsTable(evalCounts);
         }
 
-        // Verificar si una evaluación fue aprobada (mínimo 2/3)
-        function isEvaluationPassed(moduleEvals, lessonNum) {
-            if (!moduleEvals || !moduleEvals[lessonNum]) return false;
-            const answers = moduleEvals[lessonNum];
-            return Object.keys(answers).length >= 2;
+        // ✅ FUNCIÓN CORREGIDA: Contar evaluaciones aprobadas de un módulo
+        function countPassedEvaluations(moduleEvals) {
+            if (!moduleEvals || typeof moduleEvals !== 'object') {
+                return 0;
+            }
+            
+            let count = 0;
+            
+            // Iterar por cada lección en el módulo
+            for (let lessonNum in moduleEvals) {
+                if (isEvaluationPassed(moduleEvals, parseInt(lessonNum))) {
+                    count++;
+                }
+            }
+            
+            return count;
         }
 
         // Actualizar tabla de detalles de evaluaciones
@@ -929,7 +986,7 @@
 
             dashboardData.students.forEach(student => {
                 const row = document.createElement('tr');
-                const evals = dashboardData.evaluations[student.username] || {};
+                const evals = dashboardData.evaluations[student.username] || { module1: {}, module2: {}, module3: {} };
                 
                 const m1Count = countPassedEvaluations(evals.module1);
                 const m2Count = countPassedEvaluations(evals.module2);
@@ -959,18 +1016,6 @@
                 `;
                 tbody.appendChild(row);
             });
-        }
-
-        // Contar evaluaciones aprobadas de un módulo
-        function countPassedEvaluations(moduleEvals) {
-            if (!moduleEvals) return 0;
-            let count = 0;
-            for (let lesson in moduleEvals) {
-                if (isEvaluationPassed({ [lesson]: moduleEvals[lesson] }, lesson)) {
-                    count++;
-                }
-            }
-            return count;
         }
 
         // Actualizar log de actividades
@@ -1032,7 +1077,7 @@
         // Mostrar loading
         function showLoading(show) {
             if (show) {
-                console.log('Loading dashboard...');
+                console.log('⏳ Loading dashboard...');
             }
         }
 
