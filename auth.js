@@ -1,7 +1,7 @@
 // =====================================================
-// auth.js v4.1 - LMS Dibujo Anatómico (UAH)
+// auth.js v4.2 - LMS Dibujo Anatómico (UAH)
 // Universidad Alberto Hurtado - Joselyn Vizcarra
-// SISTEMA CON SINCRONIZACIÓN INTELIGENTE - FIX BORRADO DE DATOS
+// FIX CRÍTICO: Race condition y borrado de datos CORREGIDO
 // =====================================================
 
 const API_URL = 'https://script.google.com/macros/s/AKfycbwTOCRqlmssB095rOHJrGswLF25e1DFk8fZDkbziw1g4_JomibsX0OfWY8xmNPOiHt8/exec';
@@ -23,11 +23,15 @@ const STORAGE_KEYS = {
   syncStatus: 'syncStatus'
 };
 
+// ✅ NUEVO: Flags globales para controlar race condition
+window.isSyncComplete = false;
+window.isSyncInProgress = false;
+
 // Estado global de sincronización
 let syncInterval = null;
 let isSyncing = false;
 
-console.log('✅ auth.js v4.1 cargado - Fix para borrado de datos implementado');
+console.log('✅ auth.js v4.2 cargado - FIX race condition implementado');
 
 // =========================
 // AUTENTICACIÓN
@@ -45,11 +49,11 @@ async function authenticateUser(username, password) {
       localStorage.setItem(STORAGE_KEYS.authenticated, 'true');
       localStorage.setItem(STORAGE_KEYS.sessionStart, userData.loginTime || new Date().toISOString());
 
-      // ✅ NUEVO: Sincronizar progreso inmediatamente después del login
+      // ✅ Sincronizar progreso inmediatamente después del login
       console.log('🔄 Sincronizando progreso desde Google Sheets...');
-      await syncProgressFromSheets(username, true); // force=true
+      await syncProgressFromSheets(username, true);
 
-      // ✅ NUEVO: Iniciar sincronización automática en segundo plano
+      // ✅ Iniciar sincronización automática en segundo plano
       startAutoSync();
 
       await logUserActivity('login', '', '', { timestamp: new Date().toISOString() });
@@ -74,9 +78,7 @@ function logout() {
     logUserActivity('logout', '', '');
   }
   
-  // ✅ NUEVO: Detener sincronización automática
   stopAutoSync();
-  
   localStorage.clear();
   window.location.href = 'login.html';
 }
@@ -123,10 +125,9 @@ function protectPage(requiredRole = null) {
 }
 
 // =========================
-// SISTEMA DE SINCRONIZACIÓN
+// ✅ SISTEMA DE SINCRONIZACIÓN CORREGIDO
 // =========================
 
-// ✅ NUEVO: Iniciar sincronización automática en segundo plano
 function startAutoSync() {
   const user = getCurrentUser();
   if (!user || user.role === 'instructor') {
@@ -148,7 +149,6 @@ function startAutoSync() {
   }, SYNC_INTERVAL);
 }
 
-// ✅ NUEVO: Detener sincronización automática
 function stopAutoSync() {
   if (syncInterval) {
     clearInterval(syncInterval);
@@ -157,13 +157,15 @@ function stopAutoSync() {
   }
 }
 
-// ✅ MEJORADO: Sincronizar progreso desde Google Sheets con protección contra borrado
+// ✅ FUNCIÓN CRÍTICA CORREGIDA: Sincronizar progreso con protección contra borrado
 async function syncProgressFromSheets(username, force = false, retries = 0) {
   if (isSyncing && !force) {
     console.log('⏳ Sincronización ya en progreso, saltando...');
     return false;
   }
   
+  // ✅ BLOQUEAR otras operaciones durante sync
+  window.isSyncInProgress = true;
   isSyncing = true;
   updateSyncStatus('syncing', 'Sincronizando...');
   
@@ -171,21 +173,39 @@ async function syncProgressFromSheets(username, force = false, retries = 0) {
     console.log(`🔍 Consultando progreso de ${username} en Sheets...`);
     const result = await makeJSONPRequestWithRetry('getProgress', { username }, MAX_RETRIES);
     
-    console.log('📦 Respuesta de Sheets:', result); // ✅ LOG CRÍTICO para depuración
+    console.log('📦 Respuesta de Sheets:', result);
     
     if (result.success && result.data) {
       const progressKey = STORAGE_KEYS.progress(username);
       const lastSyncKey = STORAGE_KEYS.lastSync(username);
       
-      // Obtener progreso local actual
       const localProgress = localStorage.getItem(progressKey);
       let shouldUpdate = true;
       
-      // ✅ CRÍTICO: Validar que result.data tenga estructura mínima
-      if (!result.data.modules) {
-        console.warn('⚠️ Respuesta de Sheets sin estructura modules, ignorando...');
-        updateSyncStatus('error', 'Datos incompletos');
+      // ✅ VALIDACIÓN MEJORADA: Verificar que modules existe Y tiene contenido
+      if (!result.data.modules || Object.keys(result.data.modules).length === 0) {
+        console.warn('⚠️ Sheets sin datos válidos (modules vacío o inexistente)');
+        updateSyncStatus('synced', 'Sin datos remotos');
+        
+        // ✅ Si hay datos locales, SUBIRLOS en vez de borrarlos
+        if (localProgress) {
+          try {
+            const localData = JSON.parse(localProgress);
+            const localLessons = Object.values(localData.modules || {}).reduce((sum, m) => 
+              sum + (Array.isArray(m.completedLessons) ? m.completedLessons.length : 0), 0);
+            
+            if (localLessons > 0) {
+              console.log('🛡️ PROTECCIÓN: Local tiene datos, subiendo a Sheets...');
+              await updateModuleProgress(null, localData, true);
+            }
+          } catch (e) {
+            console.error('Error procesando datos locales:', e);
+          }
+        }
+        
         isSyncing = false;
+        window.isSyncInProgress = false;
+        window.isSyncComplete = true;
         return false;
       }
       
@@ -200,30 +220,29 @@ async function syncProgressFromSheets(username, force = false, retries = 0) {
         try {
           const localData = JSON.parse(localProgress);
           
-          // Calcular progreso local
           const localCompleted = Object.values(localData.modules || {}).filter(m => m.completed).length;
           const localLessons = Object.values(localData.modules || {}).reduce((sum, m) => 
             sum + (Array.isArray(m.completedLessons) ? m.completedLessons.length : 0), 0);
           
-          console.log(`🔍 Comparando progreso:
-            Local: ${localCompleted} módulos, ${localLessons} lecciones
-            Remoto: ${remoteCompleted} módulos, ${remoteLessons} lecciones`);
+          console.log(`🔄 Comparando:
+            📱 Local: ${localCompleted} módulos, ${localLessons} lecciones
+            ☁️ Remoto: ${remoteCompleted} módulos, ${remoteLessons} lecciones`);
           
-          // ✅ CRITERIO 1: Si Sheets está vacío pero hay datos locales, SUBIR
+          // ✅ CRITERIO 1: Sheets vacío + local tiene datos = SUBIR
           if (remoteCompleted === 0 && remoteLessons === 0 && (localCompleted > 0 || localLessons > 0)) {
-            console.log('⚠️ PROTECCIÓN ACTIVADA: Sheets vacío pero local tiene datos, SUBIENDO...');
+            console.log('🛡️ PROTECCIÓN: Sheets vacío, conservando datos locales');
             await updateModuleProgress(null, localData, true);
             shouldUpdate = false;
           }
-          // ✅ CRITERIO 2: Local tiene más progreso
+          // ✅ CRITERIO 2: Local > Remoto = SUBIR
           else if (localCompleted > remoteCompleted || (localCompleted === remoteCompleted && localLessons > remoteLessons)) {
-            console.log('⚠️ Datos locales tienen más progreso, subiendo a Sheets...');
+            console.log('⬆️ Local tiene más progreso, subiendo...');
             await updateModuleProgress(null, localData, true);
             shouldUpdate = false;
           }
-          // ✅ CRITERIO 3: Remoto tiene más progreso
+          // ✅ CRITERIO 3: Remoto > Local = DESCARGAR
           else if (remoteCompleted > localCompleted || (remoteCompleted === localCompleted && remoteLessons > localLessons)) {
-            console.log('📥 Datos de Sheets tienen más progreso, descargando...');
+            console.log('⬇️ Remoto tiene más progreso, descargando...');
             shouldUpdate = true;
           }
           // ✅ CRITERIO 4: Mismo progreso, comparar timestamps
@@ -231,50 +250,41 @@ async function syncProgressFromSheets(username, force = false, retries = 0) {
             const localTime = new Date(localData.lastActivity || 0).getTime();
             const remoteTime = new Date(result.data.lastActivity || 0).getTime();
             
-            if (localTime === remoteTime) {
-              console.log('✅ Datos ya sincronizados (mismo progreso y timestamp)');
-              shouldUpdate = false;
-            } else if (localTime > remoteTime) {
-              console.log('⚠️ Mismo progreso pero timestamp local más reciente, subiendo...');
-              await updateModuleProgress(null, localData, true);
-              shouldUpdate = false;
-            } else {
-              console.log('📥 Mismo progreso pero timestamp remoto más reciente, descargando...');
+            if (remoteTime > localTime) {
+              console.log('⬇️ Mismo progreso, timestamp remoto más reciente');
               shouldUpdate = true;
+            } else {
+              console.log('✅ Datos sincronizados');
+              shouldUpdate = false;
             }
           }
         } catch (e) {
-          console.warn('⚠️ Error comparando datos:', e);
-          // ✅ FIX: Solo actualizar si Sheets tiene datos reales
-          shouldUpdate = remoteCompleted > 0 || remoteLessons > 0;
-          if (!shouldUpdate) {
-            console.log('🛡️ PROTECCIÓN: Error al comparar pero Sheets vacío, conservando local');
-          }
+          console.warn('⚠️ Error comparando:', e);
+          shouldUpdate = remoteLessons > 0;
         }
       } else {
-        // No hay datos locales o es forzado
-        // ✅ FIX CRÍTICO: Si Sheets está vacío, NO sobrescribir localStorage
+        // No hay datos locales O es forzado
         if (remoteCompleted === 0 && remoteLessons === 0) {
-          console.log('ℹ️ Sheets vacío y no hay datos locales, no sobrescribir');
+          console.log('ℹ️ Sheets vacío y sin local, no actualizar');
           shouldUpdate = false;
         } else {
-          console.log('📥 No hay datos locales, descargando desde Sheets...');
+          console.log('📥 Sin datos locales, descargando de Sheets...');
           shouldUpdate = true;
         }
       }
       
       if (shouldUpdate) {
-        // Validar y migrar si es necesario
         const validatedData = validateAndMigrateProgress(result.data);
         localStorage.setItem(progressKey, JSON.stringify(validatedData));
-        console.log('✅ Progreso sincronizado desde Google Sheets');
+        console.log('✅ Progreso sincronizado desde Sheets');
       }
       
-      // Guardar timestamp de última sincronización
       localStorage.setItem(lastSyncKey, new Date().toISOString());
+      updateSyncStatus('synced', 'Sincronizado');
       
-      updateSyncStatus('synced', 'Sincronizado hace instantes');
       isSyncing = false;
+      window.isSyncInProgress = false;
+      window.isSyncComplete = true; // ✅ Indicar que sync terminó
       return true;
       
     } else {
@@ -282,109 +292,23 @@ async function syncProgressFromSheets(username, force = false, retries = 0) {
     }
     
   } catch (error) {
-    console.error('❌ Error sincronizando progreso:', error);
+    console.error('❌ Error sincronizando:', error);
     
-    // ✅ RETRY con backoff exponencial
     if (retries < MAX_RETRIES) {
-      const delay = Math.pow(2, retries) * 1000; // 1s, 2s, 4s
-      console.log(`🔄 Reintentando en ${delay/1000}s... (intento ${retries + 1}/${MAX_RETRIES})`);
+      const delay = Math.pow(2, retries) * 1000;
+      console.log(`🔄 Reintentando en ${delay/1000}s... (${retries + 1}/${MAX_RETRIES})`);
       await new Promise(resolve => setTimeout(resolve, delay));
       isSyncing = false;
+      window.isSyncInProgress = false;
       return syncProgressFromSheets(username, force, retries + 1);
     }
     
     updateSyncStatus('error', 'Error de sincronización');
     isSyncing = false;
+    window.isSyncInProgress = false;
+    window.isSyncComplete = true; // ✅ Marcar como completa aunque falle
     return false;
   }
-}
-
-// ✅ NUEVO: makeJSONPRequest con retry automático
-async function makeJSONPRequestWithRetry(action, params = {}, maxRetries = 3) {
-  let lastError;
-  
-  for (let i = 0; i < maxRetries; i++) {
-    try {
-      const result = await makeJSONPRequest(action, params);
-      return result;
-    } catch (error) {
-      lastError = error;
-      if (i < maxRetries - 1) {
-        const delay = Math.pow(2, i) * 500; // 500ms, 1s, 2s
-        await new Promise(resolve => setTimeout(resolve, delay));
-      }
-    }
-  }
-  
-  throw lastError;
-}
-
-// ✅ NUEVO: Actualizar indicador visual de sincronización
-function updateSyncStatus(status, message) {
-  localStorage.setItem(STORAGE_KEYS.syncStatus, JSON.stringify({ status, message, timestamp: new Date().toISOString() }));
-  
-  // Actualizar UI si existe el elemento
-  const syncIndicator = document.getElementById('syncIndicator');
-  if (syncIndicator) {
-    const icons = {
-      synced: '✅',
-      syncing: '🔄',
-      error: '⚠️',
-      offline: '🔴'
-    };
-    
-    const colors = {
-      synced: '#4CAF50',
-      syncing: '#2196F3',
-      error: '#f44336',
-      offline: '#9E9E9E'
-    };
-    
-    syncIndicator.innerHTML = `<span style="color: ${colors[status]}">${icons[status]} ${message}</span>`;
-  }
-  
-  // Emitir evento personalizado para que otras partes de la app puedan reaccionar
-  window.dispatchEvent(new CustomEvent('syncStatusChanged', { detail: { status, message } }));
-}
-
-// =========================
-// JSONP REQUEST
-// =========================
-
-function makeJSONPRequest(action, params = {}) {
-  return new Promise((resolve, reject) => {
-    const callbackName = 'jsonp_cb_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-
-    window[callbackName] = function (data) {
-      delete window[callbackName];
-      if (document.head.contains(script)) document.head.removeChild(script);
-      resolve(data);
-    };
-
-    const queryParams = new URLSearchParams({ action, callback: callbackName, ...params });
-    const url = `${API_URL}?${queryParams.toString()}`;
-    console.log('📡 JSONP Request →', action, params);
-
-    const script = document.createElement('script');
-    script.src = url;
-    script.async = true;
-    script.onerror = () => {
-      delete window[callbackName];
-      if (document.head.contains(script)) document.head.removeChild(script);
-      reject(new Error('Error de conexión con el servidor'));
-    };
-
-    // Timeout de 30 segundos
-    setTimeout(() => {
-      if (window[callbackName]) {
-        delete window[callbackName];
-        if (document.head.contains(script)) document.head.removeChild(script);
-        reject(new Error('Timeout: El servidor no respondió a tiempo'));
-      }
-    }, 30000);
-
-    document.head.appendChild(script);
-  });
 }
 
 // =========================
@@ -397,7 +321,6 @@ async function getStudentProgress(forceSync = false) {
 
   const progressKey = STORAGE_KEYS.progress(currentUser.username);
   
-  // ✅ Si se fuerza sincronización, consultar Sheets primero
   if (forceSync) {
     console.log('🔄 Sincronización forzada solicitada...');
     await syncProgressFromSheets(currentUser.username, true);
@@ -408,13 +331,9 @@ async function getStudentProgress(forceSync = false) {
   if (localProgress) {
     try {
       const parsed = JSON.parse(localProgress);
-      
-      // ✅ Validar y migrar formato viejo
       return validateAndMigrateProgress(parsed);
-      
     } catch (error) {
       console.error('❌ Error parseando progreso local:', error);
-      // Si hay error, intentar sincronizar desde Sheets
       await syncProgressFromSheets(currentUser.username, true);
       const syncedProgress = localStorage.getItem(progressKey);
       if (syncedProgress) {
@@ -428,11 +347,10 @@ async function getStudentProgress(forceSync = false) {
     }
   }
 
-  // ✅ CRÍTICO: Si no hay localStorage, SIEMPRE consultar Sheets primero
+  // ✅ Si no hay localStorage, consultar Sheets primero
   console.log('📥 No hay progreso local, consultando Google Sheets...');
   await syncProgressFromSheets(currentUser.username, true);
   
-  // Intentar leer después de sincronizar
   const syncedProgress = localStorage.getItem(progressKey);
   if (syncedProgress) {
     try {
@@ -445,20 +363,16 @@ async function getStudentProgress(forceSync = false) {
     }
   }
 
-  // Si después de sincronizar no hay nada, el usuario realmente no tiene progreso
   console.log('ℹ️ Usuario sin progreso previo, inicializando...');
   return initializeEmptyProgress();
 }
 
-// ✅ MEJORADO: Validar y migrar progreso
 function validateAndMigrateProgress(progress) {
-  // Crear estructura nueva si no tiene modules
   if (!progress.modules) {
     console.warn('⚠️ Formato viejo detectado, migrando automáticamente...');
     return initializeEmptyProgress();
   }
   
-  // Validar que modules tenga la estructura correcta
   for (let i = 1; i <= TOTAL_MODULES; i++) {
     if (!progress.modules[i]) {
       console.warn(`⚠️ Módulo ${i} no existe, inicializando...`);
@@ -474,14 +388,15 @@ function validateAndMigrateProgress(progress) {
     
     // ✅ CRÍTICO: Asegurar que completedLessons sea array
     if (typeof progress.modules[i].completedLessons === 'number') {
+      console.warn(`⚠️ Módulo ${i}: completedLessons es number, migrando...`);
       progress.modules[i].completedLessons = [];
     }
     
     if (!Array.isArray(progress.modules[i].completedLessons)) {
+      console.warn(`⚠️ Módulo ${i}: completedLessons no es array, corrigiendo...`);
       progress.modules[i].completedLessons = [];
     }
     
-    // Asegurar que evaluations existe
     if (!progress.modules[i].evaluations) {
       progress.modules[i].evaluations = {};
     }
@@ -490,7 +405,6 @@ function validateAndMigrateProgress(progress) {
   return progress;
 }
 
-// ✅ MEJORADO: Inicializar progreso vacío sin timestamp
 function initializeEmptyProgress() {
   return {
     modules: {
@@ -500,11 +414,10 @@ function initializeEmptyProgress() {
     },
     overallProgress: 0,
     totalTimeSpent: 0,
-    lastActivity: null // ✅ CRÍTICO: null para no sobrescribir datos existentes
+    lastActivity: null
   };
 }
 
-// ✅ MEJORADO: Actualizar progreso con sincronización inteligente
 async function updateModuleProgress(moduleNumber, progressData, skipSync = false) {
   try {
     const currentUser = getCurrentUser();
@@ -518,7 +431,6 @@ async function updateModuleProgress(moduleNumber, progressData, skipSync = false
       return false;
     }
 
-    // ✅ NUEVO: Sincronizar antes de guardar para evitar conflictos
     if (!skipSync) {
       console.log('🔄 Sincronizando antes de guardar...');
       await syncProgressFromSheets(currentUser.username, false);
@@ -526,13 +438,11 @@ async function updateModuleProgress(moduleNumber, progressData, skipSync = false
 
     let currentProgress = await getStudentProgress(false);
     
-    // Validar estructura
     if (!currentProgress || !currentProgress.modules) {
       console.warn('⚠️ currentProgress no válido, inicializando...');
       currentProgress = initializeEmptyProgress();
     }
 
-    // Si moduleNumber es null, actualizar todo el progreso (usado por syncProgressFromSheets)
     if (moduleNumber === null) {
       currentProgress = { ...currentProgress, ...progressData };
     } else {
@@ -541,7 +451,6 @@ async function updateModuleProgress(moduleNumber, progressData, skipSync = false
         return false;
       }
 
-      // Validar que el módulo específico exista
       if (!currentProgress.modules[moduleNumber]) {
         console.warn(`⚠️ Módulo ${moduleNumber} no existe, inicializando...`);
         currentProgress.modules[moduleNumber] = {
@@ -554,7 +463,6 @@ async function updateModuleProgress(moduleNumber, progressData, skipSync = false
         };
       }
 
-      // Actualizar datos del módulo
       currentProgress.modules[moduleNumber] = {
         ...currentProgress.modules[moduleNumber],
         ...progressData,
@@ -562,18 +470,15 @@ async function updateModuleProgress(moduleNumber, progressData, skipSync = false
       };
     }
 
-    // Recalcular progreso general
     const completedModules = Object.values(currentProgress.modules).filter(m => m.completed).length;
     currentProgress.overallProgress = Math.round((completedModules / TOTAL_MODULES) * 100);
     currentProgress.totalTimeSpent = Object.values(currentProgress.modules).reduce((sum, m) => sum + (m.timeSpent || 0), 0);
     currentProgress.lastActivity = new Date().toISOString();
 
-    // Guardar en localStorage SIEMPRE
     const progressKey = STORAGE_KEYS.progress(currentUser.username);
     localStorage.setItem(progressKey, JSON.stringify(currentProgress));
     console.log(`💾 Progreso guardado en localStorage`);
 
-    // ✅ GUARDAR EN GOOGLE SHEETS SIEMPRE
     if (!skipSync) {
       try {
         updateSyncStatus('syncing', 'Guardando en la nube...');
@@ -588,7 +493,6 @@ async function updateModuleProgress(moduleNumber, progressData, skipSync = false
           console.log(`✅ Progreso guardado en Sheets`);
           updateSyncStatus('synced', 'Guardado correctamente');
           
-          // Registrar actividad según el estado
           if (moduleNumber !== null) {
             const activityType = progressData.completed ? 'module_completed' : 'progress_update';
             await logUserActivity(activityType, moduleNumber.toString(), '', {
@@ -601,7 +505,7 @@ async function updateModuleProgress(moduleNumber, progressData, skipSync = false
         } else {
           console.warn('⚠️ No se pudo guardar en Sheets:', result.error);
           updateSyncStatus('error', 'Error guardando');
-          return true; // localStorage guardado es suficiente
+          return true;
         }
       } catch (sheetError) {
         console.warn('⚠️ Error guardando en Sheets (progreso local OK):', sheetError);
@@ -618,7 +522,6 @@ async function updateModuleProgress(moduleNumber, progressData, skipSync = false
   }
 }
 
-// ✅ FUNCIÓN CORREGIDA: Registrar actividad del usuario
 async function logUserActivity(activityType, moduleId = '', lessonId = '', details = {}) {
   try {
     const user = getCurrentUser();
@@ -651,6 +554,64 @@ async function logUserActivity(activityType, moduleId = '', lessonId = '', detai
     console.error('❌ Error registrando actividad:', err);
     return false;
   }
+}
+
+// =========================
+// JSONP REQUEST
+// =========================
+
+function makeJSONPRequest(action, params = {}) {
+  return new Promise((resolve, reject) => {
+    const callbackName = 'jsonp_cb_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
+    window[callbackName] = function (data) {
+      delete window[callbackName];
+      if (document.head.contains(script)) document.head.removeChild(script);
+      resolve(data);
+    };
+
+    const queryParams = new URLSearchParams({ action, callback: callbackName, ...params });
+    const url = `${API_URL}?${queryParams.toString()}`;
+    console.log('📡 JSONP Request →', action, params);
+
+    const script = document.createElement('script');
+    script.src = url;
+    script.async = true;
+    script.onerror = () => {
+      delete window[callbackName];
+      if (document.head.contains(script)) document.head.removeChild(script);
+      reject(new Error('Error de conexión con el servidor'));
+    };
+
+    setTimeout(() => {
+      if (window[callbackName]) {
+        delete window[callbackName];
+        if (document.head.contains(script)) document.head.removeChild(script);
+        reject(new Error('Timeout: El servidor no respondió a tiempo'));
+      }
+    }, 30000);
+
+    document.head.appendChild(script);
+  });
+}
+
+async function makeJSONPRequestWithRetry(action, params = {}, maxRetries = 3) {
+  let lastError;
+  
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      const result = await makeJSONPRequest(action, params);
+      return result;
+    } catch (error) {
+      lastError = error;
+      if (i < maxRetries - 1) {
+        const delay = Math.pow(2, i) * 500;
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+  }
+  
+  throw lastError;
 }
 
 // =========================
@@ -705,6 +666,31 @@ function showToast(message, type = 'info') {
   }, 3000);
 }
 
+function updateSyncStatus(status, message) {
+  localStorage.setItem(STORAGE_KEYS.syncStatus, JSON.stringify({ status, message, timestamp: new Date().toISOString() }));
+  
+  const syncIndicator = document.getElementById('syncIndicator');
+  if (syncIndicator) {
+    const icons = {
+      synced: '✅',
+      syncing: '🔄',
+      error: '⚠️',
+      offline: '🔴'
+    };
+    
+    const colors = {
+      synced: '#4CAF50',
+      syncing: '#2196F3',
+      error: '#f44336',
+      offline: '#9E9E9E'
+    };
+    
+    syncIndicator.innerHTML = `<span style="color: ${colors[status]}">${icons[status]} ${message}</span>`;
+  }
+  
+  window.dispatchEvent(new CustomEvent('syncStatusChanged', { detail: { status, message } }));
+}
+
 function getRoleDisplayName(role) {
   const roles = { 
     instructor: 'Instructor', 
@@ -730,16 +716,12 @@ function updateUIForRole() {
   if (roleEl) roleEl.textContent = getRoleDisplayName(user.role);
 }
 
-// ✅ NUEVO: Agregar indicador de sincronización al DOM automáticamente
 function injectSyncIndicator() {
-  // Solo si el usuario NO es instructor
   const user = getCurrentUser();
   if (!user || user.role === 'instructor') return;
   
-  // Buscar si ya existe
   if (document.getElementById('syncIndicator')) return;
   
-  // Crear indicador flotante
   const indicator = document.createElement('div');
   indicator.id = 'syncIndicator';
   indicator.style.cssText = `
@@ -757,7 +739,6 @@ function injectSyncIndicator() {
   
   document.body.appendChild(indicator);
   
-  // Actualizar con estado actual
   const syncStatus = localStorage.getItem(STORAGE_KEYS.syncStatus);
   if (syncStatus) {
     try {
@@ -821,7 +802,6 @@ async function testGoogleSheetsConnection() {
   }
 }
 
-// ✅ NUEVO: Forzar sincronización manual
 window.forceSyncProgress = async function() {
   const user = getCurrentUser();
   if (!user) {
@@ -834,14 +814,12 @@ window.forceSyncProgress = async function() {
   
   if (success) {
     showToast('✅ Progreso sincronizado correctamente', 'success');
-    // Recargar página para mostrar datos actualizados
     setTimeout(() => window.location.reload(), 1000);
   } else {
     showToast('Error al sincronizar', 'error');
   }
 };
 
-// ✅ NUEVO: Debug function para ver estado actual
 window.debugProgress = function() {
   const user = getCurrentUser();
   if (!user) {
@@ -859,7 +837,6 @@ window.debugProgress = function() {
       console.log('📈 Progreso general:', parsed.overallProgress + '%');
       console.log('📚 Módulos:', parsed.modules);
       
-      // Calcular stats
       const completed = Object.values(parsed.modules || {}).filter(m => m.completed).length;
       const lessons = Object.values(parsed.modules || {}).reduce((sum, m) => 
         sum + (Array.isArray(m.completedLessons) ? m.completedLessons.length : 0), 0);
@@ -875,8 +852,12 @@ window.debugProgress = function() {
   }
 };
 
-// Hacer disponible globalmente
 window.testGoogleSheetsConnection = testGoogleSheetsConnection;
+
+// ✅ EXPORTAR funciones globalmente para módulos
+window.syncProgressFromSheets = syncProgressFromSheets;
+window.validateAndMigrateProgress = validateAndMigrateProgress;
+window.initializeEmptyProgress = initializeEmptyProgress;
 
 // =========================
 // INICIALIZACIÓN
@@ -884,7 +865,7 @@ window.testGoogleSheetsConnection = testGoogleSheetsConnection;
 
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    console.log('✅ auth.js v4.1 inicializado completamente');
+    console.log('✅ auth.js v4.2 inicializado completamente');
     console.log('🔄 Sistema de sincronización inteligente activo');
     console.log('🛡️ Protección contra borrado de datos activada');
     console.log('');
@@ -893,10 +874,8 @@ if (document.readyState === 'loading') {
     console.log('   • forceSyncProgress() - Forzar sincronización');
     console.log('   • debugProgress() - Ver estado actual del progreso');
     
-    // Inyectar indicador de sincronización
     setTimeout(injectSyncIndicator, 500);
     
-    // Si hay usuario autenticado, iniciar sincronización automática
     if (isAuthenticated()) {
       const user = getCurrentUser();
       if (user && user.role !== 'instructor') {
@@ -905,7 +884,7 @@ if (document.readyState === 'loading') {
     }
   });
 } else {
-  console.log('✅ auth.js v4.1 inicializado completamente');
+  console.log('✅ auth.js v4.2 inicializado completamente');
   console.log('🔄 Sistema de sincronización inteligente activo');
   console.log('🛡️ Protección contra borrado de datos activada');
   console.log('');
@@ -914,10 +893,8 @@ if (document.readyState === 'loading') {
   console.log('   • forceSyncProgress() - Forzar sincronización');
   console.log('   • debugProgress() - Ver estado actual del progreso');
   
-  // Inyectar indicador de sincronización
   setTimeout(injectSyncIndicator, 500);
   
-  // Si hay usuario autenticado, iniciar sincronización automática
   if (isAuthenticated()) {
     const user = getCurrentUser();
     if (user && user.role !== 'instructor') {
@@ -930,7 +907,6 @@ if (document.readyState === 'loading') {
 // MANEJO DE VISIBILIDAD DE PÁGINA
 // =========================
 
-// ✅ NUEVO: Sincronizar cuando el usuario regresa a la pestaña
 document.addEventListener('visibilitychange', async function() {
   if (!document.hidden && isAuthenticated()) {
     const user = getCurrentUser();
@@ -941,10 +917,8 @@ document.addEventListener('visibilitychange', async function() {
   }
 });
 
-// ✅ NUEVO: Sincronizar antes de cerrar la pestaña
 window.addEventListener('beforeunload', function(e) {
   if (isAuthenticated() && isSyncing) {
-    // Si hay sincronización en progreso, advertir al usuario
     e.preventDefault();
     e.returnValue = 'Hay una sincronización en progreso. ¿Seguro que quieres salir?';
   }
