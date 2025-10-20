@@ -1,0 +1,2058 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 3: Figura Completa - LMS UAH</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        :root {
+            --primary-dark: #2c5f66;
+            --primary-light: #e8a2b8;
+            --dark: #1a1a1a;
+            --success: #4CAF50;
+            --warning: #FFC107;
+            --danger: #f44336;
+            --info: #2196F3;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+        }
+
+        .header-uah {
+            background: linear-gradient(135deg, var(--primary-dark), var(--dark));
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .breadcrumb-custom {
+            background: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .sidebar-lesson {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        @media (min-width: 992px) {
+            .sidebar-lesson {
+                position: sticky;
+                top: 90px;
+                max-height: calc(100vh - 110px);
+                overflow-y: auto;
+            }
+        }
+
+        .lesson-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--dark);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-bottom: 0.5rem;
+            border: 2px solid transparent;
+        }
+
+        .lesson-link:hover {
+            background: #f8f9fa;
+            transform: translateX(3px);
+            border-color: var(--primary-light);
+        }
+
+        .lesson-link.active {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            color: white;
+        }
+
+        .lesson-number {
+            width: 35px;
+            height: 35px;
+            background: #e9ecef;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .lesson-link.active .lesson-number {
+            background: white;
+            color: var(--primary-dark);
+        }
+
+        .lesson-link.completed .lesson-number {
+            background: var(--success);
+            color: white;
+        }
+
+        .lesson-link.completed::after {
+            content: '\F26B';
+            font-family: 'bootstrap-icons';
+            color: var(--success);
+            font-size: 1.2rem;
+            margin-left: auto;
+        }
+
+        .progress-module {
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 10px;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+
+        .progress-bar-module {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-light));
+            border-radius: 10px;
+            transition: width 0.6s ease;
+        }
+
+        .content-area {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            min-height: 70vh;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        @media (max-width: 768px) {
+            .content-area { padding: 1.25rem; }
+        }
+
+        .lesson-header {
+            border-bottom: 3px solid var(--primary-light);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .lesson-title {
+            color: var(--primary-dark);
+            font-weight: 700;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            margin-bottom: 0.5rem;
+        }
+
+        .lesson-subtitle {
+            color: #6c757d;
+            font-size: clamp(1rem, 2.5vw, 1.1rem);
+            margin-bottom: 1rem;
+        }
+
+        .objectives-list {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-left: 4px solid var(--primary-dark);
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .accordion-button {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            color: white;
+            font-weight: 600;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+        }
+
+        .accordion-button:not(.collapsed) {
+            background: var(--primary-dark);
+            color: white;
+        }
+
+        .accordion-button:focus {
+            box-shadow: 0 0 0 0.25rem rgba(44, 95, 102, 0.25);
+            border-color: var(--primary-dark);
+        }
+
+        .accordion-button::after {
+            filter: brightness(0) invert(1);
+        }
+
+        .video-container {
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+        }
+
+        .video-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(44,95,102,0.9), rgba(26,26,26,0.9));
+            color: white;
+        }
+
+        .video-placeholder i {
+            font-size: clamp(2rem, 8vw, 4rem);
+        }
+
+        .exercise-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-left: 5px solid var(--primary-light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .reference-image {
+            width: 100%;
+            min-height: 100px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .reference-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 576px) {
+            .reference-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        .reference-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            position: relative;
+        }
+
+        .reference-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            border-color: var(--primary-light);
+        }
+
+        .reference-card.selected {
+            border-color: var(--success);
+            background: rgba(76, 175, 80, 0.05);
+        }
+
+        .selection-badge {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            z-index: 10;
+        }
+
+        .checklist {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border: 1px solid #e9ecef;
+        }
+
+        .checklist-item {
+            padding: 0.75rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: background 0.2s;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checklist-item:hover { background: #f8f9fa; }
+        .checklist-item:last-child { border-bottom: none; }
+        .checklist-item.checked { background: rgba(76, 175, 80, 0.1); }
+        .checklist-item.checked i { color: var(--success); }
+
+        .evaluation-container {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        @media (max-width: 768px) {
+            .evaluation-container { padding: 1.25rem; }
+        }
+
+        .eval-progress {
+            background: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--info);
+        }
+
+        .eval-question {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .eval-option {
+            padding: 1rem;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .eval-option:hover:not(.correct):not(.incorrect) {
+            border-color: var(--primary-dark);
+            background: rgba(44, 95, 102, 0.05);
+            transform: translateX(3px);
+        }
+
+        .eval-option.selected {
+            border-color: var(--primary-dark);
+            background: rgba(44, 95, 102, 0.1);
+        }
+
+        .eval-option.correct {
+            border-color: var(--success);
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .eval-option.incorrect {
+            border-color: var(--danger);
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        .eval-radio {
+            width: 22px;
+            height: 22px;
+            border: 2px solid #dee2e6;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .eval-option.selected .eval-radio {
+            border-color: var(--primary-dark);
+            background: var(--primary-dark);
+        }
+
+        .eval-option.selected .eval-radio::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .eval-option.correct .eval-radio {
+            border-color: var(--success);
+            background: var(--success);
+        }
+
+        .eval-option.incorrect .eval-radio {
+            border-color: var(--danger);
+            background: var(--danger);
+        }
+
+        .btn-nav {
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 576px) {
+            .btn-nav {
+                padding: 0.65rem 1.25rem;
+                font-size: 0.9rem;
+                width: 100%;
+            }
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            border: none;
+            color: white;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(44, 95, 102, 0.3);
+        }
+
+        .alert-custom {
+            border-left: 4px solid;
+            border-radius: 8px;
+        }
+
+        .final-message {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            margin: 2rem 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .rubric-table {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            min-width: 600px;
+        }
+
+        .rubric-table th {
+            background: var(--primary-dark);
+            color: white;
+            font-weight: 600;
+            padding: 1rem;
+        }
+
+        .rubric-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .loading-overlay.show { display: flex; }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+
+        .sidebar-lesson::-webkit-scrollbar { width: 6px; }
+        .sidebar-lesson::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        .sidebar-lesson::-webkit-scrollbar-thumb { background: var(--primary-dark); border-radius: 10px; }
+
+        .text-sm { font-size: 0.875rem; }
+        .text-xs { font-size: 0.75rem; }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="text-center">
+            <div class="spinner-border text-light" style="width: 3rem; height: 3rem;"></div>
+            <p class="text-white mt-3">Cargando contenido...</p>
+        </div>
+    </div>
+
+    <header class="header-uah">
+        <div class="container-fluid">
+            <div class="row align-items-center g-2">
+                <div class="col-auto">
+                    <a href="index.html" class="text-white text-decoration-none">
+                        <i class="bi bi-arrow-left me-2"></i>
+                        <span class="d-none d-md-inline">Volver</span>
+                    </a>
+                </div>
+                <div class="col text-center">
+                    <h1 class="h5 mb-0">Módulo 3: Figura Completa</h1>
+                </div>
+                <div class="col-auto">
+                    <span class="badge bg-light text-dark" id="progressText">0%</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid py-3 py-md-4">
+        <div class="breadcrumb-custom d-none d-md-block">
+            <nav>
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="index.html">Inicio</a></li>
+                    <li class="breadcrumb-item">Módulo 3</li>
+                    <li class="breadcrumb-item active" id="breadcrumbLesson">Lección 1</li>
+                </ol>
+            </nav>
+        </div>
+
+        <div class="row">
+            <aside class="col-lg-3">
+                <div class="sidebar-lesson">
+                    <h5 class="mb-3"><i class="bi bi-book me-2"></i>Lecciones</h5>
+                    
+                    <a class="lesson-link active" data-lesson="1" onclick="loadLesson(1)">
+                        <span class="lesson-number">1</span>
+                        <span class="flex-grow-1">Síntesis por Capas</span>
+                    </a>
+                    
+                    <a class="lesson-link" data-lesson="2" onclick="loadLesson(2)">
+                        <span class="lesson-number">2</span>
+                        <span class="flex-grow-1">Luz, Sombra y Volumen</span>
+                    </a>
+                    
+                    <a class="lesson-link" data-lesson="3" onclick="loadLesson(3)">
+                        <span class="lesson-number">3</span>
+                        <span class="flex-grow-1">Proyecto Final</span>
+                    </a>
+                    
+                    <div class="mt-4">
+                        <h6 class="mb-2">Progreso del Módulo</h6>
+                        <div class="progress-module">
+                            <div class="progress-bar-module" id="progressBar" style="width: 0%"></div>
+                        </div>
+                        <small class="text-muted d-block mt-2" id="progressDetail">0 de 3 lecciones completadas</small>
+                    </div>
+
+                    <div class="card border-primary mt-3">
+                        <div class="card-header bg-primary text-white">
+                            <i class="bi bi-info-circle me-2"></i>Información
+                        </div>
+                        <div class="card-body">
+                            <p class="small mb-2"><strong>Duración:</strong> 5 días</p>
+                            <p class="small mb-2"><strong>Carga:</strong> 200 min</p>
+                            <p class="small mb-0"><strong>Entregables:</strong></p>
+                            <ul class="small mb-0 mt-2">
+                                <li>2 figuras completas</li>
+                                <li>1 figura con valores</li>
+                                <li>1 proyecto final</li>
+                                <li>3 evaluaciones</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card border-success mt-3">
+                        <div class="card-header bg-success text-white">
+                            <i class="bi bi-cloud-upload me-2"></i>Entrega
+                        </div>
+                        <div class="card-body text-center">
+                            <a href="https://forms.gle/URL_FORMULARIO_M3" class="btn btn-success btn-sm w-100" target="_blank">
+                                <i class="bi bi-box-arrow-up-right me-2"></i>Subir Trabajos
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="col-lg-9">
+                <div class="content-area" id="lessonContent"></div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="auth.js"></script>
+    
+    <script>
+        // ===== CONFIGURACIÓN Y VARIABLES GLOBALES =====
+        let currentLesson = 1;
+        let evaluationAnswers = {};
+        let completedLessons = [];
+        let selectedReference = null;
+        let moduleStartTime = Date.now();
+        let lessonStartTime = Date.now();
+
+        const MODULE_NUMBER = 3;
+        const TOTAL_LESSONS = 3;
+        const DEBUG_MODE = true;
+
+        function debugLog(message, data = null) {
+            if (DEBUG_MODE) {
+                console.log(`🔍 [M${MODULE_NUMBER}] ${message}`);
+                if (data) console.log(data);
+            }
+        }
+
+        // ===== FUNCIONES DE PERSISTENCIA =====
+        async function loadProgress() {
+            debugLog('loadProgress() INICIADO');
+            
+            const currentUser = getCurrentUser();
+            if (!currentUser) {
+                debugLog('❌ No hay usuario');
+                return;
+            }
+
+            if (window.isSyncInProgress) {
+                debugLog('⏳ Esperando sync...');
+                let waitTime = 0;
+                while (window.isSyncInProgress && waitTime < 10000) {
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    waitTime += 500;
+                }
+            }
+
+            const storageKey = `progress_${currentUser.username}`;
+            const saved = localStorage.getItem(storageKey);
+            
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    
+                    if (data.modules && data.modules[MODULE_NUMBER]) {
+                        const moduleData = data.modules[MODULE_NUMBER];
+                        
+                        completedLessons = Array.isArray(moduleData.completedLessons) ? moduleData.completedLessons : [];
+                        evaluationAnswers = moduleData.evaluations || {};
+                        selectedReference = moduleData.selectedReference || null;
+                        currentLesson = moduleData.currentLesson || 1;
+                        
+                        debugLog(`✅ Progreso cargado: ${completedLessons.length} lecciones`);
+                    } else {
+                        completedLessons = [];
+                        evaluationAnswers = {};
+                        selectedReference = null;
+                        currentLesson = 1;
+                    }
+                } catch (error) {
+                    console.error('❌ Error parseando:', error);
+                    completedLessons = [];
+                    evaluationAnswers = {};
+                }
+            }
+            
+            updateProgressBar();
+        }
+
+        async function saveProgress() {
+            if (window.isSyncInProgress) {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                if (window.isSyncInProgress) {
+                    return saveProgressLocalOnly();
+                }
+            }
+            
+            const currentUser = getCurrentUser();
+            if (!currentUser) return;
+
+            if (!Array.isArray(completedLessons)) completedLessons = [];
+
+            const timeSpent = Math.round((Date.now() - moduleStartTime) / 60000);
+            const progress = Math.round((completedLessons.length / TOTAL_LESSONS) * 100);
+            const isCompleted = completedLessons.length === TOTAL_LESSONS;
+
+            const progressData = {
+                completed: isCompleted,
+                progress,
+                timeSpent,
+                completedLessons,
+                evaluations: evaluationAnswers,
+                selectedReference,
+                currentLesson,
+                lastUpdate: new Date().toISOString()
+            };
+
+            const storageKey = `progress_${currentUser.username}`;
+
+            try {
+                const allProgress = JSON.parse(localStorage.getItem(storageKey) || '{}');
+                if (!allProgress.modules) allProgress.modules = {};
+                allProgress.modules[MODULE_NUMBER] = progressData;
+                allProgress.lastActivity = new Date().toISOString();
+                
+                localStorage.setItem(storageKey, JSON.stringify(allProgress));
+                debugLog('✅ localStorage guardado');
+            } catch (error) {
+                console.error('❌ Error localStorage:', error);
+            }
+
+            try {
+                if (typeof updateModuleProgress === 'function') {
+                    await updateModuleProgress(MODULE_NUMBER, progressData);
+                    debugLog('✅ Sheets guardado');
+                }
+            } catch (error) {
+                console.error('❌ Error Sheets:', error);
+            }
+
+            updateProgressBar();
+        }
+
+        function saveProgressLocalOnly() {
+            const currentUser = getCurrentUser();
+            if (!currentUser) return;
+
+            if (!Array.isArray(completedLessons)) completedLessons = [];
+
+            const storageKey = `progress_${currentUser.username}`;
+            try {
+                const allProgress = JSON.parse(localStorage.getItem(storageKey) || '{}');
+                if (!allProgress.modules) allProgress.modules = {};
+                
+                allProgress.modules[MODULE_NUMBER] = {
+                    completedLessons,
+                    evaluations: evaluationAnswers,
+                    selectedReference,
+                    currentLesson,
+                    lastUpdate: new Date().toISOString()
+                };
+                
+                localStorage.setItem(storageKey, JSON.stringify(allProgress));
+                debugLog('✅ Local guardado');
+            } catch (error) {
+                console.error('❌ Error:', error);
+            }
+        }
+
+        function updateProgressBar() {
+            if (!Array.isArray(completedLessons)) completedLessons = [];
+            
+            const completed = completedLessons.length;
+            const percentage = Math.round((completed / TOTAL_LESSONS) * 100);
+            
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const progressDetail = document.getElementById('progressDetail');
+            
+            if (progressBar) progressBar.style.width = percentage + '%';
+            if (progressText) progressText.textContent = percentage + '%';
+            if (progressDetail) progressDetail.textContent = `${completed} de ${TOTAL_LESSONS} lecciones completadas`;
+            
+            completedLessons.forEach(num => {
+                const link = document.querySelector(`[data-lesson="${num}"]`);
+                if (link) link.classList.add('completed');
+            });
+        }
+
+        // ===== INICIALIZACIÓN =====
+        async function initializeModule() {
+            console.log('🚀 MÓDULO 3 - INICIALIZACIÓN v4.2');
+            
+            const funcs = ['getCurrentUser', 'updateModuleProgress', 'logUserActivity', 'syncProgressFromSheets'];
+            const missing = funcs.filter(f => typeof window[f] !== 'function');
+            
+            if (missing.length > 0) {
+                console.error('❌ Funciones faltantes:', missing);
+                alert('Error: auth.js no cargado');
+                return;
+            }
+            
+            const currentUser = getCurrentUser();
+            if (!currentUser) {
+                console.warn('❌ No autenticado');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            console.log('✅ Usuario:', currentUser.username);
+            
+            await syncProgressFromSheets(currentUser.username, true);
+            await loadProgress();
+            
+            if (!Array.isArray(completedLessons)) completedLessons = [];
+            
+            console.log('✅ Estado:', { completedLessons, evaluations: Object.keys(evaluationAnswers).length });
+            
+            try {
+                await logUserActivity('module_access', MODULE_NUMBER.toString(), '', {});
+            } catch (error) {}
+            
+            loadLesson(currentLesson);
+            moduleStartTime = Date.now();
+            
+            setInterval(() => saveProgress(), 120000);
+            
+            console.log('✅ MÓDULO INICIALIZADO');
+        }
+
+        // ===== FUNCIONES DE NAVEGACIÓN =====
+        async function completeLesson(lessonNum) {
+            if (!Array.isArray(completedLessons)) completedLessons = [];
+            if (completedLessons.includes(lessonNum)) return;
+
+            const currentUser = getCurrentUser();
+            if (!currentUser) return;
+
+            const lessonTime = Math.round((Date.now() - lessonStartTime) / 60000);
+            completedLessons.push(lessonNum);
+            
+            await saveProgress();
+            
+            try {
+                await logUserActivity('lesson_completed', MODULE_NUMBER.toString(), lessonNum.toString(), {
+                    timeSpent: lessonTime
+                });
+            } catch (error) {}
+            
+            showToast('¡Lección completada!', 'success');
+        }
+
+        async function loadLesson(lessonNum) {
+            showLoading(true);
+            lessonStartTime = Date.now();
+            currentLesson = lessonNum;
+            
+            document.getElementById('breadcrumbLesson').textContent = `Lección ${lessonNum}`;
+            document.querySelectorAll('.lesson-link').forEach(l => l.classList.remove('active'));
+            document.querySelector(`[data-lesson="${lessonNum}"]`).classList.add('active');
+            
+            const currentUser = getCurrentUser();
+            if (currentUser) {
+                try {
+                    await logUserActivity('lesson_view', MODULE_NUMBER.toString(), lessonNum.toString(), {});
+                } catch (error) {}
+            }
+            
+            setTimeout(() => {
+                document.getElementById('lessonContent').innerHTML = lessons[`lesson${lessonNum}`];
+                document.getElementById('lessonContent').classList.add('fade-in');
+                restoreEvaluationState(lessonNum);
+                loadChecklistState();
+                showLoading(false);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                saveProgress();
+            }, 400);
+        }
+
+        function showLoading(show = true) {
+            document.getElementById('loadingOverlay').classList.toggle('show', show);
+        }
+
+        function goToNextLesson() {
+            if (currentLesson < TOTAL_LESSONS) {
+                loadLesson(currentLesson + 1);
+            } else {
+                showToast('¡Completaste el Módulo 3!', 'success');
+                setTimeout(() => window.location.href = 'index.html', 2000);
+            }
+        }
+
+        // ===== FUNCIONES DE CHECKLIST =====
+        function toggleChecklistItem(element) {
+            element.classList.toggle('checked');
+            const icon = element.querySelector('i');
+            icon.className = element.classList.contains('checked') ? 'bi bi-check-circle-fill' : 'bi bi-circle';
+            saveChecklistState();
+        }
+
+        function saveChecklistState() {
+            const currentUser = getCurrentUser();
+            if (!currentUser) return;
+
+            const storageKey = `progress_${currentUser.username}`;
+            const checklists = document.querySelectorAll('.checklist-item');
+            const state = {};
+            
+            checklists.forEach((item, index) => {
+                state[`checklist_${currentLesson}_${index}`] = item.classList.contains('checked');
+            });
+            
+            localStorage.setItem(`${storageKey}_checklists`, JSON.stringify(state));
+        }
+
+        function loadChecklistState() {
+            const currentUser = getCurrentUser();
+            if (!currentUser) return;
+
+            const storageKey = `progress_${currentUser.username}`;
+            const saved = localStorage.getItem(`${storageKey}_checklists`);
+            
+            if (!saved) return;
+            
+            try {
+                const state = JSON.parse(saved);
+                document.querySelectorAll('.checklist-item').forEach((item, index) => {
+                    const key = `checklist_${currentLesson}_${index}`;
+                    if (state[key]) {
+                        item.classList.add('checked');
+                        const icon = item.querySelector('i');
+                        if (icon) icon.className = 'bi bi-check-circle-fill';
+                    }
+                });
+            } catch (error) {}
+        }
+
+        // ===== FUNCIONES DE EVALUACIÓN =====
+        function updateEvalProgress(lessonNum) {
+            const count = Object.keys(evaluationAnswers[lessonNum] || {}).length;
+            const el = document.getElementById('answeredCount');
+            if (el) el.textContent = Math.min(count, 3);
+        }
+
+        function selectEvalOption(element, optionNumber, lessonNum) {
+            const container = element.closest('[data-question]');
+            if (!container) return;
+            
+            const question = container.getAttribute('data-question');
+            container.querySelectorAll('.eval-option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            
+            if (!evaluationAnswers[lessonNum]) evaluationAnswers[lessonNum] = {};
+            evaluationAnswers[lessonNum][question] = optionNumber;
+            
+            updateEvalProgress(lessonNum);
+            saveProgress();
+        }
+
+        async function submitEvaluation(lessonNum) {
+            const userAnswers = evaluationAnswers[lessonNum] || {};
+            
+            if (Object.keys(userAnswers).length < 3) {
+                showToast('Responde todas las preguntas', 'warning');
+                return;
+            }
+            
+            const correctAnswers = {
+                1: { q1: 2, q2: 3, q3: 1 },
+                2: { q1: 2, q2: 3, q3: 2 },
+                3: { q1: 2, q2: 3, q3: 2 }
+            };
+            
+            await processEvaluation(lessonNum, userAnswers, correctAnswers[lessonNum]);
+        }
+
+        async function processEvaluation(lessonNum, userAnswers, correctAnswers) {
+            showLoading(true);
+            
+            setTimeout(async () => {
+                let score = 0;
+                
+                Object.keys(correctAnswers).forEach(q => {
+                    const container = document.querySelector(`[data-question="${q}"]`);
+                    if (container) {
+                        const options = container.querySelectorAll('.eval-option');
+                        options.forEach((opt, idx) => {
+                            const optNum = idx + 1;
+                            opt.style.pointerEvents = 'none';
+                            
+                            if (optNum === correctAnswers[q]) {
+                                opt.classList.add('correct');
+                                if (userAnswers[q] === correctAnswers[q]) score++;
+                            } else if (optNum === userAnswers[q]) {
+                                opt.classList.add('incorrect');
+                            }
+                        });
+                    }
+                });
+                
+                document.getElementById('submitEvalBtn').style.display = 'none';
+                
+                const percentage = Math.round((score / 3) * 100);
+                const passed = score >= 2;
+                
+                try {
+                    await logUserActivity('evaluation_submitted', MODULE_NUMBER.toString(), lessonNum.toString(), {
+                        score: percentage,
+                        passed
+                    });
+                } catch (error) {}
+                
+                const resultHTML = passed ? 
+                    `<div class="alert alert-success alert-custom">
+                        <h5><i class="bi bi-check-circle-fill me-2"></i>¡Excelente!</h5>
+                        <p>Aprobaste con ${score}/3 (${percentage}%).</p>
+                    </div>` :
+                    `<div class="alert alert-warning alert-custom">
+                        <h5><i class="bi bi-exclamation-triangle-fill me-2"></i>Necesitas mejorar</h5>
+                        <p>Obtuviste ${score}/3 (${percentage}%). Necesitas 2/3.</p>
+                    </div>`;
+                
+                document.getElementById('evalResult').innerHTML = resultHTML;
+                
+                if (passed) {
+                    await completeLesson(lessonNum);
+                    document.getElementById('nextLessonBtn').style.display = 'inline-block';
+                } else {
+                    document.getElementById('retryEvalBtn').style.display = 'inline-block';
+                }
+                
+                showLoading(false);
+                await saveProgress();
+            }, 600);
+        }
+
+        function retryEvaluation(lessonNum) {
+            delete evaluationAnswers[lessonNum];
+            
+            document.querySelectorAll('.eval-option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+                opt.style.pointerEvents = 'auto';
+            });
+            
+            document.getElementById('evalResult').innerHTML = '';
+            document.getElementById('answeredCount').textContent = '0';
+            document.getElementById('submitEvalBtn').style.display = 'inline-block';
+            document.getElementById('retryEvalBtn').style.display = 'none';
+            document.getElementById('nextLessonBtn').style.display = 'none';
+            
+            saveProgress();
+            showToast('Intenta nuevamente', 'info');
+        }
+
+        function restoreEvaluationState(lessonNum) {
+            const answers = evaluationAnswers[lessonNum];
+            if (!answers) return;
+            
+            Object.keys(answers).forEach(question => {
+                const container = document.querySelector(`[data-question="${question}"]`);
+                if (container) {
+                    container.querySelectorAll('.eval-option').forEach((opt, idx) => {
+                        if (idx + 1 === answers[question]) opt.classList.add('selected');
+                    });
+                }
+            });
+            
+            updateEvalProgress(lessonNum);
+        }
+
+        // ===== FUNCIONES DEL PROYECTO FINAL =====
+        function selectReference(refNum) {
+            selectedReference = refNum;
+            
+            document.querySelectorAll('.reference-card').forEach(card => {
+                card.classList.remove('selected');
+                const badge = card.querySelector('.selection-badge');
+                if (badge) badge.remove();
+            });
+            
+            const selectedCard = document.querySelector(`[data-ref="${refNum}"]`);
+            if (selectedCard) {
+                selectedCard.classList.add('selected');
+                
+                const badge = document.createElement('div');
+                badge.className = 'selection-badge';
+                badge.innerHTML = '<span class="badge bg-success"><i class="bi bi-check-lg"></i> Seleccionada</span>';
+                selectedCard.appendChild(badge);
+            }
+            
+            saveProgress();
+            showToast(`Referencia ${refNum} seleccionada`, 'success');
+        }
+
+        function showReferences() {
+            const modalHTML = `
+                <div class="modal fade" id="referencesModal" tabindex="-1">
+                    <div class="modal-dialog modal-xl modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">
+                                    <i class="bi bi-images me-2"></i>Referencias para Proyecto Final
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="text-muted mb-3">Selecciona una referencia:</p>
+                                <div class="reference-grid">
+                                    <div class="reference-card ${selectedReference === 24 ? 'selected' : ''}" data-ref="24" onclick="selectReference(24)">
+                                        ${selectedReference === 24 ? '<div class="selection-badge"><span class="badge bg-success"><i class="bi bi-check-lg"></i> Seleccionada</span></div>' : ''}
+                                        <div class="reference-image" style="height: 300px;">
+                                            <span>ref24_pose_heroica.jpg</span>
+                                        </div>
+                                        <h6 class="mt-3 mb-1">Referencia 24</h6>
+                                        <p class="small text-muted mb-0">Pose dinámica</p>
+                                    </div>
+                                    <div class="reference-card ${selectedReference === 25 ? 'selected' : ''}" data-ref="25" onclick="selectReference(25)">
+                                        ${selectedReference === 25 ? '<div class="selection-badge"><span class="badge bg-success"><i class="bi bi-check-lg"></i> Seleccionada</span></div>' : ''}
+                                        <div class="reference-image" style="height: 300px;">
+                                            <span>ref25_pose_cotidiana.jpg</span>
+                                        </div>
+                                        <h6 class="mt-3 mb-1">Referencia 25</h6>
+                                        <p class="small text-muted mb-0">Pose relajada</p>
+                                    </div>
+                                    <div class="reference-card ${selectedReference === 26 ? 'selected' : ''}" data-ref="26" onclick="selectReference(26)">
+                                        ${selectedReference === 26 ? '<div class="selection-badge"><span class="badge bg-success"><i class="bi bi-check-lg"></i> Seleccionada</span></div>' : ''}
+                                        <div class="reference-image" style="height: 300px;">
+                                            <span>ref26_pose_artistica.jpg</span>
+                                        </div>
+                                        <h6 class="mt-3 mb-1">Referencia 26</h6>
+                                        <p class="small text-muted mb-0">Contrapposto marcado</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            const existingModal = document.getElementById('referencesModal');
+            if (existingModal) existingModal.remove();
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            const modal = new bootstrap.Modal(document.getElementById('referencesModal'));
+            modal.show();
+            
+            document.getElementById('referencesModal').addEventListener('hidden.bs.modal', function () {
+                this.remove();
+            });
+        }
+
+        function submitFinalProject() {
+            if (!selectedReference) {
+                showToast('Primero selecciona una referencia', 'warning');
+                return;
+            }
+            
+            window.open('https://forms.gle/URL_FORMULARIO_PROYECTO_FINAL', '_blank');
+            showToast('Abriendo formulario...', 'info');
+        }
+
+        // ===== UTILIDADES UI =====
+        function showToast(message, type = 'info') {
+            const colors = { success: '#4CAF50', warning: '#FFC107', info: '#2196F3', danger: '#f44336' };
+            const icons = { success: 'check-circle-fill', warning: 'exclamation-triangle-fill', info: 'info-circle-fill', danger: 'x-circle-fill' };
+            
+            const toast = document.createElement('div');
+            toast.style.cssText = `position: fixed; top: 80px; right: 20px; background: ${colors[type]}; color: white; padding: 1rem 1.5rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 9999; animation: slideIn 0.3s; display: flex; align-items: center; gap: 0.75rem;`;
+            toast.innerHTML = `<i class="bi bi-${icons[type]}" style="font-size: 1.25rem;"></i><span>${message}</span>`;
+            
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // ===== CONTENIDO DE LECCIONES =====
+        const lessons = {
+            lesson1: `
+                <div class="lesson-header">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start mb-3">
+                        <div class="flex-grow-1 mb-2 mb-md-0">
+                            <h2 class="lesson-title">Lección 3.1: Síntesis por Capas</h2>
+                            <p class="lesson-subtitle">Proceso de construcción en capas</p>
+                        </div>
+                        <span class="badge bg-warning text-dark lesson-duration">60 minutos</span>
+                    </div>
+                    
+                    <div class="objectives-list">
+                        <h6 class="mb-2"><i class="bi bi-bullseye me-2"></i>Objetivos</h6>
+                        <ul class="mb-0">
+                            <li>Integrar gesto + anatomía en 1 figura completa</li>
+                            <li>Aplicar proceso de refinamiento por capas</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <i class="bi bi-play-circle"></i>
+                        <p class="mt-3 mb-0 text-sm">Video: Proceso de síntesis (2:40 min)</p>
+                    </div>
+                </div>
+
+                <div class="accordion mb-4" id="accordionLesson1">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseL1_1" aria-expanded="true">
+                                <i class="bi bi-layers me-2"></i>Capas 1 y 2: Estructura y Anatomía
+                            </button>
+                        </h2>
+                        <div id="collapseL1_1" class="accordion-collapse collapse show" data-bs-parent="#accordionLesson1">
+                            <div class="accordion-body">
+                                <h6 class="text-primary">CAPA 1 - GESTO (0-10 min):</h6>
+                                <ol>
+                                    <li>Línea de acción visible</li>
+                                    <li>Punto de apoyo marcado</li>
+                                    <li>3 masas básicas</li>
+                                    <li>Ejes de hombros y caderas</li>
+                                    <li>Extremidades direccionales</li>
+                                </ol>
+                                
+                                <div class="alert alert-warning">
+                                    <strong>NO incluir:</strong> Detalles musculares, rasgos faciales, dedos
+                                </div>
+
+                                <h6 class="text-primary mt-4">CAPA 2 - ANATOMÍA (10-30 min):</h6>
+                                <ol>
+                                    <li>Refinar las 3 masas tridimensionales</li>
+                                    <li>Articulaciones principales</li>
+                                    <li>6 grupos musculares esenciales</li>
+                                    <li>Verificar proporciones</li>
+                                    <li>Manos y pies simplificados</li>
+                                </ol>
+
+                                <div class="alert alert-info mt-3">
+                                    <strong>Verificación:</strong> Mide proporciones, verifica línea de acción, confirma peso
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseL1_2">
+                                <i class="bi bi-pencil me-2"></i>Capas 3 y 4: Refinamiento
+                            </button>
+                        </h2>
+                        <div id="collapseL1_2" class="accordion-collapse collapse" data-bs-parent="#accordionLesson1">
+                            <div class="accordion-body">
+                                <h6 class="text-primary">CAPA 3 - CONTORNO (30-60 min):</h6>
+                                <ol>
+                                    <li>Contorno continuo</li>
+                                    <li>Detalles anatómicos</li>
+                                    <li>Rasgos faciales</li>
+                                    <li>Manos y pies completos</li>
+                                    <li>Borrar construcción</li>
+                                </ol>
+
+                                <h6 class="text-primary mt-4">CAPA 4 - VOLUMEN (60-90 min):</h6>
+                                <ol>
+                                    <li>Fuente de luz</li>
+                                    <li>Zonas luz/sombra</li>
+                                    <li>Valores tonales</li>
+                                    <li>Sombras proyectadas</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseL1_3">
+                                <i class="bi bi-exclamation-triangle me-2"></i>Errores Frecuentes
+                            </button>
+                        </h2>
+                        <div id="collapseL1_3" class="accordion-collapse collapse" data-bs-parent="#accordionLesson1">
+                            <div class="accordion-body">
+                                <div class="mb-4">
+                                    <h6 class="text-danger">ERROR 1: Comenzar con detalles</h6>
+                                    <p class="text-success mb-0"><strong>Solución:</strong> Fuerza el orden 1→2→3→4</p>
+                                </div>
+
+                                <div class="mb-4">
+                                    <h6 class="text-danger">ERROR 2: Perder línea de acción</h6>
+                                    <p class="text-success mb-0"><strong>Solución:</strong> Revisa constantemente</p>
+                                </div>
+
+                                <div class="mb-0">
+                                    <h6 class="text-danger">ERROR 3: Sobre-trabajar áreas</h6>
+                                    <p class="text-success mb-0"><strong>Solución:</strong> Retrocede cada 10 min</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercise-card">
+                    <h5 class="mb-3">
+                        <i class="bi bi-palette me-2"></i>EJERCICIO: 2 Figuras Completas
+                    </h5>
+                    <p><strong>Objetivo:</strong> 4 capas con documentación fotográfica</p>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-6 mb-3">
+                            <h6>Materiales:</h6>
+                            <ul>
+                                <li>2 hojas papel</li>
+                                <li>Lápices: HB, 2B, 4B</li>
+                                <li>Goma de borrar</li>
+                                <li>Smartphone</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <h6>Referencias:</h6>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <div class="reference-image" style="height: 120px;">
+                                        <span class="text-xs">ref21.jpg</span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="reference-image" style="height: 120px;">
+                                        <span class="text-xs">ref22.jpg</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <h6>Primera figura (60 min):</h6>
+                        <div class="checklist">
+                            <div class="checklist-item" onclick="toggleChecklistItem(this)">
+                                <i class="bi bi-circle text-muted"></i>
+                                <span>0-10 min: Capa 1 → FOTOGRAFIAR</span>
+                            </div>
+                            <div class="checklist-item" onclick="toggleChecklistItem(this)">
+                                <i class="bi bi-circle text-muted"></i>
+                                <span>10-30 min: Capa 2 → FOTOGRAFIAR</span>
+                            </div>
+                            <div class="checklist-item" onclick="toggleChecklistItem(this)">
+                                <i class="bi bi-circle text-muted"></i>
+                                <span>30-60 min: Capa 3 → FOTOGRAFIAR</span>
+                            </div>
+                        </div>
+
+                        <h6 class="mt-4">Segunda figura (90 min):</h6>
+                        <div class="checklist">
+                            <div class="checklist-item" onclick="toggleChecklistItem(this)">
+                                <i class="bi bi-circle text-muted"></i>
+                                <span>0-10 min: Capa 1 → FOTOGRAFIAR</span>
+                            </div>
+                            <div class="checklist-item" onclick="toggleChecklistItem(this)">
+                                <i class="bi bi-circle text-muted"></i>
+                                <span>10-30 min: Capa 2 → FOTOGRAFIAR</span>
+                            </div>
+                            <div class="checklist-item" onclick="toggleChecklistItem(this)">
+                                <i class="bi bi-circle text-muted"></i>
+                                <span>30-60 min: Capa 3 → FOTOGRAFIAR</span>
+                            </div>
+                            <div class="checklist-item" onclick="toggleChecklistItem(this)">
+                                <i class="bi bi-circle text-muted"></i>
+                                <span>60-90 min: Capa 4 → FOTOGRAFIAR</span>
+                            </div>
+                        </div>
+
+                        <p class="mt-3 mb-0"><strong>Total:</strong> 7 fotos + 2 dibujos</p>
+                    </div>
+                </div>
+
+                <div class="evaluation-container">
+                    <h4 class="mb-4"><i class="bi bi-clipboard-check me-2"></i>Evaluación 3.1</h4>
+                    
+                    <div class="eval-progress">
+                        <small class="text-muted">Respondidas: <strong><span id="answeredCount">0</span>/3</strong></small>
+                    </div>
+                    
+                    <div class="eval-question" data-question="q1">
+                        <h6>Pregunta 1:</h6>
+                        <p>¿Qué incluir en Capa 1?</p>
+                        <div class="eval-options">
+                            <div class="eval-option" onclick="selectEvalOption(this, 1, 1)">
+                                <div class="eval-radio"></div>
+                                <span>A) Detalles musculares</span>
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 2, 1)">
+                                <div class="eval-radio"></div>
+                                <span>B) Línea de acción, 3 masas, apoyo</span>
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 3, 1)">
+                                <div class="eval-radio"></div>
+                                <span>C) Sombreado</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="eval-question" data-question="q2">
+                        <h6>Pregunta 2:</h6>
+                        <p>¿En qué capa se refinan contornos?</p>
+                        <div class="eval-options">
+                            <div class="eval-option" onclick="selectEvalOption(this, 1, 1)">
+                                <div class="eval-radio"></div>
+                                <span>A) Capa 1</span>
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 2, 1)">
+                                <div class="eval-radio"></div>
+                                <span>B) Capa 2</span>
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 3, 1)">
+                                <div class="eval-radio"></div>
+                                <span>C) Capa 3</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="eval-question" data-question="q3">
+                        <h6>Pregunta 3:</h6>
+                        <p>¿Error más frecuente?</p>
+                        <div class="eval-options">
+                            <div class="eval-option" onclick="selectEvalOption(this, 1, 1)">
+                                <div class="eval-radio"></div>
+                                <span>A) Comenzar con detalles</span>
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 2, 1)">
+                                <div class="eval-radio"></div>
+                                <span>B) Usar muchas capas</span>
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 3, 1)">
+                                <div class="eval-radio"></div>
+                                <span>C) Fotografiar proceso</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="evalResult" class="mt-3"></div>
+
+                    <div class="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">
+                        <button class="btn btn-primary btn-nav" id="submitEvalBtn" onclick="submitEvaluation(1)">
+                            <i class="bi bi-check-circle me-2"></i>Enviar
+                        </button>
+                        <button class="btn btn-warning btn-nav" id="retryEvalBtn" style="display: none;" onclick="retryEvaluation(1)">
+                            <i class="bi bi-arrow-clockwise me-2"></i>Reintentar
+                        </button>
+                        <button class="btn btn-primary-custom btn-nav" id="nextLessonBtn" style="display: none;" onclick="goToNextLesson()">
+                            Siguiente <i class="bi bi-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            `,
+
+            lesson2: `
+                <div class="lesson-header">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start mb-3">
+                        <div class="flex-grow-1 mb-2 mb-md-0">
+                            <h2 class="lesson-title">Lección 3.2: Luz, Sombra y Volumen</h2>
+                            <p class="lesson-subtitle">Crear profundidad con valores tonales</p>
+                        </div>
+                        <span class="badge bg-warning text-dark lesson-duration">60 minutos</span>
+                    </div>
+                    
+                    <div class="objectives-list">
+                        <h6 class="mb-2"><i class="bi bi-bullseye me-2"></i>Objetivos</h6>
+                        <ul class="mb-0">
+                            <li>Aplicar principios luz/sombra para volumen 3D</li>
+                            <li>Crear 1 figura con valores tonales completos</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="accordion mb-4" id="accordionLesson2">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseL2_1" aria-expanded="true">
+                                <i class="bi bi-brightness-high me-2"></i>Los 5 Valores Tonales
+                            </button>
+                        </h2>
+                        <div id="collapseL2_1" class="accordion-collapse collapse show" data-bs-parent="#accordionLesson2">
+                            <div class="accordion-body">
+                                <p class="lead">5 valores básicos:</p>
+                                
+                                <div class="mb-3">
+                                    <h6 class="text-primary">1. LUZ DIRECTA:</h6>
+                                    <ul>
+                                        <li>Recibe luz directamente</li>
+                                        <li>Punto más brillante</li>
+                                        <li>Blanco del papel</li>
+                                    </ul>
+                                </div>
+
+                                <div class="mb-3">
+                                    <h6 class="text-primary">2. LUZ REFLEJADA:</h6>
+                                    <ul>
+                                        <li>Rebota de superficies</li>
+                                        <li>En zonas de sombra</li>
+                                        <li>Más clara que sombra</li>
+                                    </ul>
+                                </div>
+
+                                <div class="mb-3">
+                                    <h6 class="text-primary">3. TONO MEDIO:</h6>
+                                    <ul>
+                                        <li>Sin luz directa ni sombra</li>
+                                        <li>Mayor parte del cuerpo</li>
+                                        <li>Gris medio</li>
+                                    </ul>
+                                </div>
+
+                                <div class="mb-3">
+                                    <h6 class="text-primary">4. SOMBRA PROPIA:</h6>
+                                    <ul>
+                                        <li>NO recibe luz</li>
+                                        <li>Opuesta a fuente</li>
+                                        <li>Más oscura que medio</li>
+                                    </ul>
+                                </div>
+
+                                <div class="mb-3">
+                                    <h6 class="text-primary">5. SOMBRA PROYECTADA:</h6>
+                                    <ul>
+                                        <li>Proyecta sobre otras superficies</li>
+                                        <li>Zona más oscura</li>
+                                        <li>Define contacto con suelo</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2_2">
+                                <i class="bi bi-lightbulb me-2"></i>Tipos de Iluminación
+                            </button>
+                        </h2>
+                        <div id="collapse2_2" class="accordion-collapse collapse" data-bs-parent="#accordionLesson2">
+                            <div class="accordion-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card h-100">
+                                            <div class="card-body">
+                                                <h6 class="text-primary">LUZ FRONTAL:</h6>
+                                                <ul class="text-sm mb-0">
+                                                    <li>Frente al modelo</li>
+                                                    <li>Menos sombras</li>
+                                                    <li>Menos volumen</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card h-100">
+                                            <div class="card-body">
+                                                <h6 class="text-primary">LUZ LATERAL:</h6>
+                                                <ul class="text-sm mb-0">
+                                                    <li>A un lado</li>
+                                                    <li>Máximo contraste</li>
+                                                    <li>Mejor volumen</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card h-100">
+                                            <div class="card-body">
+                                                <h6 class="text-primary">LUZ POSTERIOR:</h6>
+                                                <ul class="text-sm mb-0">
+                                                    <li>Detrás del modelo</li>
+                                                    <li>Silueta definida</li>
+                                                    <li>Detalles en sombra</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card h-100">
+                                            <div class="card-body">
+                                                <h6 class="text-primary">LUZ CENITAL:</h6>
+                                                <ul class="text-sm mb-0">
+                                                    <li>Arriba del modelo</li>
+                                                    <li>Sombras en rostro</li>
+                                                    <li>Común en natural</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-success mt-3 mb-0">
+                                    <i class="bi bi-star me-2"></i>
+                                    <strong>Regla:</strong> Una sola fuente dominante = sombras consistentes
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2_3">
+                                <i class="bi bi-person me-2"></i>Aplicación en Cuerpo
+                            </button>
+                        </h2>
+                        <div id="collapse2_3" class="accordion-collapse collapse" data-bs-parent="#accordionLesson2">
+                            <div class="accordion-body">
+                                <h6 class="text-primary">PROCESO:</h6>
+                                
+                                <div class="mb-3">
+                                    <strong>1. Identificar fuente luz</strong>
+                                </div>
+
+                                <div class="mb-3">
+                                    <strong>2. Dividir zonas luz/sombra</strong>
+                                </div>
+
+                                <div class="mb-3">
+                                    <strong>3. Aplicar valores progresivamente</strong>
+                                </div>
+
+                                <div class="mb-0">
+                                    <strong>4. Unificar y suavizar</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercise-card">
+                    <h5 class="mb-3">
+                        <i class="bi bi-palette me-2"></i>EJERCICIO: 1 Figura con Valores
+                    </h5>
+                    <p><strong>Objetivo:</strong> Aplicar 5 valores tonales</p>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-6 mb-3">
+                            <h6>Materiales:</h6>
+                            <ul>
+                                <li>1 hoja</li>
+                                <li>Lápices: HB, 2B, 4B, 6B</li>
+                                <li>Goma</li>
+                                <li>Difumino (opcional)</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <h6>Referencia:</h6>
+                            <div class="reference-image" style="height: 150px;">
+                                <span class="text-xs">ref23_iluminacion_lateral.jpg</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <h6>Proceso (90 min):</h6>
+                        <div class="checklist">
+                            <div class="checklist-item" onclick="toggleChecklistItem(this)">
+                                <i class="bi bi-circle text-muted"></i>
+                                <span>0-30 min: Capas 1 y 2</span>
+                            </div>
+                            <div class="checklist-item" onclick="toggleChecklistItem(this)">
+                                <i class="bi bi-circle text-muted"></i>
+                                <span>30-40 min: Zonas luz/sombra</span>
+                            </div>
+                            <div class="checklist-item" onclick="toggleChecklistItem(this)">
+                                <i class="bi bi-circle text-muted"></i>
+                                <span>40-90 min: Aplicar valores</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="evaluation-container">
+                    <h4 class="mb-4"><i class="bi bi-clipboard-check me-2"></i>Evaluación 3.2</h4>
+                    
+                    <div class="eval-progress">
+                        <small class="text-muted">Respondidas: <strong><span id="answeredCount">0</span>/3</strong></small>
+                    </div>
+                    
+                    <div class="eval-question" data-question="q1">
+                        <h6>Pregunta 1:</h6>
+                        <p>¿Cuántos valores tonales básicos?</p>
+                        <div class="eval-options">
+                            <div class="eval-option" onclick="selectEvalOption(this, 1, 2)">
+                                <div class="eval-radio"></div>
+                                <span>A) 3 valores</span>
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 2, 2)">
+                                <div class="eval-radio"></div>
+                                <span>B) 5 valores</span>
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 3, 2)">
+                                <div class="eval-radio"></div>
+                                <span>C) 7 valores</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="eval-question" data-question="q2">
+                        <h6>Pregunta 2:</h6>
+                        <p>¿Zona más oscura?</p>
+                        <div class="eval-options">
+                            <div class="eval-option" onclick="selectEvalOption(this, 1, 2)">
+                                <div class="eval-radio"></div>
+                                <span>A) Sombra propia</span>
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 2, 2)">
+                                <div class="eval-radio"></div>
+                                <span>B) Tono medio</span>
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 3, 2)">
+                                <div class="eval-radio"></div>
+                                <span>C) Sombra proyectada</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="eval-question" data-question="q3">
+                        <h6>Pregunta 3:</h6>
+                        <p>¿Mayor contraste?</p>
+                        <div class="eval-options">
+                            <div class="eval-option" onclick="selectEvalOption(this, 1, 2)">
+                                <div class="eval-radio"></div>
+                                <span>A) Luz frontal</span>
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 2, 2)">
+                                <div class="eval-radio"></div>
+                                <span>B) Luz lateral</span>
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 3, 2)">
+                                <div class="eval-radio"></div>
+                                <span>C) Luz difusa</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="evalResult" class="mt-3"></div>
+
+                    <div class="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">
+                        <button class="btn btn-primary btn-nav" id="submitEvalBtn" onclick="submitEvaluation(2)">
+                            <i class="bi bi-check-circle me-2"></i>Enviar
+                        </button>
+                        <button class="btn btn-warning btn-nav" id="retryEvalBtn" style="display: none;" onclick="retryEvaluation(2)">
+                            <i class="bi bi-arrow-clockwise me-2"></i>Reintentar
+                        </button>
+                        <button class="btn btn-primary-custom btn-nav" id="nextLessonBtn" style="display: none;" onclick="goToNextLesson()">
+                            Siguiente <i class="bi bi-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            `,
+
+            lesson3: `
+                <div class="lesson-header">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start mb-3">
+                        <div class="flex-grow-1 mb-2 mb-md-0">
+                            <h2 class="lesson-title">Lección 3.3: Proyecto Final</h2>
+                            <p class="lesson-subtitle">Dibujo Completo - Integración Total</p>
+                        </div>
+                        <span class="badge bg-danger text-white lesson-duration">2-3 horas</span>
+                    </div>
+                    
+                    <div class="objectives-list">
+                        <h6 class="mb-2"><i class="bi bi-bullseye me-2"></i>Objetivos</h6>
+                        <ul class="mb-0">
+                            <li>Crear representación integrando todo el curso</li>
+                            <li>Demostrar dominio técnico 1/4 mercurio</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="final-message">
+                    <h3 class="mb-3"><i class="bi bi-trophy me-2"></i>¡Tu obra maestra!</h3>
+                    <p class="lead mb-4">Más de 20 dibujos completados</p>
+                    <div class="row text-start">
+                        <div class="col-md-4 mb-3">
+                            <h5><i class="bi bi-check-circle-fill me-2"></i>Módulo 1</h5>
+                            <p class="mb-0 text-sm">8 croquis gesto</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <h5><i class="bi bi-check-circle-fill me-2"></i>Módulo 2</h5>
+                            <p class="mb-0 text-sm">12 estudios anatómicos</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <h5><i class="bi bi-check-circle-fill me-2"></i>Módulo 3</h5>
+                            <p class="mb-0 text-sm">3 figuras integradas</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info alert-custom">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    <strong>Importante:</strong> Confía en el proceso por capas
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header" style="background: var(--primary-dark); color: white;">
+                        <h5 class="mb-0"><i class="bi bi-clipboard-data me-2"></i>Requisitos</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="text-primary">Especificaciones:</h6>
+                                <ul class="text-sm">
+                                    <li>1/4 mercurio (27.5 x 37.5 cm)</li>
+                                    <li>Lápiz grafito</li>
+                                    <li>2-3 horas</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="text-primary">Debe demostrar:</h6>
+                                <ul class="text-sm">
+                                    <li>Línea de acción clara</li>
+                                    <li>Proporciones correctas</li>
+                                    <li>Estructura anatómica</li>
+                                    <li>Grupos musculares</li>
+                                    <li>Manos y pies estructurados</li>
+                                    <li>Valores tonales (mín 3)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header" style="background: var(--primary-light); color: white;">
+                        <h5 class="mb-0"><i class="bi bi-images me-2"></i>Selección Referencia</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-3">Elige <strong>UNA</strong> referencia:</p>
+                        
+                        <div class="reference-grid">
+                            <div class="reference-card ${selectedReference === 24 ? 'selected' : ''}" data-ref="24" onclick="selectReference(24)">
+                                ${selectedReference === 24 ? '<div class="selection-badge"><span class="badge bg-success"><i class="bi bi-check-lg"></i> Seleccionada</span></div>' : ''}
+                                <div class="reference-image" style="height: 250px;">
+                                    <span>ref24_pose_heroica.jpg</span>
+                                </div>
+                                <h6 class="mt-3 mb-1">Referencia 24</h6>
+                                <p class="text-sm text-muted mb-0">Pose dinámica</p>
+                            </div>
+
+                            <div class="reference-card ${selectedReference === 25 ? 'selected' : ''}" data-ref="25" onclick="selectReference(25)">
+                                ${selectedReference === 25 ? '<div class="selection-badge"><span class="badge bg-success"><i class="bi bi-check-lg"></i> Seleccionada</span></div>' : ''}
+                                <div class="reference-image" style="height: 250px;">
+                                    <span>ref25_pose_cotidiana.jpg</span>
+                                </div>
+                                <h6 class="mt-3 mb-1">Referencia 25</h6>
+                                <p class="text-sm text-muted mb-0">Pose relajada</p>
+                            </div>
+
+                            <div class="reference-card ${selectedReference === 26 ? 'selected' : ''}" data-ref="26" onclick="selectReference(26)">
+                                ${selectedReference === 26 ? '<div class="selection-badge"><span class="badge bg-success"><i class="bi bi-check-lg"></i> Seleccionada</span></div>' : ''}
+                                <div class="reference-image" style="height: 250px;">
+                                    <span>ref26_pose_artistica.jpg</span>
+                                </div>
+                                <h6 class="mt-3 mb-1">Referencia 26</h6>
+                                <p class="text-sm text-muted mb-0">Contrapposto marcado</p>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-3">
+                            <button class="btn btn-outline-primary" onclick="showReferences()">
+                                <i class="bi bi-eye me-2"></i>Ver en Grande
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header" style="background: var(--success); color: white;">
+                        <h5 class="mb-0"><i class="bi bi-star me-2"></i>Rúbrica</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table rubric-table mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Criterio</th>
+                                        <th style="width: 100px;">Puntos</th>
+                                        <th>Descripción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Gesto y Línea</strong></td>
+                                        <td><span class="badge bg-primary">20 pts</span></td>
+                                        <td class="text-sm">Línea visible (10) + Energía (10)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Proporciones</strong></td>
+                                        <td><span class="badge bg-primary">20 pts</span></td>
+                                        <td class="text-sm">90%+: 20pts | 70-89%: 15pts</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Anatomía</strong></td>
+                                        <td><span class="badge bg-primary">20 pts</span></td>
+                                        <td class="text-sm">3 masas (8) + Articulaciones (6) + Músculos (6)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Extremidades</strong></td>
+                                        <td><span class="badge bg-primary">15 pts</span></td>
+                                        <td class="text-sm">Manos (8) + Pies (7)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Valores</strong></td>
+                                        <td><span class="badge bg-primary">15 pts</span></td>
+                                        <td class="text-sm">3+ valores (10) + Luz consistente (5)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Composición</strong></td>
+                                        <td><span class="badge bg-primary">10 pts</span></td>
+                                        <td class="text-sm">Balance (5) + Limpieza (5)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="alert alert-success mt-3 mb-0">
+                            <h6 class="mb-2"><strong>Aprobación:</strong></h6>
+                            <ul class="mb-0 text-sm">
+                                <li>90-100: Excelente</li>
+                                <li>75-89: Bueno</li>
+                                <li>60-74: Suficiente (mínimo)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="final-message">
+                    <h4 class="mb-3">¡Momento de Crear!</h4>
+                    <p class="mb-4">Respira profundo y comienza</p>
+                    
+                    <div class="d-flex flex-column flex-md-row justify-content-center gap-3">
+                        <button class="btn btn-light btn-lg" onclick="showReferences()">
+                            <i class="bi bi-images me-2"></i>Ver Referencias
+                        </button>
+                        <button class="btn btn-success btn-lg" onclick="submitFinalProject()">
+                            <i class="bi bi-cloud-upload me-2"></i>Subir Proyecto
+                        </button>
+                    </div>
+                </div>
+
+                <div class="evaluation-container mt-5">
+                    <h4 class="mb-4"><i class="bi bi-clipboard-check me-2"></i>Evaluación Final</h4>
+                    
+                    <div class="eval-progress">
+                        <small class="text-muted">Respondidas: <strong><span id="answeredCount">0</span>/3</strong></small>
+                    </div>
+                    
+                    <div class="eval-question" data-question="q1">
+                        <h6>Pregunta 1:</h6>
+                        <p>¿Puntaje mínimo para aprobar?</p>
+                        <div class="eval-options">
+                            <div class="eval-option" onclick="selectEvalOption(this, 1, 3)">
+                                <div class="eval-radio"></div>
+                                <span>A) 50 puntos</span>
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 2, 3)">
+                                <div class="eval-radio"></div>
+                                <span>B) 60 puntos</span>
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 3, 3)">
+                                <div class="eval-radio"></div>
+                                <span>C) 70 puntos</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="eval-question" data-question="q2">
+                        <h6>Pregunta 2:</h6>
+                        <p>¿Criterio con mayor puntaje?</p>
+                        <div class="eval-options">
+                            <div class="eval-option" onclick="selectEvalOption(this, 1, 3)">
+                                <div class="eval-radio"></div>
+                                <span>A) Valores (15 pts)</span>
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 2, 3)">
+                                <div class="eval-radio"></div>
+                                <span>B) Extremidades (15 pts)</span>
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 3, 3)">
+                                <div class="eval-radio"></div>
+                                <span>C) Gesto y línea (20 pts)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="eval-question" data-question="q3">
+                        <h6>Pregunta 3:</h6>
+                        <p>¿Qué NO está permitido?</p>
+                        <div class="eval-options">
+                            <div class="eval-option" onclick="selectEvalOption(this, 1, 3)">
+                                <div class="eval-radio"></div>
+                                <span>A) Revisar módulos</span>
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 2, 3)">
+                                <div class="eval-radio"></div>
+                                <span>B) Usar filtros digitales o tracing</span>
+                            </div>
+                            <div class="eval-option" onclick="selectEvalOption(this, 3, 3)">
+                                <div class="eval-radio"></div>
+                                <span>C) Ver ejercicios anteriores</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="evalResult" class="mt-3"></div>
+
+                    <div class="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">
+                        <button class="btn btn-primary btn-nav" id="submitEvalBtn" onclick="submitEvaluation(3)">
+                            <i class="bi bi-check-circle me-2"></i>Enviar
+                        </button>
+                        <button class="btn btn-warning btn-nav" id="retryEvalBtn" style="display: none;" onclick="retryEvaluation(3)">
+                            <i class="bi bi-arrow-clockwise me-2"></i>Reintentar
+                        </button>
+                        <button class="btn btn-success btn-nav" id="nextLessonBtn" style="display: none;" onclick="window.location.href='index.html'">
+                            <i class="bi bi-house-door me-2"></i>Completar Módulo
+                        </button>
+                    </div>
+                </div>
+
+                <div class="alert alert-success alert-custom mt-4">
+                    <h5><i class="bi bi-trophy-fill me-2"></i>¡Felicitaciones!</h5>
+                    <p class="mb-0">Has llegado al final del curso. Una vez completes tu proyecto final, habrás demostrado tu dominio en representación del cuerpo humano.</p>
+                </div>
+            `
+        };
+
+        // ===== EVENT LISTENERS =====
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeModule);
+        } else {
+            initializeModule();
+        }
+
+        window.addEventListener('beforeunload', function() {
+            saveProgress();
+        });
+
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'hidden') {
+                saveProgress();
+            }
+        });
+
+        console.log('%c🎨 MÓDULO 3 CARGADO', 'color: #2c5f66; font-size: 16px; font-weight: bold;');
+        console.log('%cMódulo 3 v4.2 - Sistema completo', 'color: #e8a2b8;');
+    </script>
+</body>
+</html>
