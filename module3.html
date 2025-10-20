@@ -1876,59 +1876,85 @@
 
                 <div class="card mb-4">
                     <div class="card-header" style="background: var(--success); color: white;">
-                        <h5 class="mb-0"><i class="bi bi-star me-2"></i>Rúbrica</h5>
+                        <h5 class="mb-0"><i class="bi bi-star me-2"></i>Rúbrica de Evaluación</h5>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table rubric-table mb-0">
                                 <thead>
                                     <tr>
-                                        <th>Criterio</th>
-                                        <th style="width: 100px;">Puntos</th>
-                                        <th>Descripción</th>
+                                        <th style="width: 150px;">Criterio</th>
+                                        <th>Excelente (90-100%)</th>
+                                        <th>Bueno (75-89%)</th>
+                                        <th>Suficiente (60-74%)</th>
+                                        <th>Insuficiente (<60%)</th>
+                                        <th style="width: 100px;">Puntaje</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td><strong>Gesto y Línea</strong></td>
-                                        <td><span class="badge bg-primary">20 pts</span></td>
-                                        <td class="text-sm">Línea visible (10) + Energía (10)</td>
+                                        <td><strong>Gesto y Línea de Acción</strong><br><small class="text-muted">20 pts</small></td>
+                                        <td>Línea de acción claramente visible, energía del movimiento capturada magistralmente, punto de apoyo identificable</td>
+                                        <td>Línea de acción visible, buena captura de energía, punto de apoyo claro</td>
+                                        <td>Línea de acción presente pero débil, captura parcial de energía</td>
+                                        <td>Línea de acción ausente o imperceptible, sin energía</td>
+                                        <td class="text-center">20</td>
                                     </tr>
                                     <tr>
-                                        <td><strong>Proporciones</strong></td>
-                                        <td><span class="badge bg-primary">20 pts</span></td>
-                                        <td class="text-sm">90%+: 20pts | 70-89%: 15pts</td>
+                                        <td><strong>Proporciones</strong><br><small class="text-muted">20 pts</small></td>
+                                        <td>Proporciones 95-100% precisas, consistencia interna perfecta entre todas las partes</td>
+                                        <td>Proporciones 85-94% precisas, consistencia interna buena con errores menores</td>
+                                        <td>Proporciones 70-84% precisas, algunos errores evidentes pero figura reconocible</td>
+                                        <td>Proporciones <70% precisas, errores mayores que distorsionan figura</td>
+                                        <td class="text-center">20</td>
                                     </tr>
                                     <tr>
-                                        <td><strong>Anatomía</strong></td>
-                                        <td><span class="badge bg-primary">20 pts</span></td>
-                                        <td class="text-sm">3 masas (8) + Articulaciones (6) + Músculos (6)</td>
+                                        <td><strong>Anatomía Funcional</strong><br><small class="text-muted">20 pts</small></td>
+                                        <td>3 masas claramente diferenciadas, articulaciones correctas, 6 grupos musculares identificables</td>
+                                        <td>3 masas visibles, articulaciones mayormente correctas, 4-5 grupos musculares identificables</td>
+                                        <td>3 masas presentes pero poco claras, articulaciones básicas, 2-3 grupos musculares</td>
+                                        <td>Masas corporales confundidas, articulaciones incorrectas, anatomía ausente</td>
+                                        <td class="text-center">20</td>
                                     </tr>
                                     <tr>
-                                        <td><strong>Extremidades</strong></td>
-                                        <td><span class="badge bg-primary">15 pts</span></td>
-                                        <td class="text-sm">Manos (8) + Pies (7)</td>
+                                        <td><strong>Extremidades</strong><br><small class="text-muted">15 pts</small></td>
+                                        <td>Manos y pies estructurados con articulaciones claras, proporciones correctas, gestos naturales</td>
+                                        <td>Manos y pies con estructura reconocible, proporciones aceptables, alguna rigidez</td>
+                                        <td>Manos y pies intentados pero con errores evidentes de estructura</td>
+                                        <td>Manos y pies omitidos, extremadamente simplificados o incorrectos</td>
+                                        <td class="text-center">15</td>
                                     </tr>
                                     <tr>
-                                        <td><strong>Valores</strong></td>
-                                        <td><span class="badge bg-primary">15 pts</span></td>
-                                        <td class="text-sm">3+ valores (10) + Luz consistente (5)</td>
+                                        <td><strong>Valores Tonales</strong><br><small class="text-muted">15 pts</small></td>
+                                        <td>5 valores claramente diferenciados, fuente de luz consistente, sombra proyectada coherente</td>
+                                        <td>4 valores diferenciados, fuente de luz clara, sombra proyectada presente</td>
+                                        <td>3 valores diferenciados, fuente de luz identificable, sombra básica</td>
+                                        <td>Menos de 3 valores, iluminación confusa o ausente</td>
+                                        <td class="text-center">15</td>
                                     </tr>
                                     <tr>
-                                        <td><strong>Composición</strong></td>
-                                        <td><span class="badge bg-primary">10 pts</span></td>
-                                        <td class="text-sm">Balance (5) + Limpieza (5)</td>
+                                        <td><strong>Composición y Limpieza</strong><br><small class="text-muted">10 pts</small></td>
+                                        <td>Figura bien ubicada en formato, balance visual excelente, líneas limpias y decisivas</td>
+                                        <td>Figura bien ubicada, buen balance, líneas mayormente limpias</td>
+                                        <td>Figura ubicada aceptablemente, balance básico, algunas líneas sucias</td>
+                                        <td>Figura mal ubicada, sin balance, líneas muy sucias o borradas excesivamente</td>
+                                        <td class="text-center">10</td>
+                                    </tr>
+                                    <tr class="table-primary">
+                                        <td colspan="5" class="text-end"><strong>TOTAL:</strong></td>
+                                        <td class="text-center"><strong>100</strong></td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
 
-                        <div class="alert alert-success mt-3 mb-0">
-                            <h6 class="mb-2"><strong>Aprobación:</strong></h6>
+                        <div class="alert alert-info mt-3 mb-0">
+                            <h6 class="mb-2"><strong>Escala de Aprobación:</strong></h6>
                             <ul class="mb-0 text-sm">
-                                <li>90-100: Excelente</li>
-                                <li>75-89: Bueno</li>
-                                <li>60-74: Suficiente (mínimo)</li>
+                                <li><strong>90-100 pts:</strong> Excelente</li>
+                                <li><strong>75-89 pts:</strong> Bueno</li>
+                                <li><strong>60-74 pts:</strong> Suficiente (mínimo aprobatorio)</li>
+                                <li><strong>Menos de 60:</strong> Insuficiente</li>
                             </ul>
                         </div>
                     </div>
