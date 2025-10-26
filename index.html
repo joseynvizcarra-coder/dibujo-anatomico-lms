@@ -1,0 +1,1795 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Curso de Dibujo y Representación del Cuerpo Humano - Universidad Alberto Hurtado">
+    <meta name="author" content="Joselyn Vizcarra">
+    <title>Curso de Dibujo Anatómico - LMS UAH</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        :root {
+            --primary-dark: #2c5f66;
+            --primary-light: #e8a2b8;
+            --dark: #1a1a1a;
+            --gray-light: #f5f5f5;
+            --gray-medium: #666;
+            --success: #4CAF50;
+            --danger: #f44336;
+            --warning: #FFC107;
+            --info: #2196F3;
+            --whatsapp-green: #25D366;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--gray-light);
+            min-height: 100vh;
+        }
+
+        .header-uah {
+            background: linear-gradient(135deg, var(--primary-dark), var(--dark));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+        }
+
+        .user-badge {
+            background: rgba(255,255,255,0.15);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: var(--primary-light);
+            color: var(--dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, rgba(44,95,102,0.95), rgba(26,26,26,0.95));
+            color: white;
+            padding: 4rem 0 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-light);
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 0;
+        }
+
+        .hero-icon {
+            font-size: 6rem;
+            opacity: 0.3;
+        }
+
+        .student-dashboard, .instructor-dashboard {
+            margin-bottom: 3rem;
+        }
+
+        .progress-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-light));
+        }
+
+        .progress-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-dark);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .stat-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--gray-light);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--gray-medium);
+        }
+
+        .stat-badge strong {
+            color: var(--primary-dark);
+            font-size: 1.1rem;
+        }
+
+        .custom-progress {
+            height: 40px;
+            background: var(--gray-light);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .custom-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-light));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: width 0.6s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .custom-progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .custom-progress-bar span {
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+            z-index: 1;
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-box {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+
+        .stat-box-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+            display: block;
+        }
+
+        .stat-box-label {
+            color: var(--gray-medium);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .next-task-card {
+            background: linear-gradient(135deg, var(--info), #1976D2);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+        }
+
+        .next-task-card h6 {
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .module-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .breakdown-card {
+            background: var(--gray-light);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-dark);
+        }
+
+        .breakdown-card h6 {
+            margin-bottom: 1rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .breakdown-progress {
+            height: 12px;
+            background: white;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 0.75rem;
+        }
+
+        .breakdown-progress-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.6s ease;
+        }
+
+        .breakdown-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .info-card h5 {
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .info-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-list li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--gray-medium);
+        }
+
+        .info-list i {
+            color: var(--primary-light);
+            font-size: 1.1rem;
+        }
+
+        .module-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .module-card:hover:not(.module-locked) {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        .module-card.module-locked {
+            opacity: 0.7;
+        }
+
+        .module-card.module-locked::after {
+            content: '🔒';
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 28px;
+            opacity: 0.3;
+        }
+
+        .module-header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--dark));
+            color: white;
+            padding: 2rem 1.5rem 1.5rem;
+            position: relative;
+        }
+
+        .module-number {
+            position: absolute;
+            top: 1rem;
+            left: 1.5rem;
+            font-size: 3rem;
+            font-weight: bold;
+            opacity: 0.2;
+        }
+
+        .module-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .module-subtitle {
+            font-size: 0.95rem;
+            opacity: 0.85;
+            margin-bottom: 0;
+        }
+
+        .module-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .module-description {
+            color: var(--gray-medium);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+
+        .module-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .module-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--gray-medium);
+            font-size: 0.85rem;
+        }
+
+        .module-meta i {
+            color: var(--primary-light);
+        }
+
+        .module-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-item i {
+            color: var(--primary-light);
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-item span {
+            color: var(--gray-medium);
+            font-size: 0.85rem;
+        }
+
+        .module-progress-bar {
+            height: 8px;
+            background: var(--gray-light);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .module-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), #81C784);
+            border-radius: 4px;
+            transition: width 0.6s ease;
+        }
+
+        .module-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn-module {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            color: white;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(44,95,102,0.3);
+            color: white;
+        }
+
+        .btn-secondary-custom {
+            background: var(--gray-light);
+            color: var(--dark);
+        }
+
+        .btn-secondary-custom:hover {
+            background: var(--gray-medium);
+            color: white;
+        }
+
+        .btn-module:disabled {
+            background: #ddd;
+            color: #999;
+            cursor: not-allowed;
+            opacity: 1;
+        }
+
+        footer {
+            background: linear-gradient(135deg, var(--dark), var(--primary-dark));
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            backdrop-filter: blur(5px);
+        }
+
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+
+        .spinner-border-custom {
+            width: 3rem;
+            height: 3rem;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: var(--primary-light);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== MENTOR VIRTUAL - ESTILO WHATSAPP ===== */
+        .mentor-float-button {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 65px;
+            height: 65px;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.8rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mentor-float-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(0,0,0,0.4);
+        }
+
+        .mentor-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 24px;
+            height: 24px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border: 2px solid white;
+        }
+
+        .mentor-chat-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 400px;
+            max-width: calc(100vw - 4rem);
+            height: 600px;
+            max-height: calc(100vh - 8rem);
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            display: none;
+            flex-direction: column;
+            z-index: 1001;
+            overflow: hidden;
+        }
+
+        .mentor-chat-container.show {
+            display: flex;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .mentor-chat-header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--dark));
+            color: white;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .mentor-chat-header-info {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .mentor-avatar {
+            width: 45px;
+            height: 45px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .mentor-status {
+            flex: 1;
+        }
+
+        .mentor-name {
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .mentor-online {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .mentor-close-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .mentor-close-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .mentor-chat-body {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .mentor-chat-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .mentor-chat-body::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .mentor-chat-body::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 3px;
+        }
+
+        .mentor-message {
+            display: flex;
+            gap: 0.5rem;
+            animation: messageIn 0.3s ease-out;
+        }
+
+        @keyframes messageIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .mentor-message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-bubble {
+            max-width: 75%;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            word-wrap: break-word;
+            line-height: 1.4;
+        }
+
+        .mentor-message.bot .message-bubble {
+            background: white;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .mentor-message.user .message-bubble {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            opacity: 0.6;
+            margin-top: 0.25rem;
+        }
+
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .quick-action-btn {
+            background: var(--gray-light);
+            border: 1px solid #ddd;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-action-btn:hover {
+            background: var(--primary-light);
+            color: white;
+            border-color: var(--primary-light);
+        }
+
+        .mentor-chat-input {
+            padding: 1rem;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .mentor-input-field {
+            flex: 1;
+            border: 1px solid #e5e7eb;
+            padding: 0.75rem;
+            border-radius: 24px;
+            outline: none;
+            font-size: 0.95rem;
+            resize: none;
+            max-height: 100px;
+        }
+
+        .mentor-input-field:focus {
+            border-color: var(--primary-light);
+        }
+
+        .mentor-send-btn {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            border: none;
+            color: white;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .mentor-send-btn:hover:not(:disabled) {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(44, 95, 102, 0.3);
+        }
+
+        .mentor-send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .typing-indicator {
+            display: none;
+            gap: 0.3rem;
+            padding: 0.75rem 1rem;
+            background: white;
+            border-radius: 18px;
+            border-bottom-left-radius: 4px;
+            width: fit-content;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .typing-indicator.show {
+            display: flex;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--gray-medium);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        @media (max-width: 768px) {
+            .mentor-chat-container {
+                width: calc(100vw - 2rem);
+                height: calc(100vh - 12rem);
+                bottom: 6rem;
+                right: 1rem;
+            }
+
+            .mentor-float-button {
+                bottom: 6rem;
+                right: 1.5rem;
+                width: 60px;
+                height: 60px;
+            }
+
+            .hero-title {
+                font-size: 1.8rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .module-number {
+                font-size: 2rem;
+            }
+
+            .module-actions {
+                flex-direction: column;
+            }
+
+            .btn-module {
+                width: 100%;
+            }
+
+            .dashboard-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .module-breakdown {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <script src="auth.js"></script>
+    <script src="mentor-knowledge.js"></script>
+
+    <header class="header-uah">
+        <div class="container-fluid">
+            <div class="row align-items-center g-3">
+                <div class="col-md-4">
+                    <h1 class="h5 mb-0 d-flex align-items-center gap-2">
+                        <i class="bi bi-palette"></i>
+                        <span style="color: var(--primary-light);">Arte & Anatomía UAH</span>
+                    </h1>
+                </div>
+                <div class="col-md-4 text-center d-none d-md-block">
+                    <span class="text-white-50 small">Pedagogía en Artes Visuales</span>
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex justify-content-end align-items-center gap-2">
+                        <div class="user-badge">
+                            <div class="user-avatar" id="userAvatar">U</div>
+                            <div class="d-none d-lg-block">
+                                <div class="fw-bold small" id="userName">Cargando...</div>
+                                <div class="small opacity-75" id="userRole" style="font-size: 0.75rem;">...</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-sm btn-outline-light d-none" id="dashboardBtn" onclick="goToDashboard()">
+                            <i class="bi bi-speedometer2"></i>
+                            <span class="d-none d-lg-inline ms-1">Dashboard</span>
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="logout()">
+                            <i class="bi bi-box-arrow-right"></i>
+                            <span class="d-none d-md-inline ms-1">Salir</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-content">
+                <div class="spinner-border-custom mb-3"></div>
+                <p class="mb-0">Cargando curso...</p>
+            </div>
+        </div>
+
+        <section class="hero-section">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-8 fade-in-up">
+                        <h1 class="hero-title">Dibujo y Representación del Cuerpo Humano</h1>
+                        <p class="hero-subtitle">Desarrolla competencias técnicas y expresivas en dibujo de figura humana mediante práctica sistemática progresiva</p>
+                    </div>
+                    <div class="col-lg-4 text-center d-none d-lg-block">
+                        <i class="bi bi-easel hero-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="container">
+            <div id="studentDashboard" class="student-dashboard">
+                <div class="progress-card fade-in-up" id="detailedProgressCard" style="display: none;">
+                    <h3 class="progress-header">
+                        <i class="bi bi-graph-up-arrow"></i>
+                        Tu Progreso Detallado
+                    </h3>
+                    
+                    <div class="dashboard-stats">
+                        <div class="stat-box">
+                            <span class="stat-box-value" id="studentModulesCompleted">0</span>
+                            <span class="stat-box-label">Módulos Completados</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-box-value" id="studentLessonsCompleted">0</span>
+                            <span class="stat-box-label">Lecciones Totales</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-box-value" id="studentEvaluationsPassed">0</span>
+                            <span class="stat-box-label">Evaluaciones Aprobadas</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-box-value" id="studentExercises">0</span>
+                            <span class="stat-box-label">Ejercicios Realizados</span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div style="position: relative; height: 160px; display: flex; align-items: center; justify-content: center;">
+                                <svg width="160" height="160" style="transform: rotate(-90deg);">
+                                    <circle cx="80" cy="80" r="60" fill="none" stroke="#e0e0e0" stroke-width="12"/>
+                                    <circle id="progressCircle" cx="80" cy="80" r="60" fill="none" 
+                                            stroke="url(#gradient)" stroke-width="12" 
+                                            stroke-dasharray="377" stroke-dashoffset="377"
+                                            stroke-linecap="round"
+                                            style="transition: stroke-dashoffset 0.6s ease;"/>
+                                    <defs>
+                                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#2c5f66;stop-opacity:1" />
+                                            <stop offset="100%" style="stop-color:#e8a2b8;stop-opacity:1" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <div style="position: absolute; text-align: center;">
+                                    <div id="progressPercentText" style="font-size: 2rem; font-weight: bold; color: var(--primary-dark);">0%</div>
+                                    <div style="font-size: 0.85rem; color: var(--gray-medium);">Progreso Total</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-box" style="height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                                <span class="stat-box-value" id="totalExercisesCount">0</span>
+                                <span class="stat-box-label">Ejercicios Realizados</span>
+                            </div>
+
+                            <div class="next-task-card">
+                                <h6>
+                                    <i class="bi bi-arrow-right-circle me-2"></i>
+                                    Próxima Tarea
+                                </h6>
+                                <p id="nextTaskText">Cargando...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <h5 class="mb-3" style="color: var(--primary-dark); font-weight: 600;">
+                            <i class="bi bi-list-check me-2"></i>
+                            Desglose por Módulo
+                        </h5>
+                        <div class="module-breakdown" id="moduleBreakdown"></div>
+                    </div>
+                </div>
+
+                <div class="progress-card fade-in-up" id="simpleProgressCard">
+                    <h3 class="progress-header">
+                        <i class="bi bi-graph-up"></i>
+                        Tu Progreso General
+                    </h3>
+                    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                        <span class="stat-badge">
+                            <strong id="completedModules">0</strong> de 3 módulos completados
+                        </span>
+                        <span class="stat-badge">
+                            <i class="bi bi-clock"></i> 12-14 horas totales
+                        </span>
+                        <span class="stat-badge">
+                            <i class="bi bi-calendar3"></i> 12 días de curso
+                        </span>
+                    </div>
+                    <div class="custom-progress">
+                        <div class="custom-progress-bar" id="progressBar" style="width: 0%">
+                            <span>0%</span>
+                        </div>
+                    </div>
+                    <div class="mt-2 text-end">
+                        <small class="text-muted" id="progressDetails">Comienza tu primera lección para ver tu progreso</small>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6 fade-in-up">
+                        <div class="info-card">
+                            <h5><i class="bi bi-trophy me-2"></i>Objetivos del Curso</h5>
+                            <ul class="info-list">
+                                <li><i class="bi bi-check-circle-fill"></i> Aplicar técnicas de observación directa</li>
+                                <li><i class="bi bi-check-circle-fill"></i> Analizar estructura anatómica básica</li>
+                                <li><i class="bi bi-check-circle-fill"></i> Crear representación completa de figura humana</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6 fade-in-up">
+                        <div class="info-card">
+                            <h5><i class="bi bi-clipboard-check me-2"></i>Entregables Totales</h5>
+                            <ul class="info-list">
+                                <li><i class="bi bi-pencil"></i> 23 dibujos progresivos</li>
+                                <li><i class="bi bi-list-check"></i> 10 evaluaciones formativas</li>
+                                <li><i class="bi bi-star-fill"></i> 1 proyecto final (1/4 mercurio)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <section class="mb-5">
+                    <h2 class="mb-4" style="color: var(--primary-dark); font-weight: 600;">
+                        <i class="bi bi-book"></i> Módulos del Curso
+                    </h2>
+                    
+                    <div class="row g-4" id="modulesGrid"></div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <p class="mb-1">&copy; 2025 Universidad Alberto Hurtado</p>
+                    <p class="mb-0 small text-white-50">Pedagogía en Artes Visuales</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="mb-1">Desarrollado por Joselyn Vizcarra</p>
+                    <p class="mb-0 small text-white-50">Diplomado en Diseño Instruccional - U. de Chile</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mentor Virtual -->
+    <button class="mentor-float-button" id="mentorFloatBtn" aria-label="Abrir Mentor Virtual">
+        <i class="bi bi-chat-dots-fill"></i>
+        <span class="mentor-badge">!</span>
+    </button>
+
+    <div class="mentor-chat-container" id="mentorChatContainer">
+        <div class="mentor-chat-header">
+            <div class="mentor-chat-header-info">
+                <div class="mentor-avatar">🎨</div>
+                <div class="mentor-status">
+                    <div class="mentor-name">Mentor Anatómico</div>
+                    <div class="mentor-online">
+                        <span class="status-dot"></span>
+                        En línea
+                    </div>
+                </div>
+            </div>
+            <button class="mentor-close-btn" id="mentorCloseBtn" aria-label="Cerrar chat">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div class="mentor-chat-body" id="mentorChatBody">
+            <div class="mentor-message bot">
+                <div class="message-bubble">
+                    <div>¡Hola! 👋 Soy tu Mentor Anatómico 2.0.</div>
+                    <div class="mt-2"><strong>¿En qué puedo ayudarte hoy?</strong></div>
+                    <div class="mt-3 small">
+                        💙 <strong>Emocional:</strong> Frustración, bloqueo<br>
+                        🎨 <strong>Técnico:</strong> Línea, anatomía, proporciones<br>
+                        📚 <strong>Sistema:</strong> Cómo usar el LMS
+                    </div>
+                    <div class="quick-actions">
+                        <button class="quick-action-btn" onclick="sendQuickMessage('Tengo una duda técnica')">Duda técnica</button>
+                        <button class="quick-action-btn" onclick="sendQuickMessage('Me siento frustrado')">Apoyo emocional</button>
+                        <button class="quick-action-btn" onclick="sendQuickMessage('¿Cómo funciona el curso?')">Info del curso</button>
+                    </div>
+                    <div class="message-time">Ahora</div>
+                </div>
+            </div>
+            <div class="typing-indicator" id="typingIndicator">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+        </div>
+
+        <div class="mentor-chat-input">
+            <textarea class="mentor-input-field" id="mentorInput" placeholder="Escribe tu mensaje..." rows="1"></textarea>
+            <button class="mentor-send-btn" id="mentorSendBtn" aria-label="Enviar mensaje">
+                <i class="bi bi-send-fill"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // ===== DATOS DE MÓDULOS CON SISTEMA DE DESBLOQUEO =====
+        const modulesData = [
+            {
+                id: 1,
+                number: "01",
+                title: "Observación y Gesto",
+                subtitle: "Línea de acción y estructura",
+                description: "Aprende a capturar el gesto y movimiento. Domina la línea de acción y comprende la estructura básica del cuerpo humano. Aprende a medir proporciones visualmente y comprender el balance corporal.",
+                duration: "3 días",
+                lessons: 3,
+                exercises: "8 croquis",
+                evaluations: "3 evaluaciones",
+                hours: "2.5 horas",
+                difficulty: "Básico",
+                url: "module1.html",
+                available: true,
+                requiredModule: null,
+                requiredLessons: 0
+            },
+            {
+                id: 2,
+                number: "02",
+                title: "Anatomía Funcional",
+                subtitle: "Estructura ósea y muscular",
+                description: "Identifica las 3 masas principales del cuerpo y 6 grupos musculares esenciales. Analiza la estructura de manos, pies y proporciones faciales.",
+                duration: "4 días",
+                lessons: 4,
+                exercises: "12 estudios",
+                evaluations: "4 evaluaciones",
+                hours: "3.3 horas",
+                difficulty: "Intermedio",
+                url: "module2.html",
+                available: false,
+                requiredModule: 1,
+                requiredLessons: 3
+            },
+            {
+                id: 3,
+                number: "03",
+                title: "Figura Completa",
+                subtitle: "Integración y proyecto final",
+                description: "Integra gesto + anatomía en figuras completas. Aplica luz, sombra y volumen. Crea tu proyecto final en formato 1/4 mercurio.",
+                duration: "5 días",
+                lessons: 3,
+                exercises: "3 figuras + proyecto",
+                evaluations: "3 evaluaciones",
+                hours: "5-6 horas",
+                difficulty: "Avanzado",
+                url: "module3.html",
+                available: false,
+                requiredModule: 2,
+                requiredLessons: 4
+            }
+        ];
+
+        // ===== FUNCIONES DE AUTENTICACIÓN =====
+        function isAuthenticated() {
+            return localStorage.getItem('isAuthenticated') === 'true';
+        }
+
+        function getCurrentUser() {
+            if (!isAuthenticated()) return null;
+            try {
+                return JSON.parse(localStorage.getItem('currentUser') || 'null');
+            } catch (error) {
+                console.error('Error parsing user data:', error);
+                return null;
+            }
+        }
+
+        function logout() {
+            saveProgress();
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('sessionStart');
+            window.location.href = 'login.html';
+        }
+
+        function checkAuthentication() {
+            if (!isAuthenticated()) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const user = getCurrentUser();
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            updateUserInfo(user);
+
+            if (user.role === 'instructor') {
+                document.getElementById('dashboardBtn').classList.remove('d-none');
+            }
+        }
+
+        function updateUserInfo(user) {
+            const userName = document.getElementById('userName');
+            const userRole = document.getElementById('userRole');
+            const userAvatar = document.getElementById('userAvatar');
+
+            if (userName) userName.textContent = user.fullName || user.username;
+            if (userRole) userRole.textContent = user.role === 'instructor' ? 'Instructor' : 'Estudiante';
+            if (userAvatar) {
+                const initials = (user.fullName || user.username).split(' ').map(n => n[0]).join('').toUpperCase();
+                userAvatar.textContent = initials.substring(0, 2);
+            }
+        }
+
+        function goToDashboard() {
+            window.location.href = 'dashboard.html';
+        }
+
+        // ===== FUNCIONES DE PROGRESO =====
+        function getStudentProgress() {
+            const user = getCurrentUser();
+            if (!user) return null;
+
+            const progressKey = `progress_${user.username}`;
+            const progressData = localStorage.getItem(progressKey);
+
+            if (!progressData) return null;
+
+            try {
+                return JSON.parse(progressData);
+            } catch (error) {
+                console.error('Error parsing progress:', error);
+                return null;
+            }
+        }
+
+        function saveProgress() {
+            // Implementada en cada módulo
+            console.log('Progress auto-save triggered');
+        }
+
+        // ===== FUNCIÓN DE VERIFICACIÓN DE DESBLOQUEO =====
+        function isModuleUnlocked(moduleId) {
+            // Módulo 1 siempre está desbloqueado
+            if (moduleId === 1) return true;
+            
+            const progress = getStudentProgress();
+            if (!progress || !progress.modules) return false;
+            
+            const module = modulesData.find(m => m.id === moduleId);
+            if (!module || !module.requiredModule) return true;
+            
+            // Verificar progreso del módulo anterior
+            const requiredModuleData = progress.modules[module.requiredModule];
+            if (!requiredModuleData) return false;
+            
+            // Verificar lecciones completadas
+            const completedLessons = requiredModuleData.completedLessons || [];
+            const requiredCount = module.requiredLessons || 0;
+            
+            console.log(`🔓 Verificando M${moduleId}: ${completedLessons.length}/${requiredCount} lecciones de M${module.requiredModule}`);
+            
+            return completedLessons.length >= requiredCount;
+        }
+
+        // ===== CÁLCULOS DE PROGRESO =====
+        function calculateOverallProgress() {
+            const progress = getStudentProgress();
+            if (!progress || !progress.modules) return 0;
+
+            const totalLessons = modulesData.reduce((sum, m) => sum + m.lessons, 0);
+            let completedLessons = 0;
+
+            modulesData.forEach(module => {
+                const moduleProgress = progress.modules[module.id];
+                if (moduleProgress && moduleProgress.completedLessons) {
+                    completedLessons += moduleProgress.completedLessons.length;
+                }
+            });
+
+            return totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+        }
+
+        function countCompletedModules() {
+            const progress = getStudentProgress();
+            if (!progress || !progress.modules) return 0;
+
+            return modulesData.filter(module => {
+                const moduleProgress = progress.modules[module.id];
+                return moduleProgress && moduleProgress.completed;
+            }).length;
+        }
+
+        function updateStudentDashboard() {
+            const progress = getStudentProgress();
+            if (!progress) return;
+
+            const totalLessons = modulesData.reduce((sum, m) => sum + m.lessons, 0);
+            let completedLessons = 0;
+            let completedModulesCount = 0;
+            let passedEvaluations = 0;
+
+            modulesData.forEach(module => {
+                const moduleData = progress.modules[module.id];
+                if (moduleData) {
+                    if (moduleData.completedLessons) {
+                        completedLessons += moduleData.completedLessons.length;
+                    }
+                    if (moduleData.completed) {
+                        completedModulesCount++;
+                    }
+                }
+            });
+
+            if (progress.evaluations) {
+                Object.values(progress.evaluations).forEach(moduleEvals => {
+                    if (moduleEvals && typeof moduleEvals === 'object') {
+                        Object.values(moduleEvals).forEach(lessonEval => {
+                            if (lessonEval && typeof lessonEval === 'object') {
+                                Object.values(lessonEval).forEach(attemptData => {
+                                    if (attemptData && attemptData.score && attemptData.score >= 2) {
+                                        passedEvaluations++;
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+
+            const moduleLessons = {1: 3, 2: 4, 3: 3};
+            const moduleDetails = modulesData.map(module => {
+                const moduleNum = module.id;
+                const moduleData = progress.modules[moduleNum];
+                
+                if (moduleData && moduleData.completedLessons) {
+                    const completed = moduleData.completedLessons;
+                    const total = moduleLessons[moduleNum];
+                    const percentage = total > 0 ? Math.round((completed.length / total) * 100) : 0;
+                    
+                    return {
+                        num: moduleNum,
+                        name: module.title,
+                        completed: completed.length,
+                        total: total,
+                        percentage: percentage,
+                        status: completed.length === total ? 'completed' : completed.length > 0 ? 'in-progress' : 'not-started'
+                    };
+                }
+
+                return {
+                    num: moduleNum,
+                    name: module.title,
+                    completed: 0,
+                    total: moduleLessons[moduleNum],
+                    percentage: 0,
+                    status: 'not-started'
+                };
+            });
+
+            const overallProgress = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+
+            document.getElementById('studentModulesCompleted').textContent = completedModulesCount;
+            document.getElementById('studentLessonsCompleted').textContent = completedLessons;
+            document.getElementById('studentEvaluationsPassed').textContent = passedEvaluations;
+            document.getElementById('studentExercises').textContent = completedLessons * 3;
+            document.getElementById('totalExercisesCount').textContent = completedLessons * 3;
+
+            const circumference = 377;
+            const offset = circumference - (circumference * overallProgress / 100);
+            const progressCircle = document.getElementById('progressCircle');
+            if (progressCircle) {
+                progressCircle.style.strokeDashoffset = offset;
+            }
+            document.getElementById('progressPercentText').textContent = overallProgress + '%';
+
+            let nextTask = 'Comenzar Módulo 1 - Lección 1.1';
+            if (completedLessons === 0) {
+                nextTask = 'Comenzar Módulo 1 - Lección 1.1: Fundamentos del Croquis';
+            } else if (completedModulesCount === 3) {
+                nextTask = '¡Has completado todo el curso! 🎉 Puedes repasar cualquier módulo.';
+            } else {
+                const currentModule = moduleDetails.find(m => m.status === 'in-progress');
+                if (currentModule) {
+                    nextTask = `Continuar ${currentModule.name} - Lección ${currentModule.completed + 1}`;
+                } else {
+                    const nextModule = moduleDetails.find(m => m.status === 'not-started');
+                    if (nextModule) {
+                        nextTask = `Comenzar ${nextModule.name} - Lección 1`;
+                    }
+                }
+            }
+            document.getElementById('nextTaskText').textContent = nextTask;
+
+            const breakdown = document.getElementById('moduleBreakdown');
+            if (breakdown) {
+                breakdown.innerHTML = moduleDetails.map(m => {
+                    const statusConfig = {
+                        'completed': { color: 'success', icon: 'check-circle-fill', label: 'Completado' },
+                        'in-progress': { color: 'warning', icon: 'clock-fill', label: 'En progreso' },
+                        'not-started': { color: 'secondary', icon: 'circle', label: 'No iniciado' }
+                    };
+                    const config = statusConfig[m.status];
+
+                    return `
+                        <div class="breakdown-card">
+                            <h6>
+                                <i class="bi bi-${config.icon} me-2" style="color: var(--${config.color});"></i>
+                                Módulo ${m.num}: ${m.name}
+                            </h6>
+                            <div class="breakdown-progress">
+                                <div class="breakdown-progress-fill" 
+                                     style="width: ${m.percentage}%; background: var(--${config.color});"></div>
+                            </div>
+                            <div class="breakdown-stats">
+                                <span>${m.completed}/${m.total} lecciones</span>
+                                <span class="badge bg-${config.color}">${config.label}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        function updateProgress() {
+            const overallProgress = calculateOverallProgress();
+            const completedModules = countCompletedModules();
+            
+            document.getElementById('completedModules').textContent = completedModules;
+            
+            const progressBar = document.getElementById('progressBar');
+            if (progressBar) {
+                progressBar.style.width = `${overallProgress}%`;
+                const span = progressBar.querySelector('span');
+                if (span) span.textContent = `${overallProgress}%`;
+            }
+
+            const progressDetails = document.getElementById('progressDetails');
+            if (progressDetails) {
+                if (overallProgress === 0) {
+                    progressDetails.textContent = 'Comienza tu primera lección para ver tu progreso';
+                } else if (overallProgress === 100) {
+                    progressDetails.textContent = '¡Felicitaciones! Has completado todos los módulos';
+                } else {
+                    progressDetails.textContent = `Has avanzado ${overallProgress}% del curso total`;
+                }
+            }
+        }
+
+        // ===== RENDERIZADO DE MÓDULOS CON SISTEMA DE DESBLOQUEO =====
+        function loadModules() {
+            const grid = document.getElementById('modulesGrid');
+            const progress = getStudentProgress();
+            
+            grid.innerHTML = '';
+            
+            modulesData.forEach(module => {
+                const moduleProgress = (progress && progress.modules) ? 
+                    (progress.modules[module.id] || {}) : {};
+                
+                const card = createModuleCard(module, moduleProgress);
+                grid.appendChild(card);
+            });
+        }
+
+        function createModuleCard(module, moduleProgress) {
+            const col = document.createElement('div');
+            col.className = 'col-lg-4 col-md-6 fade-in-up';
+
+            const progressValue = moduleProgress.progress || 0;
+            const isCompleted = moduleProgress.completed || false;
+            
+            // ✅ Verificar si está desbloqueado
+            const isUnlocked = isModuleUnlocked(module.id);
+
+            let actionButton = '';
+            let lockIndicator = '';
+            
+            if (!isUnlocked) {
+                // Módulo bloqueado
+                const requiredModule = modulesData.find(m => m.id === module.requiredModule);
+                lockIndicator = '<i class="bi bi-lock-fill" style="position: absolute; top: 15px; right: 15px; font-size: 24px; color: rgba(0,0,0,0.2); z-index: 10;"></i>';
+                actionButton = `
+                    <button class="btn-module" style="background: #ddd; color: #999; cursor: not-allowed;" disabled>
+                        <i class="bi bi-lock-fill me-2"></i>Bloqueado
+                    </button>
+                    <small class="text-muted mt-2 d-block" style="font-size: 0.85rem;">
+                        Completa "${requiredModule ? requiredModule.title : 'módulo anterior'}" primero
+                    </small>
+                `;
+            } else if (isCompleted) {
+                actionButton = `<a href="${module.url}" class="btn-module btn-secondary-custom"><i class="bi bi-check-circle-fill me-2"></i>Repasar</a>`;
+            } else if (progressValue > 0) {
+                actionButton = `<a href="${module.url}" class="btn-module btn-primary-custom"><i class="bi bi-play-circle me-2"></i>Continuar</a>`;
+            } else {
+                actionButton = `<a href="${module.url}" class="btn-module btn-primary-custom"><i class="bi bi-play-circle me-2"></i>Comenzar</a>`;
+            }
+
+            col.innerHTML = `
+                <div class="module-card ${!isUnlocked ? 'module-locked' : ''}" style="${!isUnlocked ? 'opacity: 0.7;' : ''} position: relative;">
+                    ${lockIndicator}
+                    <div class="module-header">
+                        <span class="module-number">${module.number}</span>
+                        <h3 class="module-title" style="${!isUnlocked ? 'color: rgba(255,255,255,0.7);' : ''}">${module.title}</h3>
+                        <p class="module-subtitle" style="${!isUnlocked ? 'color: rgba(255,255,255,0.6);' : ''}">${module.subtitle}</p>
+                    </div>
+                    <div class="module-body">
+                        <p class="module-description" style="${!isUnlocked ? 'color: #999;' : ''}">${module.description}</p>
+                        <div class="module-meta">
+                            <span><i class="bi bi-clock"></i> ${module.duration}</span>
+                            <span><i class="bi bi-book"></i> ${module.lessons} lecciones</span>
+                            <span><i class="bi bi-star"></i> ${module.difficulty}</span>
+                        </div>
+                        <div class="module-stats">
+                            <div class="stat-item">
+                                <i class="bi bi-pencil"></i>
+                                <span>${module.exercises}</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="bi bi-clock"></i>
+                                <span>${module.hours}</span>
+                            </div>
+                        </div>
+                        <div class="module-progress-bar">
+                            <div class="module-progress-fill" style="width: ${progressValue}%"></div>
+                        </div>
+                        <div class="mt-3">
+                            ${actionButton}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            return col;
+        }
+
+        // ===== MENTOR VIRTUAL =====
+        document.addEventListener('DOMContentLoaded', function() {
+            const mentorFloatBtn = document.getElementById('mentorFloatBtn');
+            const mentorChatContainer = document.getElementById('mentorChatContainer');
+            const mentorCloseBtn = document.getElementById('mentorCloseBtn');
+            const mentorSendBtn = document.getElementById('mentorSendBtn');
+            const mentorInput = document.getElementById('mentorInput');
+            const mentorChatBody = document.getElementById('mentorChatBody');
+            const typingIndicator = document.getElementById('typingIndicator');
+
+            mentorFloatBtn.addEventListener('click', function() {
+                mentorChatContainer.classList.add('show');
+                mentorFloatBtn.style.display = 'none';
+                mentorInput.focus();
+            });
+
+            mentorCloseBtn.addEventListener('click', function() {
+                mentorChatContainer.classList.remove('show');
+                mentorFloatBtn.style.display = 'flex';
+            });
+
+            mentorSendBtn.addEventListener('click', sendMessage);
+
+            mentorInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            mentorInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+            });
+
+            function sendMessage() {
+                const message = mentorInput.value.trim();
+                if (!message) return;
+
+                addUserMessage(message);
+                mentorInput.value = '';
+                mentorInput.style.height = 'auto';
+
+                showTypingIndicator();
+
+                setTimeout(() => {
+                    hideTypingIndicator();
+                    const response = getMentorResponse(message);
+                    addBotMessage(response);
+                }, 1500);
+            }
+
+            window.sendQuickMessage = function(message) {
+                addUserMessage(message);
+                showTypingIndicator();
+
+                setTimeout(() => {
+                    hideTypingIndicator();
+                    const response = getMentorResponse(message);
+                    addBotMessage(response);
+                }, 1500);
+            };
+
+            function addUserMessage(text) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'mentor-message user';
+                messageDiv.innerHTML = `
+                    <div class="message-bubble">
+                        <div>${text}</div>
+                        <div class="message-time">${getCurrentTime()}</div>
+                    </div>
+                `;
+                
+                const typingIndicator = document.getElementById('typingIndicator');
+                mentorChatBody.insertBefore(messageDiv, typingIndicator);
+                scrollToBottom();
+            }
+
+            function addBotMessage(response) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'mentor-message bot';
+                
+                let actionsHTML = '';
+                if (response.actions && response.actions.length > 0) {
+                    actionsHTML = '<div class="quick-actions">';
+                    response.actions.forEach(action => {
+                        actionsHTML += `<button class="quick-action-btn" onclick="sendQuickMessage('${action}')">${action}</button>`;
+                    });
+                    actionsHTML += '</div>';
+                }
+                
+                messageDiv.innerHTML = `
+                    <div class="message-bubble">
+                        <div>${response.text.replace(/\n/g, '<br>')}</div>
+                        ${actionsHTML}
+                        <div class="message-time">${getCurrentTime()}</div>
+                    </div>
+                `;
+                
+                const typingIndicator = document.getElementById('typingIndicator');
+                mentorChatBody.insertBefore(messageDiv, typingIndicator);
+                scrollToBottom();
+            }
+
+            function showTypingIndicator() {
+                typingIndicator.classList.add('show');
+                scrollToBottom();
+            }
+
+            function hideTypingIndicator() {
+                typingIndicator.classList.remove('show');
+            }
+
+            function getCurrentTime() {
+                const now = new Date();
+                return now.toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
+            }
+
+            function scrollToBottom() {
+                setTimeout(() => {
+                    mentorChatBody.scrollTop = mentorChatBody.scrollHeight;
+                }, 100);
+            }
+
+            function getMentorResponse(message) {
+                if (typeof window.mentorKnowledge !== 'undefined' && window.mentorKnowledge.getResponse) {
+                    return window.mentorKnowledge.getResponse(message);
+                }
+
+                const lowerMessage = message.toLowerCase();
+
+                if (lowerMessage.includes('frustrad') || lowerMessage.includes('no puedo')) {
+                    return {
+                        text: "Hey, respira 💙. La frustración es señal de que estás aprendiendo algo nuevo.\n\nRespira profundo, toma un descanso de 5 minutos, y vuelve con curiosidad.",
+                        actions: ['¿Cómo mejoro?', 'Gracias']
+                    };
+                }
+
+                if (lowerMessage.includes('línea') || lowerMessage.includes('gesto')) {
+                    return {
+                        text: "La línea de acción es la columna vertebral del dibujo.\n\nPractica trazos continuos sin levantar el lápiz. Enfócate en capturar la energía antes que los detalles.",
+                        actions: ['Ver ejemplo', 'Entendido']
+                    };
+                }
+
+                return {
+                    text: "Entiendo tu pregunta. Te recomiendo revisar las lecciones del curso o escribirme de forma más específica para ayudarte mejor.",
+                    actions: ['Tengo otra duda', 'Gracias']
+                };
+            }
+        });
+
+        // ===== INICIALIZACIÓN =====
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthentication();
+            
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            if (loadingOverlay) {
+                loadingOverlay.style.display = 'flex';
+            }
+
+            setTimeout(() => {
+                loadModules();
+                updateProgress();
+                updateStudentDashboard();
+                
+                const user = getCurrentUser();
+                if (user && user.role !== 'instructor') {
+                    document.getElementById('detailedProgressCard').style.display = 'block';
+                }
+
+                if (loadingOverlay) {
+                    loadingOverlay.style.display = 'none';
+                }
+            }, 500);
+        });
+
+        console.log('✅ LMS index.html v4.3 - Sistema de desbloqueo progresivo implementado');
+        console.log('🔒 Módulos se desbloquean al completar lecciones del módulo anterior');
+    </script>
+</body>
+</html>
