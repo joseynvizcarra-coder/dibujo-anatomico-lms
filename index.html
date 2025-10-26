@@ -87,58 +87,187 @@
             opacity: 0.3;
         }
 
-        .student-dashboard, .instructor-dashboard {
+        .student-dashboard {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             margin-bottom: 3rem;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-header h3 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .progress-circle-container {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 12px;
+        }
+
+        .progress-circle {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto;
+        }
+
+        .progress-circle svg {
+            transform: rotate(-90deg);
+        }
+
+        .progress-circle-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .stat-box {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid var(--gray-light);
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .stat-box-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-box-label {
+            font-size: 0.85rem;
+            color: var(--gray-medium);
+        }
+
+        .next-task-card {
+            background: linear-gradient(135deg, rgba(44,95,102,0.1), rgba(232,162,184,0.1));
+            border-left: 4px solid var(--primary-dark);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+
+        .next-task-card h6 {
+            color: var(--primary-dark);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .next-task-card p {
+            margin: 0;
+            color: var(--dark);
+        }
+
+        .module-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .breakdown-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 2px solid var(--gray-light);
+            transition: all 0.3s ease;
+        }
+
+        .breakdown-card:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .breakdown-card h6 {
+            color: var(--primary-dark);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .breakdown-progress {
+            height: 8px;
+            background: var(--gray-light);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.75rem;
+        }
+
+        .breakdown-progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .breakdown-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--gray-medium);
         }
 
         .progress-card {
             background: white;
-            border-radius: 16px;
+            border-radius: 15px;
             padding: 2rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            margin-bottom: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .progress-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary-dark), var(--primary-light));
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 3rem;
         }
 
         .progress-header {
+            color: var(--primary-dark);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
-            color: var(--primary-dark);
-            font-size: 1.5rem;
-            font-weight: 600;
+            gap: 0.5rem;
         }
 
         .stat-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
             background: var(--gray-light);
+            padding: 0.5rem 1rem;
             border-radius: 20px;
             font-size: 0.9rem;
-            color: var(--gray-medium);
-        }
-
-        .stat-badge strong {
             color: var(--primary-dark);
-            font-size: 1.1rem;
+            font-weight: 500;
+            display: inline-block;
         }
 
         .custom-progress {
-            height: 40px;
+            height: 35px;
             background: var(--gray-light);
             border-radius: 20px;
             overflow: hidden;
@@ -148,132 +277,219 @@
         .custom-progress-bar {
             height: 100%;
             background: linear-gradient(90deg, var(--primary-dark), var(--primary-light));
-            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.95rem;
             transition: width 0.6s ease;
-            position: relative;
-            overflow: hidden;
+            border-radius: 20px;
         }
 
-        .custom-progress-bar::after {
-            content: '';
+        .module-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .module-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .module-header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--dark));
+            color: white;
+            padding: 2rem 1.5rem;
+            position: relative;
+        }
+
+        .module-number {
             position: absolute;
+            top: 0.75rem;
+            right: 1.5rem;
+            font-size: 3rem;
+            opacity: 0.2;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .module-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .module-subtitle {
+            font-size: 0.95rem;
+            opacity: 0.85;
+        }
+
+        .module-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .module-description {
+            color: var(--gray-medium);
+            margin-bottom: 1.25rem;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+
+        .module-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.85rem;
+            color: var(--gray-medium);
+        }
+
+        .module-progress-container {
+            margin-bottom: 1.25rem;
+        }
+
+        .module-progress-bar {
+            height: 8px;
+            background: var(--gray-light);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .module-progress-fill {
+            height: 100%;
+            background: var(--success);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-label {
+            font-size: 0.8rem;
+            color: var(--gray-medium);
+            text-align: right;
+        }
+
+        .module-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn-module {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+
+        .btn-module:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn-primary-custom {
+            background: var(--primary-dark);
+            color: white;
+        }
+
+        .btn-primary-custom:hover:not(:disabled) {
+            background: var(--primary-light);
+            color: var(--dark);
+        }
+
+        .btn-secondary-custom {
+            background: var(--gray-light);
+            color: var(--primary-dark);
+            border: 2px solid var(--primary-light);
+        }
+
+        .btn-secondary-custom:hover:not(:disabled) {
+            background: var(--primary-light);
+            color: white;
+            border-color: var(--primary-light);
+        }
+
+        .loading-overlay {
+            position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            animation: shimmer 2s infinite;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
         }
 
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+        .loading-overlay.show {
+            display: flex;
         }
 
-        .custom-progress-bar span {
-            color: white;
-            font-weight: bold;
-            font-size: 0.9rem;
-            z-index: 1;
-        }
-
-        .dashboard-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-box {
+        .loading-content {
             background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
+            padding: 2rem;
+            border-radius: 15px;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         }
 
-        .stat-box:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        .spinner-border-custom {
+            width: 3rem;
+            height: 3rem;
+            border: 4px solid var(--gray-light);
+            border-top-color: var(--primary-dark);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
 
-        .stat-box-value {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--primary-dark);
-            display: block;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
-        .stat-box-label {
-            color: var(--gray-medium);
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .next-task-card {
-            background: linear-gradient(135deg, var(--info), #1976D2);
-            color: white;
-            padding: 1.5rem;
-            border-radius: 12px;
-            margin-top: 1rem;
-        }
-
-        .next-task-card h6 {
-            margin-bottom: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .module-breakdown {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .breakdown-card {
-            background: var(--gray-light);
-            padding: 1.5rem;
-            border-radius: 12px;
-            border-left: 4px solid var(--primary-dark);
-        }
-
-        .breakdown-card h6 {
-            margin-bottom: 1rem;
-            color: var(--dark);
-            font-weight: 600;
-        }
-
-        .breakdown-progress {
-            height: 12px;
-            background: white;
-            border-radius: 6px;
-            overflow: hidden;
-            margin-bottom: 0.75rem;
-        }
-
-        .breakdown-progress-fill {
-            height: 100%;
-            border-radius: 6px;
-            transition: width 0.6s ease;
-        }
-
-        .breakdown-stats {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.9rem;
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
         }
 
         .info-card {
             background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
         }
 
         .info-card h5 {
@@ -291,313 +507,95 @@
             padding: 0.5rem 0;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            color: var(--gray-medium);
+            gap: 0.5rem;
         }
 
-        .info-list i {
+        .info-list li i {
             color: var(--primary-light);
             font-size: 1.1rem;
         }
 
-        .module-card {
-            background: white;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        .module-card:hover:not(.module-locked) {
-            transform: translateY(-8px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-        }
-
-        .module-card.module-locked {
-            opacity: 0.7;
-        }
-
-        .module-card.module-locked::after {
-            content: '🔒';
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 28px;
-            opacity: 0.3;
-        }
-
-        .module-header {
-            background: linear-gradient(135deg, var(--primary-dark), var(--dark));
-            color: white;
-            padding: 2rem 1.5rem 1.5rem;
-            position: relative;
-        }
-
-        .module-number {
-            position: absolute;
-            top: 1rem;
-            left: 1.5rem;
-            font-size: 3rem;
-            font-weight: bold;
-            opacity: 0.2;
-        }
-
-        .module-title {
-            font-size: 1.4rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .module-subtitle {
-            font-size: 0.95rem;
-            opacity: 0.85;
-            margin-bottom: 0;
-        }
-
-        .module-body {
-            padding: 1.5rem;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .module-description {
-            color: var(--gray-medium);
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-            flex-grow: 1;
-        }
-
-        .module-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--gray-light);
-        }
-
-        .module-meta span {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            color: var(--gray-medium);
-            font-size: 0.85rem;
-        }
-
-        .module-meta i {
-            color: var(--primary-light);
-        }
-
-        .module-stats {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 1.5rem;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-item i {
-            color: var(--primary-light);
-            font-size: 1.5rem;
-            display: block;
-            margin-bottom: 0.25rem;
-        }
-
-        .stat-item span {
-            color: var(--gray-medium);
-            font-size: 0.85rem;
-        }
-
-        .module-progress-bar {
-            height: 8px;
-            background: var(--gray-light);
-            border-radius: 4px;
-            overflow: hidden;
-            margin-bottom: 1.5rem;
-        }
-
-        .module-progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--success), #81C784);
-            border-radius: 4px;
-            transition: width 0.6s ease;
-        }
-
-        .module-actions {
-            display: flex;
-            gap: 0.75rem;
-        }
-
-        .btn-module {
-            flex: 1;
-            padding: 0.75rem 1rem;
-            border-radius: 8px;
-            text-decoration: none;
-            text-align: center;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .btn-primary-custom {
-            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
-            color: white;
-        }
-
-        .btn-primary-custom:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(44,95,102,0.3);
-            color: white;
-        }
-
-        .btn-secondary-custom {
-            background: var(--gray-light);
-            color: var(--dark);
-        }
-
-        .btn-secondary-custom:hover {
-            background: var(--gray-medium);
-            color: white;
-        }
-
-        .btn-module:disabled {
-            background: #ddd;
-            color: #999;
-            cursor: not-allowed;
-            opacity: 1;
-        }
-
         footer {
-            background: linear-gradient(135deg, var(--dark), var(--primary-dark));
+            background: var(--dark);
             color: white;
             padding: 2rem 0;
-            margin-top: 3rem;
+            margin-top: 4rem;
         }
 
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            backdrop-filter: blur(5px);
-        }
-
-        .loading-content {
-            text-align: center;
-            color: white;
-        }
-
-        .spinner-border-custom {
-            width: 3rem;
-            height: 3rem;
-            border: 4px solid rgba(255,255,255,0.3);
-            border-top-color: var(--primary-light);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .fade-in-up {
-            animation: fadeInUp 0.6s ease-out;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* ===== MENTOR VIRTUAL - ESTILO WHATSAPP ===== */
+        /* ============================================
+           ESTILOS DEL MENTOR VIRTUAL (ESTILO WHATSAPP)
+           ============================================ */
         .mentor-float-button {
             position: fixed;
-            bottom: 2rem;
+            bottom: 8rem;
             right: 2rem;
-            width: 65px;
-            height: 65px;
+            width: 64px;
+            height: 64px;
             background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
-            border: none;
             border-radius: 50%;
-            color: white;
-            font-size: 1.8rem;
-            cursor: pointer;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            z-index: 1000;
-            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(44, 95, 102, 0.5);
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
+            z-index: 9998;
+            transition: all 0.3s ease;
+            border: 3px solid white;
         }
 
         .mentor-float-button:hover {
             transform: scale(1.1);
-            box-shadow: 0 6px 30px rgba(0,0,0,0.4);
+            box-shadow: 0 8px 25px rgba(44, 95, 102, 0.7);
+        }
+
+        .mentor-float-button i {
+            color: white;
+            font-size: 2rem;
         }
 
         .mentor-badge {
             position: absolute;
-            top: -5px;
-            right: -5px;
-            width: 24px;
-            height: 24px;
+            top: -8px;
+            right: -8px;
             background: var(--danger);
             color: white;
             border-radius: 50%;
+            width: 26px;
+            height: 26px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 0.75rem;
             font-weight: bold;
             border: 2px solid white;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
         }
 
         .mentor-chat-container {
             position: fixed;
-            bottom: 2rem;
+            bottom: 8rem;
             right: 2rem;
             width: 400px;
-            max-width: calc(100vw - 4rem);
+            max-width: calc(100vw - 2rem);
             height: 600px;
-            max-height: calc(100vh - 8rem);
+            max-height: calc(100vh - 12rem);
             background: white;
-            border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
             display: none;
             flex-direction: column;
-            z-index: 1001;
             overflow: hidden;
+            z-index: 9999;
+            animation: slideUp 0.3s ease-out;
         }
 
         .mentor-chat-container.show {
             display: flex;
-            animation: slideUp 0.3s ease-out;
         }
 
         @keyframes slideUp {
@@ -612,110 +610,112 @@
         }
 
         .mentor-chat-header {
-            background: linear-gradient(135deg, var(--primary-dark), var(--dark));
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
             color: white;
-            padding: 1rem;
+            padding: 1.25rem;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            justify-content: space-between;
+            border-radius: 20px 20px 0 0;
         }
 
         .mentor-chat-header-info {
-            flex: 1;
             display: flex;
             align-items: center;
             gap: 0.75rem;
         }
 
         .mentor-avatar {
-            width: 45px;
-            height: 45px;
-            background: var(--primary-light);
+            width: 46px;
+            height: 46px;
+            background: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
         }
 
         .mentor-status {
-            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .mentor-name {
-            font-weight: bold;
-            font-size: 1rem;
+            font-weight: 600;
+            font-size: 1.05rem;
         }
 
         .mentor-online {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             opacity: 0.9;
             display: flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.3rem;
         }
 
         .status-dot {
             width: 8px;
             height: 8px;
-            background: #4ade80;
+            background: #4CAF50;
             border-radius: 50%;
-            animation: pulse 2s infinite;
+            animation: blink 2s infinite;
         }
 
-        @keyframes pulse {
+        @keyframes blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
         }
 
         .mentor-close-btn {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             border: none;
             color: white;
             width: 32px;
             height: 32px;
             border-radius: 50%;
-            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.2s;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
 
         .mentor-close-btn:hover {
-            background: rgba(255,255,255,0.3);
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
         }
 
-        .mentor-chat-body {
+        .mentor-chat-messages {
             flex: 1;
-            padding: 1rem;
             overflow-y: auto;
+            padding: 1.25rem;
             background: #f0f2f5;
             display: flex;
             flex-direction: column;
             gap: 1rem;
         }
 
-        .mentor-chat-body::-webkit-scrollbar {
+        .mentor-chat-messages::-webkit-scrollbar {
             width: 6px;
         }
 
-        .mentor-chat-body::-webkit-scrollbar-track {
-            background: transparent;
+        .mentor-chat-messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
         }
 
-        .mentor-chat-body::-webkit-scrollbar-thumb {
-            background: #ccc;
+        .mentor-chat-messages::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
             border-radius: 3px;
         }
 
-        .mentor-message {
+        .message {
             display: flex;
             gap: 0.5rem;
-            animation: messageIn 0.3s ease-out;
+            animation: fadeInMessage 0.3s ease-out;
         }
 
-        @keyframes messageIn {
+        @keyframes fadeInMessage {
             from {
                 opacity: 0;
                 transform: translateY(10px);
@@ -726,25 +726,27 @@
             }
         }
 
-        .mentor-message.user {
+        .message.user {
             flex-direction: row-reverse;
         }
 
         .message-bubble {
             max-width: 75%;
             padding: 0.75rem 1rem;
-            border-radius: 12px;
-            word-wrap: break-word;
+            border-radius: 18px;
+            font-size: 0.9rem;
             line-height: 1.4;
+            word-wrap: break-word;
         }
 
-        .mentor-message.bot .message-bubble {
+        .message.mentor .message-bubble {
             background: white;
+            color: var(--dark);
             border-bottom-left-radius: 4px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .mentor-message.user .message-bubble {
+        .message.user .message-bubble {
             background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
             color: white;
             border-bottom-right-radius: 4px;
@@ -756,50 +758,55 @@
             margin-top: 0.25rem;
         }
 
-        .quick-actions {
+        .message-actions {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
-            margin-top: 0.5rem;
+            margin-top: 0.75rem;
         }
 
-        .quick-action-btn {
-            background: var(--gray-light);
-            border: 1px solid #ddd;
-            padding: 0.5rem 0.75rem;
-            border-radius: 8px;
+        .action-button {
+            background: white;
+            border: 2px solid var(--primary-light);
+            color: var(--primary-dark);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
             font-size: 0.85rem;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
+            font-weight: 500;
         }
 
-        .quick-action-btn:hover {
+        .action-button:hover {
             background: var(--primary-light);
             color: white;
-            border-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .mentor-chat-input-container {
+            padding: 1rem;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-end;
         }
 
         .mentor-chat-input {
-            padding: 1rem;
-            background: white;
-            border-top: 1px solid #e5e7eb;
-            display: flex;
-            gap: 0.75rem;
-            align-items: center;
-        }
-
-        .mentor-input-field {
             flex: 1;
-            border: 1px solid #e5e7eb;
-            padding: 0.75rem;
-            border-radius: 24px;
-            outline: none;
-            font-size: 0.95rem;
+            border: 2px solid var(--gray-light);
+            border-radius: 25px;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
             resize: none;
             max-height: 100px;
+            font-family: inherit;
+            transition: border-color 0.2s ease;
         }
 
-        .mentor-input-field:focus {
+        .mentor-chat-input:focus {
+            outline: none;
             border-color: var(--primary-light);
         }
 
@@ -911,7 +918,6 @@
 
 <body>
     <script src="auth.js"></script>
-    <script src="mentor-knowledge.js"></script>
 
     <header class="header-uah">
         <div class="container-fluid">
@@ -971,137 +977,129 @@
         </section>
 
         <div class="container">
-            <div id="studentDashboard" class="student-dashboard">
-                <div class="progress-card fade-in-up" id="detailedProgressCard" style="display: none;">
-                    <h3 class="progress-header">
-                        <i class="bi bi-graph-up-arrow"></i>
-                        Tu Progreso Detallado
+            <div class="student-dashboard fade-in-up" id="studentDashboard" style="display: none;">
+                <div class="dashboard-header">
+                    <h3>
+                        <i class="bi bi-graph-up me-2"></i>
+                        Tu Progreso Personal
                     </h3>
-                    
-                    <div class="dashboard-stats">
-                        <div class="stat-box">
-                            <span class="stat-box-value" id="studentModulesCompleted">0</span>
-                            <span class="stat-box-label">Módulos Completados</span>
-                        </div>
-                        <div class="stat-box">
-                            <span class="stat-box-value" id="studentLessonsCompleted">0</span>
-                            <span class="stat-box-label">Lecciones Totales</span>
-                        </div>
-                        <div class="stat-box">
-                            <span class="stat-box-value" id="studentEvaluationsPassed">0</span>
-                            <span class="stat-box-label">Evaluaciones Aprobadas</span>
-                        </div>
-                        <div class="stat-box">
-                            <span class="stat-box-value" id="studentExercises">0</span>
-                            <span class="stat-box-label">Ejercicios Realizados</span>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="progress-circle-container">
+                            <div class="progress-circle">
+                                <svg width="140" height="140">
+                                    <circle cx="70" cy="70" r="60" fill="none" stroke="#e9ecef" stroke-width="12"/>
+                                    <circle id="progressCircle" cx="70" cy="70" r="60" fill="none" 
+                                            stroke="var(--primary-dark)" stroke-width="12" 
+                                            stroke-linecap="round" 
+                                            stroke-dasharray="377" 
+                                            stroke-dashoffset="377"
+                                            transform="rotate(-90 70 70)"
+                                            style="transition: stroke-dashoffset 0.8s ease;"/>
+                                </svg>
+                                <div class="progress-circle-text" id="progressPercentText">0%</div>
+                            </div>
+                            <h6 class="mt-3 mb-0">Progreso Total</h6>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div style="position: relative; height: 160px; display: flex; align-items: center; justify-content: center;">
-                                <svg width="160" height="160" style="transform: rotate(-90deg);">
-                                    <circle cx="80" cy="80" r="60" fill="none" stroke="#e0e0e0" stroke-width="12"/>
-                                    <circle id="progressCircle" cx="80" cy="80" r="60" fill="none" 
-                                            stroke="url(#gradient)" stroke-width="12" 
-                                            stroke-dasharray="377" stroke-dashoffset="377"
-                                            stroke-linecap="round"
-                                            style="transition: stroke-dashoffset 0.6s ease;"/>
-                                    <defs>
-                                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                            <stop offset="0%" style="stop-color:#2c5f66;stop-opacity:1" />
-                                            <stop offset="100%" style="stop-color:#e8a2b8;stop-opacity:1" />
-                                        </linearGradient>
-                                    </defs>
-                                </svg>
-                                <div style="position: absolute; text-align: center;">
-                                    <div id="progressPercentText" style="font-size: 2rem; font-weight: bold; color: var(--primary-dark);">0%</div>
-                                    <div style="font-size: 0.85rem; color: var(--gray-medium);">Progreso Total</div>
-                                </div>
+                    <div class="col-md-8">
+                        <div class="dashboard-stats">
+                            <div class="stat-box">
+                                <span class="stat-box-number" id="studentModulesCompleted">0</span>
+                                <span class="stat-box-label">Módulos Completados</span>
                             </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="stat-box" style="height: 100%; display: flex; flex-direction: column; justify-content: center;">
-                                <span class="stat-box-value" id="totalExercisesCount">0</span>
+                            <div class="stat-box">
+                                <span class="stat-box-number" id="studentLessonsCompleted">0</span>
+                                <span class="stat-box-label">Lecciones Completadas</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="stat-box-number" id="studentEvaluationsPassed">0</span>
+                                <span class="stat-box-label">Evaluaciones Aprobadas</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="stat-box-number" id="studentExercises">0</span>
                                 <span class="stat-box-label">Ejercicios Realizados</span>
                             </div>
-
-                            <div class="next-task-card">
-                                <h6>
-                                    <i class="bi bi-arrow-right-circle me-2"></i>
-                                    Próxima Tarea
-                                </h6>
-                                <p id="nextTaskText">Cargando...</p>
-                            </div>
                         </div>
-                    </div>
 
-                    <div class="mt-4">
-                        <h5 class="mb-3" style="color: var(--primary-dark); font-weight: 600;">
-                            <i class="bi bi-list-check me-2"></i>
-                            Desglose por Módulo
-                        </h5>
-                        <div class="module-breakdown" id="moduleBreakdown"></div>
-                    </div>
-                </div>
-
-                <div class="progress-card fade-in-up" id="simpleProgressCard">
-                    <h3 class="progress-header">
-                        <i class="bi bi-graph-up"></i>
-                        Tu Progreso General
-                    </h3>
-                    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-                        <span class="stat-badge">
-                            <strong id="completedModules">0</strong> de 3 módulos completados
-                        </span>
-                        <span class="stat-badge">
-                            <i class="bi bi-clock"></i> 12-14 horas totales
-                        </span>
-                        <span class="stat-badge">
-                            <i class="bi bi-calendar3"></i> 12 días de curso
-                        </span>
-                    </div>
-                    <div class="custom-progress">
-                        <div class="custom-progress-bar" id="progressBar" style="width: 0%">
-                            <span>0%</span>
-                        </div>
-                    </div>
-                    <div class="mt-2 text-end">
-                        <small class="text-muted" id="progressDetails">Comienza tu primera lección para ver tu progreso</small>
-                    </div>
-                </div>
-
-                <div class="row mb-4">
-                    <div class="col-md-6 fade-in-up">
-                        <div class="info-card">
-                            <h5><i class="bi bi-trophy me-2"></i>Objetivos del Curso</h5>
-                            <ul class="info-list">
-                                <li><i class="bi bi-check-circle-fill"></i> Aplicar técnicas de observación directa</li>
-                                <li><i class="bi bi-check-circle-fill"></i> Analizar estructura anatómica básica</li>
-                                <li><i class="bi bi-check-circle-fill"></i> Crear representación completa de figura humana</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-md-6 fade-in-up">
-                        <div class="info-card">
-                            <h5><i class="bi bi-clipboard-check me-2"></i>Entregables Totales</h5>
-                            <ul class="info-list">
-                                <li><i class="bi bi-pencil"></i> 23 dibujos progresivos</li>
-                                <li><i class="bi bi-list-check"></i> 10 evaluaciones formativas</li>
-                                <li><i class="bi bi-star-fill"></i> 1 proyecto final (1/4 mercurio)</li>
-                            </ul>
+                        <div class="next-task-card">
+                            <h6>
+                                <i class="bi bi-arrow-right-circle me-2"></i>
+                                Próxima Tarea
+                            </h6>
+                            <p id="nextTaskText">Cargando...</p>
                         </div>
                     </div>
                 </div>
 
-                <section class="mb-5">
-                    <h2 class="mb-4" style="color: var(--primary-dark); font-weight: 600;">
-                        <i class="bi bi-book"></i> Módulos del Curso
-                    </h2>
-                    
-                    <div class="row g-4" id="modulesGrid"></div>
-                </section>
+                <div class="mt-4">
+                    <h5 class="mb-3" style="color: var(--primary-dark); font-weight: 600;">
+                        <i class="bi bi-list-check me-2"></i>
+                        Desglose por Módulo
+                    </h5>
+                    <div class="module-breakdown" id="moduleBreakdown"></div>
+                </div>
             </div>
+
+            <div class="progress-card fade-in-up" id="simpleProgressCard">
+                <h3 class="progress-header">
+                    <i class="bi bi-graph-up"></i>
+                    Tu Progreso General
+                </h3>
+                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                    <span class="stat-badge">
+                        <strong id="completedModules">0</strong> de 3 módulos completados
+                    </span>
+                    <span class="stat-badge">
+                        <i class="bi bi-clock"></i> 12-14 horas totales
+                    </span>
+                    <span class="stat-badge">
+                        <i class="bi bi-calendar3"></i> 12 días de curso
+                    </span>
+                </div>
+                <div class="custom-progress">
+                    <div class="custom-progress-bar" id="progressBar" style="width: 0%">
+                        <span>0%</span>
+                    </div>
+                </div>
+                <div class="mt-2 text-end">
+                    <small class="text-muted" id="progressDetails">Comienza tu primera lección para ver tu progreso</small>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-6 fade-in-up">
+                    <div class="info-card">
+                        <h5><i class="bi bi-trophy me-2"></i>Objetivos del Curso</h5>
+                        <ul class="info-list">
+                            <li><i class="bi bi-check-circle-fill"></i> Aplicar técnicas de observación directa</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Analizar estructura anatómica básica</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Crear representación completa de figura humana</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 fade-in-up">
+                    <div class="info-card">
+                        <h5><i class="bi bi-clipboard-check me-2"></i>Entregables Totales</h5>
+                        <ul class="info-list">
+                            <li><i class="bi bi-pencil"></i> 23 dibujos progresivos</li>
+                            <li><i class="bi bi-list-check"></i> 10 evaluaciones formativas</li>
+                            <li><i class="bi bi-star-fill"></i> 1 proyecto final (1/4 mercurio)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <section class="mb-5">
+                <h2 class="mb-4" style="color: var(--primary-dark); font-weight: 600;">
+                    <i class="bi bi-book"></i> Módulos del Curso
+                </h2>
+                
+                <div class="row g-4" id="modulesGrid"></div>
+            </section>
         </div>
     </main>
 
@@ -1120,7 +1118,9 @@
         </div>
     </footer>
 
-    <!-- Mentor Virtual -->
+    <!-- ============================================
+         MENTOR VIRTUAL - CHAT FLOTANTE (ESTILO WHATSAPP)
+         ============================================ -->
     <button class="mentor-float-button" id="mentorFloatBtn" aria-label="Abrir Mentor Virtual">
         <i class="bi bi-chat-dots-fill"></i>
         <span class="mentor-badge">!</span>
@@ -1129,7 +1129,9 @@
     <div class="mentor-chat-container" id="mentorChatContainer">
         <div class="mentor-chat-header">
             <div class="mentor-chat-header-info">
-                <div class="mentor-avatar">🎨</div>
+                <div class="mentor-avatar">
+                    🎨
+                </div>
                 <div class="mentor-status">
                     <div class="mentor-name">Mentor Anatómico</div>
                     <div class="mentor-online">
@@ -1143,33 +1145,23 @@
             </button>
         </div>
 
-        <div class="mentor-chat-body" id="mentorChatBody">
-            <div class="mentor-message bot">
-                <div class="message-bubble">
-                    <div>¡Hola! 👋 Soy tu Mentor Anatómico 2.0.</div>
-                    <div class="mt-2"><strong>¿En qué puedo ayudarte hoy?</strong></div>
-                    <div class="mt-3 small">
-                        💙 <strong>Emocional:</strong> Frustración, bloqueo<br>
-                        🎨 <strong>Técnico:</strong> Línea, anatomía, proporciones<br>
-                        📚 <strong>Sistema:</strong> Cómo usar el LMS
-                    </div>
-                    <div class="quick-actions">
-                        <button class="quick-action-btn" onclick="sendQuickMessage('Tengo una duda técnica')">Duda técnica</button>
-                        <button class="quick-action-btn" onclick="sendQuickMessage('Me siento frustrado')">Apoyo emocional</button>
-                        <button class="quick-action-btn" onclick="sendQuickMessage('¿Cómo funciona el curso?')">Info del curso</button>
-                    </div>
-                    <div class="message-time">Ahora</div>
-                </div>
-            </div>
-            <div class="typing-indicator" id="typingIndicator">
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-            </div>
+        <div class="mentor-chat-messages" id="mentorMessages">
+            <!-- Los mensajes se agregan dinámicamente aquí -->
         </div>
 
-        <div class="mentor-chat-input">
-            <textarea class="mentor-input-field" id="mentorInput" placeholder="Escribe tu mensaje..." rows="1"></textarea>
+        <div class="typing-indicator" id="typingIndicator">
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+        </div>
+
+        <div class="mentor-chat-input-container">
+            <textarea 
+                class="mentor-chat-input" 
+                id="mentorInput" 
+                placeholder="Escribe tu pregunta o duda..."
+                rows="1"
+            ></textarea>
             <button class="mentor-send-btn" id="mentorSendBtn" aria-label="Enviar mensaje">
                 <i class="bi bi-send-fill"></i>
             </button>
@@ -1178,15 +1170,176 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
+    <!-- IMPORTAR BASE DE CONOCIMIENTO DEL MENTOR -->
+    <script src="mentor-knowledge.js"></script>
+
     <script>
-        // ===== DATOS DE MÓDULOS CON SISTEMA DE DESBLOQUEO =====
+        // ============================================
+        // SISTEMA DE MENTOR INTEGRADO
+        // ============================================
+        
+        // Inicializar memoria conversacional
+        const conversationMemory = new window.mentorKnowledge.ConversationMemory();
+        
+        // Elementos del DOM
+        const mentorFloatBtn = document.getElementById('mentorFloatBtn');
+        const mentorCloseBtn = document.getElementById('mentorCloseBtn');
+        const mentorChatContainer = document.getElementById('mentorChatContainer');
+        const mentorMessages = document.getElementById('mentorMessages');
+        const mentorInput = document.getElementById('mentorInput');
+        const mentorSendBtn = document.getElementById('mentorSendBtn');
+        const typingIndicator = document.getElementById('typingIndicator');
+
+        // Toggle chat
+        mentorFloatBtn.addEventListener('click', function() {
+            mentorChatContainer.classList.add('show');
+            mentorFloatBtn.style.display = 'none';
+            
+            // Mensaje de bienvenida contextual
+            if (mentorMessages.children.length === 0) {
+                const greeting = conversationMemory.getContextualGreeting();
+                if (greeting) {
+                    addMentorMessage(greeting);
+                } else {
+                    addMentorMessage(
+                        "¡Hola! 👋 Soy tu Mentor Anatómico.\n\n**¿En qué puedo ayudarte?**\n\n💙 **Emocional:** Frustración, bloqueo, ansiedad\n🎨 **Técnico:** Línea de acción, proporciones, manos\n📚 **Sistema:** Subir ejercicios, ver progreso",
+                        ['Duda técnica', 'Apoyo emocional', 'Info del curso']
+                    );
+                }
+            }
+            
+            mentorInput.focus();
+        });
+
+        mentorCloseBtn.addEventListener('click', function() {
+            mentorChatContainer.classList.remove('show');
+            mentorFloatBtn.style.display = 'flex';
+        });
+
+        // Enviar mensaje
+        mentorSendBtn.addEventListener('click', sendMessage);
+        mentorInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Auto-resize del textarea
+        mentorInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+        });
+
+        function sendMessage() {
+            const message = mentorInput.value.trim();
+            if (!message) return;
+
+            // Agregar mensaje del usuario
+            addUserMessage(message);
+            mentorInput.value = '';
+            mentorInput.style.height = 'auto';
+
+            // Mostrar indicador de escritura
+            showTypingIndicator();
+
+            // Simular delay de respuesta
+            setTimeout(() => {
+                hideTypingIndicator();
+                
+                // USAR EL SISTEMA DE MENTOR-KNOWLEDGE.JS
+                const response = window.mentorKnowledge.generateResponse(message);
+                
+                // Guardar en memoria
+                conversationMemory.add(message, response.text, response.emotion, response.intensity);
+                
+                // Mostrar respuesta
+                addMentorMessage(response.text, response.actions || []);
+                
+                // Verificar si debería ofrecer un break
+                if (conversationMemory.shouldOfferBreak()) {
+                    setTimeout(() => {
+                        addMentorMessage(
+                            "💙 Noto que estás pasando por un momento difícil.\n\n**¿Quieres tomar un descanso?**\n\nA veces lo mejor es alejarse un rato, tomar aire fresco y volver con energía renovada.",
+                            ['Sí, tomaré un break', 'No, estoy bien']
+                        );
+                    }, 1500);
+                }
+            }, 800 + Math.random() * 700);
+        }
+
+        function addUserMessage(text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user';
+            
+            const bubble = document.createElement('div');
+            bubble.className = 'message-bubble';
+            bubble.textContent = text;
+            
+            messageDiv.appendChild(bubble);
+            mentorMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function addMentorMessage(text, actions = []) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message mentor';
+            
+            const bubble = document.createElement('div');
+            bubble.className = 'message-bubble';
+            bubble.innerHTML = text.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
+            messageDiv.appendChild(bubble);
+            
+            // Agregar botones de acción si existen
+            if (actions && actions.length > 0) {
+                const actionsDiv = document.createElement('div');
+                actionsDiv.className = 'message-actions';
+                
+                actions.forEach(actionText => {
+                    const btn = document.createElement('button');
+                    btn.className = 'action-button';
+                    btn.textContent = actionText;
+                    btn.onclick = () => {
+                        mentorInput.value = actionText;
+                        sendMessage();
+                    };
+                    actionsDiv.appendChild(btn);
+                });
+                
+                bubble.appendChild(actionsDiv);
+            }
+            
+            mentorMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function showTypingIndicator() {
+            typingIndicator.classList.add('show');
+            scrollToBottom();
+        }
+
+        function hideTypingIndicator() {
+            typingIndicator.classList.remove('show');
+        }
+
+        function scrollToBottom() {
+            setTimeout(() => {
+                mentorMessages.scrollTop = mentorMessages.scrollHeight;
+            }, 100);
+        }
+
+        // ============================================
+        // SISTEMA ORIGINAL DEL CURSO
+        // ============================================
+
         const modulesData = [
             {
                 id: 1,
                 number: "01",
                 title: "Observación y Gesto",
-                subtitle: "Línea de acción y estructura",
-                description: "Aprende a capturar el gesto y movimiento. Domina la línea de acción y comprende la estructura básica del cuerpo humano. Aprende a medir proporciones visualmente y comprender el balance corporal.",
+                subtitle: "Captura de movimiento y proporción",
+                description: "Domina técnicas de observación directa para capturar línea de acción en croquis de 2-5 minutos. Aprende a medir proporciones visualmente y comprender el balance corporal.",
                 duration: "3 días",
                 lessons: 3,
                 exercises: "8 croquis",
@@ -1194,9 +1347,7 @@
                 hours: "2.5 horas",
                 difficulty: "Básico",
                 url: "module1.html",
-                available: true,
-                requiredModule: null,
-                requiredLessons: 0
+                available: true
             },
             {
                 id: 2,
@@ -1211,9 +1362,7 @@
                 hours: "3.3 horas",
                 difficulty: "Intermedio",
                 url: "module2.html",
-                available: false,
-                requiredModule: 1,
-                requiredLessons: 3
+                available: true
             },
             {
                 id: 3,
@@ -1228,13 +1377,10 @@
                 hours: "5-6 horas",
                 difficulty: "Avanzado",
                 url: "module3.html",
-                available: false,
-                requiredModule: 2,
-                requiredLessons: 4
+                available: true
             }
         ];
 
-        // ===== FUNCIONES DE AUTENTICACIÓN =====
         function isAuthenticated() {
             return localStorage.getItem('isAuthenticated') === 'true';
         }
@@ -1260,176 +1406,194 @@
         function checkAuthentication() {
             if (!isAuthenticated()) {
                 window.location.href = 'login.html';
-                return;
+                return false;
             }
-
-            const user = getCurrentUser();
-            if (!user) {
-                window.location.href = 'login.html';
-                return;
-            }
-
-            updateUserInfo(user);
-
-            if (user.role === 'instructor') {
-                document.getElementById('dashboardBtn').classList.remove('d-none');
-            }
+            return true;
         }
 
-        function updateUserInfo(user) {
-            const userName = document.getElementById('userName');
-            const userRole = document.getElementById('userRole');
-            const userAvatar = document.getElementById('userAvatar');
-
-            if (userName) userName.textContent = user.fullName || user.username;
-            if (userRole) userRole.textContent = user.role === 'instructor' ? 'Instructor' : 'Estudiante';
-            if (userAvatar) {
-                const initials = (user.fullName || user.username).split(' ').map(n => n[0]).join('').toUpperCase();
-                userAvatar.textContent = initials.substring(0, 2);
-            }
-        }
-
-        function goToDashboard() {
-            window.location.href = 'dashboard.html';
-        }
-
-        // ===== FUNCIONES DE PROGRESO =====
         function getStudentProgress() {
-            const user = getCurrentUser();
-            if (!user) return null;
-
-            const progressKey = `progress_${user.username}`;
-            const progressData = localStorage.getItem(progressKey);
-
-            if (!progressData) return null;
-
+            const currentUser = getCurrentUser();
+            if (!currentUser) return null;
+            
+            const progressKey = `progress_${currentUser.username}`;
             try {
-                return JSON.parse(progressData);
+                const progress = JSON.parse(localStorage.getItem(progressKey) || 'null');
+                if (!progress) {
+                    return initializeProgress();
+                }
+                return progress;
             } catch (error) {
-                console.error('Error parsing progress:', error);
-                return null;
+                console.error('Error parsing progress data:', error);
+                return initializeProgress();
             }
+        }
+
+        function initializeProgress() {
+            return {
+                modules: {
+                    1: { completed: false, progress: 0, timeSpent: 0, completedLessons: [] },
+                    2: { completed: false, progress: 0, timeSpent: 0, completedLessons: [] },
+                    3: { completed: false, progress: 0, timeSpent: 0, completedLessons: [] }
+                },
+                overallProgress: 0,
+                totalTimeSpent: 0,
+                lastActivity: new Date().toISOString()
+            };
         }
 
         function saveProgress() {
-            // Implementada en cada módulo
-            console.log('Progress auto-save triggered');
-        }
-
-        // ===== FUNCIÓN DE VERIFICACIÓN DE DESBLOQUEO =====
-        function isModuleUnlocked(moduleId) {
-            // Módulo 1 siempre está desbloqueado
-            if (moduleId === 1) return true;
+            const currentUser = getCurrentUser();
+            if (!currentUser) return;
             
+            const progressKey = `progress_${currentUser.username}`;
             const progress = getStudentProgress();
-            if (!progress || !progress.modules) return false;
             
-            const module = modulesData.find(m => m.id === moduleId);
-            if (!module || !module.requiredModule) return true;
-            
-            // Verificar progreso del módulo anterior
-            const requiredModuleData = progress.modules[module.requiredModule];
-            if (!requiredModuleData) return false;
-            
-            // Verificar lecciones completadas
-            const completedLessons = requiredModuleData.completedLessons || [];
-            const requiredCount = module.requiredLessons || 0;
-            
-            console.log(`🔓 Verificando M${moduleId}: ${completedLessons.length}/${requiredCount} lecciones de M${module.requiredModule}`);
-            
-            return completedLessons.length >= requiredCount;
+            if (progress) {
+                progress.lastActivity = new Date().toISOString();
+                localStorage.setItem(progressKey, JSON.stringify(progress));
+            }
         }
 
-        // ===== CÁLCULOS DE PROGRESO =====
         function calculateOverallProgress() {
             const progress = getStudentProgress();
-            if (!progress || !progress.modules) return 0;
-
-            const totalLessons = modulesData.reduce((sum, m) => sum + m.lessons, 0);
-            let completedLessons = 0;
-
-            modulesData.forEach(module => {
-                const moduleProgress = progress.modules[module.id];
-                if (moduleProgress && moduleProgress.completedLessons) {
-                    completedLessons += moduleProgress.completedLessons.length;
-                }
-            });
-
-            return totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+            if (!progress) return 0;
+            
+            let totalProgress = 0;
+            let moduleCount = 0;
+            
+            for (let moduleId in progress.modules) {
+                totalProgress += progress.modules[moduleId].progress || 0;
+                moduleCount++;
+            }
+            
+            return moduleCount > 0 ? Math.round(totalProgress / moduleCount) : 0;
         }
 
         function countCompletedModules() {
             const progress = getStudentProgress();
-            if (!progress || !progress.modules) return 0;
-
-            return modulesData.filter(module => {
-                const moduleProgress = progress.modules[module.id];
-                return moduleProgress && moduleProgress.completed;
-            }).length;
+            if (!progress) return 0;
+            
+            let completed = 0;
+            for (let moduleId in progress.modules) {
+                if (progress.modules[moduleId].completed) {
+                    completed++;
+                }
+            }
+            return completed;
         }
 
-        function updateStudentDashboard() {
-            const progress = getStudentProgress();
-            if (!progress) return;
+        function updateUserInterface() {
+            const currentUser = getCurrentUser();
+            if (!currentUser) return;
 
-            const totalLessons = modulesData.reduce((sum, m) => sum + m.lessons, 0);
-            let completedLessons = 0;
-            let completedModulesCount = 0;
-            let passedEvaluations = 0;
+            document.getElementById('userName').textContent = 
+                currentUser.fullName || currentUser.name || currentUser.username || 'Usuario';
+            
+            document.getElementById('userRole').textContent = 
+                getRoleDisplayName(currentUser.role);
 
-            modulesData.forEach(module => {
-                const moduleData = progress.modules[module.id];
-                if (moduleData) {
-                    if (moduleData.completedLessons) {
-                        completedLessons += moduleData.completedLessons.length;
-                    }
-                    if (moduleData.completed) {
-                        completedModulesCount++;
-                    }
-                }
-            });
-
-            if (progress.evaluations) {
-                Object.values(progress.evaluations).forEach(moduleEvals => {
-                    if (moduleEvals && typeof moduleEvals === 'object') {
-                        Object.values(moduleEvals).forEach(lessonEval => {
-                            if (lessonEval && typeof lessonEval === 'object') {
-                                Object.values(lessonEval).forEach(attemptData => {
-                                    if (attemptData && attemptData.score && attemptData.score >= 2) {
-                                        passedEvaluations++;
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
+            const avatar = document.getElementById('userAvatar');
+            if (avatar) {
+                avatar.textContent = (currentUser.fullName || currentUser.name || currentUser.username).charAt(0).toUpperCase();
             }
 
-            const moduleLessons = {1: 3, 2: 4, 3: 3};
-            const moduleDetails = modulesData.map(module => {
-                const moduleNum = module.id;
-                const moduleData = progress.modules[moduleNum];
-                
-                if (moduleData && moduleData.completedLessons) {
-                    const completed = moduleData.completedLessons;
-                    const total = moduleLessons[moduleNum];
-                    const percentage = total > 0 ? Math.round((completed.length / total) * 100) : 0;
-                    
+            const dashboardBtn = document.getElementById('dashboardBtn');
+            if (currentUser.role === 'instructor' || currentUser.role === 'profesor') {
+                dashboardBtn.classList.remove('d-none');
+            }
+
+            updateProgress();
+            checkDiagnosticStatus();
+            loadStudentDashboard();
+        }
+
+        function getRoleDisplayName(role) {
+            const roles = {
+                'instructor': 'Instructor',
+                'profesor': 'Profesor',
+                'estudiante': 'Estudiante',
+                'evaluador': 'Evaluador',
+                'visitante': 'Visitante'
+            };
+            return roles[role] || 'Usuario';
+        }
+
+        function checkDiagnosticStatus() {
+            const currentUser = getCurrentUser();
+            if (!currentUser) return;
+
+            if (currentUser.role === 'instructor' || currentUser.role === 'profesor') {
+                return;
+            }
+
+            const studentDashboard = document.getElementById('studentDashboard');
+            const simpleProgressCard = document.getElementById('simpleProgressCard');
+            
+            studentDashboard.style.display = 'block';
+            simpleProgressCard.style.display = 'none';
+        }
+
+        function loadStudentDashboard() {
+            const currentUser = getCurrentUser();
+            if (!currentUser || currentUser.role === 'instructor' || currentUser.role === 'profesor') {
+                return;
+            }
+
+            const progressKey = `progress_${currentUser.username}`;
+            const allProgressStr = localStorage.getItem(progressKey);
+            let allProgress = null;
+            
+            if (allProgressStr) {
+                try {
+                    allProgress = JSON.parse(allProgressStr);
+                } catch (e) {
+                    console.error('Error parsing progress:', e);
+                }
+            }
+
+            const modules = [1, 2, 3];
+            let totalLessons = 0;
+            let completedLessons = 0;
+            let passedEvaluations = 0;
+            let completedModulesCount = 0;
+
+            const moduleDetails = modules.map(moduleNum => {
+                let data = null;
+                if (allProgress && allProgress.modules && allProgress.modules[moduleNum]) {
+                    data = allProgress.modules[moduleNum];
+                }
+
+                const moduleLessons = moduleNum === 1 ? 3 : moduleNum === 2 ? 4 : 3;
+                totalLessons += moduleLessons;
+
+                if (data && data.completedLessons) {
+                    const completed = Array.isArray(data.completedLessons) ? data.completedLessons : [];
+                    completedLessons += completed.length;
+
+                    if (data.evaluations) {
+                        Object.values(data.evaluations).forEach(evalData => {
+                            if (Object.keys(evalData).length >= 2) passedEvaluations++;
+                        });
+                    }
+
+                    const moduleCompleted = completed.length === moduleLessons;
+                    if (moduleCompleted) completedModulesCount++;
+
                     return {
                         num: moduleNum,
-                        name: module.title,
+                        name: modulesData[moduleNum - 1].title,
                         completed: completed.length,
-                        total: total,
-                        percentage: percentage,
-                        status: completed.length === total ? 'completed' : completed.length > 0 ? 'in-progress' : 'not-started'
+                        total: moduleLessons,
+                        percentage: Math.round((completed.length / moduleLessons) * 100),
+                        status: moduleCompleted ? 'completed' : completed.length > 0 ? 'in-progress' : 'not-started'
                     };
                 }
 
                 return {
                     num: moduleNum,
-                    name: module.title,
+                    name: modulesData[moduleNum - 1].title,
                     completed: 0,
-                    total: moduleLessons[moduleNum],
+                    total: moduleLessons,
                     percentage: 0,
                     status: 'not-started'
                 };
@@ -1441,7 +1605,6 @@
             document.getElementById('studentLessonsCompleted').textContent = completedLessons;
             document.getElementById('studentEvaluationsPassed').textContent = passedEvaluations;
             document.getElementById('studentExercises').textContent = completedLessons * 3;
-            document.getElementById('totalExercisesCount').textContent = completedLessons * 3;
 
             const circumference = 377;
             const offset = circumference - (circumference * overallProgress / 100);
@@ -1524,7 +1687,6 @@
             }
         }
 
-        // ===== RENDERIZADO DE MÓDULOS CON SISTEMA DE DESBLOQUEO =====
         function loadModules() {
             const grid = document.getElementById('modulesGrid');
             const progress = getStudentProgress();
@@ -1546,26 +1708,9 @@
 
             const progressValue = moduleProgress.progress || 0;
             const isCompleted = moduleProgress.completed || false;
-            
-            // ✅ Verificar si está desbloqueado
-            const isUnlocked = isModuleUnlocked(module.id);
 
             let actionButton = '';
-            let lockIndicator = '';
-            
-            if (!isUnlocked) {
-                // Módulo bloqueado
-                const requiredModule = modulesData.find(m => m.id === module.requiredModule);
-                lockIndicator = '<i class="bi bi-lock-fill" style="position: absolute; top: 15px; right: 15px; font-size: 24px; color: rgba(0,0,0,0.2); z-index: 10;"></i>';
-                actionButton = `
-                    <button class="btn-module" style="background: #ddd; color: #999; cursor: not-allowed;" disabled>
-                        <i class="bi bi-lock-fill me-2"></i>Bloqueado
-                    </button>
-                    <small class="text-muted mt-2 d-block" style="font-size: 0.85rem;">
-                        Completa "${requiredModule ? requiredModule.title : 'módulo anterior'}" primero
-                    </small>
-                `;
-            } else if (isCompleted) {
+            if (isCompleted) {
                 actionButton = `<a href="${module.url}" class="btn-module btn-secondary-custom"><i class="bi bi-check-circle-fill me-2"></i>Repasar</a>`;
             } else if (progressValue > 0) {
                 actionButton = `<a href="${module.url}" class="btn-module btn-primary-custom"><i class="bi bi-play-circle me-2"></i>Continuar</a>`;
@@ -1574,222 +1719,95 @@
             }
 
             col.innerHTML = `
-                <div class="module-card ${!isUnlocked ? 'module-locked' : ''}" style="${!isUnlocked ? 'opacity: 0.7;' : ''} position: relative;">
-                    ${lockIndicator}
+                <div class="module-card">
                     <div class="module-header">
                         <span class="module-number">${module.number}</span>
-                        <h3 class="module-title" style="${!isUnlocked ? 'color: rgba(255,255,255,0.7);' : ''}">${module.title}</h3>
-                        <p class="module-subtitle" style="${!isUnlocked ? 'color: rgba(255,255,255,0.6);' : ''}">${module.subtitle}</p>
+                        <h3 class="module-title">${module.title}</h3>
+                        <p class="module-subtitle">${module.subtitle}</p>
                     </div>
                     <div class="module-body">
-                        <p class="module-description" style="${!isUnlocked ? 'color: #999;' : ''}">${module.description}</p>
+                        <p class="module-description">${module.description}</p>
                         <div class="module-meta">
-                            <span><i class="bi bi-clock"></i> ${module.duration}</span>
-                            <span><i class="bi bi-book"></i> ${module.lessons} lecciones</span>
-                            <span><i class="bi bi-star"></i> ${module.difficulty}</span>
-                        </div>
-                        <div class="module-stats">
-                            <div class="stat-item">
-                                <i class="bi bi-pencil"></i>
-                                <span>${module.exercises}</span>
-                            </div>
-                            <div class="stat-item">
+                            <span class="meta-item">
+                                <i class="bi bi-calendar3"></i>
+                                ${module.duration}
+                            </span>
+                            <span class="meta-item">
+                                <i class="bi bi-book"></i>
+                                ${module.lessons} lecciones
+                            </span>
+                            <span class="meta-item">
                                 <i class="bi bi-clock"></i>
-                                <span>${module.hours}</span>
+                                ${module.hours}
+                            </span>
+                        </div>
+                        <div class="module-meta">
+                            <span class="meta-item">
+                                <i class="bi bi-pencil"></i>
+                                ${module.exercises}
+                            </span>
+                            <span class="meta-item">
+                                <i class="bi bi-clipboard-check"></i>
+                                ${module.evaluations}
+                            </span>
+                            <span class="meta-item">
+                                <i class="bi bi-bar-chart"></i>
+                                ${module.difficulty}
+                            </span>
+                        </div>
+                        <div class="module-progress-container">
+                            <div class="module-progress-bar">
+                                <div class="module-progress-fill" style="width: ${progressValue}%"></div>
                             </div>
+                            <div class="progress-label">${progressValue}% completado</div>
                         </div>
-                        <div class="module-progress-bar">
-                            <div class="module-progress-fill" style="width: ${progressValue}%"></div>
-                        </div>
-                        <div class="mt-3">
+                        <div class="module-actions">
                             ${actionButton}
                         </div>
                     </div>
                 </div>
             `;
-            
+
             return col;
         }
 
-        // ===== MENTOR VIRTUAL =====
-        document.addEventListener('DOMContentLoaded', function() {
-            const mentorFloatBtn = document.getElementById('mentorFloatBtn');
-            const mentorChatContainer = document.getElementById('mentorChatContainer');
-            const mentorCloseBtn = document.getElementById('mentorCloseBtn');
-            const mentorSendBtn = document.getElementById('mentorSendBtn');
-            const mentorInput = document.getElementById('mentorInput');
-            const mentorChatBody = document.getElementById('mentorChatBody');
-            const typingIndicator = document.getElementById('typingIndicator');
+        function goToDashboard() {
+            window.location.href = 'dashboard.html';
+        }
 
-            mentorFloatBtn.addEventListener('click', function() {
-                mentorChatContainer.classList.add('show');
-                mentorFloatBtn.style.display = 'none';
-                mentorInput.focus();
-            });
-
-            mentorCloseBtn.addEventListener('click', function() {
-                mentorChatContainer.classList.remove('show');
-                mentorFloatBtn.style.display = 'flex';
-            });
-
-            mentorSendBtn.addEventListener('click', sendMessage);
-
-            mentorInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage();
-                }
-            });
-
-            mentorInput.addEventListener('input', function() {
-                this.style.height = 'auto';
-                this.style.height = Math.min(this.scrollHeight, 100) + 'px';
-            });
-
-            function sendMessage() {
-                const message = mentorInput.value.trim();
-                if (!message) return;
-
-                addUserMessage(message);
-                mentorInput.value = '';
-                mentorInput.style.height = 'auto';
-
-                showTypingIndicator();
-
-                setTimeout(() => {
-                    hideTypingIndicator();
-                    const response = getMentorResponse(message);
-                    addBotMessage(response);
-                }, 1500);
-            }
-
-            window.sendQuickMessage = function(message) {
-                addUserMessage(message);
-                showTypingIndicator();
-
-                setTimeout(() => {
-                    hideTypingIndicator();
-                    const response = getMentorResponse(message);
-                    addBotMessage(response);
-                }, 1500);
-            };
-
-            function addUserMessage(text) {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = 'mentor-message user';
-                messageDiv.innerHTML = `
-                    <div class="message-bubble">
-                        <div>${text}</div>
-                        <div class="message-time">${getCurrentTime()}</div>
-                    </div>
-                `;
-                
-                const typingIndicator = document.getElementById('typingIndicator');
-                mentorChatBody.insertBefore(messageDiv, typingIndicator);
-                scrollToBottom();
-            }
-
-            function addBotMessage(response) {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = 'mentor-message bot';
-                
-                let actionsHTML = '';
-                if (response.actions && response.actions.length > 0) {
-                    actionsHTML = '<div class="quick-actions">';
-                    response.actions.forEach(action => {
-                        actionsHTML += `<button class="quick-action-btn" onclick="sendQuickMessage('${action}')">${action}</button>`;
-                    });
-                    actionsHTML += '</div>';
-                }
-                
-                messageDiv.innerHTML = `
-                    <div class="message-bubble">
-                        <div>${response.text.replace(/\n/g, '<br>')}</div>
-                        ${actionsHTML}
-                        <div class="message-time">${getCurrentTime()}</div>
-                    </div>
-                `;
-                
-                const typingIndicator = document.getElementById('typingIndicator');
-                mentorChatBody.insertBefore(messageDiv, typingIndicator);
-                scrollToBottom();
-            }
-
-            function showTypingIndicator() {
-                typingIndicator.classList.add('show');
-                scrollToBottom();
-            }
-
-            function hideTypingIndicator() {
-                typingIndicator.classList.remove('show');
-            }
-
-            function getCurrentTime() {
-                const now = new Date();
-                return now.toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
-            }
-
-            function scrollToBottom() {
-                setTimeout(() => {
-                    mentorChatBody.scrollTop = mentorChatBody.scrollHeight;
-                }, 100);
-            }
-
-            function getMentorResponse(message) {
-                if (typeof window.mentorKnowledge !== 'undefined' && window.mentorKnowledge.getResponse) {
-                    return window.mentorKnowledge.getResponse(message);
-                }
-
-                const lowerMessage = message.toLowerCase();
-
-                if (lowerMessage.includes('frustrad') || lowerMessage.includes('no puedo')) {
-                    return {
-                        text: "Hey, respira 💙. La frustración es señal de que estás aprendiendo algo nuevo.\n\nRespira profundo, toma un descanso de 5 minutos, y vuelve con curiosidad.",
-                        actions: ['¿Cómo mejoro?', 'Gracias']
-                    };
-                }
-
-                if (lowerMessage.includes('línea') || lowerMessage.includes('gesto')) {
-                    return {
-                        text: "La línea de acción es la columna vertebral del dibujo.\n\nPractica trazos continuos sin levantar el lápiz. Enfócate en capturar la energía antes que los detalles.",
-                        actions: ['Ver ejemplo', 'Entendido']
-                    };
-                }
-
-                return {
-                    text: "Entiendo tu pregunta. Te recomiendo revisar las lecciones del curso o escribirme de forma más específica para ayudarte mejor.",
-                    actions: ['Tengo otra duda', 'Gracias']
-                };
-            }
-        });
-
-        // ===== INICIALIZACIÓN =====
-        document.addEventListener('DOMContentLoaded', function() {
-            checkAuthentication();
-            
+        function showLoading(show) {
             const loadingOverlay = document.getElementById('loadingOverlay');
-            if (loadingOverlay) {
-                loadingOverlay.style.display = 'flex';
+            if (show) {
+                loadingOverlay.classList.add('show');
+            } else {
+                loadingOverlay.classList.remove('show');
             }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎨 Inicializando LMS...');
+            
+            if (!checkAuthentication()) {
+                return;
+            }
+
+            showLoading(true);
 
             setTimeout(() => {
+                updateUserInterface();
                 loadModules();
-                updateProgress();
-                updateStudentDashboard();
-                
-                const user = getCurrentUser();
-                if (user && user.role !== 'instructor') {
-                    document.getElementById('detailedProgressCard').style.display = 'block';
-                }
-
-                if (loadingOverlay) {
-                    loadingOverlay.style.display = 'none';
-                }
+                showLoading(false);
+                console.log('✅ LMS inicializado correctamente');
+                console.log('🤖 Mentor Anatómico v2.1 conectado');
             }, 500);
         });
 
-        console.log('✅ LMS index.html v4.3 - Sistema de desbloqueo progresivo implementado');
-        console.log('🔒 Módulos se desbloquean al completar lecciones del módulo anterior');
+        window.addEventListener('beforeunload', function() {
+            saveProgress();
+        });
+
+        setInterval(saveProgress, 120000);
     </script>
+
 </body>
 </html>
