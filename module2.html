@@ -769,6 +769,43 @@
 
         // ✅ FUNCIÓN CRÍTICA CORREGIDA: initializeModule()
         async function initializeModule() {
+            async function initializeModule() {
+    // ===== 🔒 VERIFICACIÓN DE ACCESO AL MÓDULO 2 =====
+    const progress = getStudentProgress();
+    if (progress && progress.modules) {
+        const m1Data = progress.modules[1];
+        const m1Completed = (m1Data?.completedLessons || []).length;
+        
+        if (m1Completed < 3) {
+            document.body.innerHTML = `
+                <div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px;">
+                    <div style="background: white; padding: 50px 40px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-width: 500px; text-align: center;">
+                        <i class="bi bi-lock-fill" style="font-size: 80px; color: #667eea; display: block; margin-bottom: 20px;"></i>
+                        <h2 style="color: #333; margin-bottom: 15px; font-size: 28px; font-weight: 700;">Módulo 2 Bloqueado</h2>
+                        <p style="color: #666; font-size: 16px; line-height: 1.6; margin-bottom: 25px;">
+                            Primero debes completar las <strong>3 lecciones del Módulo 1: Observación y Gesto</strong> antes de acceder al Módulo 2.
+                        </p>
+                        <div style="background: #f0f2f5; padding: 15px; border-radius: 10px; margin-bottom: 30px;">
+                            <p style="color: #333; font-size: 18px; font-weight: 600; margin: 0;">
+                                📊 Progreso actual: <span style="color: #667eea;">${m1Completed}/3 lecciones</span>
+                            </p>
+                        </div>
+                        <a href="index.html" class="btn btn-primary" style="display: inline-block; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 15px 35px; border-radius: 10px; text-decoration: none; font-weight: 600; transition: all 0.3s; border: none;">
+                            <i class="bi bi-arrow-left me-2"></i>Volver al Inicio
+                        </a>
+                        <p style="color: #999; font-size: 13px; margin-top: 20px;">
+                            💡 Tip: El aprendizaje es progresivo. Completa las bases antes de avanzar.
+                        </p>
+                    </div>
+                </div>
+            `;
+            return;
+        }
+    }
+    // ===== FIN VERIFICACIÓN DE ACCESO =====
+    
+    // Resto del código original continúa aquí...
+    console.log('='.repeat(60));
             console.log('='.repeat(60));
             console.log('🚀 MÓDULO 2 - INICIALIZACIÓN v4.2');
             console.log('='.repeat(60));
