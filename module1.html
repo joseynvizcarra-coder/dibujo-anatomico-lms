@@ -835,6 +835,51 @@
             const lessonTime = Math.round((Date.now() - lessonStartTime) / 60000);
             completedLessons.push(lessonNum);
             
+            // ============================================
+            // 🎮 GAMIFICACIÓN: Otorgar puntos y badges
+            // ============================================
+            if (typeof awardPoints === 'function' && typeof checkAndAwardBadge === 'function') {
+                const lessonPoints = 10;
+                awardPoints(currentUser.username, lessonPoints, `Lección ${MODULE_NUMBER}.${lessonNum} completada`);
+                
+                // Verificar badges basados en tiempo
+                if (typeof checkTimeBasedBadges === 'function') {
+                    checkTimeBasedBadges(currentUser.username);
+                }
+                
+                // Verificar badges basados en progreso
+                const progress = getStudentProgress();
+                if (progress && progress.modules) {
+                    const totalCompleted = Object.values(progress.modules)
+                        .reduce((sum, m) => sum + (Array.isArray(m.completedLessons) ? m.completedLessons.length : 0), 0);
+                    
+                    // Badge primera lección
+                    if (totalCompleted === 1) {
+                        checkAndAwardBadge(currentUser.username, 'firstLesson', '🎯 Primera Lección');
+                    }
+                    
+                    // Badge primer módulo (al completar módulo 1)
+                    if (MODULE_NUMBER === 1 && completedLessons.length === TOTAL_LESSONS) {
+                        checkAndAwardBadge(currentUser.username, 'firstModule', '🏆 Primer Módulo');
+                        awardPoints(currentUser.username, 50, '¡Módulo 1 completado!');
+                    }
+                    
+                    // Badge mitad del curso (aproximadamente 15 lecciones)
+                    if (totalCompleted >= 15) {
+                        checkAndAwardBadge(currentUser.username, 'halfwayCourse', '⚡ A Mitad de Camino');
+                    }
+                    
+                    // Badge curso completo
+                    const allModulesCompleted = Object.values(progress.modules)
+                        .filter(m => m.completed === true).length === 3;
+                    if (allModulesCompleted) {
+                        checkAndAwardBadge(currentUser.username, 'allModules', '🌟 Maestro del Dibujo');
+                        awardPoints(currentUser.username, 200, '¡Curso completado! 🎉');
+                    }
+                }
+            }
+            // ============================================
+            
             await saveProgress();
             
             try {
