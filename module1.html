@@ -847,6 +847,23 @@
             }
             
             showToast('¡Lección completada!', 'success');
+            
+            // ===== AVANCE AUTOMÁTICO A LA SIGUIENTE LECCIÓN =====
+            setTimeout(() => {
+                if (lessonNum < TOTAL_LESSONS) {
+                    console.log('⏭️ Avanzando automáticamente a la siguiente lección...');
+                    showToast('Avanzando a la siguiente lección...', 'info');
+                    setTimeout(() => {
+                        goToNextLesson();
+                    }, 1000);
+                } else {
+                    console.log('🎉 ¡Módulo completado!');
+                    showToast('¡Completaste el Módulo 1!', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                }
+            }, 2000);
         }
 
         async function loadLesson(lessonNum) {
