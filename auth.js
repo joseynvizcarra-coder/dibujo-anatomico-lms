@@ -904,6 +904,102 @@ if (document.readyState === 'loading') {
 }
 
 // =========================
+// 🎮 SISTEMA DE GAMIFICACIÓN
+// =========================
+
+function initializeGamification(username) {
+  const gamificationKey = `gamification_${username}`;
+  const existing = localStorage.getItem(gamificationKey);
+  
+  if (!existing) {
+    const gamificationData = {
+      points: 0,
+      level: 1,
+      badges: [],
+      achievements: {
+        firstLesson: false,
+        firstModule: false,
+        halfwayCourse: false,
+        allModules: false,
+        perfectWeek: false,
+        earlyBird: false,
+        nightOwl: false
+      },
+      streaks: {
+        current: 0,
+        longest: 0,
+        lastActivity: null
+      }
+    };
+    localStorage.setItem(gamificationKey, JSON.stringify(gamificationData));
+    return gamificationData;
+  }
+  return JSON.parse(existing);
+}
+
+function getGamificationData(username) {
+  const gamificationKey = `gamification_${username}`;
+  const data = localStorage.getItem(gamificationKey);
+  return data ? JSON.parse(data) : initializeGamification(username);
+}
+
+function saveGamificationData(username, data) {
+  const gamificationKey = `gamification_${username}`;
+  localStorage.setItem(gamificationKey, JSON.stringify(data));
+}
+
+function awardPoints(username, points, reason) {
+  const data = getGamificationData(username);
+  
+  data.points = (data.points || 0) + points;
+  data.level = Math.floor(data.points / 100) + 1;
+  
+  saveGamificationData(username, data);
+  
+  if (typeof showPointsNotification === 'function') {
+    showPointsNotification(points, reason);
+  }
+  
+  return data;
+}
+
+function checkAndAwardBadge(username, badgeId, badgeName) {
+  const data = getGamificationData(username);
+  
+  if (!data.badges) data.badges = [];
+  
+  if (!data.badges.includes(badgeId)) {
+    data.badges.push(badgeId);
+    saveGamificationData(username, data);
+    
+    if (typeof showBadgeNotification === 'function') {
+      showBadgeNotification(badgeName);
+    }
+    return true;
+  }
+  return false;
+}
+
+function checkTimeBasedBadges(username) {
+  const hour = new Date().getHours();
+  
+  if (hour < 8) {
+    checkAndAwardBadge(username, 'earlyBird', '🌅 Madrugador');
+    awardPoints(username, 5, 'Bonus madrugador');
+  } else if (hour >= 22) {
+    checkAndAwardBadge(username, 'nightOwl', '🦉 Noctámbulo');
+    awardPoints(username, 5, 'Bonus nocturno');
+  }
+}
+
+// Exportar funciones globalmente
+window.initializeGamification = initializeGamification;
+window.getGamificationData = getGamificationData;
+window.awardPoints = awardPoints;
+window.checkAndAwardBadge = checkAndAwardBadge;
+window.checkTimeBasedBadges = checkTimeBasedBadges;
+
+// =========================
 // MANEJO DE VISIBILIDAD DE PÁGINA
 // =========================
 
