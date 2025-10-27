@@ -791,6 +791,37 @@
             
             console.log('✅ Usuario:', currentUser.username);
             
+            // ===== VERIFICACIÓN DE ACCESO: MÓDULO 1 DEBE ESTAR COMPLETADO =====
+            const storageKey = `progress_${currentUser.username}`;
+            const savedProgress = localStorage.getItem(storageKey);
+            let canAccess = false;
+            
+            if (savedProgress) {
+                try {
+                    const progressData = JSON.parse(savedProgress);
+                    const module1Progress = progressData.modules?.[1];
+                    canAccess = module1Progress?.completed || false;
+                    
+                    if (!canAccess) {
+                        console.warn('❌ ACCESO DENEGADO: Módulo 1 no completado');
+                        alert('⚠️ Debes completar el Módulo 1 antes de acceder al Módulo 2.\n\nSerás redirigido al inicio.');
+                        window.location.href = 'index.html';
+                        return;
+                    }
+                    console.log('✅ Verificación de acceso: APROBADA - Módulo 1 completado');
+                } catch (error) {
+                    console.error('Error verificando acceso:', error);
+                    alert('⚠️ Error verificando progreso. Serás redirigido al inicio.');
+                    window.location.href = 'index.html';
+                    return;
+                }
+            } else {
+                console.warn('❌ No hay progreso guardado, redirigiendo al inicio');
+                alert('⚠️ Debes completar el Módulo 1 primero.\n\nSerás redirigido al inicio.');
+                window.location.href = 'index.html';
+                return;
+            }
+            
             // ✅ CRÍTICO: SINCRONIZAR ANTES DE CARGAR
             console.log('🔄 Iniciando sincronización ANTES de cargar progreso...');
             await syncProgressFromSheets(currentUser.username, true);
@@ -853,6 +884,23 @@
             }
             
             showToast('¡Lección completada!', 'success');
+            
+            // ===== AVANCE AUTOMÁTICO A LA SIGUIENTE LECCIÓN =====
+            setTimeout(() => {
+                if (lessonNum < TOTAL_LESSONS) {
+                    console.log('⏭️ Avanzando automáticamente a la siguiente lección...');
+                    showToast('Avanzando a la siguiente lección...', 'info');
+                    setTimeout(() => {
+                        goToNextLesson();
+                    }, 1000);
+                } else {
+                    console.log('🎉 ¡Módulo completado!');
+                    showToast('¡Completaste el Módulo 2!', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                }
+            }, 2000);
         }
 
         async function loadLesson(lessonNum) {
