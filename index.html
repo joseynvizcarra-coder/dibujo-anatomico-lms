@@ -980,35 +980,60 @@
         }
 
         /* ============================================
-           🎮 ESTILOS DE GAMIFICACIÓN
+           🎮 ESTILOS DE GAMIFICACIÓN - COMPACTO
            ============================================ */
         
         .gamification-panel {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            border-radius: 15px;
-            padding: 2rem;
-            margin-top: 2rem;
+            background: white;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-top: 1.5rem;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 2px solid #f8f9fa;
+        }
+
+        .gamification-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #f8f9fa;
+        }
+
+        .gamification-header h5 {
+            margin: 0;
+            font-size: 1rem;
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        .gamification-stats {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
         }
 
         .gamification-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            height: 100%;
+            flex: 1;
+            min-width: 120px;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
         }
 
         .gamification-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-color: var(--primary-light);
         }
 
         .gamification-card i {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
         }
 
         .points-card i { color: #FFC107; }
@@ -1016,48 +1041,53 @@
         .badges-card i { color: #4CAF50; }
 
         .gamification-number {
-            font-size: 2.5rem;
+            font-size: 1.5rem;
             font-weight: bold;
             color: var(--primary-dark);
-            line-height: 1;
-            margin: 0.5rem 0;
+            line-height: 1.2;
+            margin: 0.25rem 0;
         }
 
         .gamification-label {
-            font-size: 0.9rem;
+            font-size: 0.75rem;
             color: var(--gray-medium);
-            margin-top: 0.5rem;
+            margin: 0;
         }
 
         .badges-showcase {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 1rem;
-            padding: 1.5rem;
-            background: white;
-            border-radius: 12px;
-            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.75rem 0;
+            flex-wrap: wrap;
+            justify-content: flex-start;
         }
 
         .badge-item {
-            text-align: center;
-            padding: 1rem;
-            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.35rem 0.65rem;
+            border-radius: 20px;
+            background: #f8f9fa;
             transition: all 0.3s ease;
-            position: relative;
+            border: 1px solid #e9ecef;
         }
 
         .badge-item:hover {
-            background: #f8f9fa;
+            background: #e9ecef;
             transform: scale(1.05);
         }
 
         .badge-icon {
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
+            font-size: 1.25rem;
             filter: grayscale(100%);
-            opacity: 0.3;
+            opacity: 0.4;
             transition: all 0.4s ease;
+        }
+
+        .badge-item.earned {
+            background: linear-gradient(135deg, rgba(44,95,102,0.1), rgba(232,162,184,0.1));
+            border-color: var(--primary-light);
         }
 
         .badge-item.earned .badge-icon {
@@ -1072,9 +1102,9 @@
         }
 
         .badge-name {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 600;
-            color: var(--dark);
+            color: var(--gray-medium);
         }
 
         .badge-item.earned .badge-name {
@@ -1121,17 +1151,39 @@
 
         @media (max-width: 768px) {
             .gamification-panel {
-                padding: 1.5rem;
+                padding: 1rem;
+                margin-top: 1rem;
+            }
+
+            .gamification-stats {
+                gap: 0.5rem;
+            }
+
+            .gamification-card {
+                min-width: 100px;
+                padding: 0.5rem 0.75rem;
+            }
+
+            .gamification-number {
+                font-size: 1.25rem;
             }
 
             .badges-showcase {
-                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-                gap: 0.75rem;
-                padding: 1rem;
+                gap: 0.35rem;
+                padding: 0.5rem 0;
+            }
+
+            .badge-item {
+                padding: 0.25rem 0.5rem;
+                gap: 0.25rem;
             }
 
             .badge-icon {
-                font-size: 2.5rem;
+                font-size: 1rem;
+            }
+
+            .badge-name {
+                font-size: 0.65rem;
             }
 
             .points-notification, .badge-notification {
@@ -1271,35 +1323,31 @@
                 </div>
 
                 <!-- ============================================
-                     🎮 PANEL DE GAMIFICACIÓN
+                     🎮 PANEL DE GAMIFICACIÓN (Solo Estudiantes)
                      ============================================ -->
                 <div class="gamification-panel" id="gamificationPanel" style="display: none;">
-                    <h5 class="mb-4" style="color: var(--primary-dark); font-weight: 600;">
-                        <i class="bi bi-stars me-2"></i>
-                        Tu Progreso Gamificado
-                    </h5>
+                    <div class="gamification-header">
+                        <h5>
+                            <i class="bi bi-stars me-2"></i>
+                            Gamificación
+                        </h5>
+                    </div>
                     
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-4 col-sm-6">
-                            <div class="gamification-card points-card">
-                                <i class="bi bi-trophy-fill"></i>
-                                <div class="gamification-number" id="totalPoints">0</div>
-                                <div class="gamification-label">Puntos Totales</div>
-                            </div>
+                    <div class="gamification-stats">
+                        <div class="gamification-card points-card">
+                            <i class="bi bi-trophy-fill"></i>
+                            <div class="gamification-number" id="totalPoints">0</div>
+                            <div class="gamification-label">Puntos</div>
                         </div>
-                        <div class="col-md-4 col-sm-6">
-                            <div class="gamification-card level-card">
-                                <i class="bi bi-star-fill"></i>
-                                <div class="gamification-number" id="currentLevel">1</div>
-                                <div class="gamification-label">Nivel Actual</div>
-                            </div>
+                        <div class="gamification-card level-card">
+                            <i class="bi bi-star-fill"></i>
+                            <div class="gamification-number" id="currentLevel">1</div>
+                            <div class="gamification-label">Nivel</div>
                         </div>
-                        <div class="col-md-4 col-sm-12">
-                            <div class="gamification-card badges-card">
-                                <i class="bi bi-award-fill"></i>
-                                <div class="gamification-number" id="badgesCount">0</div>
-                                <div class="gamification-label">Insignias Obtenidas</div>
-                            </div>
+                        <div class="gamification-card badges-card">
+                            <i class="bi bi-award-fill"></i>
+                            <div class="gamification-number" id="badgesCount">0</div>
+                            <div class="gamification-label">Insignias</div>
                         </div>
                     </div>
                     
@@ -1982,6 +2030,12 @@
             const user = getCurrentUser();
             if (!user) return;
             
+            // 🔒 SOLO mostrar para estudiantes
+            if (user.role !== 'estudiante') {
+                console.log('🎮 Gamificación oculta para rol:', user.role);
+                return;
+            }
+            
             const gamification = initializeGamification(user.username);
             
             // Mostrar el panel
@@ -1999,13 +2053,13 @@
 
         function loadBadges(gamification) {
             const badges = [
-                { id: 'firstLesson', name: 'Primera Lección', icon: '🎯', description: 'Completaste tu primera lección' },
-                { id: 'firstModule', name: 'Primer Módulo', icon: '🏆', description: 'Completaste el Módulo 1' },
-                { id: 'halfwayCourse', name: 'A Mitad', icon: '⚡', description: 'Llegaste a la mitad del curso' },
-                { id: 'allModules', name: 'Maestro', icon: '🌟', description: 'Completaste todos los módulos' },
-                { id: 'perfectWeek', name: 'Semana Perfecta', icon: '📅', description: '7 días consecutivos estudiando' },
-                { id: 'earlyBird', name: 'Madrugador', icon: '🌅', description: 'Estudiaste antes de las 8am' },
-                { id: 'nightOwl', name: 'Noctámbulo', icon: '🦉', description: 'Estudiaste después de las 10pm' }
+                { id: 'firstLesson', name: '1ª Lección', icon: '🎯' },
+                { id: 'firstModule', name: '1er Módulo', icon: '🏆' },
+                { id: 'halfwayCourse', name: 'A Mitad', icon: '⚡' },
+                { id: 'allModules', name: 'Maestro', icon: '🌟' },
+                { id: 'perfectWeek', name: '7 días', icon: '📅' },
+                { id: 'earlyBird', name: 'Mañanero', icon: '🌅' },
+                { id: 'nightOwl', name: 'Nocturno', icon: '🦉' }
             ];
             
             const showcase = document.getElementById('badgesShowcase');
@@ -2014,9 +2068,9 @@
             showcase.innerHTML = badges.map(badge => {
                 const earned = (gamification.badges || []).includes(badge.id);
                 return `
-                    <div class="badge-item ${earned ? 'earned' : ''}" title="${badge.description}">
-                        <div class="badge-icon">${badge.icon}</div>
-                        <div class="badge-name">${badge.name}</div>
+                    <div class="badge-item ${earned ? 'earned' : ''}" title="${badge.name}">
+                        <span class="badge-icon">${badge.icon}</span>
+                        <span class="badge-name">${badge.name}</span>
                     </div>
                 `;
             }).join('');
