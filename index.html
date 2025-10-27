@@ -431,6 +431,71 @@
             border-color: var(--primary-light);
         }
 
+        /* ===== ESTILOS PARA MÓDULOS BLOQUEADOS ===== */
+        .module-card.locked {
+            opacity: 0.7;
+            position: relative;
+        }
+
+        .module-card.locked::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.05);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .module-card.locked:hover {
+            transform: translateY(-4px);
+        }
+
+        .module-card.locked .module-header {
+            background: linear-gradient(135deg, #6c757d, #495057);
+        }
+
+        .locked-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: var(--danger);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            z-index: 2;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .locked-message {
+            background: linear-gradient(135deg, rgba(244, 67, 54, 0.1), rgba(244, 67, 54, 0.05));
+            border-left: 4px solid var(--danger);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            color: var(--dark);
+        }
+
+        .btn-module.locked {
+            background: #6c757d !important;
+            color: white !important;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .btn-module.locked:hover {
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -1724,8 +1789,28 @@
             const progressValue = moduleProgress.progress || 0;
             const isCompleted = moduleProgress.completed || false;
 
+            // ===== VERIFICACIÓN DE BLOQUEO DE MÓDULOS =====
+            const progress = getStudentProgress();
+            let isLocked = false;
+            let lockMessage = '';
+
+            // Verificar si el módulo debe estar bloqueado
+            if (module.id === 2) {
+                // Módulo 2 requiere que Módulo 1 esté completado
+                const module1Progress = progress?.modules?.[1];
+                isLocked = !(module1Progress?.completed || false);
+                lockMessage = 'Completa el Módulo 1 para desbloquear';
+            } else if (module.id === 3) {
+                // Módulo 3 requiere que Módulo 2 esté completado
+                const module2Progress = progress?.modules?.[2];
+                isLocked = !(module2Progress?.completed || false);
+                lockMessage = 'Completa el Módulo 2 para desbloquear';
+            }
+
             let actionButton = '';
-            if (isCompleted) {
+            if (isLocked) {
+                actionButton = `<button class="btn-module locked" disabled><i class="bi bi-lock-fill me-2"></i>Bloqueado</button>`;
+            } else if (isCompleted) {
                 actionButton = `<a href="${module.url}" class="btn-module btn-secondary-custom"><i class="bi bi-check-circle-fill me-2"></i>Repasar</a>`;
             } else if (progressValue > 0) {
                 actionButton = `<a href="${module.url}" class="btn-module btn-primary-custom"><i class="bi bi-play-circle me-2"></i>Continuar</a>`;
@@ -1733,14 +1818,20 @@
                 actionButton = `<a href="${module.url}" class="btn-module btn-primary-custom"><i class="bi bi-play-circle me-2"></i>Comenzar</a>`;
             }
 
+            const lockedClass = isLocked ? 'locked' : '';
+            const lockedBadge = isLocked ? `<div class="locked-badge"><i class="bi bi-lock-fill"></i> Bloqueado</div>` : '';
+            const lockedMessageHTML = isLocked ? `<div class="locked-message"><i class="bi bi-info-circle-fill me-2"></i>${lockMessage}</div>` : '';
+
             col.innerHTML = `
-                <div class="module-card">
+                <div class="module-card ${lockedClass}">
+                    ${lockedBadge}
                     <div class="module-header">
                         <span class="module-number">${module.number}</span>
                         <h3 class="module-title">${module.title}</h3>
                         <p class="module-subtitle">${module.subtitle}</p>
                     </div>
                     <div class="module-body">
+                        ${lockedMessageHTML}
                         <p class="module-description">${module.description}</p>
                         <div class="module-meta">
                             <span class="meta-item">
