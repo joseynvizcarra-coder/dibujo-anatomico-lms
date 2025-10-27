@@ -978,6 +978,168 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* ============================================
+           🎮 ESTILOS DE GAMIFICACIÓN
+           ============================================ */
+        
+        .gamification-panel {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .gamification-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+        }
+
+        .gamification-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        }
+
+        .gamification-card i {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .points-card i { color: #FFC107; }
+        .level-card i { color: #9C27B0; }
+        .badges-card i { color: #4CAF50; }
+
+        .gamification-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+            line-height: 1;
+            margin: 0.5rem 0;
+        }
+
+        .gamification-label {
+            font-size: 0.9rem;
+            color: var(--gray-medium);
+            margin-top: 0.5rem;
+        }
+
+        .badges-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 1rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 12px;
+            margin-top: 1rem;
+        }
+
+        .badge-item {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .badge-item:hover {
+            background: #f8f9fa;
+            transform: scale(1.05);
+        }
+
+        .badge-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            filter: grayscale(100%);
+            opacity: 0.3;
+            transition: all 0.4s ease;
+        }
+
+        .badge-item.earned .badge-icon {
+            filter: grayscale(0%);
+            opacity: 1;
+            animation: badgePop 0.6s ease;
+        }
+
+        @keyframes badgePop {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .badge-name {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .badge-item.earned .badge-name {
+            color: var(--primary-dark);
+        }
+
+        /* Notificaciones de puntos y badges */
+        .points-notification, .badge-notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 25px;
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
+            z-index: 9999;
+            animation: slideInRight 0.5s ease, slideOutRight 0.5s ease 2.5s;
+            animation-fill-mode: forwards;
+        }
+
+        .badge-notification {
+            background: linear-gradient(135deg, #9C27B0, #7B1FA2);
+            box-shadow: 0 8px 20px rgba(156, 39, 176, 0.4);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .gamification-panel {
+                padding: 1.5rem;
+            }
+
+            .badges-showcase {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+                gap: 0.75rem;
+                padding: 1rem;
+            }
+
+            .badge-icon {
+                font-size: 2.5rem;
+            }
+
+            .points-notification, .badge-notification {
+                right: 10px;
+                left: 10px;
+                padding: 0.875rem 1.25rem;
+            }
+        }
     </style>
 </head>
 
@@ -1106,6 +1268,44 @@
                         Desglose por Módulo
                     </h5>
                     <div class="module-breakdown" id="moduleBreakdown"></div>
+                </div>
+
+                <!-- ============================================
+                     🎮 PANEL DE GAMIFICACIÓN
+                     ============================================ -->
+                <div class="gamification-panel" id="gamificationPanel" style="display: none;">
+                    <h5 class="mb-4" style="color: var(--primary-dark); font-weight: 600;">
+                        <i class="bi bi-stars me-2"></i>
+                        Tu Progreso Gamificado
+                    </h5>
+                    
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4 col-sm-6">
+                            <div class="gamification-card points-card">
+                                <i class="bi bi-trophy-fill"></i>
+                                <div class="gamification-number" id="totalPoints">0</div>
+                                <div class="gamification-label">Puntos Totales</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            <div class="gamification-card level-card">
+                                <i class="bi bi-star-fill"></i>
+                                <div class="gamification-number" id="currentLevel">1</div>
+                                <div class="gamification-label">Nivel Actual</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <div class="gamification-card badges-card">
+                                <i class="bi bi-award-fill"></i>
+                                <div class="gamification-number" id="badgesCount">0</div>
+                                <div class="gamification-label">Insignias Obtenidas</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="badges-showcase" id="badgesShowcase">
+                        <!-- Las insignias se cargarán dinámicamente aquí -->
+                    </div>
                 </div>
             </div>
 
@@ -1742,6 +1942,91 @@
             }
         }
 
+        // ============================================
+        // 🎮 FUNCIONES DE GAMIFICACIÓN
+        // ============================================
+
+        function showPointsNotification(points, reason) {
+            const notification = document.createElement('div');
+            notification.className = 'points-notification';
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="bi bi-trophy-fill" style="font-size: 1.5rem;"></i>
+                    <div>
+                        <div style="font-weight: bold; font-size: 1.2rem;">+${points} puntos</div>
+                        <div style="font-size: 0.85rem; opacity: 0.9;">${reason}</div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        function showBadgeNotification(badgeName) {
+            const notification = document.createElement('div');
+            notification.className = 'badge-notification';
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="bi bi-award-fill" style="font-size: 2rem;"></i>
+                    <div>
+                        <div style="font-weight: bold; font-size: 1.2rem;">¡Nueva Insignia!</div>
+                        <div style="font-size: 0.9rem;">${badgeName}</div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 4000);
+        }
+
+        function loadGamification() {
+            const user = getCurrentUser();
+            if (!user) return;
+            
+            const gamification = initializeGamification(user.username);
+            
+            // Mostrar el panel
+            const panel = document.getElementById('gamificationPanel');
+            if (panel) panel.style.display = 'block';
+            
+            // Actualizar números
+            document.getElementById('totalPoints').textContent = gamification.points || 0;
+            document.getElementById('currentLevel').textContent = gamification.level || 1;
+            document.getElementById('badgesCount').textContent = (gamification.badges || []).length;
+            
+            // Cargar badges
+            loadBadges(gamification);
+        }
+
+        function loadBadges(gamification) {
+            const badges = [
+                { id: 'firstLesson', name: 'Primera Lección', icon: '🎯', description: 'Completaste tu primera lección' },
+                { id: 'firstModule', name: 'Primer Módulo', icon: '🏆', description: 'Completaste el Módulo 1' },
+                { id: 'halfwayCourse', name: 'A Mitad', icon: '⚡', description: 'Llegaste a la mitad del curso' },
+                { id: 'allModules', name: 'Maestro', icon: '🌟', description: 'Completaste todos los módulos' },
+                { id: 'perfectWeek', name: 'Semana Perfecta', icon: '📅', description: '7 días consecutivos estudiando' },
+                { id: 'earlyBird', name: 'Madrugador', icon: '🌅', description: 'Estudiaste antes de las 8am' },
+                { id: 'nightOwl', name: 'Noctámbulo', icon: '🦉', description: 'Estudiaste después de las 10pm' }
+            ];
+            
+            const showcase = document.getElementById('badgesShowcase');
+            if (!showcase) return;
+            
+            showcase.innerHTML = badges.map(badge => {
+                const earned = (gamification.badges || []).includes(badge.id);
+                return `
+                    <div class="badge-item ${earned ? 'earned' : ''}" title="${badge.description}">
+                        <div class="badge-icon">${badge.icon}</div>
+                        <div class="badge-name">${badge.name}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Exportar funciones globalmente para que los módulos puedan usarlas
+        window.showPointsNotification = showPointsNotification;
+        window.showBadgeNotification = showBadgeNotification;
+        window.loadGamification = loadGamification;
+
         function updateProgress() {
             const overallProgress = calculateOverallProgress();
             const completedModules = countCompletedModules();
@@ -1902,6 +2187,7 @@
             setTimeout(() => {
                 updateUserInterface();
                 loadModules();
+                loadGamification(); // 🎮 Cargar gamificación
                 showLoading(false);
                 console.log('✅ LMS inicializado correctamente');
                 console.log('🤖 Mentor Anatómico v2.1 conectado');
