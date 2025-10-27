@@ -1301,8 +1301,23 @@
                     btn.className = 'action-button';
                     btn.textContent = actionText;
                     btn.onclick = () => {
-                        mentorInput.value = actionText;
-                        sendMessage();
+                        // Agregar mensaje del usuario visualmente
+                        addUserMessage(actionText);
+                        
+                        // Deshabilitar el botón para evitar doble clic
+                        btn.disabled = true;
+                        btn.style.opacity = '0.5';
+                        
+                        // Mostrar indicador de escritura
+                        showTypingIndicator();
+                        
+                        // Generar respuesta contextual
+                        setTimeout(() => {
+                            hideTypingIndicator();
+                            const response = window.mentorKnowledge.generateResponse(actionText);
+                            conversationMemory.add(actionText, response.text, response.emotion, response.intensity);
+                            addMentorMessage(response.text, response.actions || []);
+                        }, 800 + Math.random() * 700);
                     };
                     actionsDiv.appendChild(btn);
                 });
