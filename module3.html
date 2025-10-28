@@ -874,46 +874,6 @@
             const lessonTime = Math.round((Date.now() - lessonStartTime) / 60000);
             completedLessons.push(lessonNum);
             
-            // ============================================
-            // 🎮 GAMIFICACIÓN: Otorgar puntos y badges
-            // ============================================
-            if (typeof awardPoints === 'function' && typeof checkAndAwardBadge === 'function') {
-                const lessonPoints = 10;
-                awardPoints(currentUser.username, lessonPoints, `Lección ${MODULE_NUMBER}.${lessonNum} completada`);
-                
-                // Verificar badges basados en tiempo
-                if (typeof checkTimeBasedBadges === 'function') {
-                    checkTimeBasedBadges(currentUser.username);
-                }
-                
-                // Verificar badges basados en progreso
-                const progress = getStudentProgress();
-                if (progress && progress.modules) {
-                    const totalCompleted = Object.values(progress.modules)
-                        .reduce((sum, m) => sum + (Array.isArray(m.completedLessons) ? m.completedLessons.length : 0), 0);
-                    
-                    // Badge tercer módulo (al completar módulo 3)
-                    if (MODULE_NUMBER === 3 && completedLessons.length === TOTAL_LESSONS) {
-                        checkAndAwardBadge(currentUser.username, 'thirdModule', '🥉 Tercer Módulo');
-                        awardPoints(currentUser.username, 50, '¡Módulo 3 completado!');
-                    }
-                    
-                    // Badge mitad del curso (aproximadamente 15 lecciones)
-                    if (totalCompleted >= 15) {
-                        checkAndAwardBadge(currentUser.username, 'halfwayCourse', '⚡ A Mitad de Camino');
-                    }
-                    
-                    // Badge curso completo
-                    const allModulesCompleted = Object.values(progress.modules)
-                        .filter(m => m.completed === true).length === 3;
-                    if (allModulesCompleted) {
-                        checkAndAwardBadge(currentUser.username, 'allModules', '🌟 Maestro del Dibujo');
-                        awardPoints(currentUser.username, 200, '¡Curso completado! 🎉');
-                    }
-                }
-            }
-            // ============================================
-            
             await saveProgress();
             
             try {
@@ -1244,6 +1204,69 @@
             });
         }
 
+        // ===== FUNCIÓN PARA AMPLIAR REFERENCIAS DE LECCIONES 1 Y 2 =====
+        function showReferencesModal(lessonId) {
+            const references = {
+                'lesson1': [
+                    { file: 'ref21.jpg', title: 'Referencia 21', desc: 'Figura completa 1' },
+                    { file: 'ref22.jpg', title: 'Referencia 22', desc: 'Figura completa 2' }
+                ],
+                'lesson2': [
+                    { file: 'ref23_iluminacion_lateral.jpg', title: 'Referencia 23', desc: 'Iluminación lateral' }
+                ]
+            };
+
+            const refs = references[lessonId] || [];
+            let refsHTML = '';
+            
+            refs.forEach(ref => {
+                refsHTML += `
+                    <div class="reference-card">
+                        <div class="reference-image" style="height: 300px;">
+                            <span class="text-sm">${ref.file}</span>
+                        </div>
+                        <h6 class="mt-3 mb-1">${ref.title}</h6>
+                        <p class="small text-muted mb-0">${ref.desc}</p>
+                    </div>
+                `;
+            });
+
+            const modalHTML = `
+                <div class="modal fade" id="referencesModal" tabindex="-1">
+                    <div class="modal-dialog modal-xl modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">
+                                    <i class="bi bi-images me-2"></i>Referencias - Módulo 3
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="text-muted mb-3">Imágenes de referencia para tu ejercicio:</p>
+                                <div class="reference-grid">
+                                    ${refsHTML}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            const existingModal = document.getElementById('referencesModal');
+            if (existingModal) existingModal.remove();
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            const modal = new bootstrap.Modal(document.getElementById('referencesModal'));
+            modal.show();
+            
+            document.getElementById('referencesModal').addEventListener('hidden.bs.modal', function () {
+                this.remove();
+            });
+        }
+
         function submitFinalProject() {
             if (!selectedReference) {
                 showToast('Primero selecciona una referencia', 'warning');
@@ -1420,6 +1443,11 @@
                                         <span class="text-xs">ref22.jpg</span>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="text-center mt-2">
+                                <button class="btn btn-sm btn-outline-primary" onclick="showReferencesModal('lesson1')">
+                                    <i class="bi bi-eye me-1"></i>Ver en Grande
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -1743,6 +1771,11 @@
                             <h6>Referencia:</h6>
                             <div class="reference-image" style="height: 150px;">
                                 <span class="text-xs">ref23_iluminacion_lateral.jpg</span>
+                            </div>
+                            <div class="text-center mt-2">
+                                <button class="btn btn-sm btn-outline-primary" onclick="showReferencesModal('lesson2')">
+                                    <i class="bi bi-eye me-1"></i>Ver en Grande
+                                </button>
                             </div>
                         </div>
                     </div>
