@@ -243,6 +243,61 @@
             text-align: center;
             padding: 1rem;
             font-size: 0.85rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .reference-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .reference-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        @media (max-width: 576px) {
+            .reference-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        .reference-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            position: relative;
+        }
+
+        .reference-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            border-color: var(--primary-light);
+        }
+
+        .reference-card.selected {
+            border-color: var(--success);
+            background: rgba(76, 175, 80, 0.05);
+        }
+
+        .selection-badge {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            z-index: 10;
         }
 
         .checklist {
@@ -1254,6 +1309,11 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="text-center mt-2">
+                                <button class="btn btn-sm btn-outline-primary" onclick="showReferencesModal('lesson1')">
+                                    <i class="bi bi-eye me-1"></i>Ver en Grande
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -1485,6 +1545,11 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="text-center mt-2">
+                                <button class="btn btn-sm btn-outline-primary" onclick="showReferencesModal('lesson2')">
+                                    <i class="bi bi-eye me-1"></i>Ver en Grande
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -1715,6 +1780,11 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="text-center mt-2">
+                                <button class="btn btn-sm btn-outline-primary" onclick="showReferencesModal('lesson3')">
+                                    <i class="bi bi-eye me-1"></i>Ver en Grande
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -1847,6 +1917,80 @@
         window.addEventListener('beforeunload', function() {
             saveProgress();
         });
+
+        // ===== FUNCIÓN PARA AMPLIAR REFERENCIAS =====
+        function showReferencesModal(lessonId) {
+            const references = {
+                'lesson1': [
+                    { file: 'ref1_figura_pie.jpg', title: 'Referencia 1', desc: 'Figura de pie' },
+                    { file: 'ref2_pose_dinamica.jpg', title: 'Referencia 2', desc: 'Pose dinámica' },
+                    { file: 'ref3_contrapposto.jpg', title: 'Referencia 3', desc: 'Contrapposto' }
+                ],
+                'lesson2': [
+                    { file: 'ref4_figura_frontal.jpg', title: 'Referencia 4', desc: 'Figura frontal' },
+                    { file: 'ref5_figura_perfil.jpg', title: 'Referencia 5', desc: 'Figura de perfil' }
+                ],
+                'lesson3': [
+                    { file: 'ref6_contrapposto.jpg', title: 'Referencia 6', desc: 'Contrapposto' },
+                    { file: 'ref7_peso_asimetrico.jpg', title: 'Referencia 7', desc: 'Peso asimétrico' },
+                    { file: 'ref8_balance_dinamico.jpg', title: 'Referencia 8', desc: 'Balance dinámico' }
+                ]
+            };
+
+            const refs = references[lessonId] || [];
+            let refsHTML = '';
+            
+            refs.forEach(ref => {
+                refsHTML += `
+                    <div class="reference-card">
+                        <div class="reference-image" style="height: 300px;">
+                            <span class="text-sm">${ref.file}</span>
+                        </div>
+                        <h6 class="mt-3 mb-1">${ref.title}</h6>
+                        <p class="small text-muted mb-0">${ref.desc}</p>
+                    </div>
+                `;
+            });
+
+            const modalHTML = `
+                <div class="modal fade" id="referencesModal" tabindex="-1">
+                    <div class="modal-dialog modal-xl modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">
+                                    <i class="bi bi-images me-2"></i>Referencias - Módulo 1
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="text-muted mb-3">Imágenes de referencia para tu ejercicio:</p>
+                                <div class="reference-grid">
+                                    ${refsHTML}
+                                </div>
+                                <div class="alert alert-info mt-3 mb-0">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    <strong>Nota:</strong> Las imágenes reales deben colocarse en la carpeta <code>images/</code> de tu repositorio de GitHub.
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            const existingModal = document.getElementById('referencesModal');
+            if (existingModal) existingModal.remove();
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            const modal = new bootstrap.Modal(document.getElementById('referencesModal'));
+            modal.show();
+            
+            document.getElementById('referencesModal').addEventListener('hidden.bs.modal', function () {
+                this.remove();
+            });
+        }
 
         console.log('%c🔍 DEBUG MODE', 'color: #4CAF50; font-size: 16px; font-weight: bold;');
         console.log('%cMódulo 1 v4.2 - Sincronización habilitada', 'color: #FFC107;');
