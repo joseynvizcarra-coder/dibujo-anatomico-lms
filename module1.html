@@ -241,20 +241,26 @@
             color: #6c757d;
             font-style: italic;
             text-align: center;
-            padding: 1rem;
+            padding: 0.5rem;
             font-size: 0.85rem;
             overflow: hidden;
             position: relative;
         }
 
         .reference-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
             border-radius: 8px;
-            position: absolute;
-            top: 0;
-            left: 0;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .reference-image img:hover {
+            transform: scale(1.05);
         }
 
         .reference-grid {
@@ -1295,18 +1301,18 @@
                             <div class="row g-2">
                                 <div class="col-4">
                                     <div class="reference-image" style="height: 100px;">
-    <img src="images/ref1_figura_pie.jpg" alt="Figura de pie">
-</div>
+                                        <span class="text-xs">ref1_figura_pie.jpg</span>
+                                    </div>
                                 </div>
                                 <div class="col-4">
                                     <div class="reference-image" style="height: 100px;">
-    <img src="images/ref2_pose_dinamica.jpg" alt="Pose dinámica">
-</div>
+                                        <span class="text-xs">ref2_pose_dinamica.jpg</span>
+                                    </div>
                                 </div>
                                 <div class="col-4">
                                     <div class="reference-image" style="height: 100px;">
-    <img src="images/ref3_contrapposto.jpg" alt="Contrapposto">
-</div>
+                                        <span class="text-xs">ref3_contrapposto.jpg</span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="text-center mt-2">
@@ -1944,7 +1950,7 @@
                 refsHTML += `
                     <div class="reference-card">
                         <div class="reference-image" style="height: 300px;">
-                            <span class="text-sm">${ref.file}</span>
+                            <img src="images/${ref.file}" alt="${ref.desc}" onclick="openImageLightbox('images/${ref.file}', '${ref.desc}')">
                         </div>
                         <h6 class="mt-3 mb-1">${ref.title}</h6>
                         <p class="small text-muted mb-0">${ref.desc}</p>
@@ -1988,8 +1994,47 @@
             });
         }
 
+        // ===== FUNCIÓN PARA ABRIR IMAGEN INDIVIDUAL EN LIGHTBOX =====
+        function openImageLightbox(imageSrc, imageDesc) {
+            const lightboxHTML = `
+                <div class="modal fade" id="imageLightbox" tabindex="-1" style="z-index: 1060;">
+                    <div class="modal-dialog modal-dialog-centered" style="max-width: 90vw;">
+                        <div class="modal-content bg-transparent border-0">
+                            <div class="modal-body text-center p-0 position-relative">
+                                <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" 
+                                        data-bs-dismiss="modal" style="z-index: 1061;"></button>
+                                <img src="${imageSrc}" alt="${imageDesc}" 
+                                     style="max-width: 100%; max-height: 90vh; border-radius: 8px; box-shadow: 0 8px 32px rgba(0,0,0,0.5);">
+                                <p class="text-white mt-3 mb-0">${imageDesc}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            const existingLightbox = document.getElementById('imageLightbox');
+            if (existingLightbox) existingLightbox.remove();
+            
+            document.body.insertAdjacentHTML('beforeend', lightboxHTML);
+            const lightbox = new bootstrap.Modal(document.getElementById('imageLightbox'));
+            lightbox.show();
+            
+            document.getElementById('imageLightbox').addEventListener('hidden.bs.modal', function () {
+                this.remove();
+            });
+        }
+
         console.log('%c🔍 DEBUG MODE', 'color: #4CAF50; font-size: 16px; font-weight: bold;');
         console.log('%cMódulo 1 v4.2 - Sincronización habilitada', 'color: #FFC107;');
+
+        // ===== HACER CLICABLES LAS IMÁGENES PEQUEÑAS =====
+        document.addEventListener('click', function(e) {
+            if (e.target.matches('.reference-image img')) {
+                const imgSrc = e.target.getAttribute('src');
+                const imgAlt = e.target.getAttribute('alt') || 'Referencia';
+                openImageLightbox(imgSrc, imgAlt);
+            }
+        });
     </script>
 </body>
 </html>
