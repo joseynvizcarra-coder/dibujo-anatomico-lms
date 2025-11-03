@@ -2449,6 +2449,18 @@
 
     <!-- IMPORTAR BASE DE CONOCIMIENTO DEL MENTOR -->
     <script src="mentor-knowledge-3.js"></script>
+    <script>
+        console.log('🔍 DEBUG: Verificando carga del mentor...');
+        console.log('¿window.mentorKnowledge existe?', typeof window.mentorKnowledge !== 'undefined');
+        if (typeof window.mentorKnowledge !== 'undefined') {
+            console.log('✅ Mentor cargado correctamente');
+            console.log('Funciones disponibles:', Object.keys(window.mentorKnowledge));
+        } else {
+            console.error('❌ ERROR: window.mentorKnowledge NO está definido');
+            console.error('Verifica que mentor-knowledge-3.js esté en la misma carpeta que el HTML');
+        }
+    </script>
+
 
     <script>
         // ============================================
