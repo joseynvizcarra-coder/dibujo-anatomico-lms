@@ -1301,7 +1301,7 @@
                             <div class="row g-2">
                                 <div class="col-4">
                                     <div class="reference-image" style="height: 250px;">
-                                        <img src="images/ref1_figura_pie.jpg">
+                                        <img src="images/ref1_figura_pie.jpg" alt="Figura de pie">
                                     </div>
                                 </div>
                                 <div class="col-4">
@@ -1928,18 +1928,18 @@
         function showReferencesModal(lessonId) {
             const references = {
                 'lesson1': [
-                    { file: 'ref1_figura_pie.jpg', title: 'Referencia 1'},
-                    { file: 'ref2_pose_dinamica.jpg', title: 'Referencia 2'},
-                    { file: 'ref3_contrapposto.jpg', title: 'Referencia 3'}
+                    { file: 'ref1_figura_pie.jpg', title: 'Referencia 1', desc: 'Figura de pie' },
+                    { file: 'ref2_pose_dinamica.jpg', title: 'Referencia 2', desc: 'Pose dinámica' },
+                    { file: 'ref3_contrapposto.jpg', title: 'Referencia 3', desc: 'Contrapposto' }
                 ],
                 'lesson2': [
-                    { file: 'ref4_figura_frontal.jpg', title: 'Referencia 4'},
-                    { file: 'ref5_figura_perfil.jpg', title: 'Referencia 5'}
+                    { file: 'ref4_figura_frontal.jpg', title: 'Referencia 4', desc: 'Figura frontal' },
+                    { file: 'ref5_figura_perfil.jpg', title: 'Referencia 5', desc: 'Figura de perfil' }
                 ],
                 'lesson3': [
-                    { file: 'ref6_contrapposto.jpg', title: 'Referencia 6'},
-                    { file: 'ref7_peso_asimetrico.jpg', title: 'Referencia 7'},
-                    { file: 'ref8_balance_dinamico.jpg', title: 'Referencia 8'}
+                    { file: 'ref6_contrapposto.jpg', title: 'Referencia 6', desc: 'Contrapposto' },
+                    { file: 'ref7_peso_asimetrico.jpg', title: 'Referencia 7', desc: 'Peso asimétrico' },
+                    { file: 'ref8_balance_dinamico.jpg', title: 'Referencia 8', desc: 'Balance dinámico' }
                 ]
             };
 
@@ -1950,10 +1950,9 @@
                 refsHTML += `
                     <div class="reference-card">
                         <div class="reference-image" style="height: 450px;">
-                            <img src="images/${ref.file}" alt="${ref.desc}" onclick="openImageLightbox('images/${ref.file}', '${ref.desc}')">
+                            <img src="images/${ref.file}" alt="${ref.title}" onclick="openImageLightbox('images/${ref.file}', '${ref.title}')">
                         </div>
                         <h6 class="mt-3 mb-1">${ref.title}</h6>
-                        <p class="small text-muted mb-0">${ref.desc}</p>
                     </div>
                 `;
             });
