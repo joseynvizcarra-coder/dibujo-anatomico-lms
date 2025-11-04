@@ -1154,16 +1154,44 @@
             }
         ];
 
+        // ===== FUNCIONES DE AUTENTICACIÓN (LOCALES) =====
+        function isAuthenticated() {
+            return localStorage.getItem('isAuthenticated') === 'true';
+        }
+
+        function getCurrentUser() {
+            if (!isAuthenticated()) return null;
+            try {
+                return JSON.parse(localStorage.getItem('currentUser') || 'null');
+            } catch (error) {
+                console.error('Error parsing user data:', error);
+                return null;
+            }
+        }
+
+        function checkAuthentication() {
+            if (!isAuthenticated()) {
+                window.location.href = 'login.html';
+                return false;
+            }
+            return true;
+        }
+
+        function logout() {
+            if (typeof saveProgress === 'function') {
+                saveProgress();
+            }
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('sessionStart');
+            window.location.href = 'login.html';
+        }
+
         // ===== FUNCIONES PRINCIPALES =====
         
         async function initializeDashboard() {
             console.log('🎨 Inicializando Dashboard Optimizado ADDIE...');
             
-            if (!isAuthenticated()) {
-                window.location.href = 'login.html';
-                return;
-            }
-
             const user = getCurrentUser();
             if (!user) {
                 window.location.href = 'login.html';
@@ -1464,41 +1492,15 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🎨 Inicializando Dashboard...');
             
-            // Esperar a que auth.js esté disponible
-            const waitForAuth = setInterval(() => {
-                if (typeof isAuthenticated === 'function' && typeof getCurrentUser === 'function') {
-                    clearInterval(waitForAuth);
-                    
-                    // Verificar autenticación
-                    if (!isAuthenticated()) {
-                        console.warn('No autenticado, redirigiendo...');
-                        window.location.href = 'login.html';
-                        return;
-                    }
+            if (!checkAuthentication()) {
+                return;
+            }
 
-                    const user = getCurrentUser();
-                    if (!user) {
-                        console.warn('Usuario no encontrado, redirigiendo...');
-                        window.location.href = 'login.html';
-                        return;
-                    }
+            document.getElementById('loadingOverlay').style.display = 'flex';
 
-                    document.getElementById('loadingOverlay').style.display = 'flex';
-
-                    setTimeout(() => {
-                        initializeDashboard();
-                    }, 500);
-                }
-            }, 100);
-            
-            // Timeout de seguridad (5 segundos)
             setTimeout(() => {
-                clearInterval(waitForAuth);
-                if (typeof isAuthenticated !== 'function') {
-                    console.error('❌ auth.js no se cargó correctamente');
-                    window.location.href = 'login.html';
-                }
-            }, 5000);
+                initializeDashboard();
+            }, 500);
         });
 
         // ===== SISTEMA DE MENTOR ANATÓMICO =====
