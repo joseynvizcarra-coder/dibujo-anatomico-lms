@@ -1462,15 +1462,31 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🎨 Inicializando Dashboard...');
             
-            if (!checkAuthentication()) {
-                return;
-            }
+            // Esperar a que auth.js esté disponible
+            const waitForAuth = setInterval(() => {
+                if (typeof checkAuthentication === 'function') {
+                    clearInterval(waitForAuth);
+                    
+                    if (!checkAuthentication()) {
+                        return;
+                    }
 
-            document.getElementById('loadingOverlay').style.display = 'flex';
+                    document.getElementById('loadingOverlay').style.display = 'flex';
 
+                    setTimeout(() => {
+                        initializeDashboard();
+                    }, 500);
+                }
+            }, 100);
+            
+            // Timeout de seguridad (5 segundos)
             setTimeout(() => {
-                initializeDashboard();
-            }, 500);
+                clearInterval(waitForAuth);
+                if (typeof checkAuthentication !== 'function') {
+                    console.error('❌ auth.js no se cargó correctamente');
+                    window.location.href = 'login.html';
+                }
+            }, 5000);
         });
 
         // ===== SISTEMA DE MENTOR ANATÓMICO =====
