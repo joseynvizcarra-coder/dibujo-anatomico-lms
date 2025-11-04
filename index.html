@@ -808,6 +808,8 @@
 </head>
 
 <body>
+    <script src="auth.js?v=4.2"></script>
+
     <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="text-center">
@@ -1112,8 +1114,7 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="auth.js"></script>
-    <script src="mentor-knowledge.js"></script>
+    <script src="mentor-knowledge.js?v=1.0"></script>
     
     <script>
         // ===== CONFIGURACIÓN =====
@@ -1158,48 +1159,37 @@
         async function initializeDashboard() {
             console.log('🎨 Inicializando Dashboard Optimizado ADDIE...');
             
-            try {
-                // Verificar autenticación
-                if (typeof checkAuthentication !== 'function' || !checkAuthentication()) {
-                    console.warn('No autenticado, redirigiendo a login');
-                    window.location.href = 'login.html';
-                    return;
-                }
-
-                const user = getCurrentUser();
-                if (!user) {
-                    console.warn('Usuario no encontrado, redirigiendo a login');
-                    window.location.href = 'login.html';
-                    return;
-                }
-
-                console.log('✅ Usuario autenticado:', user.username);
-                
-                // Actualizar UI de usuario
-                updateUserInterface();
-                
-                // Sincronizar progreso si la función existe
-                if (typeof syncProgressFromSheets === 'function') {
-                    try {
-                        await syncProgressFromSheets(user.username, true);
-                    } catch (error) {
-                        console.warn('Error en sincronización, continuando con datos locales:', error);
-                    }
-                }
-                
-                // Cargar datos
-                loadQuickStats();
-                loadNextTask();
-                renderModules();
-                renderModuleBreakdown();
-                
-            } catch (error) {
-                console.error('Error en inicialización:', error);
-            } finally {
-                // SIEMPRE ocultar loading, incluso si hay error
-                document.getElementById('loadingOverlay').classList.add('hidden');
-                console.log('✅ Dashboard cargado');
+            if (!checkAuthentication()) {
+                return;
             }
+
+            const user = getCurrentUser();
+            if (!user) {
+                return;
+            }
+
+            console.log('✅ Usuario autenticado:', user.username);
+            
+            // Actualizar UI de usuario
+            updateUserInterface();
+            
+            // Sincronizar progreso en segundo plano (no bloqueante)
+            if (typeof syncProgressFromSheets === 'function') {
+                syncProgressFromSheets(user.username, false).catch(err => {
+                    console.warn('Error en sincronización, usando datos locales:', err);
+                });
+            }
+            
+            // Cargar datos
+            loadQuickStats();
+            loadNextTask();
+            renderModules();
+            renderModuleBreakdown();
+            
+            // Ocultar loading
+            document.getElementById('loadingOverlay').classList.add('hidden');
+            
+            console.log('✅ Dashboard cargado exitosamente');
         }
 
         function updateUserInterface() {
@@ -1469,11 +1459,19 @@
         }
 
         // ===== INICIALIZACIÓN =====
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initializeDashboard);
-        } else {
-            initializeDashboard();
-        }
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎨 Inicializando Dashboard...');
+            
+            if (!checkAuthentication()) {
+                return;
+            }
+
+            document.getElementById('loadingOverlay').style.display = 'flex';
+
+            setTimeout(() => {
+                initializeDashboard();
+            }, 500);
+        });
 
         // ===== SISTEMA DE MENTOR ANATÓMICO =====
         const conversationMemory = new window.mentorKnowledge.ConversationMemory();
