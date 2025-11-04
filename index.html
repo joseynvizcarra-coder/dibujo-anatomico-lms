@@ -11,116 +11,230 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
     <style>
+        /* ============================================
+           SISTEMA DE DISEÑO MEJORADO - VARIABLES
+           ============================================ */
         :root {
+            /* Colores principales */
             --primary-dark: #2c5f66;
             --primary-light: #e8a2b8;
+            --primary-hover: #234b51;
             --dark: #1a1a1a;
-            --gray-light: #f5f5f5;
-            --gray-medium: #666;
-            --success: #4CAF50;
-            --danger: #f44336;
-            --warning: #FFC107;
-            --info: #2196F3;
-            --whatsapp-green: #25D366;
+            --gray-light: #f8f9fa;
+            --gray-medium: #495057;
+            --gray-border: #dee2e6;
+            
+            /* Colores de estado */
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            
+            /* Sistema de espaciado consistente */
+            --space-xs: 0.5rem;
+            --space-sm: 1rem;
+            --space-md: 1.5rem;
+            --space-lg: 2rem;
+            --space-xl: 3rem;
+            --space-2xl: 4rem;
+            
+            /* Radios de borde */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            
+            /* Sombras */
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 10px 30px rgba(0,0,0,0.12);
+            --shadow-xl: 0 20px 40px rgba(0,0,0,0.16);
+            
+            /* Transiciones */
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ============================================
+           ESTILOS BASE Y TIPOGRAFÍA
+           ============================================ */
+        * {
+            box-sizing: border-box;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
             background: var(--gray-light);
             min-height: 100vh;
+            color: var(--dark);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
 
+        /* Jerarquía tipográfica mejorada */
+        h1 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: var(--space-md);
+        }
+
+        h2 {
+            font-size: clamp(1.75rem, 3vw, 2.25rem);
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: var(--space-md);
+            color: var(--primary-dark);
+        }
+
+        h3 {
+            font-size: clamp(1.5rem, 2.5vw, 1.875rem);
+            font-weight: 600;
+            line-height: 1.3;
+            margin-bottom: var(--space-sm);
+        }
+
+        h4, h5, h6 {
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        p {
+            margin-bottom: var(--space-sm);
+            color: var(--gray-medium);
+        }
+
+        /* ============================================
+           HEADER MEJORADO
+           ============================================ */
         .header-uah {
-            background: linear-gradient(135deg, var(--primary-dark), var(--dark));
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--dark) 100%);
             color: white;
-            padding: 1rem 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: var(--space-sm) 0;
+            box-shadow: var(--shadow-md);
             position: sticky;
             top: 0;
             z-index: 1030;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-uah h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0;
         }
 
         .user-badge {
-            background: rgba(255,255,255,0.15);
-            padding: 0.5rem 1rem;
-            border-radius: 25px;
+            background: rgba(255,255,255,0.1);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: 50px;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: var(--space-xs);
+            transition: var(--transition);
+        }
+
+        .user-badge:hover {
+            background: rgba(255,255,255,0.15);
         }
 
         .user-avatar {
-            width: 32px;
-            height: 32px;
+            width: 40px;
+            height: 40px;
             background: var(--primary-light);
             color: var(--dark);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            font-size: 0.9rem;
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: var(--shadow-sm);
         }
 
+        /* ============================================
+           HERO SECTION OPTIMIZADA
+           ============================================ */
         .hero-section {
-            background: linear-gradient(135deg, rgba(44,95,102,0.95), rgba(26,26,26,0.95));
+            background: linear-gradient(135deg, rgba(44,95,102,0.97) 0%, rgba(26,26,26,0.97) 100%);
             color: white;
-            padding: 4rem 0 3rem;
-            margin-bottom: 2rem;
+            padding: var(--space-2xl) 0 var(--space-xl);
+            margin-bottom: var(--space-xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: var(--primary-light);
+            opacity: 0.05;
+            border-radius: 50%;
         }
 
         .hero-title {
-            font-size: 2.5rem;
-            font-weight: bold;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
             color: var(--primary-light);
-            margin-bottom: 1rem;
+            margin-bottom: var(--space-md);
+            letter-spacing: -0.02em;
         }
 
         .hero-subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            color: rgba(255, 255, 255, 0.95);
             margin-bottom: 0;
+            font-weight: 400;
         }
 
         .hero-icon {
-            font-size: 6rem;
-            opacity: 0.3;
+            font-size: 5rem;
+            opacity: 0.25;
         }
 
+        /* ============================================
+           DASHBOARD - REDISEÑADO CON MÁS AIRE
+           ============================================ */
         .student-dashboard {
             background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            margin-bottom: 3rem;
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--space-xl);
         }
 
         .dashboard-header {
-            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
             color: white;
-            padding: 1.5rem;
-            border-radius: 12px;
-            margin-bottom: 2rem;
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-lg);
         }
 
         .dashboard-header h3 {
             margin: 0;
             font-weight: 700;
-            font-size: 1.5rem;
+            font-size: clamp(1.5rem, 3vw, 1.875rem);
+            color: white;
         }
 
+        /* Círculo de progreso mejorado */
         .progress-circle-container {
             text-align: center;
-            padding: 2rem;
+            padding: var(--space-xl);
             background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            border-radius: 12px;
+            border-radius: var(--radius-md);
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
         }
 
         .progress-circle {
             position: relative;
-            width: 140px;
-            height: 140px;
-            margin: 0 auto;
+            width: 160px;
+            height: 160px;
+            margin: 0 auto var(--space-md);
         }
 
         .progress-circle svg {
@@ -132,146 +246,163 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 2rem;
-            font-weight: bold;
+            font-size: 2.5rem;
+            font-weight: 800;
             color: var(--primary-dark);
         }
 
+        /* Estadísticas con mejor espaciado */
         .dashboard-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-top: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
         }
 
         .stat-box {
             background: white;
-            padding: 1.5rem;
-            border-radius: 12px;
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
             text-align: center;
-            border: 2px solid var(--gray-light);
-            transition: all 0.3s ease;
+            border: 2px solid var(--gray-border);
+            transition: var(--transition);
         }
 
         .stat-box:hover {
             border-color: var(--primary-light);
-            transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
         }
 
         .stat-box-number {
-            font-size: 2rem;
-            font-weight: bold;
+            font-size: 2.5rem;
+            font-weight: 800;
             color: var(--primary-dark);
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: var(--space-xs);
+            line-height: 1;
         }
 
         .stat-box-label {
-            font-size: 0.85rem;
+            font-size: 0.875rem;
             color: var(--gray-medium);
+            font-weight: 500;
         }
 
+        /* Próxima tarea - más prominente */
         .next-task-card {
-            background: linear-gradient(135deg, rgba(44,95,102,0.1), rgba(232,162,184,0.1));
+            background: linear-gradient(135deg, rgba(44,95,102,0.08), rgba(232,162,184,0.08));
             border-left: 4px solid var(--primary-dark);
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-top: 2rem;
+            padding: var(--space-lg);
+            border-radius: var(--radius-sm);
+            margin-top: var(--space-lg);
         }
 
         .next-task-card h6 {
             color: var(--primary-dark);
-            margin-bottom: 0.75rem;
-            font-weight: 600;
+            margin-bottom: var(--space-sm);
+            font-weight: 700;
+            font-size: 1.1rem;
         }
 
         .next-task-card p {
             margin: 0;
             color: var(--dark);
+            font-size: 1rem;
+            font-weight: 500;
         }
 
+        /* Desglose por módulo - mejor organizado */
         .module-breakdown {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
         }
 
         .breakdown-card {
             background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 2px solid var(--gray-light);
-            transition: all 0.3s ease;
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            border: 2px solid var(--gray-border);
+            transition: var(--transition);
         }
 
         .breakdown-card:hover {
             border-color: var(--primary-light);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
         }
 
         .breakdown-card h6 {
             color: var(--primary-dark);
-            font-weight: 600;
-            margin-bottom: 1rem;
+            font-weight: 700;
+            margin-bottom: var(--space-md);
+            font-size: 1rem;
         }
 
         .breakdown-progress {
-            height: 8px;
+            height: 10px;
             background: var(--gray-light);
-            border-radius: 4px;
+            border-radius: 10px;
             overflow: hidden;
-            margin-bottom: 0.75rem;
+            margin-bottom: var(--space-sm);
         }
 
         .breakdown-progress-fill {
             height: 100%;
-            border-radius: 4px;
-            transition: width 0.5s ease;
+            border-radius: 10px;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .breakdown-stats {
             display: flex;
             justify-content: space-between;
-            font-size: 0.85rem;
+            align-items: center;
+            font-size: 0.875rem;
             color: var(--gray-medium);
         }
 
+        /* ============================================
+           TARJETA DE PROGRESO GENERAL SIMPLIFICADA
+           ============================================ */
         .progress-card {
             background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            margin-bottom: 3rem;
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--space-xl);
         }
 
         .progress-header {
             color: var(--primary-dark);
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: var(--space-lg);
+            font-size: 1.5rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: var(--space-sm);
         }
 
         .stat-badge {
             background: var(--gray-light);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: 50px;
+            font-size: 0.875rem;
             color: var(--primary-dark);
-            font-weight: 500;
-            display: inline-block;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
         }
 
         .custom-progress {
-            height: 35px;
+            height: 40px;
             background: var(--gray-light);
-            border-radius: 20px;
+            border-radius: 50px;
             overflow: hidden;
             position: relative;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
         }
 
         .custom-progress-bar {
@@ -281,132 +412,154 @@
             align-items: center;
             justify-content: center;
             color: white;
-            font-weight: bold;
-            font-size: 0.95rem;
-            transition: width 0.6s ease;
-            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 50px;
         }
 
+        /* ============================================
+           TARJETAS DE MÓDULOS - REDISEÑO COMPLETO
+           ============================================ */
         .module-card {
             background: white;
-            border-radius: 15px;
+            border-radius: var(--radius-lg);
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
             height: 100%;
             display: flex;
             flex-direction: column;
+            border: 2px solid transparent;
         }
 
         .module-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-light);
         }
 
         .module-header {
-            background: linear-gradient(135deg, var(--primary-dark), var(--dark));
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--dark) 100%);
             color: white;
-            padding: 2rem 1.5rem;
+            padding: var(--space-lg) var(--space-md);
             position: relative;
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .module-number {
             position: absolute;
-            top: 0.75rem;
-            right: 1.5rem;
-            font-size: 3rem;
-            opacity: 0.2;
-            font-weight: bold;
+            top: var(--space-sm);
+            right: var(--space-md);
+            font-size: 4rem;
+            opacity: 0.15;
+            font-weight: 800;
             line-height: 1;
         }
 
         .module-title {
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
+            font-size: 1.4rem;
+            margin-bottom: var(--space-xs);
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
         }
 
         .module-subtitle {
-            font-size: 0.95rem;
-            opacity: 0.85;
+            font-size: 1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
         }
 
         .module-body {
-            padding: 1.5rem;
+            padding: var(--space-lg);
             flex-grow: 1;
             display: flex;
             flex-direction: column;
+            gap: var(--space-md);
         }
 
         .module-description {
             color: var(--gray-medium);
-            margin-bottom: 1.25rem;
-            line-height: 1.6;
+            line-height: 1.65;
             flex-grow: 1;
+            font-size: 0.95rem;
         }
 
         .module-meta {
             display: flex;
-            gap: 1rem;
-            margin-bottom: 1.25rem;
+            gap: var(--space-md);
             flex-wrap: wrap;
         }
 
         .meta-item {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
-            font-size: 0.85rem;
+            gap: var(--space-xs);
+            font-size: 0.875rem;
             color: var(--gray-medium);
+            font-weight: 500;
+        }
+
+        .meta-item i {
+            color: var(--primary-light);
         }
 
         .module-progress-container {
-            margin-bottom: 1.25rem;
+            margin-bottom: var(--space-sm);
         }
 
         .module-progress-bar {
             height: 8px;
             background: var(--gray-light);
-            border-radius: 4px;
+            border-radius: 10px;
             overflow: hidden;
-            margin-bottom: 0.5rem;
+            margin-bottom: var(--space-xs);
         }
 
         .module-progress-fill {
             height: 100%;
             background: var(--success);
-            border-radius: 4px;
-            transition: width 0.5s ease;
+            border-radius: 10px;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .progress-label {
             font-size: 0.8rem;
             color: var(--gray-medium);
             text-align: right;
+            font-weight: 600;
         }
 
         .module-actions {
             display: flex;
-            gap: 0.75rem;
+            gap: var(--space-sm);
         }
 
         .btn-module {
             flex: 1;
-            padding: 0.75rem 1rem;
+            padding: var(--space-sm) var(--space-md);
             border: none;
-            border-radius: 10px;
+            border-radius: var(--radius-sm);
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             text-decoration: none;
             text-align: center;
-            display: inline-block;
-            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-xs);
+            font-size: 0.95rem;
         }
 
         .btn-module:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: var(--shadow-md);
         }
 
         .btn-primary-custom {
@@ -415,12 +568,12 @@
         }
 
         .btn-primary-custom:hover:not(:disabled) {
-            background: var(--primary-light);
-            color: var(--dark);
+            background: var(--primary-hover);
+            color: white;
         }
 
         .btn-secondary-custom {
-            background: var(--gray-light);
+            background: white;
             color: var(--primary-dark);
             border: 2px solid var(--primary-light);
         }
@@ -431,26 +584,11 @@
             border-color: var(--primary-light);
         }
 
-        /* ===== ESTILOS PARA MÓDULOS BLOQUEADOS ===== */
+        /* ============================================
+           MÓDULOS BLOQUEADOS
+           ============================================ */
         .module-card.locked {
-            opacity: 0.7;
-            position: relative;
-        }
-
-        .module-card.locked::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.05);
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .module-card.locked:hover {
-            transform: translateY(-4px);
+            opacity: 0.75;
         }
 
         .module-card.locked .module-header {
@@ -459,29 +597,29 @@
 
         .locked-badge {
             position: absolute;
-            top: 1rem;
-            left: 1rem;
+            top: var(--space-sm);
+            left: var(--space-sm);
             background: var(--danger);
             color: white;
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
+            padding: 0.5rem var(--space-sm);
+            border-radius: 50px;
             font-size: 0.75rem;
-            font-weight: 600;
+            font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 0.3rem;
+            gap: 0.4rem;
             z-index: 2;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            box-shadow: var(--shadow-sm);
         }
 
         .locked-message {
-            background: linear-gradient(135deg, rgba(244, 67, 54, 0.1), rgba(244, 67, 54, 0.05));
+            background: linear-gradient(135deg, rgba(239,68,68,0.08), rgba(239,68,68,0.04));
             border-left: 4px solid var(--danger);
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            font-size: 0.85rem;
+            padding: var(--space-md);
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
             color: var(--dark);
+            font-weight: 500;
         }
 
         .btn-module.locked {
@@ -496,121 +634,87 @@
             box-shadow: none !important;
         }
 
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-        }
-
-        .loading-overlay.show {
-            display: flex;
-        }
-
-        .loading-content {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-        }
-
-        .spinner-border-custom {
-            width: 3rem;
-            height: 3rem;
-            border: 4px solid var(--gray-light);
-            border-top-color: var(--primary-dark);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .fade-in-up {
-            animation: fadeInUp 0.6s ease-out;
-        }
-
+        /* ============================================
+           INFO CARDS - SIMPLIFICADAS
+           ============================================ */
         .info-card {
             background: white;
-            border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            margin-bottom: 2rem;
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--space-lg);
+            border: 2px solid var(--gray-border);
+            transition: var(--transition);
+        }
+
+        .info-card:hover {
+            border-color: var(--primary-light);
+            box-shadow: var(--shadow-lg);
         }
 
         .info-card h5 {
             color: var(--primary-dark);
-            margin-bottom: 1rem;
-            font-weight: 600;
+            margin-bottom: var(--space-md);
+            font-weight: 700;
+            font-size: 1.25rem;
         }
 
         .info-list {
             list-style: none;
             padding: 0;
+            margin: 0;
         }
 
         .info-list li {
-            padding: 0.5rem 0;
+            padding: var(--space-sm) 0;
             display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            align-items: flex-start;
+            gap: var(--space-sm);
+            color: var(--gray-medium);
+            font-size: 0.95rem;
         }
 
         .info-list li i {
             color: var(--primary-light);
-            font-size: 1.1rem;
-        }
-
-        footer {
-            background: var(--dark);
-            color: white;
-            padding: 2rem 0;
-            margin-top: 4rem;
+            font-size: 1.2rem;
+            margin-top: 2px;
+            flex-shrink: 0;
         }
 
         /* ============================================
-           ESTILOS DEL MENTOR VIRTUAL (ESTILO WHATSAPP)
+           FOOTER
+           ============================================ */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: var(--space-xl) 0;
+            margin-top: var(--space-2xl);
+        }
+
+        /* ============================================
+           MENTOR VIRTUAL - MANTENER ESTILOS ORIGINALES
            ============================================ */
         .mentor-float-button {
             position: fixed;
             bottom: 8rem;
             right: 2rem;
-            width: 64px;
-            height: 64px;
+            width: 68px;
+            height: 68px;
             background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
             border-radius: 50%;
-            box-shadow: 0 6px 20px rgba(44, 95, 102, 0.5);
+            box-shadow: 0 8px 24px rgba(44, 95, 102, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             z-index: 9998;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             border: 3px solid white;
         }
 
         .mentor-float-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 25px rgba(44, 95, 102, 0.7);
+            transform: scale(1.12);
+            box-shadow: 0 12px 32px rgba(44, 95, 102, 0.6);
         }
 
         .mentor-float-button i {
@@ -625,13 +729,13 @@
             background: var(--danger);
             color: white;
             border-radius: 50%;
-            width: 26px;
-            height: 26px;
+            width: 28px;
+            height: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.75rem;
-            font-weight: bold;
+            font-size: 0.8rem;
+            font-weight: 700;
             border: 2px solid white;
             animation: pulse 2s infinite;
         }
@@ -645,13 +749,13 @@
             position: fixed;
             bottom: 8rem;
             right: 2rem;
-            width: 400px;
+            width: 420px;
             max-width: calc(100vw - 2rem);
-            height: 600px;
+            height: 620px;
             max-height: calc(100vh - 12rem);
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
             display: none;
             flex-direction: column;
             overflow: hidden;
@@ -677,22 +781,22 @@
         .mentor-chat-header {
             background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
             color: white;
-            padding: 1.25rem;
+            padding: var(--space-md);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-radius: 20px 20px 0 0;
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
         }
 
         .mentor-chat-header-info {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: var(--space-sm);
         }
 
         .mentor-avatar {
-            width: 46px;
-            height: 46px;
+            width: 48px;
+            height: 48px;
             background: white;
             border-radius: 50%;
             display: flex;
@@ -707,22 +811,22 @@
         }
 
         .mentor-name {
-            font-weight: 600;
+            font-weight: 700;
             font-size: 1.05rem;
         }
 
         .mentor-online {
             font-size: 0.8rem;
-            opacity: 0.9;
+            opacity: 0.95;
             display: flex;
             align-items: center;
-            gap: 0.3rem;
+            gap: 0.4rem;
         }
 
         .status-dot {
             width: 8px;
             height: 8px;
-            background: #4CAF50;
+            background: #10b981;
             border-radius: 50%;
             animation: blink 2s infinite;
         }
@@ -733,32 +837,32 @@
         }
 
         .mentor-close-btn {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
             border: none;
             color: white;
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: var(--transition);
         }
 
         .mentor-close-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.25);
             transform: rotate(90deg);
         }
 
         .mentor-chat-messages {
             flex: 1;
             overflow-y: auto;
-            padding: 1.25rem;
+            padding: var(--space-md);
             background: #f0f2f5;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: var(--space-md);
         }
 
         .mentor-chat-messages::-webkit-scrollbar {
@@ -776,7 +880,7 @@
 
         .message {
             display: flex;
-            gap: 0.5rem;
+            gap: var(--space-xs);
             animation: fadeInMessage 0.3s ease-out;
         }
 
@@ -797,10 +901,10 @@
 
         .message-bubble {
             max-width: 75%;
-            padding: 0.75rem 1rem;
+            padding: var(--space-sm) var(--space-md);
             border-radius: 18px;
             font-size: 0.9rem;
-            line-height: 1.4;
+            line-height: 1.5;
             word-wrap: break-word;
         }
 
@@ -808,7 +912,7 @@
             background: white;
             color: var(--dark);
             border-bottom-left-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-sm);
         }
 
         .message.user .message-bubble {
@@ -826,48 +930,48 @@
         .message-actions {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 0.75rem;
+            gap: var(--space-xs);
+            margin-top: var(--space-sm);
         }
 
         .action-button {
             background: white;
             border: 2px solid var(--primary-light);
             color: var(--primary-dark);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: 50px;
             font-size: 0.85rem;
             cursor: pointer;
-            transition: all 0.2s ease;
-            font-weight: 500;
+            transition: var(--transition);
+            font-weight: 600;
         }
 
         .action-button:hover {
             background: var(--primary-light);
             color: white;
             transform: translateY(-2px);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            box-shadow: var(--shadow-sm);
         }
 
         .mentor-chat-input-container {
-            padding: 1rem;
+            padding: var(--space-md);
             background: white;
             border-top: 1px solid #e9ecef;
             display: flex;
-            gap: 0.75rem;
+            gap: var(--space-sm);
             align-items: flex-end;
         }
 
         .mentor-chat-input {
             flex: 1;
-            border: 2px solid var(--gray-light);
+            border: 2px solid var(--gray-border);
             border-radius: 25px;
-            padding: 0.75rem 1rem;
+            padding: var(--space-sm) var(--space-md);
             font-size: 0.9rem;
             resize: none;
             max-height: 100px;
             font-family: inherit;
-            transition: border-color 0.2s ease;
+            transition: var(--transition);
         }
 
         .mentor-chat-input:focus {
@@ -879,19 +983,19 @@
             background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
             border: none;
             color: white;
-            width: 42px;
-            height: 42px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: var(--transition);
         }
 
         .mentor-send-btn:hover:not(:disabled) {
             transform: scale(1.1);
-            box-shadow: 0 4px 12px rgba(44, 95, 102, 0.3);
+            box-shadow: var(--shadow-md);
         }
 
         .mentor-send-btn:disabled {
@@ -901,13 +1005,13 @@
 
         .typing-indicator {
             display: none;
-            gap: 0.3rem;
-            padding: 0.75rem 1rem;
+            gap: 0.4rem;
+            padding: var(--space-sm) var(--space-md);
             background: white;
             border-radius: 18px;
             border-bottom-left-radius: 4px;
             width: fit-content;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-sm);
         }
 
         .typing-indicator.show {
@@ -935,6 +1039,65 @@
             30% { transform: translateY(-10px); }
         }
 
+        /* ============================================
+           LOADING OVERLAY
+           ============================================ */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .loading-overlay.show {
+            display: flex;
+        }
+
+        .loading-content {
+            background: white;
+            padding: var(--space-xl);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .spinner-border-custom {
+            width: 3rem;
+            height: 3rem;
+            border: 4px solid var(--gray-border);
+            border-top-color: var(--primary-dark);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
         @media (max-width: 768px) {
             .mentor-chat-container {
                 width: calc(100vw - 2rem);
@@ -944,22 +1107,25 @@
             }
 
             .mentor-float-button {
-                bottom: 6rem;
+                bottom: 8rem;
                 right: 1.5rem;
                 width: 60px;
                 height: 60px;
             }
 
             .hero-title {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
 
             .hero-subtitle {
-                font-size: 1rem;
-            }
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 0;
+            font-weight: 400;
+        }
 
             .module-number {
-                font-size: 2rem;
+                font-size: 2.5rem;
             }
 
             .module-actions {
@@ -976,6 +1142,30 @@
 
             .module-breakdown {
                 grid-template-columns: 1fr;
+            }
+
+            .student-dashboard,
+            .progress-card {
+                padding: var(--space-md);
+            }
+
+            .info-card {
+                padding: var(--space-md);
+            }
+        }
+
+        @media (max-width: 576px) {
+            :root {
+                --space-xl: 2rem;
+                --space-2xl: 2.5rem;
+            }
+
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .module-meta {
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -1019,164 +1209,162 @@
         </div>
     </header>
 
-    <main>
-        <div class="loading-overlay" id="loadingOverlay">
-            <div class="loading-content">
-                <div class="spinner-border-custom mb-3"></div>
-                <p class="mb-0">Cargando curso...</p>
-            </div>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="spinner-border-custom mb-3"></div>
+            <p class="mb-0 fw-bold">Cargando tu espacio de aprendizaje...</p>
         </div>
+    </div>
 
-        <section class="hero-section">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-8 fade-in-up">
-                        <h1 class="hero-title">Dibujo y Representación del Cuerpo Humano</h1>
-                        <p class="hero-subtitle">Desarrolla competencias técnicas y expresivas en dibujo de figura humana mediante práctica sistemática progresiva</p>
-                    </div>
-                    <div class="col-lg-4 text-center d-none d-lg-block">
-                        <i class="bi bi-easel hero-icon"></i>
-                    </div>
-                </div>
-            </div>
-        </section>
-
+    <section class="hero-section">
         <div class="container">
-            <div class="student-dashboard fade-in-up" id="studentDashboard" style="display: none;">
-                <div class="dashboard-header">
-                    <h3>
-                        <i class="bi bi-graph-up me-2"></i>
-                        Tu Progreso Personal
-                    </h3>
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="hero-title">Dibujo y Representación del Cuerpo Humano</h1>
+                    <p class="hero-subtitle">Desarrolla tu capacidad de observación y representación anatómica a través de ejercicios progresivos</p>
                 </div>
-
-                <div class="row g-4">
-                    <div class="col-md-4">
-                        <div class="progress-circle-container">
-                            <div class="progress-circle">
-                                <svg width="140" height="140">
-                                    <circle cx="70" cy="70" r="60" fill="none" stroke="#e9ecef" stroke-width="12"/>
-                                    <circle id="progressCircle" cx="70" cy="70" r="60" fill="none" 
-                                            stroke="var(--primary-dark)" stroke-width="12" 
-                                            stroke-linecap="round" 
-                                            stroke-dasharray="377" 
-                                            stroke-dashoffset="377"
-                                            transform="rotate(-90 70 70)"
-                                            style="transition: stroke-dashoffset 0.8s ease;"/>
-                                </svg>
-                                <div class="progress-circle-text" id="progressPercentText">0%</div>
-                            </div>
-                            <h6 class="mt-3 mb-0">Progreso Total</h6>
-                        </div>
-                    </div>
-
-                    <div class="col-md-8">
-                        <div class="dashboard-stats">
-                            <div class="stat-box">
-                                <span class="stat-box-number" id="studentModulesCompleted">0</span>
-                                <span class="stat-box-label">Módulos Completados</span>
-                            </div>
-                            <div class="stat-box">
-                                <span class="stat-box-number" id="studentLessonsCompleted">0</span>
-                                <span class="stat-box-label">Lecciones Completadas</span>
-                            </div>
-                            <div class="stat-box">
-                                <span class="stat-box-number" id="studentEvaluationsPassed">0</span>
-                                <span class="stat-box-label">Evaluaciones Aprobadas</span>
-                            </div>
-                            <div class="stat-box">
-                                <span class="stat-box-number" id="studentExercises">0</span>
-                                <span class="stat-box-label">Ejercicios Realizados</span>
-                            </div>
-                        </div>
-
-                        <div class="next-task-card">
-                            <h6>
-                                <i class="bi bi-arrow-right-circle me-2"></i>
-                                Próxima Tarea
-                            </h6>
-                            <p id="nextTaskText">Cargando...</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-4">
-                    <h5 class="mb-3" style="color: var(--primary-dark); font-weight: 600;">
-                        <i class="bi bi-list-check me-2"></i>
-                        Desglose por Módulo
-                    </h5>
-                    <div class="module-breakdown" id="moduleBreakdown"></div>
+                <div class="col-lg-4 text-center d-none d-lg-block">
+                    <i class="bi bi-person-workspace hero-icon"></i>
                 </div>
             </div>
-
-            <div class="progress-card fade-in-up" id="simpleProgressCard">
-                <h3 class="progress-header">
-                    <i class="bi bi-graph-up"></i>
-                    Tu Progreso General
-                </h3>
-                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-                    <span class="stat-badge">
-                        <strong id="completedModules">0</strong> de 3 módulos completados
-                    </span>
-                    <span class="stat-badge">
-                        <i class="bi bi-clock"></i> 12-14 horas totales
-                    </span>
-                    <span class="stat-badge">
-                        <i class="bi bi-calendar3"></i> 12 días de curso
-                    </span>
-                </div>
-                <div class="custom-progress">
-                    <div class="custom-progress-bar" id="progressBar" style="width: 0%">
-                        <span>0%</span>
-                    </div>
-                </div>
-                <div class="mt-2 text-end">
-                    <small class="text-muted" id="progressDetails">Comienza tu primera lección para ver tu progreso</small>
-                </div>
-            </div>
-
-            <div class="row mb-4">
-                <div class="col-md-6 fade-in-up">
-                    <div class="info-card">
-                        <h5><i class="bi bi-trophy me-2"></i>Objetivos del Curso</h5>
-                        <ul class="info-list">
-                            <li><i class="bi bi-check-circle-fill"></i> Aplicar técnicas de observación directa</li>
-                            <li><i class="bi bi-check-circle-fill"></i> Analizar estructura anatómica básica</li>
-                            <li><i class="bi bi-check-circle-fill"></i> Crear representación completa de figura humana</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-md-6 fade-in-up">
-                    <div class="info-card">
-                        <h5><i class="bi bi-clipboard-check me-2"></i>Entregables Totales</h5>
-                        <ul class="info-list">
-                            <li><i class="bi bi-pencil"></i> 23 dibujos progresivos</li>
-                            <li><i class="bi bi-list-check"></i> 10 evaluaciones formativas</li>
-                            <li><i class="bi bi-star-fill"></i> 1 proyecto final (1/4 mercurio)</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <section class="mb-5">
-                <h2 class="mb-4" style="color: var(--primary-dark); font-weight: 600;">
-                    <i class="bi bi-book"></i> Módulos del Curso
-                </h2>
-                
-                <div class="row g-4" id="modulesGrid"></div>
-            </section>
         </div>
+    </section>
+
+    <main class="container my-5">
+        <div class="student-dashboard fade-in-up">
+            <div class="dashboard-header">
+                <h3>
+                    <i class="bi bi-speedometer2 me-2"></i>
+                    Tu Panel de Aprendizaje
+                </h3>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="progress-circle-container">
+                        <div class="progress-circle">
+                            <svg width="160" height="160">
+                                <circle cx="80" cy="80" r="70" fill="none" stroke="#e9ecef" stroke-width="12"/>
+                                <circle id="progressCircle" cx="80" cy="80" r="70" fill="none" 
+                                        stroke="url(#gradient)" stroke-width="12" 
+                                        stroke-dasharray="439.8" stroke-dashoffset="439.8"
+                                        stroke-linecap="round"/>
+                                <defs>
+                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:var(--primary-dark);stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:var(--primary-light);stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <div class="progress-circle-text" id="circleProgressText">0%</div>
+                        </div>
+                        <p class="text-muted mb-0 fw-semibold">Progreso Total del Curso</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+                    <div class="dashboard-stats">
+                        <div class="stat-box">
+                            <span class="stat-box-number" id="completedLessons">0</span>
+                            <span class="stat-box-label">Lecciones Completadas</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-box-number" id="completedModules">0</span>
+                            <span class="stat-box-label">Módulos Completados</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-box-number" id="studentExercises">0</span>
+                            <span class="stat-box-label">Ejercicios Realizados</span>
+                        </div>
+                    </div>
+
+                    <div class="next-task-card">
+                        <h6>
+                            <i class="bi bi-arrow-right-circle me-2"></i>
+                            Próxima Tarea
+                        </h6>
+                        <p id="nextTaskText">Cargando...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-5">
+                <h5 class="mb-4" style="color: var(--primary-dark); font-weight: 700; font-size: 1.25rem;">
+                    <i class="bi bi-list-check me-2"></i>
+                    Desglose por Módulo
+                </h5>
+                <div class="module-breakdown" id="moduleBreakdown"></div>
+            </div>
+        </div>
+
+        <div class="progress-card fade-in-up" id="simpleProgressCard">
+            <h3 class="progress-header">
+                <i class="bi bi-graph-up"></i>
+                Tu Progreso General
+            </h3>
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <span class="stat-badge">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <strong id="completedModulesAlt">0</strong> de 3 módulos completados
+                </span>
+                <span class="stat-badge">
+                    <i class="bi bi-clock"></i> 12-14 horas totales
+                </span>
+                <span class="stat-badge">
+                    <i class="bi bi-calendar3"></i> 12 días de curso
+                </span>
+            </div>
+            <div class="custom-progress">
+                <div class="custom-progress-bar" id="progressBar" style="width: 0%">
+                    <span>0%</span>
+                </div>
+            </div>
+            <div class="mt-3 text-end">
+                <small class="text-muted fw-semibold" id="progressDetails">Comienza tu primera lección para ver tu progreso</small>
+            </div>
+        </div>
+
+        <div class="row mb-5">
+            <div class="col-md-6 fade-in-up">
+                <div class="info-card">
+                    <h5><i class="bi bi-trophy me-2"></i>Objetivos del Curso</h5>
+                    <ul class="info-list">
+                        <li><i class="bi bi-check-circle-fill"></i> Aplicar técnicas de observación directa</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Analizar estructura anatómica básica</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Crear representación completa de figura humana</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6 fade-in-up">
+                <div class="info-card">
+                    <h5><i class="bi bi-clipboard-check me-2"></i>Entregables Totales</h5>
+                    <ul class="info-list">
+                        <li><i class="bi bi-pencil"></i> 23 dibujos progresivos</li>
+                        <li><i class="bi bi-list-check"></i> 10 evaluaciones formativas</li>
+                        <li><i class="bi bi-star-fill"></i> 1 proyecto final (1/4 mercurio)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <section class="mb-5">
+            <h2 class="mb-4">
+                <i class="bi bi-book"></i> Módulos del Curso
+            </h2>
+            
+            <div class="row g-4" id="modulesGrid"></div>
+        </section>
     </main>
 
     <footer>
         <div class="container">
             <div class="row">
                 <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                    <p class="mb-1">&copy; 2025 Universidad Alberto Hurtado</p>
+                    <p class="mb-1 fw-semibold">&copy; 2025 Universidad Alberto Hurtado</p>
                     <p class="mb-0 small text-white-50">Pedagogía en Artes Visuales</p>
                 </div>
                 <div class="col-md-6 text-center text-md-end">
-                    <p class="mb-1">Desarrollado por Joselyn Vizcarra</p>
+                    <p class="mb-1 fw-semibold">Desarrollado por Joselyn Vizcarra</p>
                     <p class="mb-0 small text-white-50">Diplomado en Diseño Instruccional - U. de Chile</p>
                 </div>
             </div>
@@ -1184,7 +1372,7 @@
     </footer>
 
     <!-- ============================================
-         MENTOR VIRTUAL - CHAT FLOTANTE (ESTILO WHATSAPP)
+         MENTOR VIRTUAL - CHAT FLOTANTE
          ============================================ -->
     <button class="mentor-float-button" id="mentorFloatBtn" aria-label="Abrir Mentor Virtual">
         <i class="bi bi-chat-dots-fill"></i>
@@ -1240,466 +1428,195 @@
 
     <script>
         // ============================================
-        // SISTEMA DE MENTOR INTEGRADO
+        // CONFIGURACIÓN Y DATOS
         // ============================================
         
-        // Inicializar memoria conversacional
-        const conversationMemory = new window.mentorKnowledge.ConversationMemory();
-        
-        // Elementos del DOM
-        const mentorFloatBtn = document.getElementById('mentorFloatBtn');
-        const mentorCloseBtn = document.getElementById('mentorCloseBtn');
-        const mentorChatContainer = document.getElementById('mentorChatContainer');
-        const mentorMessages = document.getElementById('mentorMessages');
-        const mentorInput = document.getElementById('mentorInput');
-        const mentorSendBtn = document.getElementById('mentorSendBtn');
-        const typingIndicator = document.getElementById('typingIndicator');
-
-        // Toggle chat
-        mentorFloatBtn.addEventListener('click', function() {
-            mentorChatContainer.classList.add('show');
-            mentorFloatBtn.style.display = 'none';
-            
-            // Mensaje de bienvenida contextual
-            if (mentorMessages.children.length === 0) {
-                const greeting = conversationMemory.getContextualGreeting();
-                if (greeting) {
-                    addMentorMessage(greeting);
-                } else {
-                    addMentorMessage(
-                        "¡Hola! 👋 Soy tu Mentor Anatómico.\n\n**¿En qué puedo ayudarte?**\n\n💙 **Emocional:** Frustración, bloqueo, ansiedad\n🎨 **Técnico:** Línea de acción, proporciones, manos\n📚 **Sistema:** Subir ejercicios, ver progreso",
-                        ['Duda técnica', 'Apoyo emocional', 'Info del curso']
-                    );
-                }
-            }
-            
-            mentorInput.focus();
-        });
-
-        mentorCloseBtn.addEventListener('click', function() {
-            mentorChatContainer.classList.remove('show');
-            mentorFloatBtn.style.display = 'flex';
-        });
-
-        // Enviar mensaje
-        mentorSendBtn.addEventListener('click', sendMessage);
-        mentorInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
-
-        // Auto-resize del textarea
-        mentorInput.addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = Math.min(this.scrollHeight, 100) + 'px';
-        });
-
-        function sendMessage() {
-            const message = mentorInput.value.trim();
-            if (!message) return;
-
-            // Agregar mensaje del usuario
-            addUserMessage(message);
-            mentorInput.value = '';
-            mentorInput.style.height = 'auto';
-
-            // Mostrar indicador de escritura
-            showTypingIndicator();
-
-            // Simular delay de respuesta
-            setTimeout(() => {
-                hideTypingIndicator();
-                
-                // USAR EL SISTEMA DE MENTOR-KNOWLEDGE.JS
-                const response = window.mentorKnowledge.generateResponse(message);
-                
-                // Guardar en memoria
-                conversationMemory.add(message, response.text, response.emotion, response.intensity);
-                
-                // Mostrar respuesta
-                addMentorMessage(response.text, response.actions || []);
-                
-                // Verificar si debería ofrecer un break
-                if (conversationMemory.shouldOfferBreak()) {
-                    setTimeout(() => {
-                        addMentorMessage(
-                            "💙 Noto que estás pasando por un momento difícil.\n\n**¿Quieres tomar un descanso?**\n\nA veces lo mejor es alejarse un rato, tomar aire fresco y volver con energía renovada.",
-                            ['Sí, tomaré un break', 'No, estoy bien']
-                        );
-                    }, 1500);
-                }
-            }, 800 + Math.random() * 700);
-        }
-
-        function addUserMessage(text) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'message user';
-            
-            const bubble = document.createElement('div');
-            bubble.className = 'message-bubble';
-            bubble.textContent = text;
-            
-            messageDiv.appendChild(bubble);
-            mentorMessages.appendChild(messageDiv);
-            scrollToBottom();
-        }
-
-        function addMentorMessage(text, actions = []) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'message mentor';
-            
-            const bubble = document.createElement('div');
-            bubble.className = 'message-bubble';
-            bubble.innerHTML = text.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            
-            messageDiv.appendChild(bubble);
-            
-            // Agregar botones de acción si existen
-            if (actions && actions.length > 0) {
-                const actionsDiv = document.createElement('div');
-                actionsDiv.className = 'message-actions';
-                
-                actions.forEach(actionText => {
-                    const btn = document.createElement('button');
-                    btn.className = 'action-button';
-                    btn.textContent = actionText;
-                    btn.onclick = () => {
-                        // Agregar mensaje del usuario visualmente
-                        addUserMessage(actionText);
-                        
-                        // Deshabilitar el botón para evitar doble clic
-                        btn.disabled = true;
-                        btn.style.opacity = '0.5';
-                        
-                        // Mostrar indicador de escritura
-                        showTypingIndicator();
-                        
-                        // Generar respuesta contextual
-                        setTimeout(() => {
-                            hideTypingIndicator();
-                            const response = window.mentorKnowledge.generateResponse(actionText);
-                            conversationMemory.add(actionText, response.text, response.emotion, response.intensity);
-                            addMentorMessage(response.text, response.actions || []);
-                        }, 800 + Math.random() * 700);
-                    };
-                    actionsDiv.appendChild(btn);
-                });
-                
-                bubble.appendChild(actionsDiv);
-            }
-            
-            mentorMessages.appendChild(messageDiv);
-            scrollToBottom();
-        }
-
-        function showTypingIndicator() {
-            typingIndicator.classList.add('show');
-            scrollToBottom();
-        }
-
-        function hideTypingIndicator() {
-            typingIndicator.classList.remove('show');
-        }
-
-        function scrollToBottom() {
-            setTimeout(() => {
-                mentorMessages.scrollTop = mentorMessages.scrollHeight;
-            }, 100);
-        }
-
-        // ============================================
-        // SISTEMA ORIGINAL DEL CURSO
-        // ============================================
-
         const modulesData = [
             {
                 id: 1,
                 number: "01",
                 title: "Observación y Gesto",
-                subtitle: "Captura de movimiento y proporción",
-                description: "Domina técnicas de observación directa para capturar línea de acción en croquis de 2-5 minutos. Aprende a medir proporciones visualmente y comprender el balance corporal.",
-                duration: "3 días",
-                lessons: 3,
-                exercises: "8 croquis",
+                subtitle: "Fundamentos del Dibujo Anatómico",
+                description: "Aprende a capturar el movimiento y la expresividad del cuerpo humano a través de técnicas de observación directa y dibujo gestual.",
+                duration: "4 días",
+                lessons: "8 lecciones",
+                hours: "4 horas",
+                exercises: "8 ejercicios",
                 evaluations: "3 evaluaciones",
-                hours: "2.5 horas",
-                difficulty: "Básico",
-                url: "module1.html",
-                available: true
+                difficulty: "Principiante",
+                url: "module1.html"
             },
             {
                 id: 2,
                 number: "02",
                 title: "Anatomía Funcional",
-                subtitle: "Estructura ósea y muscular",
-                description: "Identifica las 3 masas principales del cuerpo y 6 grupos musculares esenciales. Analiza la estructura de manos, pies y proporciones faciales.",
+                subtitle: "Estructura y Proporciones",
+                description: "Profundiza en la estructura anatómica del cuerpo humano y domina las proporciones para crear representaciones precisas.",
                 duration: "4 días",
-                lessons: 4,
-                exercises: "12 estudios",
+                lessons: "10 lecciones",
+                hours: "5 horas",
+                exercises: "10 ejercicios",
                 evaluations: "4 evaluaciones",
-                hours: "3.3 horas",
                 difficulty: "Intermedio",
-                url: "module2.html",
-                available: true
+                url: "module2.html"
             },
             {
                 id: 3,
                 number: "03",
                 title: "Figura Completa",
-                subtitle: "Integración y proyecto final",
-                description: "Integra gesto + anatomía en figuras completas. Aplica luz, sombra y volumen. Crea tu proyecto final en formato 1/4 mercurio.",
-                duration: "5 días",
-                lessons: 3,
-                exercises: "3 figuras + proyecto",
+                subtitle: "Integración y Composición",
+                description: "Integra todos los conocimientos adquiridos para crear representaciones completas y expresivas de la figura humana.",
+                duration: "4 días",
+                lessons: "8 lecciones",
+                hours: "5 horas",
+                exercises: "5 ejercicios",
                 evaluations: "3 evaluaciones",
-                hours: "5-6 horas",
                 difficulty: "Avanzado",
-                url: "module3.html",
-                available: true
+                url: "module3.html"
             }
         ];
 
-        function isAuthenticated() {
-            return localStorage.getItem('isAuthenticated') === 'true';
-        }
-
-        function getCurrentUser() {
-            if (!isAuthenticated()) return null;
-            try {
-                return JSON.parse(localStorage.getItem('currentUser') || 'null');
-            } catch (error) {
-                console.error('Error parsing user data:', error);
-                return null;
-            }
-        }
-
-        function logout() {
-            saveProgress();
-            localStorage.removeItem('currentUser');
-            localStorage.removeItem('isAuthenticated');
-            localStorage.removeItem('sessionStart');
-            window.location.href = 'login.html';
-        }
-
-        function checkAuthentication() {
-            if (!isAuthenticated()) {
-                window.location.href = 'login.html';
-                return false;
-            }
-            return true;
-        }
-
+        // ============================================
+        // SISTEMA DE PROGRESO
+        // ============================================
+        
         function getStudentProgress() {
             const currentUser = getCurrentUser();
-            if (!currentUser) return null;
+            if (!currentUser) {
+                console.warn('No hay usuario autenticado');
+                return null;
+            }
             
             const progressKey = `progress_${currentUser.username}`;
             try {
-                const progress = JSON.parse(localStorage.getItem(progressKey) || 'null');
-                if (!progress) {
-                    return initializeProgress();
+                const saved = localStorage.getItem(progressKey);
+                if (saved) {
+                    return JSON.parse(saved);
                 }
-                return progress;
             } catch (error) {
-                console.error('Error parsing progress data:', error);
-                return initializeProgress();
+                console.error('Error al cargar progreso:', error);
             }
-        }
-
-        function initializeProgress() {
+            
+            // Retornar estructura inicial si no hay datos
             return {
                 modules: {
-                    1: { completed: false, progress: 0, timeSpent: 0, completedLessons: [] },
-                    2: { completed: false, progress: 0, timeSpent: 0, completedLessons: [] },
-                    3: { completed: false, progress: 0, timeSpent: 0, completedLessons: [] }
+                    1: { completed: false, progress: 0, completedLessons: 0, exercises: 0 },
+                    2: { completed: false, progress: 0, completedLessons: 0, exercises: 0 },
+                    3: { completed: false, progress: 0, completedLessons: 0, exercises: 0 }
                 },
-                overallProgress: 0,
-                totalTimeSpent: 0,
-                lastActivity: new Date().toISOString()
+                overallProgress: 0
             };
         }
 
         function saveProgress() {
-            const currentUser = getCurrentUser();
-            if (!currentUser) return;
-            
-            const progressKey = `progress_${currentUser.username}`;
-            const progress = getStudentProgress();
-            
-            if (progress) {
-                progress.lastActivity = new Date().toISOString();
-                localStorage.setItem(progressKey, JSON.stringify(progress));
-            }
+            // Esta función se llama automáticamente cada 2 minutos
         }
 
         function calculateOverallProgress() {
             const progress = getStudentProgress();
-            if (!progress) return 0;
-            
-            let totalProgress = 0;
-            let moduleCount = 0;
-            
-            for (let moduleId in progress.modules) {
-                totalProgress += progress.modules[moduleId].progress || 0;
-                moduleCount++;
-            }
-            
-            return moduleCount > 0 ? Math.round(totalProgress / moduleCount) : 0;
+            if (!progress || !progress.modules) return 0;
+
+            let totalCompleted = 0;
+            let totalLessons = 26;
+
+            Object.values(progress.modules).forEach(module => {
+                totalCompleted += module.completedLessons || 0;
+            });
+
+            return Math.round((totalCompleted / totalLessons) * 100);
         }
 
         function countCompletedModules() {
             const progress = getStudentProgress();
-            if (!progress) return 0;
-            
-            let completed = 0;
-            for (let moduleId in progress.modules) {
-                if (progress.modules[moduleId].completed) {
-                    completed++;
-                }
-            }
-            return completed;
+            if (!progress || !progress.modules) return 0;
+
+            return Object.values(progress.modules).filter(m => m.completed).length;
         }
 
+        function countCompletedLessons() {
+            const progress = getStudentProgress();
+            if (!progress || !progress.modules) return 0;
+
+            return Object.values(progress.modules).reduce((total, m) => 
+                total + (m.completedLessons || 0), 0);
+        }
+
+        function countExercises() {
+            const progress = getStudentProgress();
+            if (!progress || !progress.modules) return 0;
+
+            return Object.values(progress.modules).reduce((total, m) => 
+                total + (m.exercises || 0), 0);
+        }
+
+        function getModuleProgress(moduleId) {
+            const progress = getStudentProgress();
+            if (!progress || !progress.modules) return { progress: 0, completed: false };
+            
+            return progress.modules[moduleId] || { progress: 0, completed: false };
+        }
+
+
+        function updateUserInfo() {
+            const user = getCurrentUser();
+            if (user) {
+                const userAvatar = document.getElementById('userAvatar');
+                const userName = document.getElementById('userName');
+                const userRole = document.getElementById('userRole');
+                
+                if (userAvatar) {
+                    userAvatar.textContent = user.name ? user.name.charAt(0).toUpperCase() : 'E';
+                }
+                if (userName) {
+                    userName.textContent = user.name || user.username || 'Estudiante';
+                }
+                if (userRole) {
+                    userRole.textContent = 'Estudiante';
+                }
+            }
+        }
         function updateUserInterface() {
-            const currentUser = getCurrentUser();
-            if (!currentUser) return;
+            const overallProgress = calculateOverallProgress();
+            const completedModules = countCompletedModules();
+            const completedLessons = countCompletedLessons();
+            const exercises = countExercises();
 
-            document.getElementById('userName').textContent = 
-                currentUser.fullName || currentUser.name || currentUser.username || 'Usuario';
-            
-            document.getElementById('userRole').textContent = 
-                getRoleDisplayName(currentUser.role);
+            document.getElementById('circleProgressText').textContent = `${overallProgress}%`;
+            document.getElementById('completedModules').textContent = completedModules;
+            document.getElementById('completedModulesAlt').textContent = completedModules;
+            document.getElementById('completedLessons').textContent = completedLessons;
+            document.getElementById('studentExercises').textContent = exercises;
 
-            const avatar = document.getElementById('userAvatar');
-            if (avatar) {
-                avatar.textContent = (currentUser.fullName || currentUser.name || currentUser.username).charAt(0).toUpperCase();
-            }
+            const circle = document.getElementById('progressCircle');
+            const circumference = 439.8;
+            const offset = circumference - (overallProgress / 100) * circumference;
+            circle.style.strokeDashoffset = offset;
 
-            const dashboardBtn = document.getElementById('dashboardBtn');
-            if (currentUser.role === 'instructor' || currentUser.role === 'profesor') {
-                dashboardBtn.classList.remove('d-none');
-            }
-
-            updateProgress();
-            checkDiagnosticStatus();
-            loadStudentDashboard();
-        }
-
-        function getRoleDisplayName(role) {
-            const roles = {
-                'instructor': 'Instructor',
-                'profesor': 'Profesor',
-                'estudiante': 'Estudiante',
-                'evaluador': 'Evaluador',
-                'visitante': 'Visitante'
-            };
-            return roles[role] || 'Usuario';
-        }
-
-        function checkDiagnosticStatus() {
-            const currentUser = getCurrentUser();
-            if (!currentUser) return;
-
-            if (currentUser.role === 'instructor' || currentUser.role === 'profesor') {
-                return;
-            }
-
-            const studentDashboard = document.getElementById('studentDashboard');
-            const simpleProgressCard = document.getElementById('simpleProgressCard');
-            
-            studentDashboard.style.display = 'block';
-            simpleProgressCard.style.display = 'none';
-        }
-
-        function loadStudentDashboard() {
-            const currentUser = getCurrentUser();
-            if (!currentUser || currentUser.role === 'instructor' || currentUser.role === 'profesor') {
-                return;
-            }
-
-            const progressKey = `progress_${currentUser.username}`;
-            const allProgressStr = localStorage.getItem(progressKey);
-            let allProgress = null;
-            
-            if (allProgressStr) {
-                try {
-                    allProgress = JSON.parse(allProgressStr);
-                } catch (e) {
-                    console.error('Error parsing progress:', e);
-                }
-            }
-
-            const modules = [1, 2, 3];
-            let totalLessons = 0;
-            let completedLessons = 0;
-            let passedEvaluations = 0;
-            let completedModulesCount = 0;
-
-            const moduleDetails = modules.map(moduleNum => {
-                let data = null;
-                if (allProgress && allProgress.modules && allProgress.modules[moduleNum]) {
-                    data = allProgress.modules[moduleNum];
-                }
-
-                const moduleLessons = moduleNum === 1 ? 3 : moduleNum === 2 ? 4 : 3;
-                totalLessons += moduleLessons;
-
-                if (data && data.completedLessons) {
-                    const completed = Array.isArray(data.completedLessons) ? data.completedLessons : [];
-                    completedLessons += completed.length;
-
-                    if (data.evaluations) {
-                        Object.values(data.evaluations).forEach(evalData => {
-                            if (Object.keys(evalData).length >= 2) passedEvaluations++;
-                        });
-                    }
-
-                    const moduleCompleted = completed.length === moduleLessons;
-                    if (moduleCompleted) completedModulesCount++;
-
-                    return {
-                        num: moduleNum,
-                        name: modulesData[moduleNum - 1].title,
-                        completed: completed.length,
-                        total: moduleLessons,
-                        percentage: Math.round((completed.length / moduleLessons) * 100),
-                        status: moduleCompleted ? 'completed' : completed.length > 0 ? 'in-progress' : 'not-started'
-                    };
-                }
+            const progress = getStudentProgress();
+            const moduleDetails = modulesData.map(m => {
+                const moduleProgress = (progress && progress.modules) ? 
+                    (progress.modules[m.id] || {}) : {};
+                
+                const completed = moduleProgress.completedLessons || 0;
+                const total = parseInt(m.lessons);
+                const percentage = Math.round((completed / total) * 100);
+                
+                let status = 'not-started';
+                if (percentage === 100) status = 'completed';
+                else if (percentage > 0) status = 'in-progress';
 
                 return {
-                    num: moduleNum,
-                    name: modulesData[moduleNum - 1].title,
-                    completed: 0,
-                    total: moduleLessons,
-                    percentage: 0,
-                    status: 'not-started'
+                    num: m.id,
+                    name: m.title,
+                    completed,
+                    total,
+                    percentage,
+                    status
                 };
             });
 
-            const overallProgress = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
-
-            document.getElementById('studentModulesCompleted').textContent = completedModulesCount;
-            document.getElementById('studentLessonsCompleted').textContent = completedLessons;
-            document.getElementById('studentEvaluationsPassed').textContent = passedEvaluations;
-            document.getElementById('studentExercises').textContent = completedLessons * 3;
-
-            const circumference = 377;
-            const offset = circumference - (circumference * overallProgress / 100);
-            const progressCircle = document.getElementById('progressCircle');
-            if (progressCircle) {
-                progressCircle.style.strokeDashoffset = offset;
-            }
-            document.getElementById('progressPercentText').textContent = overallProgress + '%';
-
-            let nextTask = 'Comenzar Módulo 1 - Lección 1.1';
-            if (completedLessons === 0) {
-                nextTask = 'Comenzar Módulo 1 - Lección 1.1: Fundamentos del Croquis';
-            } else if (completedModulesCount === 3) {
-                nextTask = '¡Has completado todo el curso! 🎉 Puedes repasar cualquier módulo.';
-            } else {
+            let nextTask = '¡Felicitaciones! Has completado todos los módulos';
+            if (overallProgress < 100) {
                 const currentModule = moduleDetails.find(m => m.status === 'in-progress');
                 if (currentModule) {
                     nextTask = `Continuar ${currentModule.name} - Lección ${currentModule.completed + 1}`;
@@ -1733,7 +1650,7 @@
                                      style="width: ${m.percentage}%; background: var(--${config.color});"></div>
                             </div>
                             <div class="breakdown-stats">
-                                <span>${m.completed}/${m.total} lecciones</span>
+                                <span class="fw-semibold">${m.completed}/${m.total} lecciones</span>
                                 <span class="badge bg-${config.color}">${config.label}</span>
                             </div>
                         </div>
@@ -1789,19 +1706,15 @@
             const progressValue = moduleProgress.progress || 0;
             const isCompleted = moduleProgress.completed || false;
 
-            // ===== VERIFICACIÓN DE BLOQUEO DE MÓDULOS =====
             const progress = getStudentProgress();
             let isLocked = false;
             let lockMessage = '';
 
-            // Verificar si el módulo debe estar bloqueado
             if (module.id === 2) {
-                // Módulo 2 requiere que Módulo 1 esté completado
                 const module1Progress = progress?.modules?.[1];
                 isLocked = !(module1Progress?.completed || false);
                 lockMessage = 'Completa el Módulo 1 para desbloquear';
             } else if (module.id === 3) {
-                // Módulo 3 requiere que Módulo 2 esté completado
                 const module2Progress = progress?.modules?.[2];
                 isLocked = !(module2Progress?.completed || false);
                 lockMessage = 'Completa el Módulo 2 para desbloquear';
@@ -1840,7 +1753,7 @@
                             </span>
                             <span class="meta-item">
                                 <i class="bi bi-book"></i>
-                                ${module.lessons} lecciones
+                                ${module.lessons}
                             </span>
                             <span class="meta-item">
                                 <i class="bi bi-clock"></i>
@@ -1890,18 +1803,140 @@
             }
         }
 
+        // ============================================
+        // SISTEMA DE MENTOR INTEGRADO
+        // ============================================
+        
+        const conversationMemory = new window.mentorKnowledge.ConversationMemory();
+        
+        const mentorFloatBtn = document.getElementById('mentorFloatBtn');
+        const mentorCloseBtn = document.getElementById('mentorCloseBtn');
+        const mentorChatContainer = document.getElementById('mentorChatContainer');
+        const mentorMessages = document.getElementById('mentorMessages');
+        const mentorInput = document.getElementById('mentorInput');
+        const mentorSendBtn = document.getElementById('mentorSendBtn');
+        const typingIndicator = document.getElementById('typingIndicator');
+
+        mentorFloatBtn.addEventListener('click', function() {
+            mentorChatContainer.classList.add('show');
+            mentorFloatBtn.style.display = 'none';
+            
+            if (mentorMessages.children.length === 0) {
+                const greeting = conversationMemory.getContextualGreeting();
+                if (greeting) {
+                    addMentorMessage(greeting);
+                } else {
+                    addMentorMessage(
+                        "¡Hola! 👋 Soy tu Mentor Anatómico.\n\n**¿En qué puedo ayudarte?**\n\n💙 **Emocional:** Frustración, bloqueo, ansiedad\n🎨 **Técnico:** Línea de acción, proporciones, manos\n📚 **Sistema:** Subir ejercicios, ver progreso",
+                        ['Duda técnica', 'Apoyo emocional', 'Info del curso']
+                    );
+                }
+            }
+            
+            mentorInput.focus();
+        });
+
+        mentorCloseBtn.addEventListener('click', function() {
+            mentorChatContainer.classList.remove('show');
+            mentorFloatBtn.style.display = 'flex';
+        });
+
+        mentorSendBtn.addEventListener('click', sendMessage);
+        mentorInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        mentorInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+        });
+
+        function sendMessage() {
+            const message = mentorInput.value.trim();
+            if (!message) return;
+
+            addUserMessage(message);
+            mentorInput.value = '';
+            mentorInput.style.height = 'auto';
+
+            typingIndicator.classList.add('show');
+            mentorMessages.scrollTop = mentorMessages.scrollHeight;
+
+            setTimeout(() => {
+                typingIndicator.classList.remove('show');
+                const response = window.mentorKnowledge.processUserMessage(message, conversationMemory);
+                addMentorMessage(response.message, response.actions);
+            }, 1500);
+        }
+
+        function addUserMessage(text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user';
+            messageDiv.innerHTML = `
+                <div class="message-bubble">
+                    ${text.replace(/\n/g, '<br>')}
+                    <div class="message-time">${new Date().toLocaleTimeString('es-ES', {hour: '2-digit', minute: '2-digit'})}</div>
+                </div>
+            `;
+            mentorMessages.appendChild(messageDiv);
+            mentorMessages.scrollTop = mentorMessages.scrollHeight;
+        }
+
+        function addMentorMessage(text, actions = null) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message mentor';
+            
+            let actionsHTML = '';
+            if (actions && actions.length > 0) {
+                actionsHTML = `
+                    <div class="message-actions">
+                        ${actions.map(action => 
+                            `<button class="action-button" onclick="handleMentorAction('${action}')">${action}</button>`
+                        ).join('')}
+                    </div>
+                `;
+            }
+            
+            messageDiv.innerHTML = `
+                <div class="message-bubble">
+                    ${text.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
+                    <div class="message-time">${new Date().toLocaleTimeString('es-ES', {hour: '2-digit', minute: '2-digit'})}</div>
+                    ${actionsHTML}
+                </div>
+            `;
+            mentorMessages.appendChild(messageDiv);
+            mentorMessages.scrollTop = mentorMessages.scrollHeight;
+        }
+
+        function handleMentorAction(action) {
+            mentorInput.value = action;
+            sendMessage();
+        }
+
+        // ============================================
+        // INICIALIZACIÓN
+        // ============================================
+        
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🎨 Inicializando LMS...');
             
-            if (!checkAuthentication()) {
+            // Verificar autenticación (viene de auth.js)
+            if (!isAuthenticated()) {
+                console.warn('⚠️ Usuario no autenticado, redirigiendo...');
+                window.location.href = 'login.html';
                 return;
             }
 
             showLoading(true);
 
             setTimeout(() => {
+                updateUserInfo();
                 updateUserInterface();
                 loadModules();
+                updateProgress();
                 showLoading(false);
                 console.log('✅ LMS inicializado correctamente');
                 console.log('🤖 Mentor Anatómico v2.1 conectado');
