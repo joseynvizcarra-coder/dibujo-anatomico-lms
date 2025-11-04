@@ -1253,6 +1253,708 @@
             }
         }
 
+        /* ===== SECCIÓN: INFORMACIÓN DEL CURSO ===== */
+        .course-info-section {
+            max-width: 1400px;
+            margin: 0 auto 3rem;
+            padding: 0 2rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 2rem;
+        }
+
+        .info-card-modern {
+            background: white;
+            border-radius: 20px;
+            padding: 0;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .info-card-modern:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+            border-color: var(--primary-light);
+        }
+
+        .info-card-header {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            border-bottom: 3px solid var(--gray-light);
+        }
+
+        .info-card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .info-card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin: 0;
+        }
+
+        .info-card-body {
+            padding: 2rem;
+        }
+
+        /* Objetivos */
+        .objective-item {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .objective-item:hover {
+            background: linear-gradient(135deg, #e9ecef, #f8f9fa);
+            transform: translateX(5px);
+        }
+
+        .objective-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .objective-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(44,95,102,0.3);
+        }
+
+        .objective-text strong {
+            display: block;
+            font-size: 1.1rem;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .objective-text p {
+            margin: 0;
+            color: var(--gray-medium);
+            line-height: 1.6;
+        }
+
+        /* Entregables */
+        .deliverable-item {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .deliverable-item:hover {
+            background: linear-gradient(135deg, #e9ecef, #f8f9fa);
+            transform: translateX(5px);
+        }
+
+        .deliverable-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .deliverable-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--info), #42a5f5);
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(33,150,243,0.3);
+        }
+
+        .deliverable-content {
+            flex: 1;
+        }
+
+        .deliverable-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            margin-right: 0.5rem;
+        }
+
+        .deliverable-label {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .deliverable-desc {
+            margin: 0.25rem 0 0 0;
+            font-size: 0.9rem;
+            color: var(--gray-medium);
+        }
+
+        /* ===== SECCIÓN: VISTA RÁPIDA ===== */
+        .quick-view-section {
+            max-width: 1400px;
+            margin: 0 auto 3rem;
+            padding: 0 2rem;
+        }
+
+        .quick-view-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .quick-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .quick-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 45px rgba(0,0,0,0.15);
+            border-color: var(--primary-light);
+        }
+
+        .quick-card-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .quick-card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .quick-card-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .quick-stat {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .quick-stat:hover {
+            background: linear-gradient(135deg, #e9ecef, #f8f9fa);
+            transform: translateX(5px);
+        }
+
+        .quick-stat i {
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+        }
+
+        .quick-stat strong {
+            color: var(--primary-dark);
+        }
+
+        /* Materiales */
+        .materials-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .materials-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .materials-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            color: var(--dark);
+            margin-bottom: 0.75rem;
+        }
+
+        .materials-list {
+            list-style: none;
+            padding-left: 2rem;
+            margin: 0;
+        }
+
+        .materials-list li {
+            padding: 0.5rem 0;
+            color: var(--gray-medium);
+            position: relative;
+        }
+
+        .materials-list li::before {
+            content: "•";
+            position: absolute;
+            left: -1rem;
+            color: var(--primary-dark);
+            font-weight: bold;
+        }
+
+        /* Metodología */
+        .methodology-steps {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .method-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            flex: 1;
+            min-width: 80px;
+        }
+
+        .method-step-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 3px 10px rgba(44,95,102,0.3);
+        }
+
+        .method-step-content strong {
+            display: block;
+            font-size: 0.95rem;
+            color: var(--dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .method-step-content span {
+            font-size: 0.8rem;
+            color: var(--gray-medium);
+        }
+
+        .method-arrow {
+            color: var(--primary-light);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        /* ===== SECCIÓN: CONSEJOS DE ÉXITO ===== */
+        .success-tips-section {
+            max-width: 1400px;
+            margin: 0 auto 3rem;
+            padding: 0 2rem;
+        }
+
+        .tips-header {
+            background: linear-gradient(135deg, #FFC107, #FFD54F);
+            color: var(--dark);
+            padding: 2.5rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            box-shadow: 0 8px 30px rgba(255,193,7,0.3);
+        }
+
+        .tips-icon {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: #FFC107;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .tips-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .tips-subtitle {
+            font-size: 1.1rem;
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .tip-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            border-top: 4px solid var(--warning);
+        }
+
+        .tip-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 35px rgba(0,0,0,0.12);
+            border-color: var(--warning);
+        }
+
+        .tip-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #FFC107, #FFD54F);
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 12px rgba(255,193,7,0.3);
+        }
+
+        .tip-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.75rem;
+        }
+
+        .tip-description {
+            font-size: 0.95rem;
+            color: var(--gray-medium);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* ===== SECCIÓN: APOYO Y RECURSOS ===== */
+        .support-section {
+            max-width: 1400px;
+            margin: 0 auto 4rem;
+            padding: 0 2rem;
+        }
+
+        .support-header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--dark));
+            color: white;
+            padding: 3rem;
+            border-radius: 25px;
+            margin-bottom: 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .support-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(232,162,184,0.2) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .support-icon-large {
+            width: 90px;
+            height: 90px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            flex-shrink: 0;
+            backdrop-filter: blur(10px);
+            border: 3px solid rgba(255,255,255,0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .support-header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .support-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin: 0 0 0.5rem 0;
+            color: var(--primary-light);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .support-subtitle {
+            font-size: 1.2rem;
+            margin: 0;
+            opacity: 0.95;
+        }
+
+        .support-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .support-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+        }
+
+        .support-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 45px rgba(0,0,0,0.15);
+            border-color: var(--primary-light);
+        }
+
+        .support-card-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: linear-gradient(135deg, var(--success), #66bb6a);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(76,175,80,0.3);
+        }
+
+        .support-card-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            color: white;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 6px 20px rgba(44,95,102,0.3);
+        }
+
+        .support-card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .support-card-description {
+            font-size: 1rem;
+            color: var(--gray-medium);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .support-card-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-tag {
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--dark);
+            border: 1px solid var(--gray-light);
+        }
+
+        .support-card-button {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .support-card-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(44,95,102,0.4);
+        }
+
+        .support-card-contact {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border-radius: 10px;
+        }
+
+        .contact-item i {
+            font-size: 1.3rem;
+            color: var(--primary-dark);
+        }
+
+        .resources-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .resource-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--dark);
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .resource-link:hover {
+            background: linear-gradient(135deg, #e9ecef, #f8f9fa);
+            border-color: var(--primary-light);
+            transform: translateX(5px);
+            color: var(--primary-dark);
+        }
+
+        .resource-link i {
+            font-size: 1.3rem;
+            color: var(--primary-dark);
+        }
+
+        /* ===== RESPONSIVE PARA NUEVAS SECCIONES ===== */
+        @media (max-width: 992px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-view-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .methodology-steps {
+                flex-direction: column;
+            }
+
+            .method-arrow {
+                transform: rotate(90deg);
+            }
+
+            .tips-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .tips-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+
+            .support-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .support-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .objective-item,
+            .deliverable-item {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .methodology-steps {
+                gap: 1rem;
+            }
+
+            .tips-title {
+                font-size: 1.5rem;
+            }
+
+            .support-title {
+                font-size: 1.7rem;
+            }
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .header-content {
@@ -1469,6 +2171,353 @@
             </div>
             <div class="modules-breakdown-grid" id="moduleBreakdown">
                 <!-- Se llenará dinámicamente -->
+            </div>
+        </div>
+
+        <!-- SECCIÓN: INFORMACIÓN DEL CURSO -->
+        <div class="course-info-section fade-in-up" style="animation-delay: 0.4s;">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="bi bi-info-circle-fill"></i>
+                </div>
+                <h3 class="section-title">Información del Curso</h3>
+            </div>
+            
+            <div class="info-grid">
+                <!-- Objetivos de Aprendizaje -->
+                <div class="info-card-modern">
+                    <div class="info-card-header">
+                        <div class="info-card-icon" style="background: linear-gradient(135deg, #4CAF50, #66bb6a);">
+                            <i class="bi bi-trophy-fill"></i>
+                        </div>
+                        <h4 class="info-card-title">Objetivos de Aprendizaje</h4>
+                    </div>
+                    <div class="info-card-body">
+                        <div class="objective-item">
+                            <div class="objective-number">1</div>
+                            <div class="objective-text">
+                                <strong>Observación Directa</strong>
+                                <p>Aplicar técnicas de observación para capturar línea de acción y proporciones</p>
+                            </div>
+                        </div>
+                        <div class="objective-item">
+                            <div class="objective-number">2</div>
+                            <div class="objective-text">
+                                <strong>Estructura Anatómica</strong>
+                                <p>Analizar y representar la estructura ósea y muscular básica del cuerpo</p>
+                            </div>
+                        </div>
+                        <div class="objective-item">
+                            <div class="objective-number">3</div>
+                            <div class="objective-text">
+                                <strong>Figura Completa</strong>
+                                <p>Crear representaciones completas integrando gesto, anatomía y valores tonales</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Entregables Totales -->
+                <div class="info-card-modern">
+                    <div class="info-card-header">
+                        <div class="info-card-icon" style="background: linear-gradient(135deg, #2196F3, #42a5f5);">
+                            <i class="bi bi-clipboard-check-fill"></i>
+                        </div>
+                        <h4 class="info-card-title">Entregables del Curso</h4>
+                    </div>
+                    <div class="info-card-body">
+                        <div class="deliverable-item">
+                            <div class="deliverable-icon">
+                                <i class="bi bi-pencil-fill"></i>
+                            </div>
+                            <div class="deliverable-content">
+                                <span class="deliverable-number">23</span>
+                                <span class="deliverable-label">Dibujos Progresivos</span>
+                                <p class="deliverable-desc">Ejercicios prácticos de cada lección</p>
+                            </div>
+                        </div>
+                        <div class="deliverable-item">
+                            <div class="deliverable-icon">
+                                <i class="bi bi-list-check"></i>
+                            </div>
+                            <div class="deliverable-content">
+                                <span class="deliverable-number">10</span>
+                                <span class="deliverable-label">Evaluaciones Formativas</span>
+                                <p class="deliverable-desc">Auto-evaluaciones de progreso</p>
+                            </div>
+                        </div>
+                        <div class="deliverable-item">
+                            <div class="deliverable-icon">
+                                <i class="bi bi-star-fill"></i>
+                            </div>
+                            <div class="deliverable-content">
+                                <span class="deliverable-number">1</span>
+                                <span class="deliverable-label">Proyecto Final</span>
+                                <p class="deliverable-desc">Figura completa en papel 1/4 mercurio</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN: VISTA RÁPIDA Y PREPARACIÓN -->
+        <div class="quick-view-section fade-in-up" style="animation-delay: 0.5s;">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="bi bi-lightning-charge-fill"></i>
+                </div>
+                <h3 class="section-title">Vista Rápida y Preparación</h3>
+            </div>
+            
+            <div class="quick-view-grid">
+                <!-- Duración y Estructura -->
+                <div class="quick-card">
+                    <div class="quick-card-icon" style="background: linear-gradient(135deg, #FF9800, #FFB74D);">
+                        <i class="bi bi-calendar-week"></i>
+                    </div>
+                    <h5 class="quick-card-title">Duración y Estructura</h5>
+                    <div class="quick-card-content">
+                        <div class="quick-stat">
+                            <i class="bi bi-clock-fill"></i>
+                            <span><strong>12 días</strong> de aprendizaje</span>
+                        </div>
+                        <div class="quick-stat">
+                            <i class="bi bi-hourglass-split"></i>
+                            <span><strong>12-14 horas</strong> totales</span>
+                        </div>
+                        <div class="quick-stat">
+                            <i class="bi bi-book-fill"></i>
+                            <span><strong>10 lecciones</strong> estructuradas</span>
+                        </div>
+                        <div class="quick-stat">
+                            <i class="bi bi-boxes"></i>
+                            <span><strong>3 módulos</strong> secuenciales</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Materiales Necesarios -->
+                <div class="quick-card">
+                    <div class="quick-card-icon" style="background: linear-gradient(135deg, #E91E63, #F06292);">
+                        <i class="bi bi-palette-fill"></i>
+                    </div>
+                    <h5 class="quick-card-title">Materiales Necesarios</h5>
+                    <div class="quick-card-content">
+                        <div class="materials-section">
+                            <strong class="materials-label">
+                                <i class="bi bi-check-circle-fill text-success"></i> Esenciales:
+                            </strong>
+                            <ul class="materials-list">
+                                <li>Lápiz grafito HB y 2B</li>
+                                <li>Papel block croquis</li>
+                                <li>Borrador blanco</li>
+                                <li>Sacapuntas</li>
+                            </ul>
+                        </div>
+                        <div class="materials-section">
+                            <strong class="materials-label">
+                                <i class="bi bi-star-fill text-warning"></i> Para proyecto final:
+                            </strong>
+                            <ul class="materials-list">
+                                <li>Papel 1/4 mercurio</li>
+                                <li>Carboncillo (opcional)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Metodología -->
+                <div class="quick-card">
+                    <div class="quick-card-icon" style="background: linear-gradient(135deg, #9C27B0, #BA68C8);">
+                        <i class="bi bi-diagram-3-fill"></i>
+                    </div>
+                    <h5 class="quick-card-title">Cómo Funciona</h5>
+                    <div class="quick-card-content">
+                        <div class="methodology-steps">
+                            <div class="method-step">
+                                <div class="method-step-number">1</div>
+                                <div class="method-step-content">
+                                    <strong>Aprende</strong>
+                                    <span>Contenido teórico y visual</span>
+                                </div>
+                            </div>
+                            <div class="method-arrow">→</div>
+                            <div class="method-step">
+                                <div class="method-step-number">2</div>
+                                <div class="method-step-content">
+                                    <strong>Practica</strong>
+                                    <span>Ejercicios guiados</span>
+                                </div>
+                            </div>
+                            <div class="method-arrow">→</div>
+                            <div class="method-step">
+                                <div class="method-step-number">3</div>
+                                <div class="method-step-content">
+                                    <strong>Evalúa</strong>
+                                    <span>Auto-evaluación</span>
+                                </div>
+                            </div>
+                            <div class="method-arrow">→</div>
+                            <div class="method-step">
+                                <div class="method-step-number">4</div>
+                                <div class="method-step-content">
+                                    <strong>Sube</strong>
+                                    <span>Comparte tu trabajo</span>
+                                </div>
+                            </div>
+                            <div class="method-arrow">→</div>
+                            <div class="method-step">
+                                <div class="method-step-number">5</div>
+                                <div class="method-step-content">
+                                    <strong>Avanza</strong>
+                                    <span>Desbloquea siguiente</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN: CONSEJOS DE ÉXITO -->
+        <div class="success-tips-section fade-in-up" style="animation-delay: 0.6s;">
+            <div class="tips-header">
+                <div class="tips-icon">
+                    <i class="bi bi-lightbulb-fill"></i>
+                </div>
+                <div class="tips-title-content">
+                    <h3 class="tips-title">Consejos para Aprovechar el Curso</h3>
+                    <p class="tips-subtitle">Recomendaciones basadas en estudiantes exitosos</p>
+                </div>
+            </div>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <div class="tip-icon">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <h5 class="tip-title">Practica Diariamente</h5>
+                    <p class="tip-description">Dedica 15-30 minutos cada día. La constancia supera la intensidad esporádica.</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">
+                        <i class="bi bi-graph-up-arrow"></i>
+                    </div>
+                    <h5 class="tip-title">Progreso > Perfección</h5>
+                    <p class="tip-description">Enfócate en mejorar, no en ser perfecto. Cada trazo es aprendizaje.</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">
+                        <i class="bi bi-cloud-upload"></i>
+                    </div>
+                    <h5 class="tip-title">Sube Tus Ejercicios</h5>
+                    <p class="tip-description">Comparte aunque no estén "perfectos". El feedback es invaluable.</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">
+                        <i class="bi bi-robot"></i>
+                    </div>
+                    <h5 class="tip-title">Usa el Mentor IA</h5>
+                    <p class="tip-description">Disponible 24/7 para dudas técnicas y apoyo emocional. ¡No dudes en preguntar!</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">
+                        <i class="bi bi-arrow-clockwise"></i>
+                    </div>
+                    <h5 class="tip-title">Repasa Lecciones</h5>
+                    <p class="tip-description">Vuelve a las lecciones anteriores. La repetición refuerza el aprendizaje.</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">
+                        <i class="bi bi-emoji-smile"></i>
+                    </div>
+                    <h5 class="tip-title">Disfruta el Proceso</h5>
+                    <p class="tip-description">El dibujo es un viaje, no un destino. Celebra cada pequeño avance.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN: APOYO Y RECURSOS -->
+        <div class="support-section fade-in-up" style="animation-delay: 0.7s;">
+            <div class="support-header">
+                <div class="support-icon-large">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <div class="support-header-content">
+                    <h3 class="support-title">Estás Acompañado/a en Todo Momento</h3>
+                    <p class="support-subtitle">Múltiples recursos de apoyo disponibles para tu éxito</p>
+                </div>
+            </div>
+            
+            <div class="support-grid">
+                <!-- Mentor IA -->
+                <div class="support-card mentor-card">
+                    <div class="support-card-badge">Disponible 24/7</div>
+                    <div class="support-card-icon">
+                        <i class="bi bi-robot"></i>
+                    </div>
+                    <h4 class="support-card-title">Mentor Anatómico IA</h4>
+                    <p class="support-card-description">
+                        Tu asistente inteligente para dudas técnicas, apoyo emocional y orientación del sistema.
+                    </p>
+                    <div class="support-card-features">
+                        <div class="feature-tag">💙 Apoyo Emocional</div>
+                        <div class="feature-tag">🎨 Dudas Técnicas</div>
+                        <div class="feature-tag">📚 Guía del Sistema</div>
+                    </div>
+                    <button class="support-card-button" onclick="document.getElementById('mentorFloatBtn').click()">
+                        <i class="bi bi-chat-dots-fill me-2"></i>
+                        Abrir Chat del Mentor
+                    </button>
+                </div>
+
+                <!-- Instructor -->
+                <div class="support-card">
+                    <div class="support-card-icon">
+                        <i class="bi bi-person-badge"></i>
+                    </div>
+                    <h4 class="support-card-title">Tu Instructor</h4>
+                    <p class="support-card-description">
+                        Joselyn Vizcarra<br>
+                        <small style="opacity: 0.8;">Diplomado en Diseño Instruccional - U. de Chile</small>
+                    </p>
+                    <div class="support-card-contact">
+                        <div class="contact-item">
+                            <i class="bi bi-envelope-fill"></i>
+                            <span>Consultas por email</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="bi bi-clock-fill"></i>
+                            <span>Respuesta en 24-48 hrs</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recursos Extra -->
+                <div class="support-card">
+                    <div class="support-card-icon">
+                        <i class="bi bi-bookmarks-fill"></i>
+                    </div>
+                    <h4 class="support-card-title">Recursos Complementarios</h4>
+                    <div class="resources-list">
+                        <a href="#" class="resource-link">
+                            <i class="bi bi-images"></i>
+                            <span>Galería de Referencias Anatómicas</span>
+                        </a>
+                        <a href="#" class="resource-link">
+                            <i class="bi bi-question-circle"></i>
+                            <span>Preguntas Frecuentes (FAQ)</span>
+                        </a>
+                        <a href="#" class="resource-link">
+                            <i class="bi bi-book"></i>
+                            <span>Glosario de Términos Anatómicos</span>
+                        </a>
+                        <a href="#" class="resource-link">
+                            <i class="bi bi-film"></i>
+                            <span>Videos Demostrativos</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
