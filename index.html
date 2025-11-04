@@ -822,57 +822,56 @@
             transform: none;
         }
 
-        /* ===== MENTOR ANATÓMICO - POSICIÓN MEJORADA ===== */
-        .chatbot-trigger {
+        /* ===== MENTOR ANATÓMICO - ESTILO ORIGINAL ===== */
+        .mentor-float-button {
             position: fixed;
-            bottom: 100px;
-            right: 30px;
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, var(--whatsapp-green), #20ba55);
-            border: none;
+            bottom: 8rem;
+            right: 2rem;
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
             border-radius: 50%;
-            box-shadow: 0 6px 25px rgba(37, 211, 102, 0.4);
-            cursor: pointer;
-            z-index: 1020;
+            box-shadow: 0 6px 20px rgba(44, 95, 102, 0.5);
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
+            z-index: 1020;
+            transition: all 0.3s ease;
+            border: 3px solid white;
+        }
+
+        .mentor-float-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(44, 95, 102, 0.7);
+        }
+
+        .mentor-float-button i {
             color: white;
             font-size: 2rem;
-            transition: all 0.3s ease;
-            animation: float 3s ease-in-out infinite;
         }
 
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-
-        .chatbot-trigger:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 35px rgba(37, 211, 102, 0.6);
-        }
-
-        .chatbot-badge {
+        .mentor-badge {
             position: absolute;
-            top: -5px;
-            right: -5px;
+            top: -8px;
+            right: -8px;
             background: var(--danger);
             color: white;
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
+            width: 26px;
+            height: 26px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 0.75rem;
-            font-weight: 700;
-            box-shadow: 0 2px 8px rgba(244, 67, 54, 0.4);
+            font-weight: bold;
+            border: 2px solid white;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
         }
 
         /* ===== OVERLAY DE CARGA - POSICIÓN AJUSTADA ===== */
@@ -1182,9 +1181,9 @@
     </section>
 
     <!-- MENTOR ANATÓMICO -->
-    <button class="chatbot-trigger" onclick="openChatbot()" title="Mentor Anatómico IA">
+    <button class="mentor-float-button" id="mentorFloatBtn" onclick="openChatbot()" title="Mentor Anatómico">
         <i class="bi bi-robot"></i>
-        <span class="chatbot-badge">AI</span>
+        <span class="mentor-badge">IA</span>
     </button>
 
     <!-- OVERLAY DE CARGA -->
@@ -1370,7 +1369,7 @@
             window.open('chatbot.html', 'MentorAnatómico', 'width=400,height=600');
         }
 
-        // ===== FUNCIONES DE PROGRESO =====
+        // ===== FUNCIONES DE PROGRESO - CORREGIDAS ===== 
         function calculateOverallProgress() {
             try {
                 const progress = getStudentProgress();
@@ -1379,17 +1378,22 @@
                     return 0;
                 }
                 
-                let totalProgress = 0;
-                let moduleCount = 0;
+                // Calcular basado en lecciones completadas vs total de lecciones
+                const modules = [1, 2, 3];
+                const moduleLessonsCount = {1: 3, 2: 4, 3: 3}; // Lecciones por módulo
                 
-                for (let moduleId in progress.modules) {
-                    if (progress.modules[moduleId]) {
-                        totalProgress += progress.modules[moduleId].progress || 0;
-                        moduleCount++;
+                let totalLessons = 0;
+                let completedLessons = 0;
+                
+                modules.forEach(moduleNum => {
+                    totalLessons += moduleLessonsCount[moduleNum];
+                    const moduleData = progress.modules[moduleNum];
+                    if (moduleData && Array.isArray(moduleData.completedLessons)) {
+                        completedLessons += moduleData.completedLessons.length;
                     }
-                }
+                });
                 
-                return moduleCount > 0 ? Math.round(totalProgress / moduleCount) : 0;
+                return totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
             } catch (error) {
                 console.error('Error en calculateOverallProgress:', error);
                 return 0;
@@ -1401,7 +1405,20 @@
                 const progress = getStudentProgress();
                 if (!progress || !progress.modules) return 0;
                 
-                return Object.values(progress.modules).filter(m => m && m.completed).length;
+                // Un módulo está completo cuando todas sus lecciones están completadas
+                const moduleLessonsCount = {1: 3, 2: 4, 3: 3};
+                let completed = 0;
+                
+                for (let moduleId in moduleLessonsCount) {
+                    const moduleData = progress.modules[moduleId];
+                    if (moduleData && Array.isArray(moduleData.completedLessons)) {
+                        if (moduleData.completedLessons.length === moduleLessonsCount[moduleId]) {
+                            completed++;
+                        }
+                    }
+                }
+                
+                return completed;
             } catch (error) {
                 console.error('Error en countCompletedModules:', error);
                 return 0;
@@ -1413,11 +1430,14 @@
                 const progress = getStudentProgress();
                 if (!progress || !progress.modules) return 0;
                 
-                return Object.values(progress.modules).reduce((sum, m) => {
-                    if (!m) return sum;
-                    const lessons = Array.isArray(m.completedLessons) ? m.completedLessons : [];
-                    return sum + lessons.length;
-                }, 0);
+                let total = 0;
+                Object.values(progress.modules).forEach(moduleData => {
+                    if (moduleData && Array.isArray(moduleData.completedLessons)) {
+                        total += moduleData.completedLessons.length;
+                    }
+                });
+                
+                return total;
             } catch (error) {
                 console.error('Error en countCompletedLessons:', error);
                 return 0;
@@ -1590,47 +1610,61 @@
                 }
 
                 const progress = getStudentProgress();
+                const moduleLessonsCount = {1: 3, 2: 4, 3: 3};
                 let nextTask = 'Comienza el Módulo 1 para iniciar tu aprendizaje';
 
                 if (progress?.modules) {
-                    // Buscar módulo en progreso
-                    const inProgress = Object.entries(progress.modules).find(([id, data]) => 
-                        data && data.progress > 0 && !data.completed
-                    );
-
-                    if (inProgress) {
-                        const moduleId = parseInt(inProgress[0]);
-                        const moduleData = modulesData.find(m => m.id === moduleId);
-                        if (moduleData) {
-                            const completedLessons = Array.isArray(inProgress[1].completedLessons) ? 
-                                inProgress[1].completedLessons.length : 0;
-                            nextTask = `Continuar ${moduleData.title} - Lección ${completedLessons + 1} de ${moduleData.lessons}`;
+                    let totalCompletedLessons = 0;
+                    let totalLessons = 0;
+                    
+                    // Calcular progreso total
+                    [1, 2, 3].forEach(moduleId => {
+                        totalLessons += moduleLessonsCount[moduleId];
+                        const moduleData = progress.modules[moduleId];
+                        if (moduleData && Array.isArray(moduleData.completedLessons)) {
+                            totalCompletedLessons += moduleData.completedLessons.length;
                         }
+                    });
+
+                    // Si completó todo
+                    if (totalCompletedLessons === totalLessons) {
+                        nextTask = '¡Has completado todo el curso! 🎉 Puedes repasar cualquier módulo.';
                     } else {
-                        // Buscar siguiente módulo no iniciado
-                        const notStarted = Object.entries(progress.modules).find(([id, data]) => 
-                            data && data.progress === 0
-                        );
+                        // Buscar módulo en progreso
+                        let foundNext = false;
                         
-                        if (notStarted) {
-                            const moduleId = parseInt(notStarted[0]);
-                            const moduleData = modulesData.find(m => m.id === moduleId);
+                        for (let moduleId = 1; moduleId <= 3; moduleId++) {
+                            const moduleData = progress.modules[moduleId];
+                            const totalModuleLessons = moduleLessonsCount[moduleId];
+                            const completedLessons = moduleData && Array.isArray(moduleData.completedLessons) ? 
+                                moduleData.completedLessons.length : 0;
                             
-                            if (moduleData) {
-                                // Verificar si está bloqueado
-                                if (moduleId > 1) {
-                                    const previousModule = progress.modules[moduleId - 1];
-                                    if (!previousModule?.completed) {
-                                        nextTask = `Completa el Módulo ${moduleId - 1} para desbloquear el siguiente`;
+                            if (completedLessons < totalModuleLessons) {
+                                const moduleInfo = modulesData.find(m => m.id === moduleId);
+                                if (moduleInfo) {
+                                    if (completedLessons > 0) {
+                                        nextTask = `Continuar ${moduleInfo.title} - Lección ${completedLessons + 1} de ${totalModuleLessons}`;
                                     } else {
-                                        nextTask = `Comenzar ${moduleData.title} - ¡Nuevo módulo disponible!`;
+                                        // Verificar si está bloqueado
+                                        if (moduleId === 1) {
+                                            nextTask = `Comenzar ${moduleInfo.title} - Lección 1 de ${totalModuleLessons}`;
+                                        } else {
+                                            const prevModuleData = progress.modules[moduleId - 1];
+                                            const prevCompleted = prevModuleData && 
+                                                Array.isArray(prevModuleData.completedLessons) &&
+                                                prevModuleData.completedLessons.length === moduleLessonsCount[moduleId - 1];
+                                            
+                                            if (prevCompleted) {
+                                                nextTask = `Comenzar ${moduleInfo.title} - ¡Nuevo módulo disponible!`;
+                                            } else {
+                                                nextTask = `Completa el Módulo ${moduleId - 1} para desbloquear el siguiente`;
+                                            }
+                                        }
                                     }
-                                } else {
-                                    nextTask = `Comenzar ${moduleData.title} - Primera lección`;
                                 }
+                                foundNext = true;
+                                break;
                             }
-                        } else {
-                            nextTask = '¡Felicitaciones! Has completado todos los módulos disponibles';
                         }
                     }
                 }
@@ -1650,27 +1684,28 @@
                 }
 
                 const progress = getStudentProgress();
+                const moduleLessonsCount = {1: 3, 2: 4, 3: 3};
                 
                 container.innerHTML = modulesData.map(module => {
-                    const moduleProgress = progress?.modules?.[module.id] || {
-                        completed: false,
-                        progress: 0,
-                        completedLessons: []
-                    };
+                    const moduleData = progress?.modules?.[module.id];
+                    const totalLessons = moduleLessonsCount[module.id];
+                    
+                    let completedLessons = 0;
+                    if (moduleData && Array.isArray(moduleData.completedLessons)) {
+                        completedLessons = moduleData.completedLessons.length;
+                    }
 
-                    const completedLessons = Array.isArray(moduleProgress.completedLessons) ? 
-                        moduleProgress.completedLessons.length : 0;
-                    const totalLessons = module.lessons;
                     const percentage = Math.round((completedLessons / totalLessons) * 100);
+                    const isModuleCompleted = completedLessons === totalLessons;
 
                     let status, statusIcon, statusColor, badgeClass;
                     
-                    if (moduleProgress.completed) {
+                    if (isModuleCompleted) {
                         status = 'Completado';
                         statusIcon = 'check-circle-fill';
                         statusColor = 'var(--success)';
                         badgeClass = 'badge-completed';
-                    } else if (percentage > 0) {
+                    } else if (completedLessons > 0) {
                         status = 'En Progreso';
                         statusIcon = 'clock-fill';
                         statusColor = 'var(--warning)';
@@ -1727,10 +1762,16 @@
             const col = document.createElement('div');
             col.className = 'fade-in-up';
 
-            const completedLessons = Array.isArray(moduleProgress.completedLessons) ? 
-                moduleProgress.completedLessons.length : 0;
-            const progressValue = Math.round((completedLessons / module.lessons) * 100);
-            const isCompleted = moduleProgress.completed || false;
+            const moduleLessonsCount = {1: 3, 2: 4, 3: 3};
+            const totalLessons = moduleLessonsCount[module.id];
+            
+            let completedLessons = 0;
+            if (moduleProgress && Array.isArray(moduleProgress.completedLessons)) {
+                completedLessons = moduleProgress.completedLessons.length;
+            }
+
+            const progressValue = Math.round((completedLessons / totalLessons) * 100);
+            const isCompleted = completedLessons === totalLessons;
 
             // Verificar bloqueo
             const progress = getStudentProgress();
@@ -1738,12 +1779,18 @@
             let lockMessage = '';
 
             if (module.id === 2) {
-                const module1Progress = progress?.modules?.[1];
-                isLocked = !(module1Progress?.completed || false);
+                const module1Data = progress?.modules?.[1];
+                const module1Completed = module1Data && 
+                    Array.isArray(module1Data.completedLessons) && 
+                    module1Data.completedLessons.length === moduleLessonsCount[1];
+                isLocked = !module1Completed;
                 lockMessage = 'Completa el Módulo 1 para desbloquear';
             } else if (module.id === 3) {
-                const module2Progress = progress?.modules?.[2];
-                isLocked = !(module2Progress?.completed || false);
+                const module2Data = progress?.modules?.[2];
+                const module2Completed = module2Data && 
+                    Array.isArray(module2Data.completedLessons) && 
+                    module2Data.completedLessons.length === moduleLessonsCount[2];
+                isLocked = !module2Completed;
                 lockMessage = 'Completa el Módulo 2 para desbloquear';
             }
 
@@ -1806,7 +1853,7 @@
                             <div class="module-progress-bar">
                                 <div class="module-progress-fill" style="width: ${progressValue}%"></div>
                             </div>
-                            <div class="progress-label">${progressValue}% completado</div>
+                            <div class="progress-label">${progressValue}% completado (${completedLessons}/${totalLessons} lecciones)</div>
                         </div>
                         <div class="module-actions">
                             ${actionButton}
