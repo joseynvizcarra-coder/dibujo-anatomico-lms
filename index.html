@@ -1291,34 +1291,78 @@
             }, 3000);
         }
 
+        // ===== FUNCIONES DE AUTENTICACIÓN =====
+        function isAuthenticated() {
+            return localStorage.getItem('isAuthenticated') === 'true';
+        }
+
+        function getCurrentUser() {
+            if (!isAuthenticated()) return null;
+            try {
+                return JSON.parse(localStorage.getItem('currentUser') || 'null');
+            } catch (error) {
+                console.error('Error parsing user data:', error);
+                return null;
+            }
+        }
+
         function checkAuthentication() {
-            if (typeof isAuthenticated !== 'function' || !isAuthenticated()) {
-                console.warn('Usuario no autenticado');
+            if (!isAuthenticated()) {
                 window.location.href = 'login.html';
                 return false;
             }
             return true;
         }
 
-        function getCurrentUser() {
-            if (typeof window.getCurrentUser === 'function') {
-                return window.getCurrentUser();
-            }
-            return null;
-        }
-
-        function getStudentProgress() {
-            if (typeof window.getStudentProgress === 'function') {
-                return window.getStudentProgress();
-            }
-            return null;
-        }
-
         function logout() {
-            if (typeof window.logout === 'function') {
-                window.logout();
-            } else {
-                window.location.href = 'login.html';
+            saveProgress();
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('sessionStart');
+            window.location.href = 'login.html';
+        }
+
+        // ===== FUNCIONES DE PROGRESO =====
+        function getStudentProgress() {
+            const currentUser = getCurrentUser();
+            if (!currentUser) return null;
+            
+            const progressKey = `progress_${currentUser.username}`;
+            try {
+                const progress = JSON.parse(localStorage.getItem(progressKey) || 'null');
+                if (!progress) {
+                    return initializeProgress();
+                }
+                return progress;
+            } catch (error) {
+                console.error('Error parsing progress data:', error);
+                return initializeProgress();
+            }
+        }
+
+        function initializeProgress() {
+            return {
+                modules: {
+                    1: { completed: false, progress: 0, timeSpent: 0, completedLessons: [] },
+                    2: { completed: false, progress: 0, timeSpent: 0, completedLessons: [] },
+                    3: { completed: false, progress: 0, timeSpent: 0, completedLessons: [] }
+                },
+                overallProgress: 0,
+                totalTimeSpent: 0,
+                lastActivity: new Date().toISOString()
+            };
+        }
+
+        function saveProgress() {
+            const currentUser = getCurrentUser();
+            if (!currentUser) return;
+            
+            const progressKey = `progress_${currentUser.username}`;
+            const progress = getStudentProgress();
+            
+            if (progress) {
+                progress.lastActivity = new Date().toISOString();
+                localStorage.setItem(progressKey, JSON.stringify(progress));
             }
         }
 
@@ -1328,226 +1372,335 @@
 
         // ===== FUNCIONES DE PROGRESO =====
         function calculateOverallProgress() {
-            const progress = getStudentProgress();
-            return progress?.overallProgress || 0;
+            try {
+                const progress = getStudentProgress();
+                if (!progress || !progress.modules) {
+                    console.log('ℹ️ Sin progreso disponible');
+                    return 0;
+                }
+                
+                let totalProgress = 0;
+                let moduleCount = 0;
+                
+                for (let moduleId in progress.modules) {
+                    if (progress.modules[moduleId]) {
+                        totalProgress += progress.modules[moduleId].progress || 0;
+                        moduleCount++;
+                    }
+                }
+                
+                return moduleCount > 0 ? Math.round(totalProgress / moduleCount) : 0;
+            } catch (error) {
+                console.error('Error en calculateOverallProgress:', error);
+                return 0;
+            }
         }
 
         function countCompletedModules() {
-            const progress = getStudentProgress();
-            if (!progress?.modules) return 0;
-            return Object.values(progress.modules).filter(m => m.completed).length;
+            try {
+                const progress = getStudentProgress();
+                if (!progress || !progress.modules) return 0;
+                
+                return Object.values(progress.modules).filter(m => m && m.completed).length;
+            } catch (error) {
+                console.error('Error en countCompletedModules:', error);
+                return 0;
+            }
         }
 
         function countCompletedLessons() {
-            const progress = getStudentProgress();
-            if (!progress?.modules) return 0;
-            return Object.values(progress.modules).reduce((sum, m) => 
-                sum + (Array.isArray(m.completedLessons) ? m.completedLessons.length : 0), 0);
+            try {
+                const progress = getStudentProgress();
+                if (!progress || !progress.modules) return 0;
+                
+                return Object.values(progress.modules).reduce((sum, m) => {
+                    if (!m) return sum;
+                    const lessons = Array.isArray(m.completedLessons) ? m.completedLessons : [];
+                    return sum + lessons.length;
+                }, 0);
+            } catch (error) {
+                console.error('Error en countCompletedLessons:', error);
+                return 0;
+            }
         }
 
         function formatTimeSpent(minutes) {
-            if (!minutes) return '0h';
+            if (!minutes || minutes === 0) return '0h';
             const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            if (mins > 0) {
+                return `${hours}h ${mins}m`;
+            }
             return `${hours}h`;
         }
 
         function calculateStreak() {
-            // Implementación básica - puede mejorarse con datos reales
-            const progress = getStudentProgress();
-            if (!progress?.lastActivity) return 0;
-            
-            const lastActivity = new Date(progress.lastActivity);
-            const today = new Date();
-            const diffDays = Math.floor((today - lastActivity) / (1000 * 60 * 60 * 24));
-            
-            return diffDays <= 1 ? 1 : 0;
+            try {
+                const progress = getStudentProgress();
+                if (!progress || !progress.lastActivity) return 0;
+                
+                const lastActivity = new Date(progress.lastActivity);
+                const today = new Date();
+                const diffDays = Math.floor((today - lastActivity) / (1000 * 60 * 60 * 24));
+                
+                return diffDays <= 1 ? 1 : 0;
+            } catch (error) {
+                console.error('Error en calculateStreak:', error);
+                return 0;
+            }
         }
 
         // ===== ACTUALIZACIÓN DE INTERFAZ =====
         function updateUserInterface() {
             const user = getCurrentUser();
-            if (!user) return;
+            if (!user) {
+                console.error('❌ No hay usuario en updateUserInterface');
+                return;
+            }
+
+            console.log('🔄 Actualizando interfaz para:', user.username);
 
             // Actualizar nombre de usuario
-            const firstName = user.name.split(' ')[0];
-            document.getElementById('userName').textContent = user.name;
-            document.getElementById('welcomeName').textContent = firstName;
-            document.getElementById('userAvatar').textContent = firstName.charAt(0).toUpperCase();
+            const fullName = user.fullName || user.name || user.username;
+            const firstName = fullName.split(' ')[0];
+            
+            const userNameEl = document.getElementById('userName');
+            const welcomeNameEl = document.getElementById('welcomeName');
+            const userAvatarEl = document.getElementById('userAvatar');
+            
+            if (userNameEl) userNameEl.textContent = fullName;
+            if (welcomeNameEl) welcomeNameEl.textContent = firstName;
+            if (userAvatarEl) userAvatarEl.textContent = firstName.charAt(0).toUpperCase();
 
-            // Actualizar progreso
-            updateProgressCircle();
-            updateStatistics();
-            updateNextTask();
-            updateModulesBreakdown();
+            // Actualizar todas las secciones
+            try {
+                updateProgressCircle();
+                updateStatistics();
+                updateNextTask();
+                updateModulesBreakdown();
+                console.log('✅ Interfaz actualizada correctamente');
+            } catch (error) {
+                console.error('❌ Error actualizando interfaz:', error);
+            }
         }
 
         function updateProgressCircle() {
-            const progress = calculateOverallProgress();
-            const circle = document.getElementById('progressCircle');
-            const progressText = document.getElementById('overallProgress');
-            const detailsText = document.getElementById('progressDetails');
+            try {
+                const progress = calculateOverallProgress();
+                const circle = document.getElementById('progressCircle');
+                const progressText = document.getElementById('overallProgress');
+                const detailsText = document.getElementById('progressDetails');
 
-            // Animar círculo
-            const circumference = 2 * Math.PI * 75;
-            const offset = circumference - (progress / 100) * circumference;
-            circle.style.strokeDashoffset = offset;
-
-            // Animar número
-            let current = 0;
-            const target = progress;
-            const increment = target / 50;
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= target) {
-                    current = target;
-                    clearInterval(timer);
+                if (!circle || !progressText) {
+                    console.warn('⚠️ Elementos de progreso no encontrados');
+                    return;
                 }
-                progressText.textContent = Math.round(current) + '%';
-            }, 20);
 
-            // Actualizar detalles
-            if (progress === 0) {
-                detailsText.textContent = 'Comienza tu primera lección para ver tu progreso';
-            } else if (progress === 100) {
-                detailsText.textContent = '¡Felicitaciones! Has completado todos los módulos del curso';
-            } else {
-                const completed = countCompletedModules();
-                const total = modulesData.length;
-                detailsText.textContent = `Has completado ${completed} de ${total} módulos. ¡Sigue así!`;
+                // Animar círculo
+                const circumference = 2 * Math.PI * 75;
+                const offset = circumference - (progress / 100) * circumference;
+                circle.style.strokeDashoffset = offset;
+
+                // Animar número
+                let current = 0;
+                const target = progress;
+                const increment = target / 50;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    progressText.textContent = Math.round(current) + '%';
+                }, 20);
+
+                // Actualizar detalles
+                if (detailsText) {
+                    if (progress === 0) {
+                        detailsText.textContent = 'Comienza tu primera lección para ver tu progreso';
+                    } else if (progress === 100) {
+                        detailsText.textContent = '¡Felicitaciones! Has completado todos los módulos del curso';
+                    } else {
+                        const completed = countCompletedModules();
+                        const total = modulesData.length;
+                        detailsText.textContent = `Has completado ${completed} de ${total} módulos. ¡Sigue así!`;
+                    }
+                }
+            } catch (error) {
+                console.error('❌ Error en updateProgressCircle:', error);
             }
         }
 
         function updateStatistics() {
-            const progress = getStudentProgress();
-            
-            // Módulos completados
-            const completed = countCompletedModules();
-            animateCounter('completedModules', completed);
+            try {
+                const progress = getStudentProgress();
+                
+                // Módulos completados
+                const completed = countCompletedModules();
+                animateCounter('completedModules', completed);
 
-            // Lecciones completadas
-            const lessons = countCompletedLessons();
-            animateCounter('completedLessons', lessons);
+                // Lecciones completadas
+                const lessons = countCompletedLessons();
+                animateCounter('completedLessons', lessons);
 
-            // Tiempo de estudio
-            const timeSpent = progress?.totalTimeSpent || 0;
-            document.getElementById('totalTimeSpent').textContent = formatTimeSpent(timeSpent);
+                // Tiempo de estudio
+                const timeSpent = progress?.totalTimeSpent || 0;
+                const timeEl = document.getElementById('totalTimeSpent');
+                if (timeEl) {
+                    timeEl.textContent = formatTimeSpent(timeSpent);
+                }
 
-            // Racha
-            const streak = calculateStreak();
-            animateCounter('currentStreak', streak);
+                // Racha
+                const streak = calculateStreak();
+                animateCounter('currentStreak', streak);
+            } catch (error) {
+                console.error('❌ Error en updateStatistics:', error);
+            }
         }
 
         function animateCounter(elementId, target) {
-            const element = document.getElementById(elementId);
-            let current = 0;
-            const increment = target / 30;
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= target) {
-                    current = target;
-                    clearInterval(timer);
+            try {
+                const element = document.getElementById(elementId);
+                if (!element) {
+                    console.warn(`⚠️ Elemento ${elementId} no encontrado`);
+                    return;
                 }
-                element.textContent = Math.round(current);
-            }, 30);
+                
+                let current = 0;
+                const increment = target / 30;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    element.textContent = Math.round(current);
+                }, 30);
+            } catch (error) {
+                console.error(`Error en animateCounter para ${elementId}:`, error);
+            }
         }
 
         function updateNextTask() {
-            const progress = getStudentProgress();
-            let nextTask = 'Comienza el Módulo 1 para iniciar tu aprendizaje';
+            try {
+                const nextTaskEl = document.getElementById('nextTaskText');
+                if (!nextTaskEl) {
+                    console.warn('⚠️ Elemento nextTaskText no encontrado');
+                    return;
+                }
 
-            if (progress?.modules) {
-                // Buscar módulo en progreso
-                const inProgress = Object.entries(progress.modules).find(([id, data]) => 
-                    data.progress > 0 && !data.completed
-                );
+                const progress = getStudentProgress();
+                let nextTask = 'Comienza el Módulo 1 para iniciar tu aprendizaje';
 
-                if (inProgress) {
-                    const moduleId = parseInt(inProgress[0]);
-                    const moduleData = modulesData.find(m => m.id === moduleId);
-                    const completedLessons = Array.isArray(inProgress[1].completedLessons) ? 
-                        inProgress[1].completedLessons.length : 0;
-                    nextTask = `Continuar ${moduleData.title} - Lección ${completedLessons + 1} de ${moduleData.lessons}`;
-                } else {
-                    // Buscar siguiente módulo no iniciado
-                    const notStarted = Object.entries(progress.modules).find(([id, data]) => 
-                        data.progress === 0
+                if (progress?.modules) {
+                    // Buscar módulo en progreso
+                    const inProgress = Object.entries(progress.modules).find(([id, data]) => 
+                        data && data.progress > 0 && !data.completed
                     );
-                    
-                    if (notStarted) {
-                        const moduleId = parseInt(notStarted[0]);
+
+                    if (inProgress) {
+                        const moduleId = parseInt(inProgress[0]);
                         const moduleData = modulesData.find(m => m.id === moduleId);
-                        
-                        // Verificar si está bloqueado
-                        if (moduleId > 1) {
-                            const previousModule = progress.modules[moduleId - 1];
-                            if (!previousModule?.completed) {
-                                nextTask = `Completa el Módulo ${moduleId - 1} para desbloquear el siguiente`;
-                            } else {
-                                nextTask = `Comenzar ${moduleData.title} - ¡Nuevo módulo disponible!`;
-                            }
-                        } else {
-                            nextTask = `Comenzar ${moduleData.title} - Primera lección`;
+                        if (moduleData) {
+                            const completedLessons = Array.isArray(inProgress[1].completedLessons) ? 
+                                inProgress[1].completedLessons.length : 0;
+                            nextTask = `Continuar ${moduleData.title} - Lección ${completedLessons + 1} de ${moduleData.lessons}`;
                         }
                     } else {
-                        nextTask = '¡Felicitaciones! Has completado todos los módulos disponibles';
+                        // Buscar siguiente módulo no iniciado
+                        const notStarted = Object.entries(progress.modules).find(([id, data]) => 
+                            data && data.progress === 0
+                        );
+                        
+                        if (notStarted) {
+                            const moduleId = parseInt(notStarted[0]);
+                            const moduleData = modulesData.find(m => m.id === moduleId);
+                            
+                            if (moduleData) {
+                                // Verificar si está bloqueado
+                                if (moduleId > 1) {
+                                    const previousModule = progress.modules[moduleId - 1];
+                                    if (!previousModule?.completed) {
+                                        nextTask = `Completa el Módulo ${moduleId - 1} para desbloquear el siguiente`;
+                                    } else {
+                                        nextTask = `Comenzar ${moduleData.title} - ¡Nuevo módulo disponible!`;
+                                    }
+                                } else {
+                                    nextTask = `Comenzar ${moduleData.title} - Primera lección`;
+                                }
+                            }
+                        } else {
+                            nextTask = '¡Felicitaciones! Has completado todos los módulos disponibles';
+                        }
                     }
                 }
-            }
 
-            document.getElementById('nextTaskText').textContent = nextTask;
+                nextTaskEl.textContent = nextTask;
+            } catch (error) {
+                console.error('❌ Error en updateNextTask:', error);
+            }
         }
 
         function updateModulesBreakdown() {
-            const progress = getStudentProgress();
-            const container = document.getElementById('moduleBreakdown');
-            
-            container.innerHTML = modulesData.map(module => {
-                const moduleProgress = progress?.modules?.[module.id] || {
-                    completed: false,
-                    progress: 0,
-                    completedLessons: []
-                };
-
-                const completedLessons = Array.isArray(moduleProgress.completedLessons) ? 
-                    moduleProgress.completedLessons.length : 0;
-                const totalLessons = module.lessons;
-                const percentage = Math.round((completedLessons / totalLessons) * 100);
-
-                let status, statusIcon, statusColor, badgeClass;
-                
-                if (moduleProgress.completed) {
-                    status = 'Completado';
-                    statusIcon = 'check-circle-fill';
-                    statusColor = 'var(--success)';
-                    badgeClass = 'badge-completed';
-                } else if (percentage > 0) {
-                    status = 'En Progreso';
-                    statusIcon = 'clock-fill';
-                    statusColor = 'var(--warning)';
-                    badgeClass = 'badge-in-progress';
-                } else {
-                    status = 'No Iniciado';
-                    statusIcon = 'circle';
-                    statusColor = 'var(--gray-medium)';
-                    badgeClass = 'badge-not-started';
+            try {
+                const container = document.getElementById('moduleBreakdown');
+                if (!container) {
+                    console.warn('⚠️ Elemento moduleBreakdown no encontrado');
+                    return;
                 }
 
-                return `
-                    <div class="breakdown-module-card">
-                        <div class="breakdown-header">
-                            <i class="bi bi-${statusIcon} breakdown-status-icon" style="color: ${statusColor};"></i>
-                            <h6 class="breakdown-title">${module.number}: ${module.title}</h6>
+                const progress = getStudentProgress();
+                
+                container.innerHTML = modulesData.map(module => {
+                    const moduleProgress = progress?.modules?.[module.id] || {
+                        completed: false,
+                        progress: 0,
+                        completedLessons: []
+                    };
+
+                    const completedLessons = Array.isArray(moduleProgress.completedLessons) ? 
+                        moduleProgress.completedLessons.length : 0;
+                    const totalLessons = module.lessons;
+                    const percentage = Math.round((completedLessons / totalLessons) * 100);
+
+                    let status, statusIcon, statusColor, badgeClass;
+                    
+                    if (moduleProgress.completed) {
+                        status = 'Completado';
+                        statusIcon = 'check-circle-fill';
+                        statusColor = 'var(--success)';
+                        badgeClass = 'badge-completed';
+                    } else if (percentage > 0) {
+                        status = 'En Progreso';
+                        statusIcon = 'clock-fill';
+                        statusColor = 'var(--warning)';
+                        badgeClass = 'badge-in-progress';
+                    } else {
+                        status = 'No Iniciado';
+                        statusIcon = 'circle';
+                        statusColor = 'var(--gray-medium)';
+                        badgeClass = 'badge-not-started';
+                    }
+
+                    return `
+                        <div class="breakdown-module-card">
+                            <div class="breakdown-header">
+                                <i class="bi bi-${statusIcon} breakdown-status-icon" style="color: ${statusColor};"></i>
+                                <h6 class="breakdown-title">${module.number}: ${module.title}</h6>
+                            </div>
+                            <div class="breakdown-progress-bar">
+                                <div class="breakdown-progress-fill" style="width: ${percentage}%; background: ${statusColor};"></div>
+                            </div>
+                            <div class="breakdown-footer">
+                                <span class="breakdown-lessons">${completedLessons}/${totalLessons} lecciones</span>
+                                <span class="breakdown-badge ${badgeClass}">${status}</span>
+                            </div>
                         </div>
-                        <div class="breakdown-progress-bar">
-                            <div class="breakdown-progress-fill" style="width: ${percentage}%; background: ${statusColor};"></div>
-                        </div>
-                        <div class="breakdown-footer">
-                            <span class="breakdown-lessons">${completedLessons}/${totalLessons} lecciones</span>
-                            <span class="breakdown-badge ${badgeClass}">${status}</span>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('❌ Error en updateModulesBreakdown:', error);
+            }
         }
 
         // ===== CARGA DE MÓDULOS =====
@@ -1666,26 +1819,41 @@
         }
 
         // ===== INICIALIZACIÓN =====
-        document.addEventListener('DOMContentLoaded', async function() {
+        document.addEventListener('DOMContentLoaded', function() {
             console.log('🎨 Inicializando LMS mejorado...');
             
             if (!checkAuthentication()) {
                 return;
             }
 
+            const user = getCurrentUser();
+            if (!user) {
+                console.error('❌ No se pudo obtener el usuario');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            console.log('✅ Usuario autenticado:', user.username);
+            
             showLoading(true, 'Preparando tu espacio de aprendizaje...');
 
-            // Simular carga para efecto visual
+            // Dar tiempo para que se carguen los datos
             setTimeout(() => {
-                updateUserInterface();
-                loadModules();
-                showLoading(false);
-                console.log('✅ LMS inicializado correctamente');
-                console.log('🤖 Mentor Anatómico disponible');
-                
-                // Mostrar mensaje de bienvenida
-                showToast('¡Bienvenido de vuelta! Tu progreso está sincronizado', 'success');
-            }, 800);
+                try {
+                    updateUserInterface();
+                    loadModules();
+                    showLoading(false);
+                    console.log('✅ LMS inicializado correctamente');
+                    console.log('🤖 Mentor Anatómico disponible');
+                    
+                    // Mostrar mensaje de bienvenida
+                    showToast('¡Bienvenido de vuelta! Tu progreso está sincronizado', 'success');
+                } catch (error) {
+                    console.error('❌ Error en inicialización:', error);
+                    showLoading(false);
+                    showToast('Error al cargar el dashboard. Intenta recargar la página.', 'error');
+                }
+            }, 500);
         });
 
         // Auto-guardado periódico
