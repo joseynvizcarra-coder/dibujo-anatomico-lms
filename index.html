@@ -4423,61 +4423,94 @@
         }
 
         // ===== ACTUALIZAR HERO "TU SIGUIENTE PASO" =====
-        function updateNextTask() {
-            try {
-                const progress = getStudentProgress();
-                const nextStepBtn = document.getElementById('nextStepBtn');
-                const nextStepText = document.getElementById('nextStepText');
-                const progressInline = document.getElementById('overallProgressInline');
-                
-                if (!nextStepBtn || !nextStepText) {
-                    console.warn('⚠️ Elementos de siguiente paso no encontrados');
-                    return;
-                }
+function updateNextTask() {
+    try {
+        const progress = getStudentProgress();
+        const nextStepBtn = document.getElementById('nextStepBtn');
+        const nextStepText = document.getElementById('nextStepText');
+        const nextStepSubtext = document.getElementById('nextStepSubtext');
+        const progressPercent = document.getElementById('progressPercent');
+        const estimatedTime = document.getElementById('estimatedTime');
+        const streakDays = document.getElementById('streakDays');
+        
+        if (!nextStepBtn || !nextStepText) {
+            console.warn('⚠️ Elementos de siguiente paso no encontrados');
+            return;
+        }
 
-                let nextModule = 1;
-                let nextLesson = 1;
-                let buttonText = 'Comenzar Módulo 1, Lección 1';
-                let buttonLink = 'module1.html';
+        let nextModule = 1;
+        let nextLesson = 1;
+        let buttonText = 'Comenzar Módulo 1, Lección 1';
+        let buttonLink = 'module1.html';
 
-                // Buscar la primera lección no completada
-                for (let moduleId = 1; moduleId <= 3; moduleId++) {
-                    const moduleData = progress?.modules?.[moduleId];
-                    const completedLessons = moduleData?.completedLessons || [];
-                    const totalLessons = MODULE_LESSONS[moduleId];
+        // Buscar la primera lección no completada
+        for (let moduleId = 1; moduleId <= 3; moduleId++) {
+            const moduleData = progress?.modules?.[moduleId];
+            const completedLessons = moduleData?.completedLessons || [];
+            const totalLessons = MODULE_LESSONS[moduleId];
 
-                    if (completedLessons.length < totalLessons) {
-                        nextModule = moduleId;
-                        nextLesson = completedLessons.length + 1;
-                        buttonText = `Continuar Módulo ${moduleId}, Lección ${nextLesson}`;
-                        buttonLink = `module${moduleId}.html`;
-                        break;
-                    }
-                }
-
-                // Si completó todo
-                const overallProgress = calculateOverallProgress();
-                if (overallProgress === 100) {
-                    buttonText = '¡Curso completado! 🎉';
-                    nextStepBtn.classList.remove('btn-light');
-                    nextStepBtn.classList.add('btn-success');
-                    nextStepBtn.onclick = null;
-                    nextStepBtn.style.cursor = 'default';
-                } else {
-                    nextStepBtn.onclick = () => window.location.href = buttonLink;
-                }
-
-                nextStepText.textContent = buttonText;
-                
-                // Actualizar progreso inline
-                if (progressInline) {
-                    progressInline.textContent = `${overallProgress}% completado`;
-                }
-
-            } catch (error) {
-                console.error('❌ Error en updateNextTask:', error);
+            if (completedLessons.length < totalLessons) {
+                nextModule = moduleId;
+                nextLesson = completedLessons.length + 1;
+                buttonText = `Módulo ${moduleId}, Lección ${nextLesson}`;
+                buttonLink = `module${moduleId}.html`;
+                break;
             }
         }
+
+        // Si completó todo
+        const overallProgress = calculateOverallProgress();
+        if (overallProgress === 100) {
+            buttonText = '¡Curso completado! 🎉';
+            nextStepText.textContent = '¡Felicitaciones! Completaste todo el curso';
+            if (nextStepSubtext) {
+                nextStepSubtext.textContent = 'Has dominado los fundamentos del dibujo anatómico';
+            }
+            nextStepBtn.classList.remove('hero-btn-primary');
+            nextStepBtn.classList.add('btn-success');
+            nextStepBtn.onclick = null;
+            nextStepBtn.style.cursor = 'default';
+        } else {
+            nextStepText.textContent = buttonText;
+            nextStepBtn.onclick = () => window.location.href = buttonLink;
+            
+            // Subtexto motivacional basado en progreso
+            if (nextStepSubtext) {
+                const subtexts = [
+                    "Cada lección completada te acerca a dominar el dibujo anatómico",
+                    "¡Vas por buen camino! Sigue construyendo tu habilidad",
+                    "Tu dedicación está dando frutos. ¡Continúa así!",
+                    "Estás a mitad de camino. ¡No te detengas ahora!"
+                ];
+                const subtextIndex = Math.min(Math.floor(overallProgress / 25), subtexts.length - 1);
+                nextStepSubtext.textContent = subtexts[subtextIndex];
+            }
+        }
+        
+        // Actualizar stats
+        if (progressPercent) {
+            progressPercent.textContent = `${overallProgress}%`;
+        }
+        
+        if (streakDays) {
+            streakDays.textContent = `${calculateStreak()} días`;
+        }
+        
+        // Tiempo estimado basado en lecciones restantes
+        if (estimatedTime) {
+            const totalLessons = 10; // Total de lecciones en el curso
+            const completedCount = countCompletedLessons();
+            const remainingLessons = totalLessons - completedCount;
+            const estimatedMinutes = remainingLessons * 45;
+            const hours = Math.floor(estimatedMinutes / 60);
+            const mins = estimatedMinutes % 60;
+            estimatedTime.textContent = hours > 0 ? `~${hours}h ${mins}m` : `~${mins} min`;
+        }
+
+    } catch (error) {
+        console.error('❌ Error en updateNextTask:', error);
+    }
+}
 
         // ===== FUNCIÓN PARA IR AL SIGUIENTE PASO =====
         function goToNextStep() {
