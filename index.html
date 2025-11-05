@@ -60,19 +60,6 @@
             flex-wrap: wrap;
             gap: 1rem;
         }
-        
-        @media (max-width: 768px) {
-            .header-content {
-                padding: 0 1rem;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .user-section {
-                width: 100%;
-                justify-content: space-between;
-            }
-        }
 
         .logo-section {
             display: flex;
@@ -81,7 +68,7 @@
         }
 
         .logo-section h1 {
-            font-size: clamp(1rem, 3vw, 1.3rem);
+            font-size: 1.3rem;
             font-weight: 700;
             margin: 0;
             background: linear-gradient(135deg, white, var(--primary-light));
@@ -231,7 +218,7 @@
         }
 
         .welcome-greeting {
-            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
             color: var(--primary-light);
@@ -239,7 +226,7 @@
         }
 
         .welcome-subtitle {
-            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            font-size: 1.1rem;
             opacity: 0.95;
             margin-bottom: 0;
         }
@@ -3841,7 +3828,7 @@
                     }
                 });
                 
-                // Agregar botón acordeón para expandir
+                // Agregar botón acordeón Bootstrap para expandir
                 const modulesSection = document.querySelector('.modules-section');
                 if (modulesSection) {
                     const expandButton = document.createElement('div');
@@ -3852,15 +3839,13 @@
                             Ver más información del curso
                         </button>
                         <div class="collapse mt-4" id="collapseCourseInfo">
-                            <div class="card card-body" style="border: none; background: transparent; padding: 0;">
-                                <!-- El contenido colapsado se insertará aquí -->
-                            </div>
+                            <!-- Las secciones se moverán aquí dinámicamente -->
                         </div>
                     `;
                     modulesSection.parentNode.insertBefore(expandButton, modulesSection.nextSibling);
                     
                     // Mover las secciones dentro del acordeón
-                    const collapseContainer = document.querySelector('#collapseCourseInfo .card-body');
+                    const collapseContainer = document.getElementById('collapseCourseInfo');
                     sectionsToCollapse.forEach(sectionId => {
                         const section = document.getElementById(sectionId);
                         if (section && collapseContainer) {
@@ -3873,13 +3858,15 @@
                     // Cambiar el ícono cuando se expande/contrae
                     const collapseElement = document.getElementById('collapseCourseInfo');
                     const button = document.getElementById('toggleMoreContentBtn');
+                    
                     collapseElement.addEventListener('show.bs.collapse', function () {
-                        button.innerHTML = `<i class="bi bi-dash-circle me-2"></i>Ocultar información adicional`;
+                        button.innerHTML = '<i class="bi bi-dash-circle me-2"></i>Ocultar información adicional';
                         button.classList.remove('btn-outline-primary');
                         button.classList.add('btn-outline-secondary');
                     });
+                    
                     collapseElement.addEventListener('hide.bs.collapse', function () {
-                        button.innerHTML = `<i class="bi bi-plus-circle me-2"></i>Ver más información del curso`;
+                        button.innerHTML = '<i class="bi bi-plus-circle me-2"></i>Ver más información del curso';
                         button.classList.remove('btn-outline-secondary');
                         button.classList.add('btn-outline-primary');
                     });
@@ -3911,8 +3898,69 @@
             }, 500);
         });
 
+        // 🆕 FUNCIÓN PARA EXPANDIR SECCIONES
+        function toggleAllSections() {
+            const sectionsToToggle = [
+                'course-info-section',
+                'quick-view-section',
+                'success-tips-section',
+                'support-section'
+            ];
+            
+            const button = document.getElementById('toggleMoreContentBtn');
+            if (!button) return;
+            
+            // Verificar el estado actual (revisar primera sección)
+            const firstSection = document.getElementById(sectionsToToggle[0]);
+            const isCollapsed = firstSection && firstSection.style.display === 'none';
+            
+            if (isCollapsed) {
+                // EXPANDIR - Mostrar todas las secciones
+                sectionsToToggle.forEach(sectionId => {
+                    const section = document.getElementById(sectionId);
+                    if (section) {
+                        section.style.display = 'block';
+                        section.classList.add('fade-in-up');
+                        section.removeAttribute('data-collapsed');
+                    }
+                });
+                
+                // Cambiar el botón a "Ocultar"
+                button.innerHTML = `
+                    <i class="bi bi-dash-circle me-2"></i>
+                    Ocultar información adicional
+                `;
+                button.classList.remove('btn-outline-primary');
+                button.classList.add('btn-outline-secondary');
+            } else {
+                // COLAPSAR - Ocultar todas las secciones
+                sectionsToToggle.forEach(sectionId => {
+                    const section = document.getElementById(sectionId);
+                    if (section) {
+                        section.style.display = 'none';
+                        section.setAttribute('data-collapsed', 'true');
+                    }
+                });
+                
+                // Cambiar el botón a "Ver más"
+                button.innerHTML = `
+                    <i class="bi bi-plus-circle me-2"></i>
+                    Ver más información del curso
+                `;
+                button.classList.remove('btn-outline-secondary');
+                button.classList.add('btn-outline-primary');
+                
+                // Scroll suave hacia arriba para ver el botón
+                button.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
             });
-        });
+            
+            const button = document.getElementById('showMoreContentBtn');
+            if (button) {
+                button.parentElement.remove();
+            }
+        }
 
         // 🆕 FUNCIÓN PARA DESTACAR SIGUIENTE PASO
         function highlightNextStep() {
