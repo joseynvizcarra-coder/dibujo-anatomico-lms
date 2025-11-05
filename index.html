@@ -136,19 +136,6 @@
             padding: 0 2rem;
         }
 
-        @media (max-width: 768px) {
-            .dashboard-container {
-                margin: 1rem auto;
-                padding: 0 1rem;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .dashboard-container {
-                padding: 0 0.75rem;
-            }
-        }
-
         .dashboard-welcome {
             background: linear-gradient(135deg, var(--primary-dark), #1a3a3f);
             color: white;
@@ -158,34 +145,6 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.15);
             position: relative;
             overflow: hidden;
-        }
-
-        @media (max-width: 768px) {
-            .dashboard-welcome {
-                padding: 2rem 1.5rem;
-            }
-            
-            .welcome-greeting {
-                font-size: 2rem;
-            }
-            
-            .welcome-subtitle {
-                font-size: 1rem;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .dashboard-welcome {
-                padding: 1.5rem 1rem;
-            }
-            
-            .welcome-greeting {
-                font-size: 1.75rem;
-            }
-            
-            .welcome-subtitle {
-                font-size: 0.95rem;
-            }
         }
 
         .dashboard-welcome::before {
@@ -235,19 +194,6 @@
             grid-template-columns: 1fr 2fr;
             gap: 2rem;
             margin-bottom: 3rem;
-        }
-
-        @media (max-width: 992px) {
-            .progress-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .progress-grid {
-                gap: 1.5rem;
-                margin-bottom: 2rem;
-            }
         }
 
         @media (max-width: 992px) {
@@ -374,31 +320,6 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 1.5rem;
-        }
-
-        @media (max-width: 768px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-            
-            .stat-item {
-                padding: 1.25rem;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .stats-grid {
-                gap: 0.75rem;
-            }
-            
-            .stat-item {
-                padding: 1rem;
-            }
-            
-            .stat-number {
-                font-size: 2rem;
-            }
         }
 
         .stat-item {
@@ -1339,15 +1260,7 @@
             }
         }
         
-        
-        /* 🆕 TRANSICIÓN SUAVE PARA ACORDEÓN */
-        .course-info-section,
-        .quick-view-section,
-        .success-tips-section,
-        .support-section {
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-        
+        /* Estilos para secciones colapsadas */
         [data-collapsed="true"] {
             display: none !important;
         }
@@ -1369,18 +1282,6 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
             gap: 2rem;
-        }
-
-        @media (max-width: 992px) {
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .info-grid {
-                gap: 1.5rem;
-            }
         }
 
         .info-card-modern {
@@ -1548,23 +1449,6 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 2rem;
-        }
-
-        @media (max-width: 768px) {
-            .quick-view-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .quick-view-grid {
-                gap: 1rem;
-            }
-            
-            .quick-card {
-                padding: 1.5rem;
-            }
         }
 
         .quick-card {
@@ -1768,13 +1652,6 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 1.5rem;
-        }
-
-        @media (max-width: 768px) {
-            .tips-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
         }
 
         .tip-card {
@@ -2196,117 +2073,6 @@
         .footer p {
             margin: 0;
             opacity: 0.9;
-        }
-    
-        
-        
-        
-        /* 🆕 BOTÓN TOGGLE RESPONSIVE */
-        @media (max-width: 576px) {
-            #toggleMoreContentBtn {
-                font-size: 0.9rem;
-                padding: 0.75rem 1.5rem;
-            }
-        }
-
-        /* 🆕 NEXT TASK RESPONSIVE */
-        @media (max-width: 768px) {
-            .next-task-section {
-                padding: 0 1rem;
-            }
-            
-            .next-task-content {
-                padding: 1.5rem;
-                font-size: 1rem;
-            }
-            
-            .next-task-header {
-                flex-direction: column;
-                text-align: center;
-                gap: 0.75rem;
-            }
-            
-            .next-task-icon {
-                margin: 0 auto;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .next-task-content {
-                padding: 1.25rem;
-                font-size: 0.95rem;
-            }
-            
-            .next-task-title {
-                font-size: 1.2rem;
-            }
-        }
-
-        /* 🆕 SECTION HEADERS RESPONSIVE */
-        @media (max-width: 768px) {
-            .section-header {
-                flex-direction: column;
-                text-align: center;
-                gap: 0.75rem;
-            }
-            
-            .section-title {
-                font-size: 1.3rem;
-            }
-            
-            .section-icon {
-                margin: 0 auto;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .section-title {
-                font-size: 1.15rem;
-            }
-            
-            .section-icon {
-                width: 40px;
-                height: 40px;
-                font-size: 1.2rem;
-            }
-        }
-
-        /* 🆕 MODALES RESPONSIVE */
-        @media (max-width: 768px) {
-            .modal-dialog {
-                margin: 1rem;
-            }
-            
-            .modal-body {
-                padding: 1.5rem !important;
-            }
-            
-            .onboarding-step .modal-body {
-                padding: 2rem 1rem !important;
-            }
-            
-            .modal-footer {
-                flex-direction: column;
-                gap: 0.75rem;
-            }
-            
-            .modal-footer .btn {
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .modal-dialog {
-                margin: 0.5rem;
-            }
-            
-            .modal-body {
-                padding: 1rem !important;
-            }
-            
-            .modal-title {
-                font-size: 1.1rem;
-            }
         }
     </style>
 </head>
@@ -3832,7 +3598,7 @@
                     const expandButton = document.createElement('div');
                     expandButton.className = 'text-center my-4';
                     expandButton.innerHTML = `
-                        <button class="btn btn-lg btn-outline-primary" id="toggleMoreContentBtn" onclick="toggleAllSections()">
+                        <button class="btn btn-lg btn-outline-primary" id="showMoreContentBtn" onclick="expandAllSections()">
                             <i class="bi bi-plus-circle me-2"></i>
                             Ver más información del curso
                         </button>
@@ -3867,61 +3633,20 @@
         });
 
         // 🆕 FUNCIÓN PARA EXPANDIR SECCIONES
-        function toggleAllSections() {
-            const sectionsToToggle = [
+        function expandAllSections() {
+            const sectionsToExpand = [
                 'course-info-section',
                 'quick-view-section',
                 'success-tips-section',
                 'support-section'
             ];
             
-            const button = document.getElementById('toggleMoreContentBtn');
-            if (!button) return;
-            
-            // Verificar el estado actual (revisar primera sección)
-            const firstSection = document.getElementById(sectionsToToggle[0]);
-            const isCollapsed = firstSection && firstSection.style.display === 'none';
-            
-            if (isCollapsed) {
-                // EXPANDIR - Mostrar todas las secciones
-                sectionsToToggle.forEach(sectionId => {
-                    const section = document.getElementById(sectionId);
-                    if (section) {
-                        section.style.display = 'block';
-                        section.classList.add('fade-in-up');
-                        section.removeAttribute('data-collapsed');
-                    }
-                });
-                
-                // Cambiar el botón a "Ocultar"
-                button.innerHTML = `
-                    <i class="bi bi-dash-circle me-2"></i>
-                    Ocultar información adicional
-                `;
-                button.classList.remove('btn-outline-primary');
-                button.classList.add('btn-outline-secondary');
-            } else {
-                // COLAPSAR - Ocultar todas las secciones
-                sectionsToToggle.forEach(sectionId => {
-                    const section = document.getElementById(sectionId);
-                    if (section) {
-                        section.style.display = 'none';
-                        section.setAttribute('data-collapsed', 'true');
-                    }
-                });
-                
-                // Cambiar el botón a "Ver más"
-                button.innerHTML = `
-                    <i class="bi bi-plus-circle me-2"></i>
-                    Ver más información del curso
-                `;
-                button.classList.remove('btn-outline-secondary');
-                button.classList.add('btn-outline-primary');
-                
-                // Scroll suave hacia arriba para ver el botón
-                button.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        }
+            sectionsToExpand.forEach(sectionId => {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    section.style.display = 'block';
+                    section.classList.add('fade-in-up');
+                }
             });
             
             const button = document.getElementById('showMoreContentBtn');
