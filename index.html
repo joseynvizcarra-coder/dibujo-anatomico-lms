@@ -46,7 +46,7 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
             position: sticky;
             top: 0;
-            z-index: 1040;
+            z-index: 1030;
             backdrop-filter: blur(10px);
         }
 
@@ -836,7 +836,7 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            z-index: 1035;
+            z-index: 1045;
             transition: all 0.3s ease;
             border: 3px solid white;
         }
@@ -888,13 +888,35 @@
             display: none;
             flex-direction: column;
             overflow: hidden;
-            z-index: 1036;
+            z-index: 1050;
             animation: slideUp 0.3s ease-out;
         }
 
         .mentor-chat-container.show {
             display: flex;
         }
+
+        /* ===== BACKDROP PARA CERRAR MENTOR ===== */
+        .mentor-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(3px);
+            z-index: 1049;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            cursor: pointer;
+        }
+
+        .mentor-backdrop.show {
+            display: block;
+            opacity: 1;
+        }
+
 
         @keyframes slideUp {
             from {
@@ -3053,6 +3075,9 @@
     </section>
 
     <!-- MENTOR ANATÓMICO - SISTEMA COMPLETO -->
+        <!-- Backdrop para cerrar mentor haciendo clic fuera -->
+    <div class="mentor-backdrop" id="mentorBackdrop"></div>
+
     <button class="mentor-float-button" id="mentorFloatBtn" aria-label="Abrir Mentor Virtual">
         <i class="bi bi-chat-dots-fill"></i>
         <span class="mentor-badge">!</span>
@@ -3109,8 +3134,10 @@
     <!-- FOOTER -->
     <footer class="footer">
         <div class="container">
-            <p>© 2024 Universidad Alberto Hurtado - Curso de Dibujo Anatómico</p>
-            <p style="margin-top: 0.5rem; font-size: 0.9rem;">Diseñado por Joselyn Vizcarra</p>
+            <p>© 2025 Universidad Alberto Hurtado - Curso de Dibujo Anatómico</p>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+                Proyecto de Diplomado de Diseño Instruccional UCH - Diseñado por Joselyn Vizcarra
+            </p>
         </div>
     </footer>
 
@@ -3846,9 +3873,12 @@
         const typingIndicator = document.getElementById('typingIndicator');
 
         // Toggle chat
+        const mentorBackdrop = document.getElementById('mentorBackdrop');
+        
         mentorFloatBtn.addEventListener('click', function() {
             mentorChatContainer.classList.add('show');
             mentorFloatBtn.style.display = 'none';
+            if (mentorBackdrop) mentorBackdrop.classList.add('show');
             
             // Mensaje de bienvenida contextual
             if (mentorMessages.children.length === 0) {
@@ -3866,9 +3896,22 @@
             mentorInput.focus();
         });
 
-        mentorCloseBtn.addEventListener('click', function() {
+        function closeMentor() {
             mentorChatContainer.classList.remove('show');
             mentorFloatBtn.style.display = 'flex';
+            if (mentorBackdrop) mentorBackdrop.classList.remove('show');
+        }
+
+        mentorCloseBtn.addEventListener('click', closeMentor);
+        
+        // Cerrar al hacer clic en el backdrop
+        if (mentorBackdrop) {
+            mentorBackdrop.addEventListener('click', closeMentor);
+        }
+        
+        // Prevenir que clics dentro del chat cierren el mentor
+        mentorChatContainer.addEventListener('click', function(e) {
+            e.stopPropagation();
         });
 
         // Enviar mensaje
