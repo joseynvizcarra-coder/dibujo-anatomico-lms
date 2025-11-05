@@ -2675,17 +2675,27 @@
         </div>
 
         <!-- Siguiente Tarea -->
-        <div class="next-task-section fade-in-up" style="animation-delay: 0.2s;">
-            <div class="next-task-header">
-                <div class="next-task-icon">
-                    <i class="bi bi-flag-fill"></i>
-                </div>
-                <h4 class="next-task-title">Tu Siguiente Paso</h4>
-            </div>
-            <p class="next-task-content" id="nextTaskText">
-                Cargando...
-            </p>
+<div class="next-task-section fade-in-up" style="animation-delay: 0.2s;">
+    <div class="next-task-header">
+        <div class="next-task-icon">
+            <i class="bi bi-flag-fill"></i>
         </div>
+        <h4 class="next-task-title">Tu Siguiente Paso</h4>
+    </div>
+    
+    <!-- NUEVO CONTENIDO -->
+    <div class="next-step-hero">
+        <h5 class="next-step-title" id="nextStepText">Cargando...</h5>
+        <button class="btn btn-light btn-lg next-step-btn" id="nextStepBtn" onclick="goToNextStep()">
+            <i class="bi bi-play-circle me-2"></i>
+            Comenzar
+        </button>
+        <div class="progress-indicator-inline" id="overallProgressInline">
+            <i class="bi bi-graph-up"></i>
+            <span>0% completado</span>
+        </div>
+    </div>
+</div>
 
         <!-- Desglose por Módulos -->
         <div class="modules-breakdown-section fade-in-up" style="animation-delay: 0.3s;">
