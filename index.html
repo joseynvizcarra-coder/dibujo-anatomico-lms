@@ -2442,85 +2442,94 @@
         </div>
 
         <!-- SECCIÓN: INFORMACIÓN DEL CURSO -->
-        <div class="course-info-section fade-in-up" id="course-info-section" style="animation-delay: 0.4s;">
-            <div class="section-header">
-                <div class="section-icon">
-                    <i class="bi bi-info-circle-fill"></i>
-                </div>
-                <h3 class="section-title">Información del Curso</h3>
-            </div>
-            
-            <div class="info-grid">
-                <!-- Objetivos de Aprendizaje -->
-                <div class="info-card-modern">
-                    <div class="info-card-header">
-                        <div class="info-card-icon" style="background: linear-gradient(135deg, #4CAF50, #66bb6a);">
-                            <i class="bi bi-trophy-fill"></i>
-                        </div>
-                        <h4 class="info-card-title">Objetivos de Aprendizaje</h4>
-                    </div>
-                    <div class="info-card-body">
-                        <div class="objective-item">
-                            <div class="objective-number">1</div>
-                            <div class="objective-text">
-                                <strong>Observación Directa</strong>
-                                <p>Aplicar técnicas de observación para capturar línea de acción y proporciones</p>
-                            </div>
-                        </div>
-                        <div class="objective-item">
-                            <div class="objective-number">2</div>
-                            <div class="objective-text">
-                                <strong>Estructura Anatómica</strong>
-                                <p>Analizar y representar la estructura ósea y muscular básica del cuerpo</p>
-                            </div>
-                        </div>
-                        <div class="objective-item">
-                            <div class="objective-number">3</div>
-                            <div class="objective-text">
-                                <strong>Figura Completa</strong>
-                                <p>Crear representaciones completas integrando gesto, anatomía y valores tonales</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Entregables Totales -->
-                <div class="info-card-modern">
-                    <div class="info-card-header">
-                        <div class="info-card-icon" style="background: linear-gradient(135deg, #2196F3, #42a5f5);">
-                            <i class="bi bi-clipboard-check-fill"></i>
-                        </div>
-                        <h4 class="info-card-title">Entregables del Curso</h4>
-                    </div>
-                    <div class="info-card-body">
-                        <div class="deliverable-item">
-                            <div class="deliverable-icon">
-                                <i class="bi bi-pencil-fill"></i>
-                            </div>
-                            <div class="deliverable-content">
-                                <span class="deliverable-number">23</span>
-                                <span class="deliverable-label">Dibujos Progresivos</span>
-                                <p class="deliverable-desc">Ejercicios prácticos de cada lección</p>
-                            </div>
-                        </div>
-                        <div class="deliverable-item">
-                            <div class="deliverable-icon">
-                                <i class="bi bi-list-check"></i>
-                            </div>
-                            <div class="deliverable-content">
-                                <span class="deliverable-number">10</span>
-                                <span class="deliverable-label">Evaluaciones Formativas</span>
-                                <p class="deliverable-desc">Auto-evaluaciones de progreso</p>
-                            </div>
-                        </div>
-                        <div class="deliverable-item">
-                            <div class="deliverable-icon">
-                                <i class="bi bi-star-fill"></i>
-                            </div>
-                            <div class="deliverable-content">
-                                <span class="deliverable-number">1</span>
-                                <span class="deliverable-label">Proyecto Final</span>
-                                <p class="deliverable-desc">Figura completa en papel 1/4 mercurio</p>
+        <!-- SECCIÓN: INFORMACIÓN DEL CURSO CON ACORDEÓN -->
+        <div class="course-info-section fade-in-up" id="course-info-section" style="animation-delay: 0.4s;">
+            <div class="accordion" id="courseInfoAccordion">
+                <div class="accordion-item" style="border: none; background: transparent; margin-bottom: 1.5rem;">
+                    <h2 class="accordion-header" id="headingCourseInfo">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCourseInfo" aria-expanded="true" aria-controls="collapseCourseInfo" style="background: linear-gradient(135deg, var(--primary-dark), var(--primary-light)); color: white; border-radius: 15px !important; font-weight: 700; font-size: 1.3rem; padding: 1.5rem 2rem; box-shadow: 0 8px 30px rgba(0,0,0,0.15);">
+                            <i class="bi bi-info-circle-fill me-3" style="font-size: 1.8rem;"></i>
+                            Información del Curso
+                        </button>
+                    </h2>
+                    <div id="collapseCourseInfo" class="accordion-collapse collapse show" aria-labelledby="headingCourseInfo" data-bs-parent="#courseInfoAccordion">
+                        <div class="accordion-body" style="padding: 2rem 0;">
+                            <div class="info-grid">
+                                <!-- Objetivos de Aprendizaje -->
+                                <div class="info-card-modern">
+                                    <div class="info-card-header">
+                                        <div class="info-card-icon" style="background: linear-gradient(135deg, #4CAF50, #66bb6a);">
+                                            <i class="bi bi-trophy-fill"></i>
+                                        </div>
+                                        <h4 class="info-card-title">Objetivos de Aprendizaje</h4>
+                                    </div>
+                                    <div class="info-card-body">
+                                        <div class="objective-item">
+                                            <div class="objective-number">1</div>
+                                            <div class="objective-text">
+                                                <strong>Observación Directa</strong>
+                                                <p>Aplicar técnicas de observación para capturar línea de acción y proporciones</p>
+                                            </div>
+                                        </div>
+                                        <div class="objective-item">
+                                            <div class="objective-number">2</div>
+                                            <div class="objective-text">
+                                                <strong>Estructura Anatómica</strong>
+                                                <p>Analizar y representar la estructura ósea y muscular básica del cuerpo</p>
+                                            </div>
+                                        </div>
+                                        <div class="objective-item">
+                                            <div class="objective-number">3</div>
+                                            <div class="objective-text">
+                                                <strong>Figura Completa</strong>
+                                                <p>Crear representaciones completas integrando gesto, anatomía y valores tonales</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Entregables Totales -->
+                                <div class="info-card-modern">
+                                    <div class="info-card-header">
+                                        <div class="info-card-icon" style="background: linear-gradient(135deg, #2196F3, #42a5f5);">
+                                            <i class="bi bi-clipboard-check-fill"></i>
+                                        </div>
+                                        <h4 class="info-card-title">Entregables del Curso</h4>
+                                    </div>
+                                    <div class="info-card-body">
+                                        <div class="deliverable-item">
+                                            <div class="deliverable-icon">
+                                                <i class="bi bi-pencil-fill"></i>
+                                            </div>
+                                            <div class="deliverable-content">
+                                                <span class="deliverable-number">23</span>
+                                                <span class="deliverable-label">Dibujos Progresivos</span>
+                                                <p class="deliverable-desc">Ejercicios prácticos de cada lección</p>
+                                            </div>
+                                        </div>
+                                        <div class="deliverable-item">
+                                            <div class="deliverable-icon">
+                                                <i class="bi bi-list-check"></i>
+                                            </div>
+                                            <div class="deliverable-content">
+                                                <span class="deliverable-number">10</span>
+                                                <span class="deliverable-label">Evaluaciones Formativas</span>
+                                                <p class="deliverable-desc">Auto-evaluaciones de progreso</p>
+                                            </div>
+                                        </div>
+                                        <div class="deliverable-item">
+                                            <div class="deliverable-icon">
+                                                <i class="bi bi-star-fill"></i>
+                                            </div>
+                                            <div class="deliverable-content">
+                                                <span class="deliverable-number">1</span>
+                                                <span class="deliverable-label">Proyecto Final</span>
+                                                <p class="deliverable-desc">Figura completa en papel 1/4 mercurio</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
