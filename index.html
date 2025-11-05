@@ -2722,15 +2722,55 @@
     </div>
     
     <!-- NUEVO CONTENIDO -->
-    <div class="next-step-hero">
-        <h5 class="next-step-title" id="nextStepText">Cargando...</h5>
-        <button class="btn btn-light btn-lg next-step-btn" id="nextStepBtn" onclick="goToNextStep()">
-            <i class="bi bi-play-circle me-2"></i>
-            Comenzar
-        </button>
-        <div class="progress-indicator-inline" id="overallProgressInline">
-            <i class="bi bi-graph-up"></i>
-            <span>0% completado</span>
+    <!-- Hero Card Mejorado V2 -->
+    <div class="next-step-hero-v2">
+        <div class="hero-background-pattern"></div>
+        
+        <div class="hero-content">
+            <!-- Icono Grande Animado -->
+            <div class="hero-icon-large">
+                <i class="bi bi-rocket-takeoff-fill"></i>
+            </div>
+            
+            <!-- Título Principal -->
+            <h3 class="hero-title" id="nextStepText">Cargando tu próxima aventura...</h3>
+            
+            <!-- Subtítulo Contextual -->
+            <p class="hero-subtitle" id="nextStepSubtext">
+                Cada lección completada te acerca a dominar el dibujo anatómico
+            </p>
+            
+            <!-- Stats Rápidas -->
+            <div class="hero-stats">
+                <div class="hero-stat-item">
+                    <i class="bi bi-clock-history"></i>
+                    <span id="estimatedTime">~45 min</span>
+                </div>
+                <div class="hero-stat-item">
+                    <i class="bi bi-trophy"></i>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="hero-stat-item">
+                    <i class="bi bi-fire"></i>
+                    <span id="streakDays">0 días</span>
+                </div>
+            </div>
+            
+            <!-- Botón de Acción Principal -->
+            <button class="hero-btn-primary" id="nextStepBtn" onclick="goToNextStep()">
+                <span class="btn-text">Comenzar Ahora</span>
+                <i class="bi bi-arrow-right-circle-fill"></i>
+            </button>
+            
+            <!-- Acciones Secundarias -->
+            <div class="hero-actions-secondary">
+                <button class="btn-link-style" onclick="showLessonPreview()">
+                    <i class="bi bi-eye"></i> Vista previa de la lección
+                </button>
+                <button class="btn-link-style" onclick="showStudySchedule()">
+                    <i class="bi bi-calendar3"></i> Ver mi horario
+                </button>
+            </div>
         </div>
     </div>
 </div>
