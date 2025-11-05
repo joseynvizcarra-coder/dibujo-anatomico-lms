@@ -594,7 +594,7 @@
 
         .modules-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 2rem;
             margin-bottom: 3rem;
         }
@@ -1429,7 +1429,7 @@
 
         .quick-view-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 2rem;
         }
 
@@ -1749,7 +1749,7 @@
 
         .support-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 2rem;
         }
 
@@ -2056,7 +2056,307 @@
             margin: 0;
             opacity: 0.9;
         }
-    </style>
+    
+        /* ===== ACORDEONES RETRÁCTILES BOOTSTRAP ===== */
+        .collapse-toggle-btn {
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary-dark);
+        }
+
+        .collapse-toggle-btn:hover {
+            background: var(--primary-dark);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(44, 95, 102, 0.3);
+        }
+
+        .collapse-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .collapse-icon.rotated {
+            transform: rotate(180deg);
+        }
+
+        .collapsible-section {
+            margin-bottom: 2rem;
+        }
+
+        .collapsible-section .collapse {
+            margin-top: 1rem;
+        }
+
+        /* ===== MODAL DE ONBOARDING ===== */
+        .onboarding-modal .modal-content {
+            border-radius: 20px;
+            border: none;
+            overflow: hidden;
+        }
+
+        .onboarding-header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .onboarding-step {
+            padding: 2rem;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .onboarding-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .roadmap-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .roadmap-step {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--gray-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border: 3px solid var(--primary-dark);
+        }
+
+        .roadmap-arrow {
+            font-size: 2rem;
+            color: var(--primary-light);
+        }
+
+        .onboarding-progress {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--gray-light);
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.active {
+            background: var(--primary-dark);
+            width: 30px;
+            border-radius: 6px;
+        }
+
+        /* ===== MODAL DE SESIÓN COMPLETADA ===== */
+        .session-summary-modal .modal-content {
+            border-radius: 20px;
+            border: none;
+        }
+
+        .session-header {
+            background: linear-gradient(135deg, var(--success), #45a049);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .session-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem;
+        }
+
+        .session-stat {
+            text-align: center;
+            padding: 1rem;
+            background: var(--gray-light);
+            border-radius: 12px;
+        }
+
+        .session-stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .session-stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+
+        .session-stat-label {
+            font-size: 0.85rem;
+            color: var(--gray-medium);
+        }
+
+        .concepts-list {
+            background: var(--gray-light);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+        }
+
+        .concepts-list h6 {
+            color: var(--primary-dark);
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .concepts-list ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .concepts-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .concepts-list li:last-child {
+            border-bottom: none;
+        }
+
+        .concepts-list li::before {
+            content: '✓ ';
+            color: var(--success);
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        .motivational-message {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        /* ===== RESPONSIVE MODALS ===== */
+        @media (max-width: 768px) {
+            .onboarding-modal .modal-dialog,
+            .session-summary-modal .modal-dialog {
+                margin: 0.5rem;
+                max-width: calc(100% - 1rem);
+            }
+
+            .onboarding-step {
+                padding: 1.5rem;
+                min-height: 250px;
+            }
+
+            .onboarding-icon {
+                font-size: 3rem;
+            }
+
+            .session-stats {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 1.5rem;
+            }
+
+            .roadmap-visual {
+                flex-direction: column;
+            }
+
+            .roadmap-arrow {
+                transform: rotate(90deg);
+            }
+        }
+
+        /* ===== AJUSTES RESPONSIVE PARA ACORDEONES ===== */
+        @media (max-width: 768px) {
+            .dashboard-welcome {
+                padding: 2rem 1.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .collapse-text-mobile {
+                display: inline;
+            }
+
+            .collapse-text-desktop {
+                display: none;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .collapse-text-mobile {
+                display: none;
+            }
+
+            .collapse-text-desktop {
+                display: inline;
+            }
+        }
+
+        /* ===== HERO SECTION MEJORADO ===== */
+        .next-step-hero {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            padding: 2rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            border: 2px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .next-step-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .next-step-btn {
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 50px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .next-step-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+        }
+
+        .progress-indicator-inline {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.9);
+            margin-top: 1rem;
+        }
+</style>
 </head>
 <body>
 
@@ -2175,7 +2475,22 @@
         </div>
 
         <!-- SECCIÓN: INFORMACIÓN DEL CURSO -->
-        <div class="course-info-section fade-in-up" style="animation-delay: 0.4s;">
+        <!-- Botón Toggle Acordeón -->
+        <div class="collapsible-section">
+            <button class="btn collapse-toggle-btn w-100 mb-3" 
+                    type="button" 
+                    data-bs-toggle="collapse" 
+                    data-bs-target="#collapseCourseInfo" 
+                    aria-expanded="false" 
+                    aria-controls="collapseCourseInfo"
+                    onclick="toggleCollapseIcon(this)">
+                <i class="bi bi-chevron-down me-2 collapse-icon"></i>
+                <span class="collapse-text collapse-text-desktop">Ver más información del curso</span>
+                <span class="collapse-text collapse-text-mobile">Más info</span>
+            </button>
+            
+            <div class="collapse" id="collapseCourseInfo">
+                <div class="course-info-section fade-in-up" style="animation-delay: 0.4s;">
             <div class="section-header">
                 <div class="section-icon">
                     <i class="bi bi-info-circle-fill"></i>
@@ -3479,7 +3794,520 @@
                 mentorMessages.scrollTop = mentorMessages.scrollHeight;
             }, 100);
         }
-    </script>
+    
+
+        // =====================================================
+        // FUNCIONES PARA MODALES Y MEJORAS UX
+        // =====================================================
+
+        // ===== CONSTANTES =====
+        const MODULE_LESSONS = { 1: 3, 2: 4, 3: 3 }; // Total: 10 lecciones
+        const AVG_LESSON_TIME = 45; // minutos por lección
+        
+        const MOTIVATIONAL_MESSAGES = [
+            "¡Excelente progreso! Cada trazo te acerca a tu objetivo.",
+            "Tu constancia está dando frutos. ¡Sigue así!",
+            "Estás construyendo una base sólida. ¡Muy bien!",
+            "El aprendizaje es un viaje, y vas por buen camino.",
+            "Cada lección completada es un paso hacia la maestría.",
+            "Tu dedicación se refleja en cada ejercicio. ¡Continúa!",
+            "Estás demostrando gran compromiso con tu aprendizaje.",
+            "El progreso constante siempre supera al talento sin esfuerzo."
+        ];
+
+        // ===== MODAL DE ONBOARDING =====
+        function checkAndShowOnboarding() {
+            const hasSeenOnboarding = localStorage.getItem('onboardingCompleted');
+            
+            if (!hasSeenOnboarding) {
+                const modal = new bootstrap.Modal(document.getElementById('onboardingModal'));
+                modal.show();
+            }
+        }
+
+        function nextOnboardingStep(stepNumber) {
+            // Ocultar todos los pasos
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById(`onboardingStep${i}`).style.display = 'none';
+            }
+            
+            // Mostrar el paso solicitado
+            document.getElementById(`onboardingStep${stepNumber}`).style.display = 'block';
+        }
+
+        function prevOnboardingStep(stepNumber) {
+            nextOnboardingStep(stepNumber);
+        }
+
+        function skipOnboarding() {
+            localStorage.setItem('onboardingCompleted', 'true');
+            const modal = bootstrap.Modal.getInstance(document.getElementById('onboardingModal'));
+            modal.hide();
+            showToast('Puedes revisar la información del curso en cualquier momento', 'info');
+        }
+
+        function finishOnboarding() {
+            localStorage.setItem('onboardingCompleted', 'true');
+            const modal = bootstrap.Modal.getInstance(document.getElementById('onboardingModal'));
+            modal.hide();
+            showToast('¡Bienvenido/a! Comienza cuando estés listo/a', 'success');
+            
+            // Highlight en el botón de siguiente paso
+            const nextStepBtn = document.getElementById('nextStepBtn');
+            if (nextStepBtn) {
+                nextStepBtn.style.animation = 'pulse 1s ease-in-out 3';
+            }
+        }
+
+        // ===== MODAL DE SESIÓN COMPLETADA =====
+        function checkAndShowSessionSummary() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('showSummary') === 'true') {
+                const summaryData = localStorage.getItem('lastSessionSummary');
+                
+                if (summaryData) {
+                    try {
+                        const summary = JSON.parse(summaryData);
+                        showSessionCompletedModal(summary);
+                        localStorage.removeItem('lastSessionSummary');
+                        
+                        // Limpiar URL sin recargar página
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    } catch (error) {
+                        console.error('Error mostrando resumen de sesión:', error);
+                    }
+                }
+            }
+        }
+
+        function showSessionCompletedModal(summary) {
+            // Construir HTML de estadísticas
+            const statsHTML = `
+                <div class="session-stat">
+                    <div class="session-stat-icon">✅</div>
+                    <div class="session-stat-number">${summary.lessonsCompleted || 0}</div>
+                    <div class="session-stat-label">Lección${summary.lessonsCompleted > 1 ? 'es' : ''} completada${summary.lessonsCompleted > 1 ? 's' : ''}</div>
+                </div>
+                <div class="session-stat">
+                    <div class="session-stat-icon">⏱️</div>
+                    <div class="session-stat-number">${summary.timeSpent || 0}</div>
+                    <div class="session-stat-label">Minutos de estudio</div>
+                </div>
+                <div class="session-stat">
+                    <div class="session-stat-icon">🎯</div>
+                    <div class="session-stat-number">${summary.newConcepts?.length || 0}</div>
+                    <div class="session-stat-label">Concepto${summary.newConcepts?.length !== 1 ? 's' : ''} nuevo${summary.newConcepts?.length !== 1 ? 's' : ''}</div>
+                </div>
+            `;
+
+            // Construir lista de conceptos
+            let conceptsHTML = '<h6><i class="bi bi-lightbulb me-2"></i>Conceptos aprendidos en esta sesión:</h6><ul>';
+            if (summary.newConcepts && summary.newConcepts.length > 0) {
+                summary.newConcepts.forEach(concept => {
+                    conceptsHTML += `<li>${concept}</li>`;
+                });
+            } else {
+                conceptsHTML += '<li>Repaso de conceptos anteriores</li>';
+            }
+            conceptsHTML += '</ul>';
+
+            // Mensaje motivacional aleatorio
+            const randomMessage = MOTIVATIONAL_MESSAGES[Math.floor(Math.random() * MOTIVATIONAL_MESSAGES.length)];
+
+            // Próxima lección
+            const nextStepText = summary.nextLesson || 'Continúa con el siguiente módulo cuando estés listo/a';
+
+            // Actualizar contenido del modal
+            document.getElementById('sessionStatsContainer').innerHTML = statsHTML;
+            document.getElementById('conceptsListContainer').innerHTML = conceptsHTML;
+            document.getElementById('motivationalMessage').textContent = randomMessage;
+            document.getElementById('nextStepSummary').textContent = nextStepText;
+
+            // Mostrar modal
+            const modal = new bootstrap.Modal(document.getElementById('sessionSummaryModal'));
+            modal.show();
+
+            // Actualizar interfaz principal después de cerrar el modal
+            document.getElementById('sessionSummaryModal').addEventListener('hidden.bs.modal', function () {
+                updateUserInterface();
+            }, { once: true });
+        }
+
+        // ===== CALCULAR TIEMPO RESTANTE =====
+        function calculateEstimatedCompletion() {
+            try {
+                const progress = getStudentProgress();
+                
+                let totalLessons = 0;
+                let completedLessons = 0;
+                
+                Object.keys(MODULE_LESSONS).forEach(moduleId => {
+                    totalLessons += MODULE_LESSONS[moduleId];
+                    const moduleData = progress?.modules?.[moduleId];
+                    if (moduleData && Array.isArray(moduleData.completedLessons)) {
+                        completedLessons += moduleData.completedLessons.length;
+                    }
+                });
+                
+                const remainingLessons = totalLessons - completedLessons;
+                const estimatedMinutes = remainingLessons * AVG_LESSON_TIME;
+                const estimatedHours = Math.ceil(estimatedMinutes / 60);
+                
+                // Calcular fecha estimada (asumiendo 1 lección por día)
+                const today = new Date();
+                const completionDate = new Date(today);
+                completionDate.setDate(today.getDate() + remainingLessons);
+                
+                return {
+                    remainingLessons,
+                    estimatedHours,
+                    completionDate: completionDate.toLocaleDateString('es-CL', { 
+                        day: 'numeric', 
+                        month: 'long' 
+                    }),
+                    percentComplete: Math.round((completedLessons / totalLessons) * 100)
+                };
+            } catch (error) {
+                console.error('Error calculando estimación:', error);
+                return {
+                    remainingLessons: 10,
+                    estimatedHours: 8,
+                    completionDate: 'Por determinar',
+                    percentComplete: 0
+                };
+            }
+        }
+
+        // ===== ACTUALIZAR HERO "TU SIGUIENTE PASO" =====
+        function updateNextTask() {
+            try {
+                const progress = getStudentProgress();
+                const nextStepBtn = document.getElementById('nextStepBtn');
+                const nextStepText = document.getElementById('nextStepText');
+                const progressInline = document.getElementById('overallProgressInline');
+                
+                if (!nextStepBtn || !nextStepText) {
+                    console.warn('⚠️ Elementos de siguiente paso no encontrados');
+                    return;
+                }
+
+                let nextModule = 1;
+                let nextLesson = 1;
+                let buttonText = 'Comenzar Módulo 1, Lección 1';
+                let buttonLink = 'module1.html';
+
+                // Buscar la primera lección no completada
+                for (let moduleId = 1; moduleId <= 3; moduleId++) {
+                    const moduleData = progress?.modules?.[moduleId];
+                    const completedLessons = moduleData?.completedLessons || [];
+                    const totalLessons = MODULE_LESSONS[moduleId];
+
+                    if (completedLessons.length < totalLessons) {
+                        nextModule = moduleId;
+                        nextLesson = completedLessons.length + 1;
+                        buttonText = `Continuar Módulo ${moduleId}, Lección ${nextLesson}`;
+                        buttonLink = `module${moduleId}.html`;
+                        break;
+                    }
+                }
+
+                // Si completó todo
+                const overallProgress = calculateOverallProgress();
+                if (overallProgress === 100) {
+                    buttonText = '¡Curso completado! 🎉';
+                    nextStepBtn.classList.remove('btn-light');
+                    nextStepBtn.classList.add('btn-success');
+                    nextStepBtn.onclick = null;
+                    nextStepBtn.style.cursor = 'default';
+                } else {
+                    nextStepBtn.onclick = () => window.location.href = buttonLink;
+                }
+
+                nextStepText.textContent = buttonText;
+                
+                // Actualizar progreso inline
+                if (progressInline) {
+                    progressInline.textContent = `${overallProgress}% completado`;
+                }
+
+            } catch (error) {
+                console.error('❌ Error en updateNextTask:', error);
+            }
+        }
+
+        // ===== FUNCIÓN PARA IR AL SIGUIENTE PASO =====
+        function goToNextStep() {
+            const progress = getStudentProgress();
+            
+            // Buscar la primera lección no completada
+            for (let moduleId = 1; moduleId <= 3; moduleId++) {
+                const moduleData = progress?.modules?.[moduleId];
+                const completedLessons = moduleData?.completedLessons || [];
+                const totalLessons = MODULE_LESSONS[moduleId];
+
+                if (completedLessons.length < totalLessons) {
+                    window.location.href = `module${moduleId}.html`;
+                    return;
+                }
+            }
+
+            // Si completó todo
+            showToast('¡Felicitaciones! Has completado todo el curso 🎉', 'success');
+        }
+
+        // ===== TOGGLE DE ACORDEONES =====
+        function toggleCollapseIcon(button) {
+            const icon = button.querySelector('.collapse-icon');
+            const text = button.querySelector('.collapse-text');
+            
+            // Toggle icono
+            if (icon.classList.contains('bi-chevron-down')) {
+                icon.classList.remove('bi-chevron-down');
+                icon.classList.add('bi-chevron-up');
+                icon.classList.add('rotated');
+                if (text) text.textContent = text.textContent.replace('Ver más', 'Ocultar');
+            } else {
+                icon.classList.remove('bi-chevron-up');
+                icon.classList.add('bi-chevron-down');
+                icon.classList.remove('rotated');
+                if (text) text.textContent = text.textContent.replace('Ocultar', 'Ver más');
+            }
+        }
+
+        // ===== INICIALIZACIÓN AL CARGAR ===== 
+        const originalUpdateUserInterface = updateUserInterface;
+        updateUserInterface = function() {
+            // Llamar a la función original
+            originalUpdateUserInterface();
+            
+            // Agregar actualizaciones adicionales
+            updateNextTask();
+            
+            // Agregar indicador de tiempo restante si no existe
+            const statsGrid = document.querySelector('.stats-grid');
+            if (statsGrid && !document.getElementById('estimatedTimeRemaining')) {
+                const estimation = calculateEstimatedCompletion();
+                
+                const timeCard = document.createElement('div');
+                timeCard.className = 'stat-item';
+                timeCard.style.gridColumn = 'span 2';
+                timeCard.id = 'estimatedTimeRemaining';
+                timeCard.innerHTML = `
+                    <i class="bi bi-hourglass-split" style="font-size: 2rem; color: var(--primary-dark);"></i>
+                    <span class="stat-number">${estimation.estimatedHours}h</span>
+                    <span class="stat-label">Tiempo estimado restante</span>
+                    <small class="text-muted mt-1 d-block">Finalización aprox: ${estimation.completionDate}</small>
+                `;
+                
+                statsGrid.appendChild(timeCard);
+            }
+        };
+
+        // Verificar onboarding y sesión al cargar
+        document.addEventListener('DOMContentLoaded', function() {
+            // Esperar a que se cargue el usuario
+            setTimeout(() => {
+                checkAndShowOnboarding();
+                checkAndShowSessionSummary();
+            }, 1000);
+        });
+
+        // Toast mejorado
+        function showToast(message, type = 'info') {
+            const colors = { 
+                success: '#4CAF50', 
+                warning: '#FFC107', 
+                info: '#2196F3', 
+                danger: '#f44336' 
+            };
+            const icons = { 
+                success: 'check-circle-fill', 
+                warning: 'exclamation-triangle-fill', 
+                info: 'info-circle-fill', 
+                danger: 'x-circle-fill' 
+            };
+            
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed; 
+                top: 80px; 
+                right: 20px; 
+                background: ${colors[type]}; 
+                color: white; 
+                padding: 1rem 1.5rem; 
+                border-radius: 8px; 
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3); 
+                z-index: 9999; 
+                animation: slideIn 0.3s;
+                max-width: 400px;
+            `;
+            toast.innerHTML = `
+                <i class="bi bi-${icons[type]}" style="font-size: 1.25rem; margin-right: 0.75rem;"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+</script>
+
+
+
+    <!-- ============================================ -->
+    <!-- MODAL DE ONBOARDING (Primera Visita)        -->
+    <!-- ============================================ -->
+    <div class="modal fade onboarding-modal" id="onboardingModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <!-- Paso 1 -->
+                <div class="onboarding-step" id="onboardingStep1">
+                    <div class="onboarding-header">
+                        <h2>¡Bienvenido/a al Curso! 🎨</h2>
+                    </div>
+                    <div class="onboarding-icon">🎓</div>
+                    <h4>Aprenderás a dibujar el cuerpo humano desde cero</h4>
+                    <p class="text-muted">Este curso está diseñado en 3 módulos secuenciales que te guiarán desde la observación básica hasta la representación completa de la figura humana.</p>
+                    <div class="onboarding-progress">
+                        <div class="progress-dot active"></div>
+                        <div class="progress-dot"></div>
+                        <div class="progress-dot"></div>
+                        <div class="progress-dot"></div>
+                    </div>
+                    <div class="mt-4 d-flex gap-3">
+                        <button class="btn btn-outline-secondary" onclick="skipOnboarding()">Omitir tour</button>
+                        <button class="btn btn-primary btn-lg" onclick="nextOnboardingStep(2)">Siguiente</button>
+                    </div>
+                </div>
+
+                <!-- Paso 2 -->
+                <div class="onboarding-step" id="onboardingStep2" style="display: none;">
+                    <div class="onboarding-header">
+                        <h2>Tu Ruta de Aprendizaje 📚</h2>
+                    </div>
+                    <div class="roadmap-visual">
+                        <div class="roadmap-step">M1</div>
+                        <div class="roadmap-arrow">→</div>
+                        <div class="roadmap-step">M2</div>
+                        <div class="roadmap-arrow">→</div>
+                        <div class="roadmap-step">M3</div>
+                    </div>
+                    <h5>Los 3 módulos del curso:</h5>
+                    <ul class="text-start mt-3" style="max-width: 500px;">
+                        <li><strong>Módulo 1:</strong> Observación y Gesto</li>
+                        <li><strong>Módulo 2:</strong> Anatomía Funcional</li>
+                        <li><strong>Módulo 3:</strong> Figura Completa e Integración</li>
+                    </ul>
+                    <div class="onboarding-progress">
+                        <div class="progress-dot"></div>
+                        <div class="progress-dot active"></div>
+                        <div class="progress-dot"></div>
+                        <div class="progress-dot"></div>
+                    </div>
+                    <div class="mt-4 d-flex gap-3">
+                        <button class="btn btn-outline-secondary" onclick="prevOnboardingStep(1)">Atrás</button>
+                        <button class="btn btn-outline-secondary" onclick="skipOnboarding()">Omitir tour</button>
+                        <button class="btn btn-primary btn-lg" onclick="nextOnboardingStep(3)">Siguiente</button>
+                    </div>
+                </div>
+
+                <!-- Paso 3 -->
+                <div class="onboarding-step" id="onboardingStep3" style="display: none;">
+                    <div class="onboarding-header">
+                        <h2>Comienza Aquí 🚀</h2>
+                    </div>
+                    <div class="onboarding-icon">📝</div>
+                    <h4>Tu primer objetivo</h4>
+                    <p class="text-muted">Completar <strong>Módulo 1, Lección 1</strong></p>
+                    <p class="small text-muted">(Duración estimada: 45 minutos)</p>
+                    <div class="alert alert-info mt-3" style="max-width: 500px;">
+                        <i class="bi bi-lightbulb me-2"></i>
+                        Cada lección incluye teoría, referencias visuales, ejercicios prácticos y una evaluación breve.
+                    </div>
+                    <div class="onboarding-progress">
+                        <div class="progress-dot"></div>
+                        <div class="progress-dot"></div>
+                        <div class="progress-dot active"></div>
+                        <div class="progress-dot"></div>
+                    </div>
+                    <div class="mt-4 d-flex gap-3">
+                        <button class="btn btn-outline-secondary" onclick="prevOnboardingStep(2)">Atrás</button>
+                        <button class="btn btn-outline-secondary" onclick="skipOnboarding()">Omitir tour</button>
+                        <button class="btn btn-success btn-lg" onclick="nextOnboardingStep(4)">Siguiente</button>
+                    </div>
+                </div>
+
+                <!-- Paso 4 -->
+                <div class="onboarding-step" id="onboardingStep4" style="display: none;">
+                    <div class="onboarding-header">
+                        <h2>Tu Mentor IA está disponible 24/7 🤖</h2>
+                    </div>
+                    <div class="onboarding-icon">💬</div>
+                    <h4>¿Tienes dudas?</h4>
+                    <p class="text-muted">Haz clic en el <strong>botón flotante</strong> en la esquina inferior derecha para acceder al Mentor Anatómico IA.</p>
+                    <div class="alert alert-success mt-3" style="max-width: 500px;">
+                        <i class="bi bi-check-circle me-2"></i>
+                        El mentor puede ayudarte con dudas técnicas, conceptos anatómicos y apoyo emocional cuando lo necesites.
+                    </div>
+                    <div class="onboarding-progress">
+                        <div class="progress-dot"></div>
+                        <div class="progress-dot"></div>
+                        <div class="progress-dot"></div>
+                        <div class="progress-dot active"></div>
+                    </div>
+                    <div class="mt-4 d-flex gap-3">
+                        <button class="btn btn-outline-secondary" onclick="prevOnboardingStep(3)">Atrás</button>
+                        <button class="btn btn-success btn-lg" onclick="finishOnboarding()">
+                            <i class="bi bi-rocket-takeoff me-2"></i>Comenzar Curso
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- MODAL DE SESIÓN COMPLETADA                  -->
+    <!-- ============================================ -->
+    <div class="modal fade session-summary-modal" id="sessionSummaryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="session-header">
+                    <h2><i class="bi bi-trophy-fill me-2"></i>¡Sesión completada!</h2>
+                    <p class="mb-0">Excelente trabajo en tu última sesión de estudio</p>
+                </div>
+                
+                <div class="session-stats" id="sessionStatsContainer">
+                    <!-- Contenido dinámico -->
+                </div>
+
+                <div class="modal-body">
+                    <div class="concepts-list" id="conceptsListContainer">
+                        <!-- Contenido dinámico -->
+                    </div>
+
+                    <div class="motivational-message" id="motivationalMessage">
+                        <!-- Mensaje dinámico -->
+                    </div>
+
+                    <div class="alert alert-info">
+                        <h6><i class="bi bi-compass me-2"></i>Tu siguiente paso:</h6>
+                        <p class="mb-0" id="nextStepSummary"><!-- Contenido dinámico --></p>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="goToNextStep()">
+                        <i class="bi bi-arrow-right me-2"></i>Ir a siguiente lección
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>
