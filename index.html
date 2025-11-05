@@ -46,7 +46,7 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
             position: sticky;
             top: 0;
-            z-index: 1030;
+            z-index: 1040;
             backdrop-filter: blur(10px);
         }
 
@@ -836,7 +836,7 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            z-index: 1020;
+            z-index: 1035;
             transition: all 0.3s ease;
             border: 3px solid white;
         }
@@ -881,14 +881,14 @@
             width: 400px;
             max-width: calc(100vw - 2rem);
             height: 600px;
-            max-height: calc(100vh - 12rem);
+            max-height: calc(100vh - 10rem);
             background: white;
             border-radius: 20px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
             display: none;
             flex-direction: column;
             overflow: hidden;
-            z-index: 1021;
+            z-index: 1036;
             animation: slideUp 0.3s ease-out;
         }
 
@@ -1164,17 +1164,38 @@
 
         @media (max-width: 768px) {
             .mentor-chat-container {
-                width: calc(100vw - 2rem);
-                height: calc(100vh - 12rem);
-                bottom: 6rem;
-                right: 1rem;
+                width: calc(100vw - 1rem);
+                height: calc(100vh - 160px);
+                bottom: 4rem;
+                right: 0.5rem;
+                left: 0.5rem;
+                border-radius: 16px;
+                max-height: calc(100vh - 160px);
             }
 
             .mentor-float-button {
-                bottom: 6rem;
-                right: 1.5rem;
-                width: 60px;
-                height: 60px;
+                bottom: 4rem;
+                right: 1rem;
+                width: 56px;
+                height: 56px;
+            }
+            
+            .mentor-chat-header {
+                padding: 1rem;
+            }
+            
+            .mentor-avatar {
+                width: 40px;
+                height: 40px;
+                font-size: 1.4rem;
+            }
+            
+            .mentor-name {
+                font-size: 0.95rem;
+            }
+            
+            .btn-close-mentor {
+                padding: 0.4rem;
             }
         }
 
@@ -1995,6 +2016,189 @@
                 font-size: 1.7rem;
             }
         }
+
+        
+        /* ===== MEJORAS RESPONSIVE ADICIONALES ===== */
+        @media (max-width: 768px) {
+            /* Container principal */
+            .dashboard-container {
+                padding: 0 1rem;
+                margin: 1rem auto;
+            }
+            
+            /* Hero section más compacto */
+            .next-step-hero {
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .next-step-title {
+                font-size: 1.2rem;
+            }
+            
+            .next-step-btn {
+                padding: 0.85rem 1.5rem;
+                font-size: 1rem;
+                width: 100%;
+            }
+            
+            /* Progress card */
+            .progress-circle-container svg {
+                width: 140px;
+                height: 140px;
+            }
+            
+            .progress-percentage {
+                font-size: 1.8rem;
+            }
+            
+            /* Stats grid */
+            .stat-item {
+                padding: 1.25rem;
+            }
+            
+            .stat-number {
+                font-size: 1.8rem;
+            }
+            
+            /* Módulos */
+            .module-card {
+                padding: 1.5rem;
+            }
+            
+            .module-title {
+                font-size: 1.3rem;
+            }
+            
+            /* Course info sections */
+            .course-info-section,
+            .quick-overview-section,
+            .success-tips-section,
+            .support-section {
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            /* Tips grid */
+            .tips-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            /* Quick overview grid */
+            .quick-overview-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            /* Support grid */
+            .support-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            /* Collapse buttons */
+            .collapse-toggle-btn {
+                font-size: 0.9rem;
+                padding: 0.75rem 1rem;
+            }
+            
+            /* Header */
+            .logo-section h1 {
+                font-size: 1.1rem;
+            }
+            
+            .user-badge {
+                padding: 0.5rem 0.9rem;
+                font-size: 0.85rem;
+            }
+            
+            .btn-logout {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.85rem;
+            }
+            
+            /* Modales en móvil */
+            .modal-dialog {
+                margin: 0.5rem;
+                max-width: calc(100% - 1rem);
+            }
+            
+            .onboarding-step {
+                padding: 1.25rem;
+            }
+            
+            .roadmap-visual {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .roadmap-step {
+                width: 60px;
+                height: 60px;
+                font-size: 1.1rem;
+            }
+            
+            .roadmap-arrow {
+                transform: rotate(90deg);
+                font-size: 1.5rem;
+            }
+            
+            /* Session summary */
+            .session-stats {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+                gap: 0.75rem;
+            }
+            
+            /* Toasts en móvil */
+            .toast-container {
+                top: 70px;
+                right: 0.5rem;
+                left: 0.5rem;
+            }
+            
+            .toast {
+                min-width: auto;
+                width: 100%;
+            }
+        }
+        
+        /* Para pantallas muy pequeñas (<400px) */
+        @media (max-width: 400px) {
+            .dashboard-welcome {
+                padding: 1.5rem 1rem;
+            }
+            
+            .welcome-greeting {
+                font-size: 1.5rem;
+            }
+            
+            .next-step-btn {
+                font-size: 0.9rem;
+                padding: 0.75rem 1.25rem;
+            }
+            
+            .module-card {
+                padding: 1.25rem;
+            }
+            
+            .progress-circle-container svg {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .mentor-float-button {
+                width: 52px;
+                height: 52px;
+                bottom: 3.5rem;
+            }
+            
+            .mentor-chat-container {
+                height: calc(100vh - 140px);
+                bottom: 3.5rem;
+            }
+        }
+
 
         /* ===== TOAST NOTIFICATIONS ===== */
         .toast-container {
