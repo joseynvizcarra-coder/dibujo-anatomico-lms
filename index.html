@@ -4629,6 +4629,82 @@ function updateNextTask() {
                 setTimeout(() => toast.remove(), 300);
             }, 4000);
         }
+// ===== FUNCIONES PARA BOTONES SECUNDARIOS DEL HERO =====
+function showLessonPreview() {
+    const progress = getStudentProgress();
+    let nextModule = 1;
+    let nextLesson = 1;
+    
+    // Encontrar próxima lección
+    for (let moduleId = 1; moduleId <= 3; moduleId++) {
+        const moduleData = progress?.modules?.[moduleId];
+        const completedLessons = moduleData?.completedLessons || [];
+        const totalLessons = {1: 3, 2: 4, 3: 3}[moduleId];
+
+        if (completedLessons.length < totalLessons) {
+            nextModule = moduleId;
+            nextLesson = completedLessons.length + 1;
+            break;
+        }
+    }
+    
+    // Información de cada lección
+    const lessonInfo = {
+        1: {
+            1: { title: 'Fundamentos del Croquis', desc: 'Captura la línea de acción y el gesto', time: '45 min' },
+            2: { title: 'Proporciones por Observación', desc: 'Medición visual sin fórmulas', time: '50 min' },
+            3: { title: 'Composición y Balance', desc: 'Contrapposto y distribución del peso', time: '55 min' }
+        },
+        2: {
+            1: { title: 'Estructura Ósea', desc: 'Las 3 masas corporales', time: '50 min' },
+            2: { title: 'Músculos Superficiales', desc: 'Los 6 grupos musculares', time: '50 min' },
+            3: { title: 'Extremidades', desc: 'Manos y pies en detalle', time: '50 min' },
+            4: { title: 'Rostro', desc: 'Proporciones faciales básicas', time: '50 min' }
+        },
+        3: {
+            1: { title: 'Volumen y Luz', desc: 'Sombreado básico', time: '60 min' },
+            2: { title: 'Integración Completa', desc: 'Figura con todos los elementos', time: '60 min' },
+            3: { title: 'Proyecto Final', desc: 'Creación de figura completa', time: '90 min' }
+        }
+    };
+    
+    const info = lessonInfo[nextModule]?.[nextLesson];
+    if (info) {
+        showToast(
+            `📖 Próxima Lección:\n\n${info.title}\n${info.desc}\n⏱️ Duración: ${info.time}`, 
+            'info'
+        );
+    }
+}
+
+function showStudySchedule() {
+    const completedCount = countCompletedLessons();
+    const totalLessons = 10;
+    const remainingLessons = totalLessons - completedCount;
+    
+    let scheduleText = `📅 Tu Plan de Estudio\n\n`;
+    scheduleText += `✅ Completadas: ${completedCount}/${totalLessons} lecciones\n`;
+    scheduleText += `📌 Por completar: ${remainingLessons} lecciones\n\n`;
+    
+    if (remainingLessons > 0) {
+        const daysToComplete = Math.ceil(remainingLessons / 1); // 1 lección por día
+        const estimatedDate = new Date();
+        estimatedDate.setDate(estimatedDate.getDate() + daysToComplete);
+        const dateStr = estimatedDate.toLocaleDateString('es-CL', { 
+            day: 'numeric', 
+            month: 'long' 
+        });
+        
+        scheduleText += `🎯 Fecha estimada de finalización:\n${dateStr}\n\n`;
+        scheduleText += `💡 Tip: Estudia a la misma hora cada día para crear un hábito`;
+    } else {
+        scheduleText += `🎉 ¡Felicitaciones!\nHas completado todo el curso`;
+    }
+    
+    showToast(scheduleText, 'info');
+}
+
+const MODULE_LESSONS = {1: 3, 2: 4, 3: 3};
 
 </script>
 
