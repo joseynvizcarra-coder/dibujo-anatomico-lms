@@ -2762,6 +2762,87 @@
             }
         }
 
+        /* ===== MEJORAS RESPONSIVE MÓVIL (CRÍTICAS) ===== */
+        @media (max-width: 576px) {
+            /* Cards de módulos más compactos */
+            .module-card {
+                padding: 1.5rem !important;
+            }
+            
+            .module-card h3 {
+                font-size: 1.25rem;
+            }
+            
+            /* Breadcrumbs legibles */
+            .breadcrumb-item {
+                font-size: 0.75rem;
+            }
+            
+            .breadcrumb-item + .breadcrumb-item::before {
+                padding: 0 0.25rem;
+            }
+            
+            /* Toast centrado */
+            .toast-container {
+                top: 70px !important;
+                left: 50% !important;
+                right: auto !important;
+                transform: translateX(-50%);
+                width: 90%;
+            }
+            
+            /* Modal de sesión compacto */
+            .session-summary-modal .modal-body {
+                padding: 1rem;
+            }
+            
+            .session-stats {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            /* Botones hero ajustados */
+            .hero-btn-primary,
+            .hero-btn-secondary {
+                padding: 0.875rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+        
+        /* Onboarding en landscape móvil */
+        @media (max-width: 896px) and (orientation: landscape) {
+            #onboardingModal .modal-dialog {
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+        }
+        
+        /* Botones en tablets */
+        @media (min-width: 768px) and (max-width: 991px) {
+            .hero-btn-primary {
+                padding: 0.875rem 2rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* ===== SKIP NAVIGATION (ACCESIBILIDAD) ===== */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary-dark);
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 0 0 8px 0;
+            z-index: 10000;
+            font-weight: 600;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
         /* ===== HERO SECTION MEJORADO ===== */
         .next-step-hero {
             background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
@@ -2804,6 +2885,8 @@
 </style>
 </head>
 <body>
+    <!-- Skip Navigation (Accesibilidad) -->
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
     <!-- HEADER -->
     <header class="header-uah">
@@ -2817,8 +2900,8 @@
                     <div class="user-avatar" id="userAvatar">?</div>
                     <span id="userName">Usuario</span>
                 </div>
-                <button class="btn btn-logout" onclick="logout()">
-                    <i class="bi bi-box-arrow-right me-1"></i>
+                <button class="btn btn-logout" onclick="logout()" aria-label="Cerrar sesión y salir del sistema">
+                    <i class="bi bi-box-arrow-right me-1" aria-hidden="true"></i>
                     Cerrar Sesión
                 </button>
             </div>
@@ -2826,7 +2909,7 @@
     </header>
 
     <!-- DASHBOARD DEL ESTUDIANTE -->
-    <div class="dashboard-container fade-in">
+    <main id="main-content" class="dashboard-container fade-in">
         <!-- Bienvenida -->
         <div class="dashboard-welcome">
             <div class="welcome-content">
@@ -2938,9 +3021,9 @@
             </div>
             
             <!-- Botón de Acción Principal -->
-            <button class="hero-btn-primary" id="nextStepBtn" onclick="goToNextStep()">
+            <button class="hero-btn-primary" id="nextStepBtn" onclick="goToNextStep()" aria-label="Comenzar el curso ahora">
                 <span class="btn-text">Comenzar Ahora</span>
-                <i class="bi bi-arrow-right-circle-fill"></i>
+                <i class="bi bi-arrow-right-circle-fill" aria-hidden="true"></i>
             </button>
             
             <!-- Acciones Secundarias -->
@@ -3342,6 +3425,7 @@
             <!-- Se llenará dinámicamente -->
         </div>
     </section>
+    </main>
 
     <!-- MENTOR ANATÓMICO - SISTEMA COMPLETO -->
         <!-- Backdrop para cerrar mentor haciendo clic fuera -->
@@ -4605,6 +4689,8 @@ function updateNextTask() {
             };
             
             const toast = document.createElement('div');
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'polite');
             toast.style.cssText = `
                 position: fixed; 
                 top: 80px; 
@@ -4619,7 +4705,7 @@ function updateNextTask() {
                 max-width: 400px;
             `;
             toast.innerHTML = `
-                <i class="bi bi-${icons[type]}" style="font-size: 1.25rem; margin-right: 0.75rem;"></i>
+                <i class="bi bi-${icons[type]}" style="font-size: 1.25rem; margin-right: 0.75rem;" aria-hidden="true"></i>
                 <span>${message}</span>
             `;
             
@@ -4712,13 +4798,13 @@ function showStudySchedule() {
     <!-- ============================================ -->
     <!-- MODAL DE ONBOARDING (Primera Visita)        -->
     <!-- ============================================ -->
-    <div class="modal fade onboarding-modal" id="onboardingModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal fade onboarding-modal" id="onboardingModal" tabindex="-1" aria-labelledby="onboardingTitle" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <!-- Paso 1 -->
                 <div class="onboarding-step" id="onboardingStep1">
                     <div class="onboarding-header">
-                        <h2>¡Bienvenido/a al Curso! 🎨</h2>
+                        <h2 id="onboardingTitle">¡Bienvenido/a al Curso! 🎨</h2>
                     </div>
                     <div class="onboarding-icon">🎓</div>
                     <h4>Aprenderás a dibujar el cuerpo humano desde cero</h4>
@@ -4824,11 +4910,11 @@ function showStudySchedule() {
     <!-- ============================================ -->
     <!-- MODAL DE SESIÓN COMPLETADA                  -->
     <!-- ============================================ -->
-    <div class="modal fade session-summary-modal" id="sessionSummaryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade session-summary-modal" id="sessionSummaryModal" tabindex="-1" aria-labelledby="sessionSummaryTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="session-header">
-                    <h2><i class="bi bi-trophy-fill me-2"></i>¡Sesión completada!</h2>
+                    <h2 id="sessionSummaryTitle"><i class="bi bi-trophy-fill me-2"></i>¡Sesión completada!</h2>
                     <p class="mb-0">Excelente trabajo en tu última sesión de estudio</p>
                 </div>
                 
@@ -4853,8 +4939,8 @@ function showStudySchedule() {
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" onclick="goToNextStep()">
-                        <i class="bi bi-arrow-right me-2"></i>Ir a siguiente lección
+                    <button type="button" class="btn btn-primary" onclick="goToNextStep()" aria-label="Ir a la siguiente lección del curso">
+                        <i class="bi bi-arrow-right me-2" aria-hidden="true"></i>Ir a siguiente lección
                     </button>
                 </div>
             </div>
