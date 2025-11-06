@@ -1074,6 +1074,36 @@
                 --space-2xl: 2.5rem;
             }
         }
+
+        /* ===== IMÁGENES AMPLIABLES ===== */
+        .reference-image img {
+            cursor: zoom-in;
+            transition: transform 0.2s ease;
+        }
+
+        .reference-image img:hover {
+            transform: scale(1.05);
+        }
+
+        .zoom-badge {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .reference-image:hover .zoom-badge {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            #imageLightbox .modal-dialog {
+                max-width: 95vw;
+                margin: 0.5rem;
+            }
+            
+            #imageLightbox img {
+                max-height: 85vh;
+            }
+        }
 </style>
 </head>
 <body>
@@ -1425,6 +1455,15 @@
         }
 
         // ===== FUNCIONES DE NAVEGACIÓN =====
+        // ===== CONCEPTOS CLAVE POR MÓDULO Y LECCIÓN =====
+        const MODULE_CONCEPTS = {
+            3: {
+                1: ['Síntesis por capas', 'Proceso de construcción', '4 capas sucesivas'],
+                2: ['5 valores tonales', 'Luz y sombra', 'Volumen tridimensional'],
+                3: ['Composición integral', 'Proyecto final', 'Aplicación completa del curso']
+            }
+        };
+
         async function completeLesson(lessonNum) {
             if (!Array.isArray(completedLessons)) completedLessons = [];
             if (completedLessons.includes(lessonNum)) return;
@@ -1455,12 +1494,37 @@
                     }, 1000);
                 } else {
                     console.log('🎉 ¡Módulo completado!');
-                    showToast('¡Completaste el Módulo 3 y el curso completo!', 'success');
+                    showToast(`¡Completaste el Módulo ${MODULE_NUMBER} y el curso completo!`, 'success');
                     setTimeout(() => {
-                        window.location.href = 'index.html';
+                        returnToDashboardWithSummary();
                     }, 2000);
                 }
             }, 2000);
+        }
+
+        // ===== FUNCIÓN PARA REGRESAR AL DASHBOARD CON RESUMEN =====
+        function returnToDashboardWithSummary() {
+            const sessionSummary = {
+                moduleCompleted: MODULE_NUMBER,
+                lessonsCompleted: completedLessons.length,
+                timeSpent: Math.round((Date.now() - moduleStartTime) / 60000),
+                newConcepts: MODULE_CONCEPTS[MODULE_NUMBER][currentLesson] || [],
+                nextLesson: getNextLessonInfo()
+            };
+            
+            localStorage.setItem('lastSessionSummary', JSON.stringify(sessionSummary));
+            window.location.href = 'index.html?showSummary=true';
+        }
+
+        // ===== FUNCIÓN AUXILIAR PARA OBTENER INFO DE SIGUIENTE LECCIÓN =====
+        function getNextLessonInfo() {
+            if (currentLesson < TOTAL_LESSONS) {
+                return `Módulo ${MODULE_NUMBER}, Lección ${currentLesson + 1}`;
+            } else if (MODULE_NUMBER < 3) {
+                return `Módulo ${MODULE_NUMBER + 1}, Lección 1`;
+            } else {
+                return '¡Has completado el curso completo! 🎉';
+            }
         }
 
         async function loadLesson(lessonNum) {
@@ -1587,6 +1651,18 @@
             await processEvaluation(lessonNum, userAnswers, correctAnswers[lessonNum]);
         }
 
+        // ===== TIPOS DE LECCIONES Y UMBRALES DE APROBACIÓN =====
+        const LESSON_TYPES = {
+            1: 'foundational', // Primera lección siempre es fundacional
+            2: 'practice',
+            3: 'practice'
+        };
+
+        const MASTERY_THRESHOLDS = {
+            foundational: 3, // 100% obligatorio para fundacionales
+            practice: 2      // 66% aceptable para práctica
+        };
+
         async function processEvaluation(lessonNum, userAnswers, correctAnswers) {
             showLoading(true);
             
@@ -1613,8 +1689,11 @@
                 
                 document.getElementById('submitEvalBtn').style.display = 'none';
                 
+                // Determinar tipo de lección y umbral requerido
+                const lessonType = LESSON_TYPES[lessonNum];
+                const requiredScore = MASTERY_THRESHOLDS[lessonType];
                 const percentage = Math.round((score / 3) * 100);
-                const passed = score >= 2;
+                const passed = score >= requiredScore;
                 
                 try {
                     await logUserActivity('evaluation_submitted', MODULE_NUMBER.toString(), lessonNum.toString(), {
@@ -1628,10 +1707,29 @@
                         <h5><i class="bi bi-check-circle-fill me-2"></i>¡Excelente!</h5>
                         <p>Aprobaste con ${score}/3 (${percentage}%).</p>
                     </div>` :
-                    `<div class="alert alert-warning alert-custom">
-                        <h5><i class="bi bi-exclamation-triangle-fill me-2"></i>Necesitas mejorar</h5>
-                        <p>Obtuviste ${score}/3 (${percentage}%). Necesitas 2/3.</p>
-                    </div>`;
+                    (() => {
+                        const isFoundational = lessonType === 'foundational';
+                        return `<div class="alert alert-warning alert-custom">
+                            <h5><i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                ${isFoundational ? '¡Ups! Necesitas dominar estos conceptos' : 'Casi ahí, intenta de nuevo'}
+                            </h5>
+                            <p>Obtuviste ${score}/3 correctas.</p>
+                            ${isFoundational ? 
+                                '<p class="mb-2"><strong>Esta lección es fundamental para las siguientes.</strong> Te recomendamos:</p>' : 
+                                '<p>Necesitas al menos 2/3 para aprobar.</p>'}
+                            <div class="mt-3 d-flex gap-2 flex-wrap">
+                                <button class="btn btn-outline-primary" onclick="reviewContent()">
+                                    <i class="bi bi-book me-1"></i>Repasar contenido
+                                </button>
+                                <button class="btn btn-primary" onclick="retryEvaluation(${lessonNum})">
+                                    <i class="bi bi-arrow-clockwise me-1"></i>Reintentar ahora
+                                </button>
+                                <button class="btn btn-outline-secondary" onclick="document.getElementById('mentorFloatBtn').click()">
+                                    <i class="bi bi-robot me-1"></i>Consultar al Mentor
+                                </button>
+                            </div>
+                        </div>`;
+                    })();
                 
                 document.getElementById('evalResult').innerHTML = resultHTML;
                 
@@ -1645,6 +1743,18 @@
                 showLoading(false);
                 await saveProgress();
             }, 600);
+        }
+
+        // ===== FUNCIÓN PARA REPASAR CONTENIDO =====
+        function reviewContent() {
+            const lessonHeader = document.querySelector('.lesson-header');
+            if (lessonHeader) {
+                lessonHeader.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+                showToast('💡 Repasa el contenido y reinténtalo cuando estés listo/a', 'info');
+            }
         }
 
         function retryEvaluation(lessonNum) {
@@ -2025,13 +2135,33 @@
                             <h6>Referencias:</h6>
                             <div class="row g-2">
                                 <div class="col-6">
-                                    <div class="reference-image" style="height: 300px;">
-                                        <img src="images/ref21.jpg" alt="Figura completa 1">
+                                    <div class="reference-image" style="height: 300px; position: relative;">
+                                        <img src="images/ref21.jpg" 
+                                             alt="Referencia 21" 
+                                             onclick="openImageLightbox('images/ref21.jpg', 'Referencia 21')"
+                                             title="Clic para ampliar"
+                                             style="cursor: zoom-in; transition: transform 0.2s;">
+                                        <span class="zoom-badge" style="position: absolute; bottom: 8px; right: 8px; 
+                                                                         background: rgba(0,0,0,0.7); color: white; 
+                                                                         padding: 4px 8px; border-radius: 4px; 
+                                                                         font-size: 0.75rem;">
+                                            <i class="bi bi-zoom-in me-1"></i>Ampliar
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                    <div class="reference-image" style="height: 300px;">
-                                        <img src="images/ref22.jpg" alt="Figura completa 2">
+                                    <div class="reference-image" style="height: 300px; position: relative;">
+                                        <img src="images/ref22.jpg" 
+                                             alt="Referencia 22" 
+                                             onclick="openImageLightbox('images/ref22.jpg', 'Referencia 22')"
+                                             title="Clic para ampliar"
+                                             style="cursor: zoom-in; transition: transform 0.2s;">
+                                        <span class="zoom-badge" style="position: absolute; bottom: 8px; right: 8px; 
+                                                                         background: rgba(0,0,0,0.7); color: white; 
+                                                                         padding: 4px 8px; border-radius: 4px; 
+                                                                         font-size: 0.75rem;">
+                                            <i class="bi bi-zoom-in me-1"></i>Ampliar
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -2360,8 +2490,18 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <h6>Referencia:</h6>
-                            <div class="reference-image" style="height: 400px;">
-                                <img src="images/ref23_iluminacion_lateral.jpg" alt="Iluminación lateral">
+                            <div class="reference-image" style="height: 400px; position: relative;">
+                                <img src="images/ref23_iluminacion_lateral.jpg" 
+                                     alt="Referencia 23" 
+                                     onclick="openImageLightbox('images/ref23_iluminacion_lateral.jpg', 'Referencia 23 - Iluminación lateral')"
+                                     title="Clic para ampliar"
+                                     style="cursor: zoom-in; transition: transform 0.2s;">
+                                <span class="zoom-badge" style="position: absolute; bottom: 8px; right: 8px; 
+                                                                 background: rgba(0,0,0,0.7); color: white; 
+                                                                 padding: 4px 8px; border-radius: 4px; 
+                                                                 font-size: 0.75rem;">
+                                    <i class="bi bi-zoom-in me-1"></i>Ampliar
+                                </span>
                             </div>
                             <div class="text-center mt-2">
                                 <button class="btn btn-sm btn-outline-primary" onclick="showReferencesModal('lesson2')">
