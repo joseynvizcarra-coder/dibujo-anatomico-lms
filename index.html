@@ -129,6 +129,25 @@
             box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
         }
 
+        .btn-dashboard {
+            background: rgba(33, 150, 243, 0.2);
+            border: 1px solid rgba(33, 150, 243, 0.4);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            text-decoration: none;
+        }
+
+        .btn-dashboard:hover {
+            background: var(--info);
+            border-color: var(--info);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+        }
+
         /* ===== DASHBOARD DEL ESTUDIANTE - REDISEÑADO ===== */
         .dashboard-container {
             max-width: 1400px;
@@ -2900,6 +2919,10 @@
                     <div class="user-avatar" id="userAvatar">?</div>
                     <span id="userName">Usuario</span>
                 </div>
+                <a href="dashboard.html" class="btn btn-dashboard" id="btnDashboard" style="display: none;" aria-label="Ir al panel de control de instructor">
+                    <i class="bi bi-speedometer2 me-1" aria-hidden="true"></i>
+                    Dashboard
+                </a>
                 <button class="btn btn-logout" onclick="logout()" aria-label="Cerrar sesión y salir del sistema">
                     <i class="bi bi-box-arrow-right me-1" aria-hidden="true"></i>
                     Cerrar Sesión
@@ -3785,6 +3808,12 @@
             if (userNameEl) userNameEl.textContent = fullName;
             if (welcomeNameEl) welcomeNameEl.textContent = firstName;
             if (userAvatarEl) userAvatarEl.textContent = firstName.charAt(0).toUpperCase();
+
+            // Mostrar botón de Dashboard solo para instructores
+            const btnDashboard = document.getElementById('btnDashboard');
+            if (btnDashboard && user.role === 'instructor') {
+                btnDashboard.style.display = 'block';
+            }
 
             // Actualizar todas las secciones
             try {
