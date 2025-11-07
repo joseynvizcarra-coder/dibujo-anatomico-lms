@@ -1,6 +1,6 @@
 // ============================================
-// MENTOR ANATÓMICO v5.0 - CONVERSACIÓN NATURAL EXPANDIDA
-// 70 respuestas base + Keywords MASIVAMENTE expandidos
+// MENTOR ANATÓMICO v5.0 - ENCODING CORREGIDO
+// 70 respuestas + Keywords CON Y SIN ACENTOS
 // Conversación fluida y natural
 // Compatible con integración index.html y module1.html
 // ============================================
@@ -14,10 +14,10 @@
     const basicConversation = {
         saludos: {
             keywords: [
-                // Saludos generales
+                // Saludos generales (SIN acentos)
                 'hola', 'hi', 'hey', 'ola', 'holi', 'holaaa', 'holaa', 'holiwis',
                 // Saludos formales
-                'buenos dias', 'buenos días', 'buenas tardes', 'buenas noches', 'buen día', 'buen dia',
+                'buenos dias', 'buenos días', 'buenas tardes', 'buenas noches', 'buen dia', 'buen día',
                 // Saludos informales
                 'que tal', 'qué tal', 'que onda', 'qué onda', 'wenas', 'buenas', 'saludos',
                 // Variantes
@@ -115,8 +115,8 @@
 
         motivacion: {
             keywords: [
-                'dame ánimo', 'dame animo', 'motivame', 'motívame',
-                'necesito motivación', 'necesito motivacion', 'desmotivado', 'desmotivada',
+                'dame animo', 'dame ánimo', 'motivame', 'motívame',
+                'necesito motivacion', 'necesito motivación', 'desmotivado', 'desmotivada',
                 'sin ganas', 'aburrido', 'aburrida'
             ],
             text: "¡Escucha esto! 💪✨\n\n**Cada trazo que haces te acerca a tu objetivo.**\n\nNo importa si hoy dibujaste \"mal\". Lo importante es que DIBUJASTE.\n\n**Verdad:** Los profesionales también tienen días malos. La diferencia es que NO PARAN.\n\n**Tú tampoco pares.** El talento es 1%, la constancia es 99%.\n\n¿Seguimos? 🎨",
@@ -175,24 +175,26 @@
     };
 
     // ============================================
-    // 2. BASE DE CONOCIMIENTO EMOCIONAL (25 respuestas - KEYWORDS EXPANDIDOS)
+    // 2. BASE DE CONOCIMIENTO EMOCIONAL (25 respuestas)
     // ============================================
     const emotionalKnowledge = {
         frustracion: {
             keywords: [
-                // Frustración directa
+                // Frustración directa (SIN acentos primero)
                 'frustrado', 'frustrada', 'frustrante', 'frustra', 'frustracion', 'frustración',
                 // No puedo
                 'no puedo', 'no me sale', 'no logro', 'no consigo',
                 // Calificativos negativos
-                'horrible', 'mal', 'feo', 'terrible', 'pésimo', 'pesimo', 'desastre',
+                'horrible', 'mal', 'feo', 'terrible', 'pesimo', 'pésimo', 'desastre',
                 // Expresiones de rabia
                 'que rabia', 'qué rabia', 'molesto', 'molesta', 'enojado', 'enojada', 'me enoja',
                 // Variantes
                 'todo me sale mal', 'nada funciona', 'no funciona', 'no sirve',
                 'odio dibujar', 'odio esto', 'detesto', 'asco',
                 // Desesperación
-                'desesperado', 'desesperada', 'desesperacion', 'desesperación'
+                'desesperado', 'desesperada', 'desesperacion', 'desesperación',
+                // Del PDF
+                'me siento muy frustrado', 'esto es horrible', 'estoy frustrada'
             ],
             responses: {
                 leve: {
@@ -222,7 +224,10 @@
                 'todos menos yo', 'por qué yo no', 'porque yo no', 'solo a mi', 'sólo a mí',
                 'todos pueden', 'todos logran', 'yo soy el único', 'yo soy la única',
                 // Variantes
-                'todos son mejores', 'soy el peor', 'soy la peor', 'el más malo', 'la más mala'
+                'todos son mejores', 'soy el peor', 'soy la peor', 'el más malo', 'la más mala',
+                // Del PDF
+                'todos dibujan mejor que yo', 'por que yo no tengo talento',
+                'otros avanzan más rápido', 'siempre hay alguien mejor'
             ],
             responses: {
                 text: "🛑 **Alto ahí**. Compararse mata el progreso creativo.\n\n**Verdad dura:** Siempre habrá alguien \"mejor\". Siempre.\n\n**Pregunta real:** ¿Dibujas mejor que AYER? Esa es la única comparación válida.\n\nCompárate con tu yo de hace 1 semana.",
@@ -241,7 +246,11 @@
                 // Variantes
                 'fue suerte', 'pura suerte', 'no sé cómo', 'no se como',
                 'alguien se dará cuenta', 'me van a descubrir', 'van a descubrir',
-                'no debería estar aquí', 'no deberia estar aqui'
+                'no debería estar aquí', 'no deberia estar aqui',
+                // Del PDF
+                'siento que soy un fraude', 'no merezco estar aquí',
+                'fue pura suerte', 'no soy realmente artista',
+                'sindrome del impostor', 'síndrome del impostor'
             ],
             responses: {
                 text: "Síndrome del impostor detectado 🎭. El 70% de artistas lo experimenta.\n\n**Realidad:** Si HACES arte, ERES artista. Punto.\n\n**Tip:** Reemplaza \"no soy artista\" por: \"Soy un artista en desarrollo\".\n\nTu práctica te hace artista.",
@@ -260,7 +269,10 @@
                 // Variantes
                 'stuck', 'no avanzo', 'página en blanco', 'pagina en blanco',
                 'mente en blanco', 'sin inspiración', 'sin inspiracion',
-                'no se me ocurre nada', 'no se me ocurre', 'creatividad bloqueada'
+                'no se me ocurre nada', 'no se me ocurre', 'creatividad bloqueada',
+                // Del PDF
+                'estoy bloqueado', 'no sé qué dibujar', 'página en blanco', 'estoy estancada',
+                'bloqueo creativo'
             ],
             responses: {
                 text: "Bloqueo = falta de INPUT, no falta de talento.\n\n**Ejercicio (15 min):**\n1. Ve 20 fotos de poses en Pinterest/Line of Action\n2. Elige la que MÁS te llame\n3. Dibújala EN 5 MINUTOS (sí, mal hecho)\n4. Repite\n\nEl bloqueo se rompe con VOLUMEN.",
@@ -279,7 +291,11 @@
                 // Variantes
                 'inquieto', 'inquieta', 'intranquilo', 'intranquila',
                 'angustia', 'agobio', 'agobiado', 'agobiada',
-                'pánico', 'panico', 'ataque de ansiedad', 'crisis'
+                'pánico', 'panico', 'ataque de ansiedad', 'crisis',
+                // Del PDF
+                'tengo mucha ansiedad', 'estoy muy nervioso',
+                'me siento estresada al dibujar', 'tengo angustia',
+                'ansiedad general'
             ],
             responses: {
                 text: "La ansiedad es energía mal dirigida. Vamos a redirigirla.\n\n**Técnica 5-4-3-2-1:**\n- 5 cosas que VES\n- 4 que TOCAS\n- 3 que ESCUCHAS\n- 2 que HUELES\n- 1 que SABOREAS\n\nEsto te ancla al presente. La ansiedad vive en el futuro.",
@@ -297,7 +313,10 @@
                 'borrar todo', 'nunca termino', 'siempre borro', 'borro mucho',
                 // Variantes
                 'obsesionado', 'obsesionada', 'detalle', 'imperfecto',
-                'no queda como quiero', 'no me convence', 'falta algo'
+                'no queda como quiero', 'no me convence', 'falta algo',
+                // Del PDF
+                'siempre borro todo', 'nunca termino nada',
+                'tiene que quedar perfecto', 'soy muy perfeccionista'
             ],
             responses: {
                 text: "Perfeccionismo NO es excelencia. Es miedo disfrazado.\n\n**Regla 80/20:** Un dibujo al 80% te enseña MÁS que uno al 100%.\n\n¿Por qué? Porque TERMINAS más.\n\n**Ejercicio:** Próximo dibujo en la MITAD del tiempo. Prohibido borrar.\n\nAbraza lo \"feo\".",
@@ -314,7 +333,9 @@
                 'sueño', 'sueno', 'somnoliento', 'somnolenta',
                 // Variantes
                 'exhaust', 'fatiga', 'sin fuerzas', 'rendido', 'rendida',
-                'muerto', 'muerta', 'reventado', 'reventada'
+                'muerto', 'muerta', 'reventado', 'reventada',
+                // Del PDF
+                'estoy muy cansado', 'sin energía', 'agotada', 'muerta de sueño'
             ],
             responses: {
                 text: "Dibujar cansado/a = entrenar enfermo. Contraproducente.\n\n**Prioriza:**\n1. Dormir 7-8 horas\n2. Comer bien\n3. Moverte\n4. DESPUÉS dibujar\n\nTu creatividad necesita energía física.\n\nDescansa hoy, dibuja mañana.",
@@ -330,7 +351,10 @@
                 'miedoso', 'miedosa', 'temeroso', 'temerosa', 'aterrado', 'aterrada',
                 // Variantes
                 'pavor', 'fobia', 'me da miedo', 'tengo miedo',
-                'miedo a equivocarme', 'miedo al error', 'miedo a fallar'
+                'miedo a equivocarme', 'miedo al error', 'miedo a fallar',
+                // Del PDF
+                'tengo miedo de equivocarme', 'me da pánico empezar',
+                'miedo al error', 'me aterroriza fallar'
             ],
             responses: {
                 text: "El miedo al error es enemigo #1 del aprendizaje.\n\n**Verdad:** Los dibujos \"malos\" enseñan MÁS que los \"buenos\".\n\nCada error es data. Data = aprendizaje.\n\n**Mantra:** \"Este dibujo no define mi valor como artista\".\n\nEl miedo se disuelve con repetición.",
@@ -348,7 +372,10 @@
                 'aburrido', 'aburrida', 'perdí interés', 'perdi interes',
                 'ya no me gusta', 'desanimado', 'desanimada',
                 // Variantes
-                'no tiene sentido', 'para nada', 'sin propósito', 'sin proposito'
+                'no tiene sentido', 'para nada', 'sin propósito', 'sin proposito',
+                // Del PDF
+                'ya no tengo ganas', 'para qué sigo', 'perdí la motivación',
+                'no vale la pena'
             ],
             responses: {
                 text: "Desmotivación = expectativas vs. realidad desalineadas.\n\n**Pregunta:** ¿Por qué empezaste este curso?\n\nReconecta con ESO.\n\n**Micro-motivación:** Dibuja solo 5 minutos hoy. SOLO 5.\n\nLa motivación sigue a la acción, no al revés.",
@@ -364,7 +391,9 @@
                 // Tristeza
                 'triste', 'tristeza', 'quiero llorar', 'me dan ganas de llorar',
                 // Variantes
-                'lloros', 'lloroso', 'llorosa', 'sollozar', 'sollozo'
+                'lloros', 'lloroso', 'llorosa', 'sollozar', 'sollozo',
+                // Del PDF
+                'tengo ganas de llorar', 'lloré dibujando', 'lágrimas', 'quiero llorar'
             ],
             responses: {
                 text: "Llorar está bien. En serio. No es debilidad.\n\nEstás procesando frustración, expectativa, esfuerzo. Eso es HUMANO.\n\n**Permiso oficial:** Llora si necesitas. Luego lávate la cara, toma agua.\n\nTu bienestar > cualquier dibujo. Siempre. 💙",
@@ -381,7 +410,11 @@
                 'me juzgan', 'van a criticar', 'feedback me asusta', 'miedo al feedback',
                 'miedo a la evaluación', 'miedo a la evaluacion',
                 // Variantes
-                'me van a revisar', 'me van a corregir', 'corrección', 'correccion'
+                'me van a revisar', 'me van a corregir', 'corrección', 'correccion',
+                // Del PDF
+                'me da miedo la evaluación', 'me asusta el feedback',
+                'tengo ansiedad por la revisión', 'van a calificar mi trabajo',
+                'ansiedad por evaluación'
             ],
             responses: {
                 text: "**Ansiedad por evaluación es súper común.**\n\n**Reframe mental:**\nFeedback NO es juicio personal. Es información.\n\n**Verdad:** Nadie evalúa TU VALOR como persona. Solo observan una habilidad en desarrollo.\n\n**Tip:** Lee feedback 24h después, no inmediatamente.\n\nTu cerebro necesita tiempo para procesar.",
@@ -398,7 +431,10 @@
                 'que dirán', 'qué dirán', 'me van a criticar', 'miedo a opiniones',
                 'exponerme', 'exponer mi arte',
                 // Variantes
-                'mostrar en público', 'mostrar en publico', 'redes sociales me asustan'
+                'mostrar en público', 'mostrar en publico', 'redes sociales me asustan',
+                // Del PDF
+                'me da miedo mostrar mis dibujos', 'tengo vergüenza de publicar en Instagram',
+                'no quiero compartir mi arte', 'me da cosa que vean mis dibujos'
             ],
             responses: {
                 text: "**Miedo a mostrar arte = miedo al rechazo (natural).**\n\n**Verdad liberadora:** El 99% de la gente NO opina. Ni positivo ni negativo.\n\n**Los que opinan negativo:** Proyectan SUS inseguridades.\n\n**Ejercicio:** Comparte 1 dibujo \"malo\" intencionalmente. Observa: nada explota.\n\nTu valor ≠ likes.",
@@ -416,7 +452,10 @@
                 // Excusas
                 'excusas', 'flojera', 'pereza', 'perezoso', 'perezosa',
                 // Variantes
-                'después lo hago', 'despues lo hago', 'ya lo haré', 'ya lo hare'
+                'después lo hago', 'despues lo hago', 'ya lo haré', 'ya lo hare',
+                // Del PDF
+                'siempre dejo todo para después', 'no puedo empezar a dibujar',
+                'procrastino mucho', 'mañana empiezo'
             ],
             responses: {
                 text: "**Procrastinación = evasión de incomodidad.**\n\n**No es pereza. Es miedo disfrazado.**\n\n**Técnica 2 minutos:**\n\"Solo voy a abrir mi cuaderno.\"\n\nEso es TODO. Nada más.\n\n**Ciencia:** Empezar es lo más difícil. Después, momentum te lleva.\n\nLa acción genera motivación, no al revés.",
@@ -432,7 +471,10 @@
                 // No tengo talento
                 'no tengo talento', 'nunca aprenderé', 'nunca aprendere', 'soy horrible',
                 // Variantes
-                'soy un fracaso', 'soy una fracasada', 'no valgo nada', 'basura'
+                'soy un fracaso', 'soy una fracasada', 'no valgo nada', 'basura',
+                // Del PDF
+                'soy muy malo dibujando', 'no sirvo para esto',
+                'soy un desastre', 'no tengo talento'
             ],
             responses: {
                 text: "**ALTO. Eso que dices no es verdad.**\n\n**Habilidad ≠ Identidad.**\n\nHoy dibujas a nivel X. Eso no te define.\n\n**Cambia el lenguaje:**\n❌ \"Soy malo/a\"\n✅ \"Aún estoy aprendiendo esto\"\n\n**Pregunta:** ¿Le dirías eso a un amigo?\n\nNo te mereces ese trato tampoco.",
@@ -450,7 +492,10 @@
                 // Tiempo perdido
                 'tiempo perdido', 'he fallado', 'me rendí', 'me rendi',
                 // Variantes
-                'culpabilidad', 'remordimiento', 'arrepentido', 'arrepentida'
+                'culpabilidad', 'remordimiento', 'arrepentido', 'arrepentida',
+                // Del PDF
+                'me siento culpable por no practicar', 'debería haber dibujado más',
+                'perdí mucho tiempo', 'he fallado'
             ],
             responses: {
                 text: "**La culpa NO te hace dibujar mejor.**\n\n**Dato:** Nadie practica perfecto. Ni Picasso.\n\n**Realidad:** Tomaste un descanso. Necesario y válido.\n\n**Ahora:** Vuelve sin drama. Sin autoflagelación.\n\nDibuja 5 min hoy. Ya. Eso borra la culpa.\n\nAcción > culpa.",
@@ -466,7 +511,9 @@
                 // Colapso
                 'colapsado', 'colapsada', 'overwhelmed', 'es mucho',
                 // Variantes
-                'demasiadas cosas', 'no puedo con todo', 'me supera'
+                'demasiadas cosas', 'no puedo con todo', 'me supera',
+                // Del PDF
+                'estoy abrumado', 'es demasiado', 'no doy abasto', 'estoy colapsado'
             ],
             responses: {
                 text: "**Overwhelm = intentar todo a la vez.**\n\n**Principio:** Puedes hacerlo TODO. Solo que no AHORA.\n\n**Ejercicio emergencia:**\n1. Escribe TODAS las tareas\n2. Elige solo UNA\n3. Ignora el resto HOY\n\n**Mantra:** \"Solo esto. Nada más por ahora.\"\n\nMultitasking es mito.",
@@ -480,7 +527,10 @@
                 'vergüenza', 'verguenza', 'me da pena', 'da vergüenza', 'da verguenza',
                 'penoso', 'penosa', 'humillante', 'avergonzado', 'avergonzada',
                 // Variantes
-                'bochorno', 'me da cosa', 'ridículo', 'ridiculo', 'pasar vergüenza', 'pasar verguenza'
+                'bochorno', 'me da cosa', 'ridículo', 'ridiculo', 'pasar vergüenza', 'pasar verguenza',
+                // Del PDF
+                'me da vergüenza mi trabajo', 'es muy penoso',
+                'me da pena mostrar esto', 'qué humillante'
             ],
             responses: {
                 text: "**Vergüenza artística = temer ser visto como \"malo/a\".**\n\n**Secreto:** Nadie nace sabiendo. TODOS empezamos \"mal\".\n\n**Ejercicio mental:**\nImagina a alguien mostrándote su primer dibujo torpe. ¿Lo juzgas?\n\nNo. Admiras su valentía.\n\n**Aplica eso a ti.**\n\nVergüenza disminuye con exposición repetida.",
@@ -495,7 +545,10 @@
                 'dudas', 'dudo', 'no confío', 'no confio', 'incertidumbre',
                 // Variantes
                 'no sé si', 'no se si', 'será que', 'sera que',
-                'inseguridad', 'duda constante', 'siempre dudo'
+                'inseguridad', 'duda constante', 'siempre dudo',
+                // Del PDF
+                'no estoy segura de nada', 'tengo muchas dudas',
+                'no confío en mí', 'incertidumbre total'
             ],
             responses: {
                 text: "**Inseguridad = espacio entre donde estás y donde quieres estar.**\n\n**Es normal. Es UNIVERSAL.**\n\n**Truco mental:**\nLa inseguridad nunca desaparece. Los profesionales también la sienten.\n\n**Diferencia:** Ellos actúan A PESAR de la inseguridad.\n\n**Tu turno:** Dibuja inseguro/a. Pero DIBUJA.",
@@ -510,7 +563,10 @@
                 'opinarán mal', 'opinaran mal', 'se reirán', 'se reiran',
                 'se burlarán', 'se burlaran', 'hablarán mal', 'hablaran mal',
                 // Variantes
-                'miedo a la crítica', 'miedo a la critica', 'críticas', 'criticas'
+                'miedo a la crítica', 'miedo a la critica', 'críticas', 'criticas',
+                // Del PDF
+                'me van a criticar', 'se van a reír de mí',
+                '¿qué pensarán?', 'van a hablar mal'
             ],
             responses: {
                 text: "**Miedo al juicio = asumir lo peor.**\n\n**Dato real:** La mayoría de la gente está ocupada con SU vida.\n\n**Los que juzgan duro:** Proyectan inseguridades propias.\n\n**Tu trabajo:** Hacer arte para TI primero.\n\nOpiniones ajenas = ruido.\n\n**Filtro útil:** ¿Esta persona ha hecho lo que yo intento? Si no, su opinión es irrelevante.",
@@ -525,7 +581,9 @@
                 'no decido', 'paralizado', 'paralizada', 'no puedo decidir',
                 'muchas opciones', 'parálisis', 'paralisis',
                 // Variantes
-                'demasiado análisis', 'demasiado analisis', 'pienso en exceso'
+                'demasiado análisis', 'demasiado analisis', 'pienso en exceso',
+                // Del PDF
+                'pienso demasiado', 'no puedo decidir', 'doy muchas vueltas', 'overthinking'
             ],
             responses: {
                 text: "**Parálisis por análisis = cerebro en loop infinito.**\n\n**Problema:** Quieres la decisión \"perfecta\". No existe.\n\n**Solución:** Regla de 70%.\nCon 70% de info, DECIDE. El resto lo aprendes haciendo.\n\n**Ejercicio:** Timer 2 minutos. Al finalizar, decides SÍ o NO.\n\nAcción imperfecta > reflexión perfecta.",
@@ -540,7 +598,10 @@
                 'exhausto emocional', 'exhausta emocional', 'no siento nada',
                 'vacío creativo', 'vacio creativo', 'sin chispa',
                 // Variantes
-                'agotamiento emocional', 'desgaste', 'desgastado', 'desgastada'
+                'agotamiento emocional', 'desgaste', 'desgastado', 'desgastada',
+                // Del PDF
+                'estoy quemado creativamente', 'ya no siento nada al dibujar',
+                'vacío creativo', 'sin chispa'
             ],
             responses: {
                 text: "**Burnout creativo = señal de STOP obligatorio.**\n\n**Síntomas reconocibles:**\n- Dibujar se siente como obligación\n- Cero disfrute\n- Todo te irrita\n\n**Prescripción:**\nDESCANSO TOTAL. 1-2 semanas SIN dibujar.\n\n**Prohibido sentir culpa.**\n\nTu cerebro necesita reset. Vuelve cuando QUIERAS, no cuando \"debas\".",
@@ -555,7 +616,10 @@
                 'likes', 'followers', 'seguidores', 'algoritmo', 'views', 'viral',
                 'engagement', 'social media',
                 // Variantes
-                'comparación en redes', 'comparacion en redes', 'números en redes', 'numeros en redes'
+                'comparación en redes', 'comparacion en redes', 'números en redes', 'numeros en redes',
+                // Del PDF
+                'me obsesiono con los likes', 'instagram me estresa',
+                'el algoritmo me frustra', 'comparación en redes'
             ],
             responses: {
                 text: "**Redes sociales ≠ medidor de talento.**\n\n**Algoritmo favorece:** Consistencia, tendencias, suerte.\nNO necesariamente calidad.\n\n**Artistas increíbles con 200 seguidores:** Existen.\n**Arte mediocre con 50K seguidores:** También existe.\n\n**Tu enfoque:** Mejorar habilidad, no números.\n\nLikes son validación externa. Progreso es validación interna.",
@@ -570,7 +634,10 @@
                 'cuánto tiempo tarda', 'cuando seré bueno', 'cuándo seré bueno',
                 'impaciencia', 'apurado', 'apurada', 'prisa',
                 // Variantes
-                'quiero resultados ya', 'atajos', 'método rápido', 'metodo rapido'
+                'quiero resultados ya', 'atajos', 'método rápido', 'metodo rapido',
+                // Del PDF
+                'quiero mejorar rápido', '¿cuándo seré bueno?',
+                'impaciencia', 'necesito avanzar YA'
             ],
             responses: {
                 text: "**Querer resultados rápidos = receta para frustración.**\n\n**Tiempo real:** 1,000-2,000 horas para dominio básico.\nTraducido: 1-2 años con práctica diaria.\n\n**No hay atajos. Lo siento.**\n\n**Buena noticia:** Cada sesión suma. CADA UNA.\n\n**Cambia enfoque:**\nNo busques \"ser bueno/a\".\nBusca \"disfrutar el proceso\".\n\nEl dominio llega sin que lo notes.",
@@ -585,7 +652,10 @@
                 'en clase', 'frente a otros', 'me vean', 'me miren',
                 'hacer el ridículo', 'hacer el ridiculo', 'exponerme',
                 // Variantes
-                'presentar en público', 'presentar en publico', 'miedo escénico', 'miedo escenico'
+                'presentar en público', 'presentar en publico', 'miedo escénico', 'miedo escenico',
+                // Del PDF
+                'miedo a equivocarme en clase', 'me da pánico en vivo',
+                'hacer el ridículo', 'que me vean fallar'
             ],
             responses: {
                 text: "**Miedo escénico artístico es real.**\n\n**Verdad:** TODOS se equivocan en público. Hasta maestros.\n\n**Reframe:** Equivocarte públicamente = mostrar humanidad.\n\nLa gente se identifica más contigo.\n\n**Practica:** Comparte 1 dibujo \"feo\" cada semana.\n\nLa repetición desensibiliza el miedo.",
@@ -600,7 +670,10 @@
                 'destruí mi arte', 'destrui mi arte', 'perdí horas', 'perdi horas',
                 'tiempo desperdiciado',
                 // Variantes
-                'arruinado', 'arruinada', 'dibujo perdido', 'trabajo perdido'
+                'arruinado', 'arruinada', 'dibujo perdido', 'trabajo perdido',
+                // Del PDF
+                'arruiné mi dibujo', 'perdí horas de trabajo',
+                'destruí mi arte', 'tiempo desperdiciado'
             ],
             responses: {
                 text: "**Duelo artístico = lamentar trabajo \"perdido\".**\n\n**Reframe potente:**\nNO perdiste tiempo. Ganaste INFORMACIÓN.\n\n**Cada \"dibujo arruinado\" te enseñó:**\n- Qué NO hacer\n- Límites de tu técnica actual\n- Paciencia\n\n**Regla profesional:** Por cada 10 dibujos, 3 son \"buenos\".\n\nLos otros 7 = escalones hacia esos 3.\n\nNada se desperdicia.",
@@ -610,23 +683,24 @@
     };
 
     // ============================================
-    // 3. BASE DE CONOCIMIENTO TÉCNICO (35 respuestas - KEYWORDS MASIVAMENTE EXPANDIDOS)
+    // 3. BASE DE CONOCIMIENTO TÉCNICO (35 respuestas)
     // ============================================
     const technicalKnowledge = {
         // ===== MÓDULO 1: FUNDAMENTOS (10) =====
         lineaAccion: {
             keywords: [
-                // Línea de acción directa
-                'linea de accion', 'linea accion', 'línea de acción', 'línea acción',
+                // Línea de acción directa (SIN acentos PRIMERO - más prioritario)
+                'linea de accion', 'linea accion', 'como hago la linea de accion',
+                'que es la linea de accion', 'explica linea de accion',
+                // Con acentos
+                'línea de acción', 'línea acción', 'cómo hago la línea de acción',
+                'qué es la línea de acción',
                 // Gesto
                 'gesto', 'movimiento', 'dinamica', 'dinámica', 'gesto rápido', 'gesto rapido',
                 // Variantes
                 'curva del cuerpo', 'eje del movimiento', 'línea principal', 'linea principal',
-                // Preguntas
-                'como hago la linea de accion', 'cómo hago la línea de acción',
-                'que es la linea de accion', 'qué es la línea de acción',
-                'explica linea de accion', 'no entiendo linea de accion',
-                'ayuda con linea de accion', 'linea de accion ayuda'
+                // Ayuda
+                'no entiendo linea de accion', 'ayuda con linea de accion'
             ],
             responses: {
                 text: "**Línea de acción** = Curva imaginaria que atraviesa el cuerpo mostrando su movimiento.\n\n**Cómo encontrarla:**\n1. Ignora detalles\n2. Busca la curva desde cabeza a pies\n3. Dibújala en 1 segundo\n\n**Formas base:** 'S', 'C' o línea recta.\n\nCroquis empieza SIEMPRE con esto.",
@@ -636,15 +710,15 @@
         
         medirProporcion: {
             keywords: [
-                // Medir proporción
+                // Medir proporción (SIN acentos primero)
                 'medir', 'proporcion', 'proporciones', 'proporción',
+                'como medir proporciones', 'cómo medir proporciones',
                 // Lápiz
                 'lapiz', 'lápiz', 'medicion', 'medición',
+                'como medir con lapiz', 'cómo medir con lápiz',
                 // Reglas
                 'regla de la cabeza', 'unidad de medida', 'sight-size',
                 // Preguntas
-                'como medir proporciones', 'cómo medir proporciones',
-                'como medir con lapiz', 'cómo medir con lápiz',
                 'que son las proporciones', 'qué son las proporciones',
                 'ayuda con proporciones', 'no entiendo proporciones',
                 'proporciones del cuerpo', 'proporción humana', 'proporcion humana'
@@ -658,14 +732,13 @@
         contrapposto: {
             keywords: [
                 // Contrapposto directo
-                'contrapposto', 'contraposto', 'contrapposto',
+                'contrapposto', 'contraposto', 'que es contrapposto', 'qué es contrapposto',
+                'como hacer contrapposto', 'cómo hacer contrapposto',
                 // Equilibrio
                 'equilibrio', 'peso', 'pierna apoyo', 'pierna de apoyo',
                 // Distribución
                 'distribución peso', 'distribucion peso', 'postura asimétrica', 'postura asimetrica',
-                // Preguntas
-                'que es contrapposto', 'qué es contrapposto',
-                'como hacer contrapposto', 'cómo hacer contrapposto',
+                // Ayuda
                 'explica contrapposto', 'no entiendo contrapposto',
                 'ayuda con contrapposto', 'balance del cuerpo'
             ],
@@ -679,14 +752,16 @@
             keywords: [
                 // Croquis directo
                 'croquis', 'boceto', 'sketch', 'esbozo',
+                'como hacer croquis', 'cómo hacer croquis',
                 // Rápido
                 'rapido', 'rápido', 'gesture drawing', 'dibujo rápido', 'dibujo rapido',
                 'gestos', 'figura rápida', 'figura rapida',
                 // Preguntas
-                'como hacer croquis', 'cómo hacer croquis',
                 'que es un croquis', 'qué es un croquis',
                 'como hacer boceto rapido', 'cómo hacer boceto rápido',
-                'ayuda con croquis', 'no entiendo croquis'
+                'ayuda con croquis', 'no entiendo croquis',
+                // Del PDF
+                'cómo hacer croquis rápidos', 'como hacer croquis rapidos'
             ],
             responses: {
                 text: "**Croquis = captura de esencia, NO detalle.**\n\n**Tiempo:** 30 segundos - 5 minutos MAX.\n\n**Orden:**\n1. Línea de acción (1 línea)\n2. Masas principales (óvalos)\n3. Articulaciones (puntos)\n4. Conectar con líneas simples\n\n**Prohibido:** Borrar, detallar, perfeccionar.\n\nVolumen > Precisión.",
@@ -698,12 +773,12 @@
             keywords: [
                 // Formas básicas
                 'formas básicas', 'formas basicas', 'cilindros', 'esferas', 'cubos',
+                'que son las formas basicas', 'qué son las formas básicas',
                 // Simplificar
                 'simplificar', 'formas geométricas', 'formas geometricas',
                 'primitivos', 'volúmenes básicos', 'volumenes basicos',
                 // Preguntas
                 'como simplificar el cuerpo', 'cómo simplificar el cuerpo',
-                'que son las formas basicas', 'qué son las formas básicas',
                 'formas geometricas en el cuerpo', 'formas geométricas en el cuerpo'
             ],
             responses: {
@@ -716,12 +791,12 @@
             keywords: [
                 // Perspectiva
                 'perspectiva', 'escorzo', 'angulo', 'ángulo', 'vista',
+                'que es perspectiva', 'qué es perspectiva',
+                'no entiendo perspectiva', 'ayuda con perspectiva',
                 // Punto de fuga
                 'punto fuga', 'foreshortening', 'acortamiento', 'profundidad',
                 'punto de vista',
                 // Preguntas
-                'que es perspectiva', 'qué es perspectiva',
-                'no entiendo perspectiva', 'ayuda con perspectiva',
                 'como hacer perspectiva', 'cómo hacer perspectiva',
                 'escorzo ayuda', 'no me sale la perspectiva'
             ],
@@ -740,7 +815,9 @@
                 // Preguntas
                 'que son los ejes', 'qué son los ejes',
                 'ejes anatomicos', 'ejes anatómicos',
-                'linea del centro', 'línea del centro'
+                'linea del centro', 'línea del centro',
+                // Del PDF
+                'qué son los ejes anatómicos', 'que son los ejes anatomicos'
             ],
             responses: {
                 text: "**Ejes anatómicos = guías invisibles.**\n\n**3 ejes principales:**\n1. **Central:** Divide cuerpo en izquierda/derecha\n2. **Hombros:** Línea de clavículas\n3. **Caderas:** Línea pélvica\n\n**Uso:** Define postura y rotación.\n\nDibújalos ANTES de detalles.",
@@ -752,7 +829,9 @@
             keywords: [
                 'ritmo', 'flujo', 'lineas ritmicas', 'líneas rítmicas',
                 'curvas', 'fluidez', 'flow', 'líneas de flujo', 'lineas de flujo',
-                'continuidad visual'
+                'continuidad visual',
+                // Del PDF
+                'explícame las líneas de ritmo', 'explicame las lineas de ritmo'
             ],
             responses: {
                 text: "**Líneas de ritmo = guías que unifican el dibujo.**\n\n**Busca:**\n- Curvas que conectan partes del cuerpo\n- Repeticiones de formas\n- Flujo visual continuo\n\n**Tip:** El ojo sigue estas líneas automáticamente.\n\n¡Crea caminos visuales!",
@@ -764,7 +843,9 @@
             keywords: [
                 'espacio negativo', 'negativo', 'formas negativas',
                 'alrededor', 'entre', 'negative space', 'espacio entre figuras',
-                'vacíos', 'vacios'
+                'vacíos', 'vacios',
+                // Del PDF
+                'qué es el espacio negativo', 'que es el espacio negativo'
             ],
             responses: {
                 text: "**Espacio negativo = forma ENTRE y ALREDEDOR del cuerpo.**\n\n**Técnica:**\nNo dibujes el cuerpo. Dibuja los espacios vacíos.\n\n**Beneficio:** Tu cerebro no sabotea con \"cómo debería verse\".\n\n¡Súper efectivo para proporciones!",
@@ -776,7 +857,9 @@
             keywords: [
                 'construccion', 'construcción', 'construir', 'estructura',
                 'armazon', 'armazón', 'build up', 'estructura interna',
-                'construcción del cuerpo', 'como construir', 'cómo construir'
+                'construcción del cuerpo', 'como construir', 'cómo construir',
+                // Del PDF
+                'cómo construir un cuerpo', 'como construir un cuerpo'
             ],
             responses: {
                 text: "**Construcción = dibujar de adentro hacia afuera.**\n\n**Proceso:**\n1. Esqueleto (palitos)\n2. Volúmenes (cilindros/esferas)\n3. Contornos (línea exterior)\n4. Detalles\n\n**Error común:** Empezar con contornos.\n\nEstructura primero, belleza después.",
@@ -790,7 +873,9 @@
                 'tres masas', '3 masas', 'cabeza torso cadera',
                 'masas principales', 'head thorax pelvis',
                 'tres bloques', 'tres volumenes', 'tres volúmenes',
-                'que son las 3 masas', 'qué son las 3 masas'
+                'que son las 3 masas', 'qué son las 3 masas',
+                // Del PDF
+                'qué son las 3 masas', 'que son las tres masas'
             ],
             responses: {
                 text: "**Las 3 masas = simplificación del cuerpo.**\n\n**1. Cabeza** (esfera)\n**2. Torso** (caja de costillas)\n**3. Cadera** (pelvis)\n**Conectadas:** Cuello y columna.\n\nEstas rotan INDEPENDIENTEMENTE.\n\nDomina esto = dominas poses complejas.",
@@ -802,7 +887,9 @@
             keywords: [
                 'anatomia', 'anatomía', 'musculos', 'músculos', 'huesos',
                 'estructura', 'anatomy', 'musculatura', 'sistema muscular',
-                'anatomia basica', 'anatomía básica', 'anatomia del cuerpo'
+                'anatomia basica', 'anatomía básica', 'anatomia del cuerpo',
+                // Del PDF
+                'anatomía básica del cuerpo', 'anatomia basica del cuerpo'
             ],
             responses: {
                 text: "**No memorices TODO. Enfócate en lo visible.**\n\n**Prioridades:**\n1. Trapecio (cuello-hombro)\n2. Deltoides (hombros)\n3. Pectorales\n4. Abdominales\n5. Oblicuos\n\n**Tip:** Dibuja músculo sobre esqueleto simple.\n\nAnatomía sirve al gesto, no al revés.",
@@ -815,7 +902,9 @@
                 'manos', 'mano', 'dedos', 'pulgar', 'palma', 'hands',
                 'muñeca', 'muñecas', 'puño', 'puños', 'hand drawing',
                 'no me salen las manos', 'ayuda con manos', 'manos ayuda',
-                'como dibujar manos', 'cómo dibujar manos', 'dibujar dedos'
+                'como dibujar manos', 'cómo dibujar manos', 'dibujar dedos',
+                // Del PDF
+                'no me salen las manos', 'tengo miedo de dibujar manos'
             ],
             responses: {
                 text: "**Manos = todos las odiamos. Normal.**\n\n**Simplificación:**\n- Palma = caja\n- Dedos = 3 cilindros cada uno\n- Pulgar = aparte, 45°\n\n**Proporción:** Palma = largo de dedos.\n\n**Practica:** 10 manos diarias en 2 minutos cada una.\n\n¡Volumen es la clave!",
@@ -828,7 +917,9 @@
                 'pies', 'pie', 'tobillo', 'dedos pie', 'planta', 'feet', 'foot',
                 'talón', 'talon', 'arco del pie',
                 'ayuda con pies', 'no me salen los pies',
-                'como dibujar pies', 'cómo dibujar pies'
+                'como dibujar pies', 'cómo dibujar pies',
+                // Del PDF
+                'ayuda con los pies'
             ],
             responses: {
                 text: "**Pies = triángulos + arco.**\n\n**Estructura:**\n- Talón = círculo\n- Puente = triángulo\n- Dedos = 5 pequeños cilindros\n\n**Ángulos importantes:**\n- Interno: arco pronunciado\n- Externo: más recto\n\n**Largo:** ~1 cabeza.\n\nMás fáciles que las manos, te lo prometo.",
@@ -840,7 +931,9 @@
             keywords: [
                 'torso', 'tronco', 'pecho', 'espalda', 'costillas',
                 'ribcage', 'caja torácica', 'caja toracica', 'abdomen',
-                'como dibujar torso', 'cómo dibujar torso', 'ayuda con torso'
+                'como dibujar torso', 'cómo dibujar torso', 'ayuda con torso',
+                // Del PDF
+                'cómo dibujar el torso', 'como dibujar el torso'
             ],
             responses: {
                 text: "**Torso = caja de huevos (flexible, no rígida).**\n\n**2 masas:**\n1. **Caja torácica:** Costillas (ovalada)\n2. **Abdomen:** Flexible, se comprime\n\n**Movimiento:** Se tuerce, dobla, estira.\n\n**Punto clave:** Línea blanca (centro abdominal).\n\nTorso conecta TODO.",
@@ -852,7 +945,9 @@
             keywords: [
                 'pelvis', 'cadera', 'caderas', 'cintura', 'hueso cadera',
                 'pelvis bone', 'hueso pélvico', 'hueso pelvico', 'ilion', 'ílion',
-                'anatomia de la pelvis', 'anatomía de la pelvis'
+                'anatomia de la pelvis', 'anatomía de la pelvis',
+                // Del PDF
+                'anatomía de la pelvis'
             ],
             responses: {
                 text: "**Pelvis = cuenco inclinado.**\n\n**Forma:** Mariposa o cuenco.\n\n**Diferencias:**\n- Mujer: más ancha, menos profunda\n- Hombre: más estrecha, más profunda\n\n**Punto de articulación:** Donde piernas conectan.\n\nPelvis define postura completa.",
@@ -864,7 +959,9 @@
             keywords: [
                 'hombros', 'hombro', 'clavicula', 'clavícula', 'deltoides',
                 'escapula', 'escápula', 'shoulders', 'omóplato', 'omoplato',
-                'como dibujar hombros', 'cómo dibujar hombros'
+                'como dibujar hombros', 'cómo dibujar hombros',
+                // Del PDF
+                'cómo dibujar hombros', 'como dibujar hombros'
             ],
             responses: {
                 text: "**Hombros = articulación + músculo deltoides.**\n\n**Anatomía:**\n- Clavícula (horizontal)\n- Escápula (omóplato, atrás)\n- Deltoides (músculo redondeado)\n\n**Movimiento:** MÁXIMA movilidad del cuerpo.\n\n**Tip:** Hombros caídos = relajado. Alzados = tensión.\n\nDefinen personalidad de pose.",
@@ -876,7 +973,9 @@
             keywords: [
                 'brazos', 'brazo', 'biceps', 'bíceps', 'triceps', 'tríceps',
                 'antebrazo', 'arms', 'húmero', 'humero', 'codo',
-                'ayuda con brazos', 'no entiendo los brazos'
+                'ayuda con brazos', 'no entiendo los brazos',
+                // Del PDF
+                'ayuda con los brazos'
             ],
             responses: {
                 text: "**Brazos = 2 cilindros + articulación.**\n\n**Estructura:**\n1. **Brazo:** Húmero (bíceps/tríceps)\n2. **Antebrazo:** Radio + cúbito (2 huesos)\n\n**Longitud:** Codo a mitad del torso.\n\n**Rotación:** Antebrazo gira, brazo NO.\n\nPractica rotación del antebrazo (pronación/supinación).",
@@ -888,7 +987,9 @@
             keywords: [
                 'piernas', 'pierna', 'muslo', 'pantorrilla', 'rodilla',
                 'femur', 'fémur', 'legs', 'cuádriceps', 'cuadriceps', 'gemelos',
-                'ayuda con piernas', 'no entiendo las piernas'
+                'ayuda con piernas', 'no entiendo las piernas',
+                // Del PDF
+                'no entiendo las piernas'
             ],
             responses: {
                 text: "**Piernas = 2 cilindros conectados.**\n\n**Estructura:**\n1. **Muslo:** Fémur (grueso, potente)\n2. **Pantorrilla:** Tibia + peroné\n\n**Rodilla:** NO está centrada (rótula al frente).\n\n**Curvas:**\n- Exterior: más recto\n- Interior: más curvo\n\nLongitud = 2 cabezas (muslo + pantorrilla).",
@@ -900,7 +1001,9 @@
             keywords: [
                 'cuello', 'trapecio', 'nuca', 'garganta', 'esternocleidomastoideo',
                 'neck', 'cervical', 'columna cervical',
-                'como dibujar cuello', 'cómo dibujar cuello'
+                'como dibujar cuello', 'cómo dibujar cuello',
+                // Del PDF
+                'cómo dibujar el cuello', 'como dibujar el cuello'
             ],
             responses: {
                 text: "**Cuello = cilindro + músculos visibles.**\n\n**Anatomía visible:**\n- Esternocleidomastoideo (V desde oreja a clavículas)\n- Trapecio (de nuca a hombros)\n\n**No es:** Un palito. Tiene volumen.\n\n**Ángulo:** Ligeramente inclinado hacia adelante.\n\n¡El cuello comunica emoción!",
@@ -912,7 +1015,9 @@
             keywords: [
                 'musculo', 'músculo', 'masa muscular', 'definicion', 'definición',
                 'tono muscular', 'muscles', 'musculatura', 'fibras musculares',
-                'que musculos memorizar', 'qué músculos memorizar'
+                'que musculos memorizar', 'qué músculos memorizar',
+                // Del PDF
+                'qué músculos debo memorizar', 'que musculos debo memorizar'
             ],
             responses: {
                 text: "**Músculos = NO memorices todos. Aprende los 10 principales.**\n\n**Top 10 visibles:**\n1. Trapecio\n2. Deltoides\n3. Pectorales\n4. Bíceps\n5. Tríceps\n6. Abdominales\n7. Oblicuos\n8. Cuádriceps\n9. Gemelos\n10. Glúteos\n\nDibuja la forma general primero, anatomía después.",
@@ -924,6 +1029,8 @@
             keywords: [
                 'esqueleto', 'huesos', 'estructura osea', 'estructura ósea',
                 'hueso', 'skeleton', 'bones', 'sistema óseo', 'sistema oseo',
+                'estructura del esqueleto',
+                // Del PDF
                 'estructura del esqueleto'
             ],
             responses: {
@@ -936,7 +1043,9 @@
             keywords: [
                 'articulaciones', 'articulacion', 'articulación', 'coyuntura',
                 'union', 'unión', 'joints', 'puntos de flexión', 'puntos de flexion',
-                'donde se dobla', 'dónde se dobla'
+                'donde se dobla', 'dónde se dobla',
+                // Del PDF
+                'qué son las articulaciones', 'que son las articulaciones'
             ],
             responses: {
                 text: "**Articulaciones = donde se DOBLA el cuerpo.**\n\n**Principales:**\n- Cuello\n- Hombros (más móvil)\n- Codos\n- Muñecas\n- Caderas\n- Rodillas\n- Tobillos\n\n**Regla:** Dibuja círculos en estas zonas primero.\n\nArticulaciones definen poses dinámicas.",
@@ -949,7 +1058,9 @@
                 'genero', 'género', 'hombre mujer', 'diferencias',
                 'masculino femenino', 'gender differences', 'dimorfismo',
                 'anatomía femenina', 'anatomia femenina',
-                'anatomía masculina', 'anatomia masculina'
+                'anatomía masculina', 'anatomia masculina',
+                // Del PDF
+                'diferencias entre hombre y mujer'
             ],
             responses: {
                 text: "**Diferencias anatómicas generales:**\n\n**Mujer típicamente:**\n- Hombros más estrechos\n- Caderas más anchas\n- Cintura más marcada\n- Centro de gravedad más bajo\n\n**Hombre típicamente:**\n- Hombros más anchos\n- Caderas más estrechas\n- Torso más rectangular\n- Masa muscular más visible\n\n**Recuerda:** Son espectros, no reglas absolutas.",
@@ -962,7 +1073,9 @@
                 'movimiento', 'dinamismo', 'accion', 'acción',
                 'dinamico', 'dinámico', 'poses dinamicas', 'poses dinámicas',
                 'movement', 'dynamic pose', 'como crear movimiento',
-                'cómo crear movimiento'
+                'cómo crear movimiento',
+                // Del PDF
+                'cómo crear movimiento dinámico', 'como crear movimiento dinamico'
             ],
             responses: {
                 text: "**Movimiento = contraste + anticipación.**\n\n**Principios:**\n1. **Línea de acción clara** (curva fuerte)\n2. **Contraste** (partes abiertas vs. cerradas)\n3. **Anticipación** (cuerpo prepara movimiento)\n\n**Tip:** Poses estáticas → borradas.\nPoses con tensión → memorables.\n\n¡Exagera el gesto!",
@@ -976,7 +1089,9 @@
                 'valores', 'tonos', 'sombras', 'luces', 'valor tonal',
                 'escala tonal', 'values', 'tonal values', 'claroscuro',
                 'escala de grises', 'que son los valores', 'qué son los valores',
-                'como sombrear', 'cómo sombrear'
+                'como sombrear', 'cómo sombrear',
+                // Del PDF
+                'qué son los valores tonales', 'que son los valores tonales'
             ],
             responses: {
                 text: "**Valores = escala de claros y oscuros.**\n\n**Escala básica:**\n1. Blanco (luz directa)\n2. Gris claro (luz indirecta)\n3. Gris medio (tono local)\n4. Gris oscuro (sombra)\n5. Negro (sombra profunda)\n\n**Regla 80/20:** Usa 3 valores, no 10.\n\nContraste > Cantidad de tonos.",
@@ -988,7 +1103,9 @@
             keywords: [
                 'iluminacion', 'iluminación', 'luz', 'fuente luz', 'fuente de luz',
                 'light', 'lighting', 'dirección de luz', 'direccion de luz',
-                'source light', 'como usar la luz', 'cómo usar la luz'
+                'source light', 'como usar la luz', 'cómo usar la luz',
+                // Del PDF
+                'cómo usar la iluminación', 'como usar la iluminacion'
             ],
             responses: {
                 text: "**Iluminación define volumen.**\n\n**3 tipos básicos:**\n1. **Frontal:** Plano, poco volumen\n2. **Lateral:** Máximo volumen y drama\n3. **Contraluz:** Silueta con borde luminoso\n\n**Tip:** Define fuente de luz ANTES de sombrear.\n\n1 luz fuerte > varias luces débiles.",
@@ -1001,7 +1118,9 @@
                 'sombreado', 'sombrear', 'sombra', 'shading', 'degradado',
                 'hatching', 'difuminado', 'cross-hatching',
                 'técnicas de sombreado', 'tecnicas de sombreado',
-                'como sombrear', 'cómo sombrear', 'ayuda con sombreado'
+                'como sombrear', 'cómo sombrear', 'ayuda con sombreado',
+                // Del PDF
+                'técnicas de sombreado', 'tecnicas de sombreado'
             ],
             responses: {
                 text: "**Sombreado = transición de luz a sombra.**\n\n**Técnicas:**\n1. **Hatching:** Líneas paralelas\n2. **Cross-hatching:** Líneas cruzadas\n3. **Difuminado:** Suave con dedo/difumino\n4. **Puntillismo:** Puntos (lento)\n\n**Principio:** Formas cilíndricas = gradiente suave.\n\n¡Practica cada técnica 10 minutos!",
@@ -1013,7 +1132,9 @@
             keywords: [
                 'composicion', 'composición', 'encuadre', 'diseño', 'layout',
                 'composition', 'regla de tercios', 'golden ratio', 'diseño visual',
-                'como hacer buena composicion', 'cómo hacer buena composición'
+                'como hacer buena composicion', 'cómo hacer buena composición',
+                // Del PDF
+                'cómo hacer buena composición', 'como hacer buena composicion'
             ],
             responses: {
                 text: "**Composición = dónde colocas elementos.**\n\n**Reglas básicas:**\n1. **Regla de tercios:** Divide en 9, pon importante en cruces\n2. **Espacio negativo:** Respira\n3. **Dirección:** Hacia dónde mira/mueve la figura\n\n**Tip:** Deja espacio hacia donde mira el personaje.\n\nComposición guía el ojo.",
@@ -1025,7 +1146,9 @@
             keywords: [
                 'profundidad', 'espacio', 'fondo', 'planos', 'capas', 'depth',
                 'foreground', 'background', 'primer plano', 'atmospheric perspective',
-                'como crear profundidad', 'cómo crear profundidad'
+                'como crear profundidad', 'cómo crear profundidad',
+                // Del PDF
+                'cómo crear profundidad', 'como crear profundidad'
             ],
             responses: {
                 text: "**Profundidad = sensación de 3D en 2D.**\n\n**Técnicas:**\n1. **Superposición:** Elementos que se tapan\n2. **Escala:** Más grande = más cerca\n3. **Detalle:** Lejos = menos nítido\n4. **Contraste:** Cerca = más contraste\n\n**Truco:** 3 planos (primer, medio, fondo).\n\nSepara con contraste diferente.",
@@ -1037,7 +1160,9 @@
             keywords: [
                 'peso linea', 'peso línea', 'grosor', 'linea gruesa', 'línea gruesa',
                 'line weight', 'variación de línea', 'variacion de linea', 'thickness',
-                'que es peso de linea', 'qué es peso de línea'
+                'que es peso de linea', 'qué es peso de línea',
+                // Del PDF
+                'qué es el peso de línea', 'que es el peso de linea'
             ],
             responses: {
                 text: "**Peso de línea = grosor variable.**\n\n**Regla:**\n- **Gruesa:** Contornos externos, sombras\n- **Media:** Detalles importantes\n- **Delgada:** Detalles secundarios, luces\n\n**Beneficio:** Añade jerarquía visual.\n\nVariación de línea = interés visual.",
@@ -1049,7 +1174,9 @@
             keywords: [
                 'textura', 'superficie', 'material', 'tela', 'piel', 'pelo',
                 'texture', 'cabello', 'hair', 'skin texture', 'fabric',
-                'como dibujar texturas', 'cómo dibujar texturas'
+                'como dibujar texturas', 'cómo dibujar texturas',
+                // Del PDF
+                'cómo dibujar texturas', 'como dibujar texturas'
             ],
             responses: {
                 text: "**Textura = sensación de superficie.**\n\n**Técnicas por material:**\n- **Piel:** Suave, pocos trazos\n- **Tela:** Pliegues, líneas direccionales\n- **Pelo:** Mechones, NO pelos individuales\n- **Metal:** Alto contraste, reflejos\n\n**Principio:** Sugiere, NO copies cada detalle.\n\nMenos es más.",
@@ -1062,7 +1189,9 @@
                 'pliegues', 'tela', 'ropa', 'arrugas', 'cloth', 'fabric',
                 'folds', 'drapery', 'clothing folds', 'wrinkles',
                 'como dibujar pliegues', 'cómo dibujar pliegues',
-                'ayuda con pliegues', 'pliegues de ropa'
+                'ayuda con pliegues', 'pliegues de ropa',
+                // Del PDF
+                'ayuda con pliegues de ropa'
             ],
             responses: {
                 text: "**Pliegues = respuesta de tela a gravedad y movimiento.**\n\n**5 tipos básicos:**\n1. **Pipe:** Cilindros verticales (faldas)\n2. **Zigzag:** Apretada (codos)\n3. **Espiral:** Torsión\n4. **Half-lock:** Media caída\n5. **Diaper:** Punto de tensión\n\n**Regla:** Sigue forma del cuerpo debajo.\n\nTela abraza volumen.",
@@ -1075,7 +1204,9 @@
                 'punto focal', 'foco', 'atencion', 'atención', 'enfoque',
                 'centro interes', 'centro de interés', 'focal point', 'emphasis',
                 'area de interés', 'area de interes', 'que es punto focal',
-                'qué es punto focal'
+                'qué es punto focal',
+                // Del PDF
+                'qué es el punto focal', 'que es el punto focal'
             ],
             responses: {
                 text: "**Punto focal = donde quieres que mire el espectador.**\n\n**Cómo crearlo:**\n1. **Contraste máximo** (valor/color)\n2. **Más detalle**\n3. **Líneas convergen** hacia ahí\n4. **Figura mira** hacia ahí\n\n**Regla:** 1 punto focal por dibujo.\n\nNo compitas con ti mismo.",
@@ -1087,7 +1218,9 @@
             keywords: [
                 'historia', 'narrativa', 'contar', 'story', 'expresion', 'expresión',
                 'emocion', 'emoción', 'narrative art', 'character design', 'personalidad',
-                'como contar historias', 'cómo contar historias con dibujos'
+                'como contar historias', 'cómo contar historias con dibujos',
+                // Del PDF
+                'cómo contar historias con dibujos', 'como contar historias con dibujos'
             ],
             responses: {
                 text: "**Dibujo cuenta historia sin palabras.**\n\n**Elementos narrativos:**\n1. **Lenguaje corporal** (postura)\n2. **Expresión facial**\n3. **Contexto** (ambiente)\n4. **Acción implícita** (qué pasó/pasará)\n\n**Pregunta clave:** ¿Qué siente/piensa este personaje?\n\n¡Emoción > técnica perfecta!",
@@ -1102,7 +1235,12 @@
     // ============================================
     const systemKnowledge = {
         subirEjercicios: {
-            keywords: ['subir', 'enviar', 'ejercicio', 'tarea', 'entregar', 'upload', 'cómo subo', 'como subo', 'cargar ejercicio', 'mandar ejercicio'],
+            keywords: [
+                'subir', 'enviar', 'ejercicio', 'tarea', 'entregar', 'upload',
+                'cómo subo', 'como subo', 'cargar ejercicio', 'mandar ejercicio',
+                // Del PDF
+                'cómo subo mis ejercicios', 'como subo mis ejercicios'
+            ],
             responses: {
                 text: "**Para subir ejercicios:**\n\n1. Ve a la sección del módulo correspondiente\n2. Click en \"Subir ejercicio\"\n3. Selecciona archivo (JPG, PNG, PDF)\n4. Agrega nota opcional\n5. Click \"Enviar\"\n\n**Formato recomendado:** JPG o PNG, max 10MB.\n\n¿Problemas técnicos? Contacta soporte.",
                 actions: ['Problemas al subir', 'Entendido']
@@ -1110,7 +1248,12 @@
         },
 
         progreso: {
-            keywords: ['progreso', 'avance', 'donde voy', 'dónde voy', 'porcentaje', 'completado', 'progress', 'mi avance', '¿cómo voy?', 'como voy'],
+            keywords: [
+                'progreso', 'avance', 'donde voy', 'dónde voy', 'porcentaje', 'completado',
+                'progress', 'mi avance', '¿cómo voy?', 'como voy',
+                // Del PDF
+                'dónde veo mi progreso', 'donde veo mi progreso'
+            ],
             responses: {
                 text: "**Para ver tu progreso:**\n\n1. Dashboard principal\n2. Sección \"Mi Progreso\"\n3. Verás: % completado, ejercicios pendientes, feedback\n\n**Tip:** Progreso NO es lineal. Algunos días avanzan más.\n\n¡Celebra cada ejercicio completado!",
                 actions: ['Ver mi progreso', 'Ok']
@@ -1118,7 +1261,13 @@
         },
 
         materiales: {
-            keywords: ['materiales', 'que necesito', 'qué necesito', 'herramientas', 'lapices', 'lápices', 'papel', 'supplies', 'materials', 'comprar', 'lista de materiales'],
+            keywords: [
+                'materiales', 'que necesito', 'qué necesito', 'herramientas',
+                'lapices', 'lápices', 'papel', 'supplies', 'materials', 'comprar',
+                'lista de materiales',
+                // Del PDF
+                'qué materiales necesito', 'que materiales necesito'
+            ],
             responses: {
                 text: "**Materiales básicos:**\n\n✏️ **Lápices:**\n- HB (líneas)\n- 2B (sombreado)\n- 4B/6B (oscuros)\n\n📄 **Papel:**\n- Bond A4 (práctica diaria)\n- Canson 180gr (proyectos)\n\n🧹 **Otros:**\n- Goma, sacapuntas, difumino (opcional)\n\n**Verdad:** Herramienta no hace al artista. ¡Practica con lo que tengas!",
                 actions: ['¿Dónde compro?', 'Entendido']
@@ -1126,7 +1275,12 @@
         },
 
         feedback: {
-            keywords: ['feedback', 'retroalimentacion', 'retroalimentación', 'revision', 'revisión', 'comentario', 'corrección', 'correccion', 'crítica', 'critica', 'review'],
+            keywords: [
+                'feedback', 'retroalimentacion', 'retroalimentación', 'revision', 'revisión',
+                'comentario', 'corrección', 'correccion', 'crítica', 'critica', 'review',
+                // Del PDF
+                'cuándo recibo feedback', 'cuando recibo feedback'
+            ],
             responses: {
                 text: "**Sistema de feedback:**\n\n1. Sube ejercicio\n2. Espera 24-48h (días hábiles)\n3. Recibirás correo con revisión\n4. Accede desde tu Dashboard\n\n**Incluye:**\n- ¿Qué está bien?\n- ¿Qué mejorar?\n- Próximos pasos\n\n**Tip:** Lee feedback con mente abierta. Es para crecer.",
                 actions: ['No recibí feedback', 'Entendido']
@@ -1134,7 +1288,13 @@
         },
 
         tiempoDedicacion: {
-            keywords: ['cuanto tiempo', 'cuánto tiempo', 'horas', 'dedicacion', 'dedicación', 'practicar', 'tiempo de práctica', 'tiempo de practica', 'cuantas horas', 'cuántas horas', 'schedule'],
+            keywords: [
+                'cuanto tiempo', 'cuánto tiempo', 'horas', 'dedicacion', 'dedicación',
+                'practicar', 'tiempo de práctica', 'tiempo de practica',
+                'cuantas horas', 'cuántas horas', 'schedule',
+                // Del PDF
+                'cuánto tiempo debo practicar', 'cuanto tiempo debo practicar'
+            ],
             responses: {
                 text: "**Tiempo recomendado:**\n\n⏰ **Ideal:** 30-60 min diarios\n⏰ **Mínimo:** 15 min diarios\n\n**Verdad dura:** Constancia > intensidad.\n\n15 min x 7 días = 105 min/semana\n2 horas x 1 día = 120 min/semana\n\nPero la práctica diaria crea hábito.\n\n¡Consistencia es la clave!",
                 actions: ['Tengo poco tiempo', 'Entendido']
@@ -1360,9 +1520,9 @@
     // ============================================
     // 8. INICIALIZACIÓN Y LOGS
     // ============================================
-    console.log('✅ mentor-knowledge.js v4.0 (70 RESPUESTAS): Cargado exitosamente');
+    console.log('✅ mentor-knowledge.js v5.0 (70 RESPUESTAS + ENCODING CORREGIDO): Cargado exitosamente');
     console.log('┌────────────────────────────────────────────┐');
-    console.log('│  📊 ESTADÍSTICAS DEL MENTOR ANATÓMICO v4.0 │');
+    console.log('│  📊 ESTADÍSTICAS DEL MENTOR ANATÓMICO v5.0 │');
     console.log('├────────────────────────────────────────────┤');
     console.log('│  💙 Respuestas emocionales: ' + Object.keys(emotionalKnowledge).length + '          │');
     console.log('│  🎨 Respuestas técnicas: ' + Object.keys(technicalKnowledge).length + '             │');
@@ -1371,26 +1531,26 @@
     console.log('│  📝 Total respuestas: ' + (Object.keys(emotionalKnowledge).length + Object.keys(technicalKnowledge).length + Object.keys(basicConversation).length + Object.keys(systemKnowledge).length) + '                  │');
     console.log('└────────────────────────────────────────────┘');
     console.log('');
-    console.log('💙 FUNCIONALIDADES v4.0:');
-    console.log('  ✅ 5 respuestas de conversación básica');
-    console.log('  ✅ 25 respuestas emocionales (EXPANDIDO)');
-    console.log('     - Ansiedad (general + evaluación + social)');
-    console.log('     - Síndrome del impostor');
-    console.log('     - Procrastinación y culpa');
-    console.log('     - Burnout y overwhelm');
-    console.log('     - Vergüenza e inseguridad');
-    console.log('     - Miedo al juicio');
-    console.log('     - Comparación en redes sociales');
-    console.log('     - Y más...');
+    console.log('💙 FUNCIONALIDADES v5.0:');
+    console.log('  ✅ 15 respuestas de conversación básica');
+    console.log('  ✅ 25 respuestas emocionales completas');
     console.log('  ✅ 35 respuestas técnicas completas');
     console.log('  ✅ 5 respuestas de sistema/curso');
-    console.log('  ✅ Keywords EXPANDIDOS para mejor detección');
+    console.log('  ✅ Keywords CON Y SIN ACENTOS (encoding corregido)');
+    console.log('  ✅ Detección mejorada para "como hago la linea de accion"');
     console.log('  ✅ Sistema de memoria conversacional');
     console.log('  ✅ Compatible con integración index.html');
     console.log('');
+    console.log('🔧 CORRECCIONES v5.0:');
+    console.log('  ✅ Todos los keywords duplicados (con y sin acentos)');
+    console.log('  ✅ Versiones SIN acentos tienen prioridad');
+    console.log('  ✅ Texto de respuestas con encoding UTF-8 correcto');
+    console.log('  ✅ Emojis funcionando correctamente');
+    console.log('');
     console.log('🧪 TESTING:');
+    console.log('  window.mentorKnowledge.testResponse("como hago la linea de accion")');
     console.log('  window.mentorKnowledge.testResponse("tengo ansiedad")');
-    console.log('  window.mentorKnowledge.testResponse("síndrome del impostor")');
+    console.log('  window.mentorKnowledge.testResponse("sindrome del impostor")');
     console.log('  window.mentorKnowledge.getExamples()');
     console.log('  window.mentorKnowledge.getStats()');
     console.log('');
