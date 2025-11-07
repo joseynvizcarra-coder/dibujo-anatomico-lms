@@ -1,6 +1,6 @@
 // ============================================
-// MENTOR ANATÓMICO v5.0 - ENCODING CORREGIDO
-// 70 respuestas + Keywords CON Y SIN ACENTOS
+// MENTOR ANATÓMICO v5.1 - KEYWORDS FLEXIBLES
+// 70 respuestas + Keywords ULTRA FLEXIBLES
 // Conversación fluida y natural
 // Compatible con integración index.html y module1.html
 // ============================================
@@ -14,13 +14,9 @@
     const basicConversation = {
         saludos: {
             keywords: [
-                // Saludos generales (SIN acentos)
                 'hola', 'hi', 'hey', 'ola', 'holi', 'holaaa', 'holaa', 'holiwis',
-                // Saludos formales
                 'buenos dias', 'buenos días', 'buenas tardes', 'buenas noches', 'buen dia', 'buen día',
-                // Saludos informales
                 'que tal', 'qué tal', 'que onda', 'qué onda', 'wenas', 'buenas', 'saludos',
-                // Variantes
                 'alo', 'aló', 'holis', 'holiwi', 'buenass'
             ],
             text: "¡Hola! 👋 Soy tu Mentor Anatómico.\n\n**¿En qué puedo ayudarte hoy?**\n\n💙 **Emocional:** Frustración, ansiedad, bloqueo creativo, síndrome del impostor\n🎨 **Técnico:** Línea de acción, proporciones, anatomía, sombreado\n📚 **Sistema:** Cómo subir ejercicios, ver progreso, materiales\n\n**Escribe tu duda o pregunta** 💬",
@@ -129,7 +125,7 @@
                 'presentate', 'preséntate', 'dime sobre ti', 'cuentame de ti',
                 'cuéntame de ti', 'que haces', 'qué haces'
             ],
-            text: "¡Encantado de conocerte! 🎨✨\n\nSoy tu **Mentor Anatómico v5.0**, tu compañero de aprendizaje 24/7.\n\n**Lo que hago:**\n💙 Te apoyo emocionalmente (frustración, ansiedad, bloqueos)\n🎨 Resuelvo dudas técnicas (anatomía, proporciones, sombreado)\n📚 Te guío en el sistema del curso\n\n**Mi misión:** Que aprendas sin frustración y disfrutes el proceso.\n\n¿Empezamos?",
+            text: "¡Encantado de conocerte! 🎨✨\n\nSoy tu **Mentor Anatómico v5.1**, tu compañero de aprendizaje 24/7.\n\n**Lo que hago:**\n💙 Te apoyo emocionalmente (frustración, ansiedad, bloqueos)\n🎨 Resuelvo dudas técnicas (anatomía, proporciones, sombreado)\n📚 Te guío en el sistema del curso\n\n**Mi misión:** Que aprendas sin frustración y disfrutes el proceso.\n\n¿Empezamos?",
             actions: ['Tengo una duda', 'Solo curiosidad']
         },
 
@@ -180,20 +176,13 @@
     const emotionalKnowledge = {
         frustracion: {
             keywords: [
-                // Frustración directa (SIN acentos primero)
                 'frustrado', 'frustrada', 'frustrante', 'frustra', 'frustracion', 'frustración',
-                // No puedo
                 'no puedo', 'no me sale', 'no logro', 'no consigo',
-                // Calificativos negativos
                 'horrible', 'mal', 'feo', 'terrible', 'pesimo', 'pésimo', 'desastre',
-                // Expresiones de rabia
                 'que rabia', 'qué rabia', 'molesto', 'molesta', 'enojado', 'enojada', 'me enoja',
-                // Variantes
                 'todo me sale mal', 'nada funciona', 'no funciona', 'no sirve',
                 'odio dibujar', 'odio esto', 'detesto', 'asco',
-                // Desesperación
                 'desesperado', 'desesperada', 'desesperacion', 'desesperación',
-                // Del PDF
                 'me siento muy frustrado', 'esto es horrible', 'estoy frustrada'
             ],
             responses: {
@@ -214,18 +203,12 @@
         
         comparacion: {
             keywords: [
-                // Comparación directa
                 'mejor que yo', 'peor que', 'otros dibujan', 'comparar', 'comparación', 'comparacion',
-                // Talento
                 'talento', 'nunca voy a', 'no tengo', 'no poseo',
-                // Envidia
                 'envidia', 'envidiosa', 'envidioso', 'celos', 'celoso', 'celosa',
-                // Comparaciones específicas
                 'todos menos yo', 'por qué yo no', 'porque yo no', 'solo a mi', 'sólo a mí',
                 'todos pueden', 'todos logran', 'yo soy el único', 'yo soy la única',
-                // Variantes
                 'todos son mejores', 'soy el peor', 'soy la peor', 'el más malo', 'la más mala',
-                // Del PDF
                 'todos dibujan mejor que yo', 'por que yo no tengo talento',
                 'otros avanzan más rápido', 'siempre hay alguien mejor'
             ],
@@ -237,17 +220,12 @@
         
         impostor: {
             keywords: [
-                // Síndrome del impostor directo
                 'no merezco', 'soy un fraude', 'suerte', 'engaño', 'impostor', 'impostora',
-                // No soy artista
                 'no soy artista', 'farsante', 'mentira', 'fake', 'falso', 'falsa',
-                // No valgo
                 'no valgo', 'no soy bueno', 'no soy buena', 'casualidad', 'fluke',
-                // Variantes
                 'fue suerte', 'pura suerte', 'no sé cómo', 'no se como',
                 'alguien se dará cuenta', 'me van a descubrir', 'van a descubrir',
                 'no debería estar aquí', 'no deberia estar aqui',
-                // Del PDF
                 'siento que soy un fraude', 'no merezco estar aquí',
                 'fue pura suerte', 'no soy realmente artista',
                 'sindrome del impostor', 'síndrome del impostor'
@@ -260,17 +238,12 @@
         
         bloqueo: {
             keywords: [
-                // Bloqueo directo
                 'bloqueado', 'bloqueada', 'bloqueo', 'bloqueada',
-                // No sé qué hacer
                 'no se que dibujar', 'no sé qué dibujar', 'blanco', 'sin ideas',
-                // Vacío
                 'vacío', 'vacio', 'estancado', 'estancada', 'atrapado', 'atrapada',
-                // Variantes
                 'stuck', 'no avanzo', 'página en blanco', 'pagina en blanco',
                 'mente en blanco', 'sin inspiración', 'sin inspiracion',
                 'no se me ocurre nada', 'no se me ocurre', 'creatividad bloqueada',
-                // Del PDF
                 'estoy bloqueado', 'no sé qué dibujar', 'página en blanco', 'estoy estancada',
                 'bloqueo creativo'
             ],
@@ -282,17 +255,12 @@
         
         ansiedad: {
             keywords: [
-                // Ansiedad directa
                 'ansioso', 'ansiosa', 'ansiedad', 'ansiedades',
-                // Nervios
                 'nervios', 'nervioso', 'nerviosa', 'nerviosismo',
-                // Estrés
                 'estresado', 'estresada', 'presión', 'presion', 'estrés', 'estres',
-                // Variantes
                 'inquieto', 'inquieta', 'intranquilo', 'intranquila',
                 'angustia', 'agobio', 'agobiado', 'agobiada',
                 'pánico', 'panico', 'ataque de ansiedad', 'crisis',
-                // Del PDF
                 'tengo mucha ansiedad', 'estoy muy nervioso',
                 'me siento estresada al dibujar', 'tengo angustia',
                 'ansiedad general'
@@ -305,16 +273,11 @@
         
         perfeccionismo: {
             keywords: [
-                // Perfeccionismo directo
                 'perfecto', 'perfecta', 'perfeccionista', 'perfeccion', 'perfección',
-                // Tiene que quedar bien
                 'tiene que quedar bien', 'debe quedar perfecto', 'no está bien', 'no esta bien',
-                // Borrar todo
                 'borrar todo', 'nunca termino', 'siempre borro', 'borro mucho',
-                // Variantes
                 'obsesionado', 'obsesionada', 'detalle', 'imperfecto',
                 'no queda como quiero', 'no me convence', 'falta algo',
-                // Del PDF
                 'siempre borro todo', 'nunca termino nada',
                 'tiene que quedar perfecto', 'soy muy perfeccionista'
             ],
@@ -326,15 +289,11 @@
         
         cansancio: {
             keywords: [
-                // Cansancio directo
                 'cansado', 'cansada', 'agotado', 'agotada', 'cansancio', 'agotamiento',
-                // Sin energía
                 'no tengo energía', 'no tengo energia', 'energía', 'energia',
                 'sueño', 'sueno', 'somnoliento', 'somnolenta',
-                // Variantes
                 'exhaust', 'fatiga', 'sin fuerzas', 'rendido', 'rendida',
                 'muerto', 'muerta', 'reventado', 'reventada',
-                // Del PDF
                 'estoy muy cansado', 'sin energía', 'agotada', 'muerta de sueño'
             ],
             responses: {
@@ -345,14 +304,10 @@
         
         miedo: {
             keywords: [
-                // Miedo directo
                 'miedo', 'temor', 'asusta', 'da pánico', 'da panico', 'terror',
-                // Miedoso
                 'miedoso', 'miedosa', 'temeroso', 'temerosa', 'aterrado', 'aterrada',
-                // Variantes
                 'pavor', 'fobia', 'me da miedo', 'tengo miedo',
                 'miedo a equivocarme', 'miedo al error', 'miedo a fallar',
-                // Del PDF
                 'tengo miedo de equivocarme', 'me da pánico empezar',
                 'miedo al error', 'me aterroriza fallar'
             ],
@@ -364,16 +319,11 @@
         
         desmotivacion: {
             keywords: [
-                // Desmotivación directa
                 'desmotivado', 'desmotivada', 'sin ganas', 'desmotivacion', 'desmotivación',
-                // Para qué
                 'para qué', 'para que', 'no vale la pena', 'no quiero',
-                // Aburrimiento
                 'aburrido', 'aburrida', 'perdí interés', 'perdi interes',
                 'ya no me gusta', 'desanimado', 'desanimada',
-                // Variantes
                 'no tiene sentido', 'para nada', 'sin propósito', 'sin proposito',
-                // Del PDF
                 'ya no tengo ganas', 'para qué sigo', 'perdí la motivación',
                 'no vale la pena'
             ],
@@ -385,14 +335,10 @@
         
         llanto: {
             keywords: [
-                // Llorar
                 'llorar', 'lloro', 'lágrimas', 'lagrimas', 'ganas de llorar',
                 'lloré', 'llore', 'llorando', 'lloros',
-                // Tristeza
                 'triste', 'tristeza', 'quiero llorar', 'me dan ganas de llorar',
-                // Variantes
                 'lloros', 'lloroso', 'llorosa', 'sollozar', 'sollozo',
-                // Del PDF
                 'tengo ganas de llorar', 'lloré dibujando', 'lágrimas', 'quiero llorar'
             ],
             responses: {
@@ -403,15 +349,11 @@
 
         ansiedadEvaluacion: {
             keywords: [
-                // Evaluación
                 'evaluación', 'evaluacion', 'me van a evaluar', 'calificación', 'calificacion',
                 'nota', 'examen', 'test', 'revisión', 'revision',
-                // Juicio
                 'me juzgan', 'van a criticar', 'feedback me asusta', 'miedo al feedback',
                 'miedo a la evaluación', 'miedo a la evaluacion',
-                // Variantes
                 'me van a revisar', 'me van a corregir', 'corrección', 'correccion',
-                // Del PDF
                 'me da miedo la evaluación', 'me asusta el feedback',
                 'tengo ansiedad por la revisión', 'van a calificar mi trabajo',
                 'ansiedad por evaluación'
@@ -424,15 +366,11 @@
 
         ansiedadSocial: {
             keywords: [
-                // Mostrar arte
                 'mostrar mi arte', 'enseñar dibujos', 'compartir', 'publicar',
                 'subir a redes', 'instagram', 'vergüenza social', 'verguenza social',
-                // Qué dirán
                 'que dirán', 'qué dirán', 'me van a criticar', 'miedo a opiniones',
                 'exponerme', 'exponer mi arte',
-                // Variantes
                 'mostrar en público', 'mostrar en publico', 'redes sociales me asustan',
-                // Del PDF
                 'me da miedo mostrar mis dibujos', 'tengo vergüenza de publicar en Instagram',
                 'no quiero compartir mi arte', 'me da cosa que vean mis dibujos'
             ],
@@ -444,16 +382,11 @@
 
         procrastinacion: {
             keywords: [
-                // Procrastinación directa
                 'procrastinar', 'procrastinación', 'procrastinacion', 'postergar',
                 'dejar para después', 'dejar para despues', 'mañana empiezo', 'manana empiezo',
-                // No empiezo
                 'luego lo hago', 'no empiezo', 'posponer', 'evito dibujar',
-                // Excusas
                 'excusas', 'flojera', 'pereza', 'perezoso', 'perezosa',
-                // Variantes
                 'después lo hago', 'despues lo hago', 'ya lo haré', 'ya lo hare',
-                // Del PDF
                 'siempre dejo todo para después', 'no puedo empezar a dibujar',
                 'procrastino mucho', 'mañana empiezo'
             ],
@@ -465,14 +398,10 @@
 
         autodepreciacion: {
             keywords: [
-                // Autodepreciación directa
                 'soy malo', 'soy mala', 'no sirvo', 'inútil', 'inutilidad',
                 'patético', 'patética', 'desastre', 'pésimo', 'pésima', 'pesimo', 'pesima',
-                // No tengo talento
                 'no tengo talento', 'nunca aprenderé', 'nunca aprendere', 'soy horrible',
-                // Variantes
                 'soy un fracaso', 'soy una fracasada', 'no valgo nada', 'basura',
-                // Del PDF
                 'soy muy malo dibujando', 'no sirvo para esto',
                 'soy un desastre', 'no tengo talento'
             ],
@@ -484,16 +413,11 @@
 
         culpa: {
             keywords: [
-                // Culpa directa
                 'culpa', 'culpable', 'me siento culpable',
-                // Debería
                 'debería practicar', 'debería haber', 'deberia', 'debi',
                 'no practiqué', 'no practique', 'me siento mal por no',
-                // Tiempo perdido
                 'tiempo perdido', 'he fallado', 'me rendí', 'me rendi',
-                // Variantes
                 'culpabilidad', 'remordimiento', 'arrepentido', 'arrepentida',
-                // Del PDF
                 'me siento culpable por no practicar', 'debería haber dibujado más',
                 'perdí mucho tiempo', 'he fallado'
             ],
@@ -505,14 +429,10 @@
 
         overwhelm: {
             keywords: [
-                // Overwhelm directo
                 'abrumado', 'abrumada', 'demasiado', 'mucho', 'muchísimo', 'muchisimo',
                 'sobrepasado', 'sobrepasada', 'no doy abasto', 'agobiado', 'agobiada',
-                // Colapso
                 'colapsado', 'colapsada', 'overwhelmed', 'es mucho',
-                // Variantes
                 'demasiadas cosas', 'no puedo con todo', 'me supera',
-                // Del PDF
                 'estoy abrumado', 'es demasiado', 'no doy abasto', 'estoy colapsado'
             ],
             responses: {
@@ -523,12 +443,9 @@
 
         verguenza: {
             keywords: [
-                // Vergüenza directa
                 'vergüenza', 'verguenza', 'me da pena', 'da vergüenza', 'da verguenza',
                 'penoso', 'penosa', 'humillante', 'avergonzado', 'avergonzada',
-                // Variantes
                 'bochorno', 'me da cosa', 'ridículo', 'ridiculo', 'pasar vergüenza', 'pasar verguenza',
-                // Del PDF
                 'me da vergüenza mi trabajo', 'es muy penoso',
                 'me da pena mostrar esto', 'qué humillante'
             ],
@@ -540,13 +457,10 @@
 
         inseguridad: {
             keywords: [
-                // Inseguridad directa
                 'inseguro', 'insegura', 'no estoy seguro', 'no estoy segura',
                 'dudas', 'dudo', 'no confío', 'no confio', 'incertidumbre',
-                // Variantes
                 'no sé si', 'no se si', 'será que', 'sera que',
                 'inseguridad', 'duda constante', 'siempre dudo',
-                // Del PDF
                 'no estoy segura de nada', 'tengo muchas dudas',
                 'no confío en mí', 'incertidumbre total'
             ],
@@ -558,13 +472,10 @@
 
         miedoJuicio: {
             keywords: [
-                // Miedo al juicio
                 'me van a juzgar', 'van a criticar', 'qué pensarán', 'que pensaran',
                 'opinarán mal', 'opinaran mal', 'se reirán', 'se reiran',
                 'se burlarán', 'se burlaran', 'hablarán mal', 'hablaran mal',
-                // Variantes
                 'miedo a la crítica', 'miedo a la critica', 'críticas', 'criticas',
-                // Del PDF
                 'me van a criticar', 'se van a reír de mí',
                 '¿qué pensarán?', 'van a hablar mal'
             ],
@@ -576,13 +487,10 @@
 
         paralisisAnalisis: {
             keywords: [
-                // Parálisis por análisis
                 'analizar demasiado', 'pensar mucho', 'overthinking', 'doy vueltas',
                 'no decido', 'paralizado', 'paralizada', 'no puedo decidir',
                 'muchas opciones', 'parálisis', 'paralisis',
-                // Variantes
                 'demasiado análisis', 'demasiado analisis', 'pienso en exceso',
-                // Del PDF
                 'pienso demasiado', 'no puedo decidir', 'doy muchas vueltas', 'overthinking'
             ],
             responses: {
@@ -593,13 +501,10 @@
 
         burnout: {
             keywords: [
-                // Burnout directo
                 'burnout', 'quemado', 'quemada', 'harto', 'harta',
                 'exhausto emocional', 'exhausta emocional', 'no siento nada',
                 'vacío creativo', 'vacio creativo', 'sin chispa',
-                // Variantes
                 'agotamiento emocional', 'desgaste', 'desgastado', 'desgastada',
-                // Del PDF
                 'estoy quemado creativamente', 'ya no siento nada al dibujar',
                 'vacío creativo', 'sin chispa'
             ],
@@ -611,13 +516,10 @@
 
         redesSociales: {
             keywords: [
-                // Redes sociales
                 'instagram', 'artstation', 'twitter', 'tiktok', 'redes sociales', 'redes',
                 'likes', 'followers', 'seguidores', 'algoritmo', 'views', 'viral',
                 'engagement', 'social media',
-                // Variantes
                 'comparación en redes', 'comparacion en redes', 'números en redes', 'numeros en redes',
-                // Del PDF
                 'me obsesiono con los likes', 'instagram me estresa',
                 'el algoritmo me frustra', 'comparación en redes'
             ],
@@ -629,13 +531,10 @@
 
         presionRapida: {
             keywords: [
-                // Mejorar rápido
                 'mejorar rápido', 'mejorar rapido', 'quiero ser bueno ya', 'cuanto tiempo tarda',
                 'cuánto tiempo tarda', 'cuando seré bueno', 'cuándo seré bueno',
                 'impaciencia', 'apurado', 'apurada', 'prisa',
-                // Variantes
                 'quiero resultados ya', 'atajos', 'método rápido', 'metodo rapido',
-                // Del PDF
                 'quiero mejorar rápido', '¿cuándo seré bueno?',
                 'impaciencia', 'necesito avanzar YA'
             ],
@@ -647,13 +546,10 @@
 
         miedoPublico: {
             keywords: [
-                // Miedo público
                 'equivocarme en público', 'equivocarme en publico', 'error en vivo',
                 'en clase', 'frente a otros', 'me vean', 'me miren',
                 'hacer el ridículo', 'hacer el ridiculo', 'exponerme',
-                // Variantes
                 'presentar en público', 'presentar en publico', 'miedo escénico', 'miedo escenico',
-                // Del PDF
                 'miedo a equivocarme en clase', 'me da pánico en vivo',
                 'hacer el ridículo', 'que me vean fallar'
             ],
@@ -665,13 +561,10 @@
 
         dueloArtistico: {
             keywords: [
-                // Duelo artístico
                 'arruiné mi dibujo', 'arruine mi dibujo', 'lo eché a perder', 'lo eche a perder',
                 'destruí mi arte', 'destrui mi arte', 'perdí horas', 'perdi horas',
                 'tiempo desperdiciado',
-                // Variantes
                 'arruinado', 'arruinada', 'dibujo perdido', 'trabajo perdido',
-                // Del PDF
                 'arruiné mi dibujo', 'perdí horas de trabajo',
                 'destruí mi arte', 'tiempo desperdiciado'
             ],
@@ -684,23 +577,28 @@
 
     // ============================================
     // 3. BASE DE CONOCIMIENTO TÉCNICO (35 respuestas)
+    // CON KEYWORDS ULTRA FLEXIBLES
     // ============================================
     const technicalKnowledge = {
         // ===== MÓDULO 1: FUNDAMENTOS (10) =====
         lineaAccion: {
             keywords: [
-                // Línea de acción directa (SIN acentos PRIMERO - más prioritario)
-                'linea de accion', 'linea accion', 'como hago la linea de accion',
-                'que es la linea de accion', 'explica linea de accion',
-                // Con acentos
-                'línea de acción', 'línea acción', 'cómo hago la línea de acción',
-                'qué es la línea de acción',
+                // Directo
+                'linea de accion', 'linea accion', 'línea de acción', 'línea acción',
+                // Preguntas flexibles
+                'como hago la linea de accion', 'cómo hago la línea de acción',
+                'como hacer linea de accion', 'cómo hacer línea de acción',
+                'que es la linea de accion', 'qué es la línea de acción',
+                'explica linea de accion', 'explícame línea de acción',
+                'ayuda con linea de accion', 'ayuda línea de acción',
+                'no entiendo linea de accion', 'no entiendo línea de acción',
+                'enseñame linea de accion', 'enséñame línea de acción',
                 // Gesto
                 'gesto', 'movimiento', 'dinamica', 'dinámica', 'gesto rápido', 'gesto rapido',
-                // Variantes
                 'curva del cuerpo', 'eje del movimiento', 'línea principal', 'linea principal',
-                // Ayuda
-                'no entiendo linea de accion', 'ayuda con linea de accion'
+                // Variantes de ayuda
+                'como se hace linea de accion', 'cómo se hace línea de acción',
+                'linea de accion tutorial', 'línea de acción tutorial'
             ],
             responses: {
                 text: "**Línea de acción** = Curva imaginaria que atraviesa el cuerpo mostrando su movimiento.\n\n**Cómo encontrarla:**\n1. Ignora detalles\n2. Busca la curva desde cabeza a pies\n3. Dibújala en 1 segundo\n\n**Formas base:** 'S', 'C' o línea recta.\n\nCroquis empieza SIEMPRE con esto.",
@@ -710,18 +608,24 @@
         
         medirProporcion: {
             keywords: [
-                // Medir proporción (SIN acentos primero)
+                // Directo
                 'medir', 'proporcion', 'proporciones', 'proporción',
+                // Preguntas flexibles
                 'como medir proporciones', 'cómo medir proporciones',
+                'como mido proporciones', 'cómo mido proporciones',
+                'que son las proporciones', 'qué son las proporciones',
+                'explica proporciones', 'explícame proporciones',
+                'ayuda con proporciones', 'no entiendo proporciones',
+                'enseñame a medir', 'enséñame a medir',
                 // Lápiz
                 'lapiz', 'lápiz', 'medicion', 'medición',
                 'como medir con lapiz', 'cómo medir con lápiz',
+                'medir con el lapiz', 'medir con el lápiz',
                 // Reglas
                 'regla de la cabeza', 'unidad de medida', 'sight-size',
-                // Preguntas
-                'que son las proporciones', 'qué son las proporciones',
-                'ayuda con proporciones', 'no entiendo proporciones',
-                'proporciones del cuerpo', 'proporción humana', 'proporcion humana'
+                'proporciones del cuerpo', 'proporción humana', 'proporcion humana',
+                // Variantes de ayuda
+                'como se mide', 'cómo se mide', 'tecnica de medicion', 'técnica de medición'
             ],
             responses: {
                 text: "**Medir con lápiz:**\n1. Estira brazo COMPLETO\n2. Cierra un ojo\n3. Usa lápiz como regla\n4. Cabeza = unidad base\n\n**Proporción:** Cuerpo = 7-8 cabezas.\n\n**Error común:** Doblar codo.\n\nPractica con objetos simples primero.",
@@ -731,16 +635,21 @@
         
         contrapposto: {
             keywords: [
-                // Contrapposto directo
-                'contrapposto', 'contraposto', 'que es contrapposto', 'qué es contrapposto',
+                // Directo
+                'contrapposto', 'contraposto',
+                // Preguntas flexibles
+                'que es contrapposto', 'qué es contrapposto',
                 'como hacer contrapposto', 'cómo hacer contrapposto',
+                'como hago contrapposto', 'cómo hago contrapposto',
+                'explica contrapposto', 'explícame contrapposto',
+                'ayuda con contrapposto', 'no entiendo contrapposto',
+                'enseñame contrapposto', 'enséñame contrapposto',
                 // Equilibrio
                 'equilibrio', 'peso', 'pierna apoyo', 'pierna de apoyo',
-                // Distribución
-                'distribución peso', 'distribucion peso', 'postura asimétrica', 'postura asimetrica',
-                // Ayuda
-                'explica contrapposto', 'no entiendo contrapposto',
-                'ayuda con contrapposto', 'balance del cuerpo'
+                'distribucion peso', 'distribución peso', 'postura asimetrica', 'postura asimétrica',
+                'balance del cuerpo', 'como balancear', 'cómo balancear',
+                // Variantes
+                'peso del cuerpo', 'apoyo del cuerpo', 'pierna que sostiene'
             ],
             responses: {
                 text: "**Contrapposto** = Distribución asimétrica del peso corporal.\n\n**Regla:** Hombros y caderas NUNCA paralelos.\n\n**Observa:**\n- Pierna de apoyo → cadera alta\n- Pierna relajada → cadera baja\n- Hombros inclinados opuesto\n\nEsto crea naturalidad.",
@@ -750,18 +659,22 @@
 
         croquis: {
             keywords: [
-                // Croquis directo
+                // Directo
                 'croquis', 'boceto', 'sketch', 'esbozo',
+                // Preguntas flexibles
                 'como hacer croquis', 'cómo hacer croquis',
+                'como hago un croquis', 'cómo hago un croquis',
+                'que es un croquis', 'qué es un croquis',
+                'explica croquis', 'explícame croquis',
+                'ayuda con croquis', 'no entiendo croquis',
+                'enseñame croquis', 'enséñame croquis',
                 // Rápido
                 'rapido', 'rápido', 'gesture drawing', 'dibujo rápido', 'dibujo rapido',
                 'gestos', 'figura rápida', 'figura rapida',
-                // Preguntas
-                'que es un croquis', 'qué es un croquis',
                 'como hacer boceto rapido', 'cómo hacer boceto rápido',
-                'ayuda con croquis', 'no entiendo croquis',
-                // Del PDF
-                'cómo hacer croquis rápidos', 'como hacer croquis rapidos'
+                // Variantes
+                'dibujo gestual', 'bocetos rapidos', 'bocetos rápidos',
+                'como dibujar rapido', 'cómo dibujar rápido'
             ],
             responses: {
                 text: "**Croquis = captura de esencia, NO detalle.**\n\n**Tiempo:** 30 segundos - 5 minutos MAX.\n\n**Orden:**\n1. Línea de acción (1 línea)\n2. Masas principales (óvalos)\n3. Articulaciones (puntos)\n4. Conectar con líneas simples\n\n**Prohibido:** Borrar, detallar, perfeccionar.\n\nVolumen > Precisión.",
@@ -771,15 +684,22 @@
 
         formasBasicas: {
             keywords: [
-                // Formas básicas
+                // Directo
                 'formas básicas', 'formas basicas', 'cilindros', 'esferas', 'cubos',
+                // Preguntas flexibles
                 'que son las formas basicas', 'qué son las formas básicas',
+                'como usar formas basicas', 'cómo usar formas básicas',
+                'como simplificar el cuerpo', 'cómo simplificar el cuerpo',
+                'explica formas basicas', 'explícame formas básicas',
+                'ayuda con formas', 'no entiendo las formas',
+                'enseñame formas basicas', 'enséñame formas básicas',
                 // Simplificar
                 'simplificar', 'formas geométricas', 'formas geometricas',
                 'primitivos', 'volúmenes básicos', 'volumenes basicos',
-                // Preguntas
-                'como simplificar el cuerpo', 'cómo simplificar el cuerpo',
-                'formas geometricas en el cuerpo', 'formas geométricas en el cuerpo'
+                'formas geometricas en el cuerpo', 'formas geométricas en el cuerpo',
+                // Variantes
+                'como descomponer el cuerpo', 'cómo descomponer el cuerpo',
+                'geometria basica', 'geometría básica'
             ],
             responses: {
                 text: "**Todo cuerpo = formas geométricas simples.**\n\n**Piensa así:**\n- Cabeza = esfera\n- Torso = cilindro/caja\n- Brazos/piernas = cilindros\n- Manos/pies = cajas pequeñas\n\n**Beneficio:** Más fácil rotar mentalmente.\n\nDibuja el \"maniquí\" antes del detalle.",
@@ -789,16 +709,21 @@
 
         perspectiva: {
             keywords: [
-                // Perspectiva
+                // Directo
                 'perspectiva', 'escorzo', 'angulo', 'ángulo', 'vista',
+                // Preguntas flexibles
                 'que es perspectiva', 'qué es perspectiva',
-                'no entiendo perspectiva', 'ayuda con perspectiva',
+                'como hacer perspectiva', 'cómo hacer perspectiva',
+                'como uso perspectiva', 'cómo uso perspectiva',
+                'explica perspectiva', 'explícame perspectiva',
+                'ayuda con perspectiva', 'no entiendo perspectiva',
+                'no me sale la perspectiva', 'enseñame perspectiva', 'enséñame perspectiva',
                 // Punto de fuga
                 'punto fuga', 'foreshortening', 'acortamiento', 'profundidad',
-                'punto de vista',
-                // Preguntas
-                'como hacer perspectiva', 'cómo hacer perspectiva',
-                'escorzo ayuda', 'no me sale la perspectiva'
+                'punto de vista', 'escorzo ayuda',
+                // Variantes
+                'como dibujar en perspectiva', 'cómo dibujar en perspectiva',
+                'perspectiva del cuerpo', 'angulos dificiles', 'ángulos difíciles'
             ],
             responses: {
                 text: "**Perspectiva en figura humana:**\n\n**Principio:** Lo que está más cerca se ve MÁS GRANDE.\n\n**Escorzo:** Cuando una parte \"viene hacia ti\".\n\n**Truco:** Dibuja formas cilíndricas con elipses.\n\nLas elipses más abiertas = más perpendiculares a tu vista.\n\nPractica con cilindros primero.",
@@ -808,16 +733,20 @@
 
         ejesAnatomicos: {
             keywords: [
-                // Ejes
+                // Directo
                 'eje', 'ejes', 'centro', 'simetria', 'simetría',
-                'linea central', 'línea central', 'eje central', 'eje vertical',
-                'línea media', 'linea media',
-                // Preguntas
+                // Preguntas flexibles
                 'que son los ejes', 'qué son los ejes',
-                'ejes anatomicos', 'ejes anatómicos',
+                'como usar ejes', 'cómo usar ejes',
+                'como hacer ejes', 'cómo hacer ejes',
+                'explica ejes', 'explícame los ejes',
+                'ayuda con ejes', 'no entiendo los ejes',
+                'enseñame ejes', 'enséñame los ejes',
+                // Variantes
+                'linea central', 'línea central', 'eje central', 'eje vertical',
+                'línea media', 'linea media', 'ejes anatomicos', 'ejes anatómicos',
                 'linea del centro', 'línea del centro',
-                // Del PDF
-                'qué son los ejes anatómicos', 'que son los ejes anatomicos'
+                'como encontrar el eje', 'cómo encontrar el eje'
             ],
             responses: {
                 text: "**Ejes anatómicos = guías invisibles.**\n\n**3 ejes principales:**\n1. **Central:** Divide cuerpo en izquierda/derecha\n2. **Hombros:** Línea de clavículas\n3. **Caderas:** Línea pélvica\n\n**Uso:** Define postura y rotación.\n\nDibújalos ANTES de detalles.",
@@ -827,11 +756,17 @@
 
         lineasRitmo: {
             keywords: [
+                // Directo
                 'ritmo', 'flujo', 'lineas ritmicas', 'líneas rítmicas',
+                // Preguntas flexibles
+                'que son lineas de ritmo', 'qué son líneas de ritmo',
+                'como usar ritmo', 'cómo usar ritmo',
+                'como hacer lineas de ritmo', 'cómo hacer líneas de ritmo',
+                'explica ritmo', 'explícame las líneas de ritmo',
+                'ayuda con ritmo', 'no entiendo ritmo',
+                // Variantes
                 'curvas', 'fluidez', 'flow', 'líneas de flujo', 'lineas de flujo',
-                'continuidad visual',
-                // Del PDF
-                'explícame las líneas de ritmo', 'explicame las lineas de ritmo'
+                'continuidad visual', 'flujo visual'
             ],
             responses: {
                 text: "**Líneas de ritmo = guías que unifican el dibujo.**\n\n**Busca:**\n- Curvas que conectan partes del cuerpo\n- Repeticiones de formas\n- Flujo visual continuo\n\n**Tip:** El ojo sigue estas líneas automáticamente.\n\n¡Crea caminos visuales!",
@@ -841,11 +776,17 @@
 
         negativoEspacio: {
             keywords: [
+                // Directo
                 'espacio negativo', 'negativo', 'formas negativas',
+                // Preguntas flexibles
+                'que es el espacio negativo', 'qué es el espacio negativo',
+                'como usar espacio negativo', 'cómo usar espacio negativo',
+                'como dibujar espacio negativo', 'cómo dibujar espacio negativo',
+                'explica espacio negativo', 'explícame espacio negativo',
+                'ayuda con espacio negativo', 'no entiendo espacio negativo',
+                // Variantes
                 'alrededor', 'entre', 'negative space', 'espacio entre figuras',
-                'vacíos', 'vacios',
-                // Del PDF
-                'qué es el espacio negativo', 'que es el espacio negativo'
+                'vacíos', 'vacios', 'espacios vacios', 'espacios vacíos'
             ],
             responses: {
                 text: "**Espacio negativo = forma ENTRE y ALREDEDOR del cuerpo.**\n\n**Técnica:**\nNo dibujes el cuerpo. Dibuja los espacios vacíos.\n\n**Beneficio:** Tu cerebro no sabotea con \"cómo debería verse\".\n\n¡Súper efectivo para proporciones!",
@@ -855,11 +796,19 @@
 
         construccionFormas: {
             keywords: [
+                // Directo
                 'construccion', 'construcción', 'construir', 'estructura',
+                // Preguntas flexibles
+                'como construir un cuerpo', 'cómo construir un cuerpo',
+                'como construir figura', 'cómo construir figura',
+                'que es construccion', 'qué es construcción',
+                'explica construccion', 'explícame construcción',
+                'ayuda con construccion', 'no entiendo construccion',
+                'enseñame a construir', 'enséñame a construir',
+                // Variantes
                 'armazon', 'armazón', 'build up', 'estructura interna',
-                'construcción del cuerpo', 'como construir', 'cómo construir',
-                // Del PDF
-                'cómo construir un cuerpo', 'como construir un cuerpo'
+                'construcción del cuerpo', 'como armar el cuerpo', 'cómo armar el cuerpo',
+                'estructura del dibujo'
             ],
             responses: {
                 text: "**Construcción = dibujar de adentro hacia afuera.**\n\n**Proceso:**\n1. Esqueleto (palitos)\n2. Volúmenes (cilindros/esferas)\n3. Contornos (línea exterior)\n4. Detalles\n\n**Error común:** Empezar con contornos.\n\nEstructura primero, belleza después.",
@@ -870,12 +819,19 @@
         // ===== MÓDULO 2: ANATOMÍA (15) =====
         tresMasas: {
             keywords: [
+                // Directo
                 'tres masas', '3 masas', 'cabeza torso cadera',
+                // Preguntas flexibles
+                'que son las 3 masas', 'qué son las 3 masas',
+                'como usar las 3 masas', 'cómo usar las 3 masas',
+                'como hacer las 3 masas', 'cómo hacer las 3 masas',
+                'explica 3 masas', 'explícame las 3 masas',
+                'ayuda con 3 masas', 'no entiendo 3 masas',
+                'enseñame las 3 masas', 'enséñame las 3 masas',
+                // Variantes
                 'masas principales', 'head thorax pelvis',
                 'tres bloques', 'tres volumenes', 'tres volúmenes',
-                'que son las 3 masas', 'qué son las 3 masas',
-                // Del PDF
-                'qué son las 3 masas', 'que son las tres masas'
+                'que son las tres masas', 'masas del cuerpo'
             ],
             responses: {
                 text: "**Las 3 masas = simplificación del cuerpo.**\n\n**1. Cabeza** (esfera)\n**2. Torso** (caja de costillas)\n**3. Cadera** (pelvis)\n**Conectadas:** Cuello y columna.\n\nEstas rotan INDEPENDIENTEMENTE.\n\nDomina esto = dominas poses complejas.",
@@ -885,11 +841,19 @@
 
         anatomiaBasica: {
             keywords: [
+                // Directo
                 'anatomia', 'anatomía', 'musculos', 'músculos', 'huesos',
+                // Preguntas flexibles
+                'como aprender anatomia', 'cómo aprender anatomía',
+                'que es anatomia', 'qué es anatomía',
+                'explica anatomia', 'explícame anatomía',
+                'ayuda con anatomia', 'no entiendo anatomia',
+                'enseñame anatomia', 'enséñame anatomía',
+                'como dibujar anatomia', 'cómo dibujar anatomía',
+                // Variantes
                 'estructura', 'anatomy', 'musculatura', 'sistema muscular',
                 'anatomia basica', 'anatomía básica', 'anatomia del cuerpo',
-                // Del PDF
-                'anatomía básica del cuerpo', 'anatomia basica del cuerpo'
+                'anatomía básica del cuerpo', 'que musculos estudiar', 'qué músculos estudiar'
             ],
             responses: {
                 text: "**No memorices TODO. Enfócate en lo visible.**\n\n**Prioridades:**\n1. Trapecio (cuello-hombro)\n2. Deltoides (hombros)\n3. Pectorales\n4. Abdominales\n5. Oblicuos\n\n**Tip:** Dibuja músculo sobre esqueleto simple.\n\nAnatomía sirve al gesto, no al revés.",
@@ -899,12 +863,19 @@
 
         manos: {
             keywords: [
+                // Directo
                 'manos', 'mano', 'dedos', 'pulgar', 'palma', 'hands',
+                // Preguntas flexibles
+                'como dibujar manos', 'cómo dibujar manos',
+                'como hacer manos', 'cómo hacer manos',
+                'que son las manos', 'explica manos', 'explícame las manos',
+                'ayuda con manos', 'no me salen las manos',
+                'no entiendo manos', 'enseñame manos', 'enséñame manos',
+                'como dibujar dedos', 'cómo dibujar dedos',
+                'tengo miedo de dibujar manos',
+                // Variantes
                 'muñeca', 'muñecas', 'puño', 'puños', 'hand drawing',
-                'no me salen las manos', 'ayuda con manos', 'manos ayuda',
-                'como dibujar manos', 'cómo dibujar manos', 'dibujar dedos',
-                // Del PDF
-                'no me salen las manos', 'tengo miedo de dibujar manos'
+                'manos ayuda', 'dibujar dedos', 'anatomia de manos', 'anatomía de manos'
             ],
             responses: {
                 text: "**Manos = todos las odiamos. Normal.**\n\n**Simplificación:**\n- Palma = caja\n- Dedos = 3 cilindros cada uno\n- Pulgar = aparte, 45°\n\n**Proporción:** Palma = largo de dedos.\n\n**Practica:** 10 manos diarias en 2 minutos cada una.\n\n¡Volumen es la clave!",
@@ -914,12 +885,17 @@
 
         pies: {
             keywords: [
+                // Directo
                 'pies', 'pie', 'tobillo', 'dedos pie', 'planta', 'feet', 'foot',
-                'talón', 'talon', 'arco del pie',
-                'ayuda con pies', 'no me salen los pies',
+                // Preguntas flexibles
                 'como dibujar pies', 'cómo dibujar pies',
-                // Del PDF
-                'ayuda con los pies'
+                'como hacer pies', 'cómo hacer pies',
+                'explica pies', 'explícame los pies',
+                'ayuda con pies', 'no me salen los pies',
+                'no entiendo pies', 'enseñame pies', 'enséñame pies',
+                // Variantes
+                'talón', 'talon', 'arco del pie', 'anatomia de pies', 'anatomía de pies',
+                'como dibujar tobillos', 'cómo dibujar tobillos'
             ],
             responses: {
                 text: "**Pies = triángulos + arco.**\n\n**Estructura:**\n- Talón = círculo\n- Puente = triángulo\n- Dedos = 5 pequeños cilindros\n\n**Ángulos importantes:**\n- Interno: arco pronunciado\n- Externo: más recto\n\n**Largo:** ~1 cabeza.\n\nMás fáciles que las manos, te lo prometo.",
@@ -929,11 +905,18 @@
 
         torso: {
             keywords: [
+                // Directo
                 'torso', 'tronco', 'pecho', 'espalda', 'costillas',
+                // Preguntas flexibles
+                'como dibujar torso', 'cómo dibujar torso',
+                'como hacer el torso', 'cómo hacer el torso',
+                'que es el torso', 'explica torso', 'explícame el torso',
+                'ayuda con torso', 'no entiendo torso',
+                'enseñame torso', 'enséñame el torso',
+                // Variantes
                 'ribcage', 'caja torácica', 'caja toracica', 'abdomen',
-                'como dibujar torso', 'cómo dibujar torso', 'ayuda con torso',
-                // Del PDF
-                'cómo dibujar el torso', 'como dibujar el torso'
+                'como dibujar el pecho', 'cómo dibujar el pecho',
+                'anatomia del torso', 'anatomía del torso'
             ],
             responses: {
                 text: "**Torso = caja de huevos (flexible, no rígida).**\n\n**2 masas:**\n1. **Caja torácica:** Costillas (ovalada)\n2. **Abdomen:** Flexible, se comprime\n\n**Movimiento:** Se tuerce, dobla, estira.\n\n**Punto clave:** Línea blanca (centro abdominal).\n\nTorso conecta TODO.",
@@ -943,11 +926,18 @@
 
         pelvis: {
             keywords: [
+                // Directo
                 'pelvis', 'cadera', 'caderas', 'cintura', 'hueso cadera',
+                // Preguntas flexibles
+                'como dibujar pelvis', 'cómo dibujar pelvis',
+                'como hacer la pelvis', 'cómo hacer la pelvis',
+                'que es la pelvis', 'explica pelvis', 'explícame la pelvis',
+                'ayuda con pelvis', 'no entiendo pelvis',
+                'enseñame pelvis', 'enséñame la pelvis',
+                // Variantes
                 'pelvis bone', 'hueso pélvico', 'hueso pelvico', 'ilion', 'ílion',
                 'anatomia de la pelvis', 'anatomía de la pelvis',
-                // Del PDF
-                'anatomía de la pelvis'
+                'como dibujar caderas', 'cómo dibujar caderas'
             ],
             responses: {
                 text: "**Pelvis = cuenco inclinado.**\n\n**Forma:** Mariposa o cuenco.\n\n**Diferencias:**\n- Mujer: más ancha, menos profunda\n- Hombre: más estrecha, más profunda\n\n**Punto de articulación:** Donde piernas conectan.\n\nPelvis define postura completa.",
@@ -957,11 +947,17 @@
 
         hombros: {
             keywords: [
+                // Directo
                 'hombros', 'hombro', 'clavicula', 'clavícula', 'deltoides',
-                'escapula', 'escápula', 'shoulders', 'omóplato', 'omoplato',
+                // Preguntas flexibles
                 'como dibujar hombros', 'cómo dibujar hombros',
-                // Del PDF
-                'cómo dibujar hombros', 'como dibujar hombros'
+                'como hacer hombros', 'cómo hacer hombros',
+                'que son los hombros', 'explica hombros', 'explícame los hombros',
+                'ayuda con hombros', 'no entiendo hombros',
+                'enseñame hombros', 'enséñame los hombros',
+                // Variantes
+                'escapula', 'escápula', 'shoulders', 'omóplato', 'omoplato',
+                'anatomia de hombros', 'anatomía de hombros'
             ],
             responses: {
                 text: "**Hombros = articulación + músculo deltoides.**\n\n**Anatomía:**\n- Clavícula (horizontal)\n- Escápula (omóplato, atrás)\n- Deltoides (músculo redondeado)\n\n**Movimiento:** MÁXIMA movilidad del cuerpo.\n\n**Tip:** Hombros caídos = relajado. Alzados = tensión.\n\nDefinen personalidad de pose.",
@@ -971,11 +967,18 @@
 
         brazos: {
             keywords: [
+                // Directo
                 'brazos', 'brazo', 'biceps', 'bíceps', 'triceps', 'tríceps',
-                'antebrazo', 'arms', 'húmero', 'humero', 'codo',
+                // Preguntas flexibles
+                'como dibujar brazos', 'cómo dibujar brazos',
+                'como hacer brazos', 'cómo hacer brazos',
+                'que son los brazos', 'explica brazos', 'explícame los brazos',
                 'ayuda con brazos', 'no entiendo los brazos',
-                // Del PDF
-                'ayuda con los brazos'
+                'enseñame brazos', 'enséñame los brazos',
+                // Variantes
+                'antebrazo', 'arms', 'húmero', 'humero', 'codo',
+                'anatomia de brazos', 'anatomía de brazos',
+                'como dibujar codos', 'cómo dibujar codos'
             ],
             responses: {
                 text: "**Brazos = 2 cilindros + articulación.**\n\n**Estructura:**\n1. **Brazo:** Húmero (bíceps/tríceps)\n2. **Antebrazo:** Radio + cúbito (2 huesos)\n\n**Longitud:** Codo a mitad del torso.\n\n**Rotación:** Antebrazo gira, brazo NO.\n\nPractica rotación del antebrazo (pronación/supinación).",
@@ -985,11 +988,18 @@
 
         piernas: {
             keywords: [
+                // Directo
                 'piernas', 'pierna', 'muslo', 'pantorrilla', 'rodilla',
-                'femur', 'fémur', 'legs', 'cuádriceps', 'cuadriceps', 'gemelos',
+                // Preguntas flexibles
+                'como dibujar piernas', 'cómo dibujar piernas',
+                'como hacer piernas', 'cómo hacer piernas',
+                'que son las piernas', 'explica piernas', 'explícame las piernas',
                 'ayuda con piernas', 'no entiendo las piernas',
-                // Del PDF
-                'no entiendo las piernas'
+                'enseñame piernas', 'enséñame las piernas',
+                // Variantes
+                'femur', 'fémur', 'legs', 'cuádriceps', 'cuadriceps', 'gemelos',
+                'anatomia de piernas', 'anatomía de piernas',
+                'como dibujar rodillas', 'cómo dibujar rodillas'
             ],
             responses: {
                 text: "**Piernas = 2 cilindros conectados.**\n\n**Estructura:**\n1. **Muslo:** Fémur (grueso, potente)\n2. **Pantorrilla:** Tibia + peroné\n\n**Rodilla:** NO está centrada (rótula al frente).\n\n**Curvas:**\n- Exterior: más recto\n- Interior: más curvo\n\nLongitud = 2 cabezas (muslo + pantorrilla).",
@@ -999,11 +1009,17 @@
 
         cuello: {
             keywords: [
+                // Directo
                 'cuello', 'trapecio', 'nuca', 'garganta', 'esternocleidomastoideo',
-                'neck', 'cervical', 'columna cervical',
+                // Preguntas flexibles
                 'como dibujar cuello', 'cómo dibujar cuello',
-                // Del PDF
-                'cómo dibujar el cuello', 'como dibujar el cuello'
+                'como hacer el cuello', 'cómo hacer el cuello',
+                'que es el cuello', 'explica cuello', 'explícame el cuello',
+                'ayuda con cuello', 'no entiendo cuello',
+                'enseñame cuello', 'enséñame el cuello',
+                // Variantes
+                'neck', 'cervical', 'columna cervical',
+                'anatomia del cuello', 'anatomía del cuello'
             ],
             responses: {
                 text: "**Cuello = cilindro + músculos visibles.**\n\n**Anatomía visible:**\n- Esternocleidomastoideo (V desde oreja a clavículas)\n- Trapecio (de nuca a hombros)\n\n**No es:** Un palito. Tiene volumen.\n\n**Ángulo:** Ligeramente inclinado hacia adelante.\n\n¡El cuello comunica emoción!",
@@ -1013,11 +1029,19 @@
 
         musculos: {
             keywords: [
+                // Directo
                 'musculo', 'músculo', 'masa muscular', 'definicion', 'definición',
-                'tono muscular', 'muscles', 'musculatura', 'fibras musculares',
+                // Preguntas flexibles
                 'que musculos memorizar', 'qué músculos memorizar',
-                // Del PDF
-                'qué músculos debo memorizar', 'que musculos debo memorizar'
+                'que musculos estudiar', 'qué músculos estudiar',
+                'como dibujar musculos', 'cómo dibujar músculos',
+                'explica musculos', 'explícame los músculos',
+                'ayuda con musculos', 'no entiendo musculos',
+                'enseñame musculos', 'enséñame músculos',
+                // Variantes
+                'tono muscular', 'muscles', 'musculatura', 'fibras musculares',
+                'que musculos debo memorizar', 'qué músculos debo memorizar',
+                'anatomia muscular', 'anatomía muscular'
             ],
             responses: {
                 text: "**Músculos = NO memorices todos. Aprende los 10 principales.**\n\n**Top 10 visibles:**\n1. Trapecio\n2. Deltoides\n3. Pectorales\n4. Bíceps\n5. Tríceps\n6. Abdominales\n7. Oblicuos\n8. Cuádriceps\n9. Gemelos\n10. Glúteos\n\nDibuja la forma general primero, anatomía después.",
@@ -1027,11 +1051,16 @@
 
         esqueleto: {
             keywords: [
+                // Directo
                 'esqueleto', 'huesos', 'estructura osea', 'estructura ósea',
+                // Preguntas flexibles
+                'como dibujar esqueleto', 'cómo dibujar esqueleto',
+                'que es el esqueleto', 'explica esqueleto', 'explícame el esqueleto',
+                'ayuda con esqueleto', 'no entiendo esqueleto',
+                'enseñame esqueleto', 'enséñame el esqueleto',
+                // Variantes
                 'hueso', 'skeleton', 'bones', 'sistema óseo', 'sistema oseo',
-                'estructura del esqueleto',
-                // Del PDF
-                'estructura del esqueleto'
+                'estructura del esqueleto', 'anatomia del esqueleto', 'anatomía del esqueleto'
             ],
             responses: {
                 text: "**Esqueleto = armazón interno.**\n\n**Puntos clave visibles:**\n- Clavículas\n- Esternón\n- Costillas (parcial)\n- Codos\n- Muñecas\n- Rodillas\n- Tobillos\n\n**Tip:** Puntos óseos NO se mueven con músculo.\n\nUsa estos como referencias fijas.",
@@ -1041,11 +1070,17 @@
 
         articulaciones: {
             keywords: [
+                // Directo
                 'articulaciones', 'articulacion', 'articulación', 'coyuntura',
+                // Preguntas flexibles
+                'que son las articulaciones', 'qué son las articulaciones',
+                'como dibujar articulaciones', 'cómo dibujar articulaciones',
+                'explica articulaciones', 'explícame las articulaciones',
+                'ayuda con articulaciones', 'no entiendo articulaciones',
+                'enseñame articulaciones', 'enséñame las articulaciones',
+                // Variantes
                 'union', 'unión', 'joints', 'puntos de flexión', 'puntos de flexion',
-                'donde se dobla', 'dónde se dobla',
-                // Del PDF
-                'qué son las articulaciones', 'que son las articulaciones'
+                'donde se dobla', 'dónde se dobla', 'puntos de doblez'
             ],
             responses: {
                 text: "**Articulaciones = donde se DOBLA el cuerpo.**\n\n**Principales:**\n- Cuello\n- Hombros (más móvil)\n- Codos\n- Muñecas\n- Caderas\n- Rodillas\n- Tobillos\n\n**Regla:** Dibuja círculos en estas zonas primero.\n\nArticulaciones definen poses dinámicas.",
@@ -1055,12 +1090,18 @@
 
         diferenciasGenero: {
             keywords: [
+                // Directo
                 'genero', 'género', 'hombre mujer', 'diferencias',
+                // Preguntas flexibles
+                'diferencias entre hombre y mujer',
+                'como dibujar hombre', 'cómo dibujar hombre',
+                'como dibujar mujer', 'cómo dibujar mujer',
+                'explica diferencias de genero', 'explícame diferencias de género',
+                'ayuda con genero', 'no entiendo las diferencias',
+                // Variantes
                 'masculino femenino', 'gender differences', 'dimorfismo',
                 'anatomía femenina', 'anatomia femenina',
-                'anatomía masculina', 'anatomia masculina',
-                // Del PDF
-                'diferencias entre hombre y mujer'
+                'anatomía masculina', 'anatomia masculina'
             ],
             responses: {
                 text: "**Diferencias anatómicas generales:**\n\n**Mujer típicamente:**\n- Hombros más estrechos\n- Caderas más anchas\n- Cintura más marcada\n- Centro de gravedad más bajo\n\n**Hombre típicamente:**\n- Hombros más anchos\n- Caderas más estrechas\n- Torso más rectangular\n- Masa muscular más visible\n\n**Recuerda:** Son espectros, no reglas absolutas.",
@@ -1070,12 +1111,18 @@
 
         movimiento: {
             keywords: [
+                // Directo
                 'movimiento', 'dinamismo', 'accion', 'acción',
+                // Preguntas flexibles
+                'como crear movimiento', 'cómo crear movimiento',
+                'como hacer movimiento dinamico', 'cómo hacer movimiento dinámico',
+                'que es dinamismo', 'qué es dinamismo',
+                'explica movimiento', 'explícame el movimiento',
+                'ayuda con movimiento', 'no entiendo movimiento',
+                'enseñame movimiento', 'enséñame movimiento',
+                // Variantes
                 'dinamico', 'dinámico', 'poses dinamicas', 'poses dinámicas',
-                'movement', 'dynamic pose', 'como crear movimiento',
-                'cómo crear movimiento',
-                // Del PDF
-                'cómo crear movimiento dinámico', 'como crear movimiento dinamico'
+                'movement', 'dynamic pose', 'como dar dinamismo', 'cómo dar dinamismo'
             ],
             responses: {
                 text: "**Movimiento = contraste + anticipación.**\n\n**Principios:**\n1. **Línea de acción clara** (curva fuerte)\n2. **Contraste** (partes abiertas vs. cerradas)\n3. **Anticipación** (cuerpo prepara movimiento)\n\n**Tip:** Poses estáticas → borradas.\nPoses con tensión → memorables.\n\n¡Exagera el gesto!",
@@ -1086,12 +1133,19 @@
         // ===== MÓDULO 3: RENDERIZADO Y COMPOSICIÓN (10) =====
         valoresTonales: {
             keywords: [
+                // Directo
                 'valores', 'tonos', 'sombras', 'luces', 'valor tonal',
-                'escala tonal', 'values', 'tonal values', 'claroscuro',
-                'escala de grises', 'que son los valores', 'qué son los valores',
+                // Preguntas flexibles
+                'que son los valores', 'qué son los valores',
+                'como usar valores', 'cómo usar valores',
+                'como hacer valores', 'cómo hacer valores tonales',
+                'explica valores', 'explícame los valores',
+                'ayuda con valores', 'no entiendo valores',
+                'enseñame valores', 'enséñame valores tonales',
                 'como sombrear', 'cómo sombrear',
-                // Del PDF
-                'qué son los valores tonales', 'que son los valores tonales'
+                // Variantes
+                'escala tonal', 'values', 'tonal values', 'claroscuro',
+                'escala de grises', 'que son los valores tonales', 'qué son los valores tonales'
             ],
             responses: {
                 text: "**Valores = escala de claros y oscuros.**\n\n**Escala básica:**\n1. Blanco (luz directa)\n2. Gris claro (luz indirecta)\n3. Gris medio (tono local)\n4. Gris oscuro (sombra)\n5. Negro (sombra profunda)\n\n**Regla 80/20:** Usa 3 valores, no 10.\n\nContraste > Cantidad de tonos.",
@@ -1101,11 +1155,18 @@
 
         iluminacion: {
             keywords: [
+                // Directo
                 'iluminacion', 'iluminación', 'luz', 'fuente luz', 'fuente de luz',
+                // Preguntas flexibles
+                'como usar la luz', 'cómo usar la luz',
+                'como hacer iluminacion', 'cómo hacer iluminación',
+                'que es iluminacion', 'qué es iluminación',
+                'explica iluminacion', 'explícame la iluminación',
+                'ayuda con luz', 'no entiendo iluminacion',
+                'enseñame iluminacion', 'enséñame iluminación',
+                // Variantes
                 'light', 'lighting', 'dirección de luz', 'direccion de luz',
-                'source light', 'como usar la luz', 'cómo usar la luz',
-                // Del PDF
-                'cómo usar la iluminación', 'como usar la iluminacion'
+                'source light', 'tipos de luz', 'luces y sombras'
             ],
             responses: {
                 text: "**Iluminación define volumen.**\n\n**3 tipos básicos:**\n1. **Frontal:** Plano, poco volumen\n2. **Lateral:** Máximo volumen y drama\n3. **Contraluz:** Silueta con borde luminoso\n\n**Tip:** Define fuente de luz ANTES de sombrear.\n\n1 luz fuerte > varias luces débiles.",
@@ -1115,12 +1176,19 @@
 
         sombreado: {
             keywords: [
+                // Directo
                 'sombreado', 'sombrear', 'sombra', 'shading', 'degradado',
+                // Preguntas flexibles
+                'como sombrear', 'cómo sombrear',
+                'como hacer sombreado', 'cómo hacer sombreado',
+                'que es sombreado', 'qué es sombreado',
+                'explica sombreado', 'explícame el sombreado',
+                'ayuda con sombreado', 'no entiendo sombreado',
+                'enseñame a sombrear', 'enséñame a sombrear',
+                // Variantes
                 'hatching', 'difuminado', 'cross-hatching',
                 'técnicas de sombreado', 'tecnicas de sombreado',
-                'como sombrear', 'cómo sombrear', 'ayuda con sombreado',
-                // Del PDF
-                'técnicas de sombreado', 'tecnicas de sombreado'
+                'como dar sombra', 'cómo dar sombra'
             ],
             responses: {
                 text: "**Sombreado = transición de luz a sombra.**\n\n**Técnicas:**\n1. **Hatching:** Líneas paralelas\n2. **Cross-hatching:** Líneas cruzadas\n3. **Difuminado:** Suave con dedo/difumino\n4. **Puntillismo:** Puntos (lento)\n\n**Principio:** Formas cilíndricas = gradiente suave.\n\n¡Practica cada técnica 10 minutos!",
@@ -1130,11 +1198,17 @@
 
         composicion: {
             keywords: [
+                // Directo
                 'composicion', 'composición', 'encuadre', 'diseño', 'layout',
-                'composition', 'regla de tercios', 'golden ratio', 'diseño visual',
+                // Preguntas flexibles
                 'como hacer buena composicion', 'cómo hacer buena composición',
-                // Del PDF
-                'cómo hacer buena composición', 'como hacer buena composicion'
+                'que es composicion', 'qué es composición',
+                'explica composicion', 'explícame la composición',
+                'ayuda con composicion', 'no entiendo composicion',
+                'enseñame composicion', 'enséñame composición',
+                // Variantes
+                'composition', 'regla de tercios', 'golden ratio', 'diseño visual',
+                'como componer', 'cómo componer', 'encuadrar dibujo'
             ],
             responses: {
                 text: "**Composición = dónde colocas elementos.**\n\n**Reglas básicas:**\n1. **Regla de tercios:** Divide en 9, pon importante en cruces\n2. **Espacio negativo:** Respira\n3. **Dirección:** Hacia dónde mira/mueve la figura\n\n**Tip:** Deja espacio hacia donde mira el personaje.\n\nComposición guía el ojo.",
