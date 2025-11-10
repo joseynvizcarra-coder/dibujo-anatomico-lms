@@ -1720,12 +1720,18 @@
             const optNum = idx + 1;
             opt.style.pointerEvents = 'none';
             
-            if (optNum === correctAnswers[q]) {
-                opt.classList.add('correct');
-                if (userAnswers[q] === correctAnswers[q]) score++;
-            } else if (optNum === userAnswers[q]) {
-                opt.classList.add('incorrect');
+            // Solo marcar la respuesta del estudiante
+            if (optNum === userAnswers[q]) {
+                if (userAnswers[q] === correctAnswers[q]) {
+                    // Respuesta correcta: marcar en verde
+                    opt.classList.add('correct');
+                    score++;
+                } else {
+                    // Respuesta incorrecta: marcar en rojo
+                    opt.classList.add('incorrect');
+                }
             }
+            // NO marcamos la respuesta correcta si el estudiante falló
         });
     }
 });
