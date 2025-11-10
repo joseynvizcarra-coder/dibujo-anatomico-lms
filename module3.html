@@ -1713,22 +1713,22 @@
                 let score = 0;
                 
                 Object.keys(correctAnswers).forEach(q => {
-                    const container = document.querySelector(`[data-question="${q}"]`);
-                    if (container) {
-                        const options = container.querySelectorAll('.eval-option');
-                        options.forEach((opt, idx) => {
-                            const optNum = idx + 1;
-                            opt.style.pointerEvents = 'none';
-                            
-                            if (optNum === correctAnswers[q]) {
-                                opt.classList.add('correct');
-                                if (userAnswers[q] === correctAnswers[q]) score++;
-                            } else if (optNum === userAnswers[q]) {
-                                opt.classList.add('incorrect');
-                            }
-                        });
-                    }
-                });
+    const container = document.querySelector(`[data-question="${q}"]`);
+    if (container) {
+        const options = container.querySelectorAll('.eval-option');
+        options.forEach((opt, idx) => {
+            const optNum = idx + 1;
+            opt.style.pointerEvents = 'none';
+            
+            if (optNum === correctAnswers[q]) {
+                opt.classList.add('correct');
+                if (userAnswers[q] === correctAnswers[q]) score++;
+            } else if (optNum === userAnswers[q]) {
+                opt.classList.add('incorrect');
+            }
+        });
+    }
+});
                 
                 document.getElementById('submitEvalBtn').style.display = 'none';
                 
@@ -1801,22 +1801,43 @@
         }
 
         function retryEvaluation(lessonNum) {
-            delete evaluationAnswers[lessonNum];
-            
-            document.querySelectorAll('.eval-option').forEach(opt => {
-                opt.classList.remove('selected', 'correct', 'incorrect');
-                opt.style.pointerEvents = 'auto';
+    // 1. Borrar respuestas guardadas
+    delete evaluationAnswers[lessonNum];
+    
+    // 2. RECARGAR COMPLETAMENTE el HTML de la lección (esto borra TODO estado visual)
+    const lessonContent = document.getElementById('lessonContent');
+    if (lessonContent && lessons[`lesson${lessonNum}`]) {
+        lessonContent.innerHTML = lessons[`lesson${lessonNum}`];
+    }
+    
+    // 3. Restaurar el contador de respuestas
+    document.getElementById('answeredCount').textContent = '0';
+    
+    // 4. Restaurar botones de navegación
+    document.getElementById('submitEvalBtn').style.display = 'inline-block';
+    document.getElementById('retryEvalBtn').style.display = 'none';
+    document.getElementById('nextLessonBtn').style.display = 'none';
+    
+    // 5. Limpiar el área de resultados
+    document.getElementById('evalResult').innerHTML = '';
+    
+    // 6. Guardar progreso
+    saveProgress();
+    
+    // 7. Mensaje educativo
+    showToast('💡 Repasa el contenido de la lección antes de intentar nuevamente', 'info');
+    
+    // 8. Scroll suave al inicio del contenido
+    setTimeout(() => {
+        const lessonHeader = document.querySelector('.lesson-header');
+        if (lessonHeader) {
+            lessonHeader.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
             });
-            
-            document.getElementById('evalResult').innerHTML = '';
-            document.getElementById('answeredCount').textContent = '0';
-            document.getElementById('submitEvalBtn').style.display = 'inline-block';
-            document.getElementById('retryEvalBtn').style.display = 'none';
-            document.getElementById('nextLessonBtn').style.display = 'none';
-            
-            saveProgress();
-            showToast('Intenta nuevamente', 'info');
         }
+    }, 300);
+}
 
         function restoreEvaluationState(lessonNum) {
             const answers = evaluationAnswers[lessonNum];
