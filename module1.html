@@ -1773,37 +1773,30 @@
     // 1. Borrar respuestas guardadas
     delete evaluationAnswers[lessonNum];
     
-    // 2. RESETEO COMPLETO de todas las opciones
-    document.querySelectorAll('.eval-option').forEach(opt => {
-        // Remover TODAS las clases de estado
-        opt.classList.remove('selected', 'correct', 'incorrect');
-        
-        // Resetear atributo style COMPLETAMENTE (fuerza limpieza total)
-        opt.removeAttribute('style');
-        
-        // Re-habilitar interacción
-        opt.style.pointerEvents = 'auto';
-    });
+    // 2. RECARGAR COMPLETAMENTE el HTML de la lección (esto borra TODO estado visual)
+    const lessonContent = document.getElementById('lessonContent');
+    if (lessonContent && lessons[`lesson${lessonNum}`]) {
+        lessonContent.innerHTML = lessons[`lesson${lessonNum}`];
+    }
     
-    // 3. Limpiar también los radio buttons internos
-    document.querySelectorAll('.eval-radio').forEach(radio => {
-        radio.removeAttribute('style');
-    });
-    
-    // 4. Limpiar UI de evaluación
-    document.getElementById('evalResult').innerHTML = '';
+    // 3. Restaurar el contador de respuestas
     document.getElementById('answeredCount').textContent = '0';
+    
+    // 4. Restaurar botones de navegación
     document.getElementById('submitEvalBtn').style.display = 'inline-block';
     document.getElementById('retryEvalBtn').style.display = 'none';
     document.getElementById('nextLessonBtn').style.display = 'none';
     
-    // 5. Guardar progreso
+    // 5. Limpiar el área de resultados
+    document.getElementById('evalResult').innerHTML = '';
+    
+    // 6. Guardar progreso
     saveProgress();
     
-    // 6. Mensaje educativo + scroll al contenido
+    // 7. Mensaje educativo
     showToast('💡 Repasa el contenido de la lección antes de intentar nuevamente', 'info');
     
-    // 7. Scroll suave al inicio para forzar repaso
+    // 8. Scroll suave al inicio del contenido
     setTimeout(() => {
         const lessonHeader = document.querySelector('.lesson-header');
         if (lessonHeader) {
@@ -1812,7 +1805,7 @@
                 block: 'start' 
             });
         }
-    }, 500);
+    }, 300);
 }
 
         function restoreEvaluationState(lessonNum) {
