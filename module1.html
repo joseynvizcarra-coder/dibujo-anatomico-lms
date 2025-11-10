@@ -1676,22 +1676,28 @@
                 let score = 0;
                 
                 Object.keys(correctAnswers).forEach(q => {
-                    const container = document.querySelector(`[data-question="${q}"]`);
-                    if (container) {
-                        const options = container.querySelectorAll('.eval-option');
-                        options.forEach((opt, idx) => {
-                            const optNum = idx + 1;
-                            opt.style.pointerEvents = 'none';
-                            
-                            if (optNum === correctAnswers[q]) {
-                                opt.classList.add('correct');
-                                if (userAnswers[q] === correctAnswers[q]) score++;
-                            } else if (optNum === userAnswers[q]) {
-                                opt.classList.add('incorrect');
-                            }
-                        });
-                    }
-                });
+    const container = document.querySelector(`[data-question="${q}"]`);
+    if (container) {
+        const options = container.querySelectorAll('.eval-option');
+        options.forEach((opt, idx) => {
+            const optNum = idx + 1;
+            opt.style.pointerEvents = 'none';
+            
+            // Solo marcar la respuesta del estudiante
+            if (optNum === userAnswers[q]) {
+                if (userAnswers[q] === correctAnswers[q]) {
+                    // Respuesta correcta: marcar en verde
+                    opt.classList.add('correct');
+                    score++;
+                } else {
+                    // Respuesta incorrecta: marcar en rojo
+                    opt.classList.add('incorrect');
+                }
+            }
+            // NO marcamos la respuesta correcta si el estudiante falló
+        });
+    }
+});
                 
                 document.getElementById('submitEvalBtn').style.display = 'none';
                 
