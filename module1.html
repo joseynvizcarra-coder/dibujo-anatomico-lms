@@ -1773,24 +1773,21 @@
     // 1. Borrar respuestas guardadas
     delete evaluationAnswers[lessonNum];
     
-    // 2. Limpiar COMPLETAMENTE todas las opciones (SIN pistas visuales)
+    // 2. RESETEO COMPLETO de todas las opciones
     document.querySelectorAll('.eval-option').forEach(opt => {
         // Remover TODAS las clases de estado
         opt.classList.remove('selected', 'correct', 'incorrect');
         
-        // Resetear estilos inline (elimina colores residuales)
-        opt.style.borderColor = '';
-        opt.style.background = '';
-        opt.style.fontWeight = '';
+        // Resetear atributo style COMPLETAMENTE (fuerza limpieza total)
+        opt.removeAttribute('style');
         
-        // Habilitar interacción
+        // Re-habilitar interacción
         opt.style.pointerEvents = 'auto';
     });
     
-    // 3. Limpiar estados de los radio buttons
+    // 3. Limpiar también los radio buttons internos
     document.querySelectorAll('.eval-radio').forEach(radio => {
-        radio.style.borderColor = '';
-        radio.style.background = '';
+        radio.removeAttribute('style');
     });
     
     // 4. Limpiar UI de evaluación
@@ -1800,7 +1797,7 @@
     document.getElementById('retryEvalBtn').style.display = 'none';
     document.getElementById('nextLessonBtn').style.display = 'none';
     
-    // 5. Guardar estado
+    // 5. Guardar progreso
     saveProgress();
     
     // 6. Mensaje educativo + scroll al contenido
