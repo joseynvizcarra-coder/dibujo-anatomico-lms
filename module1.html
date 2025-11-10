@@ -1770,52 +1770,40 @@
         }
 
         function retryEvaluation(lessonNum) {
-    // 1. Borrar respuestas guardadas
     delete evaluationAnswers[lessonNum];
     
-    // 2. Limpiar COMPLETAMENTE todas las opciones (SIN pistas visuales)
+    // SOLUCIÓN: Limpiar TODOS los indicadores visuales
     document.querySelectorAll('.eval-option').forEach(opt => {
-        // Remover TODAS las clases de estado
+        // Remover clases que indican respuestas correctas/incorrectas
         opt.classList.remove('selected', 'correct', 'incorrect');
-        
-        // Resetear estilos inline (elimina colores residuales)
-        opt.style.borderColor = '';
-        opt.style.background = '';
-        opt.style.fontWeight = '';
-        
-        // Habilitar interacción
+        // Reactivar interacción
         opt.style.pointerEvents = 'auto';
     });
     
-    // 3. Limpiar estados de los radio buttons
+    // Limpiar los radio buttons también
     document.querySelectorAll('.eval-radio').forEach(radio => {
         radio.style.borderColor = '';
         radio.style.background = '';
     });
     
-    // 4. Limpiar UI de evaluación
     document.getElementById('evalResult').innerHTML = '';
     document.getElementById('answeredCount').textContent = '0';
     document.getElementById('submitEvalBtn').style.display = 'inline-block';
     document.getElementById('retryEvalBtn').style.display = 'none';
     document.getElementById('nextLessonBtn').style.display = 'none';
     
-    // 5. Guardar estado
     saveProgress();
+    showToast('Intenta nuevamente', 'info');
+}
     
-    // 6. Mensaje educativo + scroll al contenido
-    showToast('💡 Repasa el contenido de la lección antes de intentar nuevamente', 'info');
+    document.getElementById('evalResult').innerHTML = '';
+    document.getElementById('answeredCount').textContent = '0';
+    document.getElementById('submitEvalBtn').style.display = 'inline-block';
+    document.getElementById('retryEvalBtn').style.display = 'none';
+    document.getElementById('nextLessonBtn').style.display = 'none';
     
-    // 7. Scroll suave al inicio para forzar repaso
-    setTimeout(() => {
-        const lessonHeader = document.querySelector('.lesson-header');
-        if (lessonHeader) {
-            lessonHeader.scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'start' 
-            });
-        }
-    }, 500);
+    saveProgress();
+    showToast('Intenta nuevamente', 'info');
 }
 
         function restoreEvaluationState(lessonNum) {
