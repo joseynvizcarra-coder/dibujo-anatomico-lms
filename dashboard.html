@@ -1,309 +1,1420 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Dashboard Instructor - LMS UAH (Auto + Color)</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #f8f9fa;
-      color: #222;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Instructor - DIADIFO LMS UAH</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --primary-dark: #2c5f66;
+            --primary-light: #e8a2b8;
+            --dark: #1a1a1a;
+            --light-bg: #f8f9fa;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+        }
 
-    .header {
-      background: linear-gradient(135deg, #2c5f66, #0f3a3f);
-      color: #fff;
-      padding: 12px 16px;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .header h1 {
-      font-size: 1.25rem;
-      margin: 0;
-      color: #e8a2b8;
-    }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--light-bg);
+            color: var(--dark);
+            line-height: 1.6;
+        }
 
-    .btn-header {
-      background: rgba(255, 255, 255, .12);
-      color: #fff;
-      border-radius: 18px;
-      border: none;
-      padding: .35rem .7rem;
-    }
+        /* Header */
+        .header-uah {
+            background: linear-gradient(135deg, var(--primary-dark), var(--dark));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+        }
 
-    .stat-number {
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: #2c5f66;
-    }
+        .header-title {
+            color: var(--primary-light);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+        }
 
-    .chart-card {
-      height: 260px;
-    }
+        .header-subtitle {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.85rem;
+        }
 
-    .risk-badge {
-      padding: .25rem .6rem;
-      border-radius: 18px;
-      font-weight: 600;
-      font-size: .8rem;
-    }
+        .btn-header {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            display: inline-block;
+        }
 
-    .risk-high {background: #fee2e2; color: #dc2626;}
-    .risk-medium {background: #fef3c7; color: #d97706;}
-    .risk-low {background: #d1fae5; color: #059669;}
+        .btn-header:hover {
+            background: var(--primary-light);
+            color: var(--dark);
+            transform: translateY(-2px);
+        }
 
-    .legend-item {
-      display: inline-flex;
-      align-items: center;
-      margin-right: 12px;
-      font-size: .85rem;
-    }
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
 
-    .legend-color {
-      width: 14px;
-      height: 14px;
-      border-radius: 3px;
-      margin-right: 6px;
-    }
+        .stat-card {
+            background: white;
+            padding: 1.25rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
 
-    canvas {
-      background: #fff;
-      border-radius: 8px;
-      padding: 4px;
-    }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
 
-    /* Responsive optimizations */
-    @media (max-width: 768px) {
-      .header h1 {font-size: 1rem;}
-      .chart-card {height: auto;}
-      .stat-number {font-size: 1.3rem;}
-      table {font-size: 0.85rem;}
-    }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-light));
+        }
 
-    .table-responsive {
-      overflow-x: auto;
-    }
-  </style>
+        .stat-card.warning::before {
+            background: var(--warning);
+        }
+
+        .stat-card.danger::before {
+            background: var(--danger);
+        }
+
+        .stat-card.success::before {
+            background: var(--success);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .stat-sublabel {
+            color: #9ca3af;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Section Cards */
+        .section-card {
+            background: white;
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .section-header {
+            border-bottom: 3px solid var(--primary-light);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-title {
+            color: var(--primary-dark);
+            font-weight: 700;
+            font-size: 1.4rem;
+            margin: 0;
+        }
+
+        /* Charts */
+        .chart-container {
+            height: 280px;
+            position: relative;
+        }
+
+        .chart-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            color: var(--primary-dark);
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .legend-item {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+            margin-right: 6px;
+        }
+
+        /* Tables */
+        .table-responsive {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table {
+            margin: 0;
+        }
+
+        .table thead th {
+            background: var(--light-bg);
+            color: var(--primary-dark);
+            font-weight: 600;
+            border: none;
+            padding: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .table tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        .table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .table tbody td {
+            padding: 0.75rem;
+            vertical-align: middle;
+            font-size: 0.9rem;
+        }
+
+        /* Badges */
+        .risk-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .risk-high { background: #fee2e2; color: #dc2626; }
+        .risk-medium { background: #fef3c7; color: #d97706; }
+        .risk-low { background: #d1fae5; color: #059669; }
+
+        /* Progress bars */
+        .progress-bar-small {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 8px;
+            width: 100px;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .progress-fill-small {
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-light));
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        /* Tabs */
+        .nav-tabs {
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .nav-tabs .nav-link {
+            border: none;
+            color: #6c757d;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+        }
+
+        .nav-tabs .nav-link:hover {
+            border: none;
+            color: var(--primary-dark);
+        }
+
+        .nav-tabs .nav-link.active {
+            border: none;
+            border-bottom: 3px solid var(--primary-dark);
+            color: var(--primary-dark);
+            background: transparent;
+        }
+
+        /* Loading */
+        .loading-spinner {
+            border: 3px solid var(--light-bg);
+            border-top: 3px solid var(--primary-dark);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .stat-number {
+                font-size: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Activity Log */
+        .activity-item {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s ease;
+        }
+
+        .activity-item:hover {
+            background: #f8f9fa;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-user {
+            font-weight: 600;
+            color: var(--primary-dark);
+            font-size: 0.9rem;
+        }
+
+        .activity-action {
+            color: #6c757d;
+            font-size: 0.85rem;
+        }
+
+        .activity-time {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+
+        /* Utilities */
+        .text-muted-custom {
+            color: #9ca3af;
+        }
+
+        .fw-semibold {
+            font-weight: 600;
+        }
+    </style>
 </head>
 <body>
-<script src="auth.js"></script>
+    <!-- Auth.js debe cargarse primero -->
+    <script src="auth.js"></script>
 
-<header class="header d-flex flex-wrap justify-content-between align-items-center">
-  <div class="mb-2 mb-md-0">
-    <h1><i class="bi bi-graph-up me-2"></i>Dashboard Instructor — Auto + Color</h1>
-    <small class="text-white-50">Datos faltantes inferidos automáticamente</small>
-  </div>
-  <div class="text-end">
-    <span id="instructorName" class="me-3">Cargando...</span>
-    <a href="index.html" class="btn-header me-2"><i class="bi bi-arrow-left me-1"></i>Volver</a>
-    <button id="logoutBtn" class="btn-header"><i class="bi bi-box-arrow-right me-1"></i>Salir</button>
-  </div>
-</header>
-
-<main class="container py-4">
-  <div class="row g-3">
-    <!-- Métricas generales -->
-    <div class="col-12">
-      <div class="card p-3 shadow-sm">
-        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
-          <h5 class="mb-0"><i class="bi bi-speedometer2 me-2"></i>Métricas LMS</h5>
-          <button id="refreshBtn" class="btn btn-sm btn-success"><i class="bi bi-arrow-clockwise me-1"></i>Actualizar</button>
+    <!-- Header -->
+    <header class="header-uah">
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div>
+                    <h1 class="header-title">
+                        <i class="bi bi-graph-up-arrow me-2"></i>Dashboard Instructor
+                    </h1>
+                    <p class="header-subtitle mb-0">
+                        DIADIFO - Sistema de Gestión de Aprendizaje
+                    </p>
+                </div>
+                <div class="text-end d-flex align-items-center gap-2">
+                    <span id="instructorName" class="text-white me-2 d-none d-md-inline">Cargando...</span>
+                    <button id="refreshBtn" class="btn-header">
+                        <i class="bi bi-arrow-clockwise me-1"></i>Actualizar
+                    </button>
+                    <a href="index.html" class="btn-header">
+                        <i class="bi bi-house me-1"></i>Inicio
+                    </a>
+                    <button id="logoutBtn" class="btn-header">
+                        <i class="bi bi-box-arrow-right me-1"></i>Salir
+                    </button>
+                </div>
+            </div>
         </div>
-        <div class="row g-3 text-center">
-          <div class="col-6 col-md-2"><div><div class="stat-number" id="totalStudents">-</div><small>Estudiantes</small></div></div>
-          <div class="col-6 col-md-2"><div><div class="stat-number" id="avgProgress">-</div><small>Progreso</small></div></div>
-          <div class="col-6 col-md-2"><div><div class="stat-number" id="evalPassRate">-</div><small>Aprobación</small></div></div>
-          <div class="col-6 col-md-2"><div><div class="stat-number" id="completionRate">-</div><small>Finalización</small></div></div>
-          <div class="col-6 col-md-2"><div><div class="stat-number" id="activeStudents">-</div><small>Activos 7d</small></div></div>
-          <div class="col-6 col-md-2"><div><div class="stat-number" id="studentsAtRisk">-</div><small>En riesgo</small></div></div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container-fluid py-4">
+        <!-- Métricas Principales -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-number" id="totalStudents">-</span>
+                <div class="stat-label">Estudiantes</div>
+                <div class="stat-sublabel">Total activos</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="totalEvaluators">-</span>
+                <div class="stat-label">Evaluadores</div>
+                <div class="stat-sublabel">Total registrados</div>
+            </div>
+            <div class="stat-card success">
+                <span class="stat-number" id="avgProgress">-</span>
+                <div class="stat-label">Progreso Promedio</div>
+                <div class="stat-sublabel">Estudiantes</div>
+            </div>
+            <div class="stat-card success">
+                <span class="stat-number" id="completionRate">-</span>
+                <div class="stat-label">Tasa Finalización</div>
+                <div class="stat-sublabel">Módulos completos</div>
+            </div>
+            <div class="stat-card warning">
+                <span class="stat-number" id="avgScore">-</span>
+                <div class="stat-label">Nota Promedio</div>
+                <div class="stat-sublabel">Evaluaciones</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="activeStudents">-</span>
+                <div class="stat-label">Activos 7 días</div>
+                <div class="stat-sublabel">Estudiantes</div>
+            </div>
+            <div class="stat-card danger">
+                <span class="stat-number" id="studentsAtRisk">-</span>
+                <div class="stat-label">En Riesgo</div>
+                <div class="stat-sublabel">&lt; 25% progreso</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="totalEvaluations">-</span>
+                <div class="stat-label">Evaluaciones</div>
+                <div class="stat-sublabel">Total aprobadas</div>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Gráficos -->
-    <div class="col-12 col-lg-6">
-      <div class="card p-3 chart-card mt-3 shadow-sm">
-        <h6><i class="bi bi-pie-chart me-2"></i>Distribución de progreso</h6>
-        <canvas id="progressChart"></canvas>
-        <div class="mt-3 text-center">
-          <span class="legend-item"><span class="legend-color" style="background:#dc2626"></span>0–25% (Riesgo alto)</span>
-          <span class="legend-item"><span class="legend-color" style="background:#f59e0b"></span>26–50% (Medio)</span>
-          <span class="legend-item"><span class="legend-color" style="background:#10b981"></span>51–75% (Avanzando)</span>
-          <span class="legend-item"><span class="legend-color" style="background:#065f46"></span>76–100% (Completado)</span>
+        <!-- Gráficos -->
+        <div class="row g-3 mb-4">
+            <div class="col-12 col-lg-6">
+                <div class="chart-card">
+                    <h6 class="chart-title">
+                        <i class="bi bi-pie-chart me-2"></i>Distribución de Progreso
+                    </h6>
+                    <div class="chart-container">
+                        <canvas id="progressChart"></canvas>
+                    </div>
+                    <div class="mt-3 text-center">
+                        <span class="legend-item">
+                            <span class="legend-color" style="background:#dc2626"></span>0-25% (Riesgo)
+                        </span>
+                        <span class="legend-item">
+                            <span class="legend-color" style="background:#f59e0b"></span>26-50% (Medio)
+                        </span>
+                        <span class="legend-item">
+                            <span class="legend-color" style="background:#10b981"></span>51-75% (Avanzando)
+                        </span>
+                        <span class="legend-item">
+                            <span class="legend-color" style="background:#065f46"></span>76-100% (Completo)
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="chart-card">
+                    <h6 class="chart-title">
+                        <i class="bi bi-activity me-2"></i>Actividad por Día (14 días)
+                    </h6>
+                    <div class="chart-container">
+                        <canvas id="activityChart"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <div class="col-12 col-lg-6">
-      <div class="card p-3 chart-card mt-3 shadow-sm">
-        <h6><i class="bi bi-activity me-2"></i>Actividad por día (14 días)</h6>
-        <canvas id="activityChart"></canvas>
-      </div>
-    </div>
+        <!-- Tabs: Estudiantes / Evaluadores / Evaluaciones -->
+        <div class="section-card">
+            <ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="students-tab" data-bs-toggle="tab" 
+                            data-bs-target="#students" type="button" role="tab">
+                        <i class="bi bi-people-fill me-2"></i>Estudiantes
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="evaluators-tab" data-bs-toggle="tab" 
+                            data-bs-target="#evaluators" type="button" role="tab">
+                        <i class="bi bi-person-badge me-2"></i>Evaluadores
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="evaluations-tab" data-bs-toggle="tab" 
+                            data-bs-target="#evaluations" type="button" role="tab">
+                        <i class="bi bi-clipboard-check me-2"></i>Evaluaciones
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="activity-tab" data-bs-toggle="tab" 
+                            data-bs-target="#activity" type="button" role="tab">
+                        <i class="bi bi-clock-history me-2"></i>Actividad Reciente
+                    </button>
+                </li>
+            </ul>
 
-    <!-- Tabla de estudiantes -->
-    <div class="col-12">
-      <div class="card p-3 mt-3 shadow-sm">
-        <h5><i class="bi bi-people me-2"></i>Estudiantes</h5>
-        <div class="table-responsive">
-          <table class="table table-sm table-hover mt-2 align-middle">
-            <thead class="table-light">
-              <tr>
-                <th>Nombre</th>
-                <th>Usuario</th>
-                <th>%</th>
-                <th>Módulos</th>
-                <th>Lecciones por módulo</th>
-                <th>Último acceso</th>
-                <th>Tiempo (h)</th>
-                <th>Nota</th>
-                <th>Riesgo</th>
-              </tr>
-            </thead>
-            <tbody id="studentsTableBody">
-              <tr><td colspan="9" class="text-center py-4 text-muted">Cargando...</td></tr>
-            </tbody>
-          </table>
+            <div class="tab-content mt-4" id="dashboardTabsContent">
+                <!-- Tab: Estudiantes -->
+                <div class="tab-pane fade show active" id="students" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Usuario</th>
+                                    <th>Progreso</th>
+                                    <th>Módulos</th>
+                                    <th>Lecciones por Módulo</th>
+                                    <th>Último Acceso</th>
+                                    <th>Nota</th>
+                                    <th>Riesgo</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentsTableBody">
+                                <tr>
+                                    <td colspan="8" class="text-center py-4">
+                                        <div class="loading-spinner"></div>
+                                        <p class="text-muted-custom">Cargando datos...</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab: Evaluadores -->
+                <div class="tab-pane fade" id="evaluators" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Usuario</th>
+                                    <th>Progreso</th>
+                                    <th>Módulos Completados</th>
+                                    <th>Último Acceso</th>
+                                </tr>
+                            </thead>
+                            <tbody id="evaluatorsTableBody">
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">
+                                        <div class="loading-spinner"></div>
+                                        <p class="text-muted-custom">Cargando datos...</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab: Evaluaciones -->
+                <div class="tab-pane fade" id="evaluations" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Estudiante</th>
+                                    <th class="text-center">M1L1</th>
+                                    <th class="text-center">M1L2</th>
+                                    <th class="text-center">M1L3</th>
+                                    <th class="text-center">M2L1</th>
+                                    <th class="text-center">M2L2</th>
+                                    <th class="text-center">M2L3</th>
+                                    <th class="text-center">M2L4</th>
+                                    <th class="text-center">M3L1</th>
+                                    <th class="text-center">M3L2</th>
+                                    <th class="text-center">M3L3</th>
+                                    <th class="text-center"><strong>Total</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody id="evaluationsTableBody">
+                                <tr>
+                                    <td colspan="12" class="text-center py-4">
+                                        <div class="loading-spinner"></div>
+                                        <p class="text-muted-custom">Cargando datos...</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab: Actividad Reciente -->
+                <div class="tab-pane fade" id="activity" role="tabpanel">
+                    <div id="activityLog" style="max-height: 500px; overflow-y: auto;">
+                        <div class="text-center py-4">
+                            <div class="loading-spinner"></div>
+                            <p class="text-muted-custom">Cargando actividades...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </div>
-</main>
+    </main>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script>
-(async function(){
-  function waitForAuthReady(timeout=5000){
-    return new Promise((res,rej)=>{
-      const t0=Date.now();
-      (function check(){
-        if(typeof protectPage==='function'&&typeof getCurrentUser==='function'&&typeof makeJSONPRequest==='function')return res();
-        if(Date.now()-t0>timeout)return rej(new Error('auth.js no cargó'));
-        setTimeout(check,50);
-      })();
-    });
-  }
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <script>
+    (async function() {
+        // ==========================================
+        // CONFIGURACIÓN Y VARIABLES GLOBALES
+        // ==========================================
+        
+        let dashboardData = {
+            students: [],
+            evaluators: [],
+            evaluations: {},
+            activities: []
+        };
 
-  function inferStudentData(s){
-    s.progress = s.progress || {};
-    if(!s.progress.modules) s.progress.modules = {};
-    const mods = s.progress.modules;
-    if(!s.progress.overallProgress){
-      const vals = Object.values(mods).map(m=>m.progress||0);
-      s.progress.overallProgress = vals.length? Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):0;
-    }
-    if(!s.avgScore){
-      let sum=0,count=0;
-      Object.values(mods).forEach(m=>{
-        Object.values(m.evaluations||{}).forEach(e=>{ if(typeof e.score==='number'){sum+=e.score;count++;} });
-      });
-      s.avgScore = count? Math.round((sum/count)*10)/10:0;
-    }
-    if(!s.totalTime){
-      let lessons=0;Object.values(mods).forEach(m=>{lessons+=Object.keys(m.evaluations||{}).length;});
-      s.totalTime = lessons*8;
-    }
-    if(!s.avgSession)s.avgSession=Math.max(10,Math.round(s.totalTime/Math.max(1,Math.random()*3+1)));
-    if(!s.progress.lastAccess){
-      const acts=(window.activities||[]).filter(a=>a.username===s.username);
-      if(acts.length)s.progress.lastAccess=acts[acts.length-1].timestamp;else s.progress.lastAccess=new Date().toISOString();
-    }
-    return s;
-  }
+        let progressChart = null;
+        let activityChart = null;
 
-  async function init(){
-    await waitForAuthReady();
-    if(!protectPage('instructor'))return;
-    const user=getCurrentUser();
-    if(!user)return;
-    document.getElementById('instructorName').textContent=user.fullName||user.username;
-    document.getElementById('logoutBtn').addEventListener('click',logout);
-    document.getElementById('refreshBtn').addEventListener('click',loadStudents);
-    loadStudents();
-  }
+        // ==========================================
+        // ESPERAR A QUE AUTH.JS ESTÉ LISTO
+        // ==========================================
+        
+        function waitForAuthReady(timeout = 5000) {
+            return new Promise((resolve, reject) => {
+                const startTime = Date.now();
+                
+                function checkAuth() {
+                    if (typeof protectPage === 'function' && 
+                        typeof getCurrentUser === 'function' && 
+                        typeof makeJSONPRequest === 'function') {
+                        console.log('✅ auth.js cargado y listo');
+                        resolve();
+                    } else if (Date.now() - startTime > timeout) {
+                        reject(new Error('auth.js no se cargó a tiempo'));
+                    } else {
+                        setTimeout(checkAuth, 50);
+                    }
+                }
+                
+                checkAuth();
+            });
+        }
 
-  async function loadStudents(){
-    const res=await makeJSONPRequest('getAllStudents');
-    const students=(res&&res.success)?res.data:[];
-    window.activities=(await makeJSONPRequest('getActivities',{limit:200})).data||[];
-    const processed=students.map(inferStudentData);
-    render(processed);
-  }
+        // ==========================================
+        // INFERENCIA AUTOMÁTICA DE DATOS
+        // ==========================================
+        
+        function inferStudentData(student) {
+            // Asegurar que exista la estructura de progreso
+            student.progress = student.progress || {};
+            student.progress.modules = student.progress.modules || {};
+            
+            const modules = student.progress.modules;
 
-  function render(students){
-    const tbody=document.getElementById('studentsTableBody');
-    tbody.innerHTML='';
-    if(!students.length){tbody.innerHTML='<tr><td colspan="9" class="text-center text-muted py-3">Sin estudiantes</td></tr>';return;}
-    const total=students.length;
-    let sumProgress=0,passed=0,completed=0,active7=0,atRisk=0;
-    const now=new Date();const cutoff7=new Date(now-7*86400000);
-    const dist={'0-25':0,'26-50':0,'51-75':0,'76-100':0};
-    students.forEach(s=>{
-      sumProgress+=s.progress.overallProgress;
-      if(s.avgScore>=60)passed++;
-      if(s.progress.overallProgress>=100)completed++;
-      const last=new Date(s.progress.lastAccess);
-      if(last>cutoff7)active7++;
-      if(s.progress.overallProgress<25)atRisk++;
-      if(s.progress.overallProgress<=25)dist['0-25']++;
-      else if(s.progress.overallProgress<=50)dist['26-50']++;
-      else if(s.progress.overallProgress<=75)dist['51-75']++;
-      else dist['76-100']++;
+            // 1. Calcular progreso general si no existe
+            if (!student.progress.overallProgress) {
+                const moduleProgresses = Object.values(modules).map(m => m.progress || 0);
+                student.progress.overallProgress = moduleProgresses.length 
+                    ? Math.round(moduleProgresses.reduce((a, b) => a + b, 0) / moduleProgresses.length)
+                    : 0;
+            }
 
-      const risk=s.progress.overallProgress<25?'high':(s.progress.overallProgress<50?'medium':'low');
-      
-      // Calcular lecciones completadas por módulo
-      const modulesInfo = Object.entries(s.progress.modules||{}).map(([num,mod])=>{
-        const totalLessons = (mod.totalLessons || Object.keys(mod.evaluations||{}).length) || 0;
-        const completedLessons = (mod.completedLessons||[]).length || 0;
-        return `M${num}: ${completedLessons}/${totalLessons}`;
-      }).join(' | ') || '-';
+            // 2. Calcular nota promedio de evaluaciones
+            if (!student.avgScore) {
+                let totalScore = 0;
+                let evalCount = 0;
+                
+                Object.values(modules).forEach(module => {
+                    Object.values(module.evaluations || {}).forEach(evaluation => {
+                        if (typeof evaluation.score === 'number') {
+                            totalScore += evaluation.score;
+                            evalCount++;
+                        }
+                    });
+                });
+                
+                student.avgScore = evalCount > 0 
+                    ? Math.round((totalScore / evalCount) * 10) / 10 
+                    : 0;
+            }
 
-      const tr=document.createElement('tr');
-      tr.innerHTML=`
-        <td>${s.fullName||s.username}</td>
-        <td><code>${s.username}</code></td>
-        <td>${s.progress.overallProgress}%</td>
-        <td>${Object.values(s.progress.modules||{}).filter(m=>m.completed).length||0}</td>
-        <td>${modulesInfo}</td>
-        <td>${new Date(s.progress.lastAccess).toLocaleString()}</td>
-        <td>${Math.round(s.totalTime/60)}</td>
-        <td>${s.avgScore}</td>
-        <td><span class="risk-badge risk-${risk}">${risk==='high'?'Alto':risk==='medium'?'Medio':'Bajo'}</span></td>`;
-      tbody.appendChild(tr);
-    });
+            // 3. Estimar tiempo total basado en lecciones completadas
+            if (!student.totalTime) {
+                let totalLessons = 0;
+                Object.values(modules).forEach(module => {
+                    totalLessons += Object.keys(module.evaluations || {}).length;
+                });
+                // Estimar 8 horas por lección
+                student.totalTime = totalLessons * 8 * 60; // en minutos
+            }
 
-    document.getElementById('totalStudents').textContent=total;
-    document.getElementById('avgProgress').textContent=Math.round(sumProgress/total)+'%';
-    document.getElementById('evalPassRate').textContent=Math.round((passed/total)*100)+'%';
-    document.getElementById('completionRate').textContent=Math.round((completed/total)*100)+'%';
-    document.getElementById('activeStudents').textContent=active7;
-    document.getElementById('studentsAtRisk').textContent=atRisk;
-    renderCharts(dist);
-  }
+            // 4. Inferir último acceso desde actividades
+            if (!student.progress.lastAccess) {
+                const studentActivities = (dashboardData.activities || [])
+                    .filter(a => a.username === student.username);
+                
+                if (studentActivities.length > 0) {
+                    student.progress.lastAccess = studentActivities[studentActivities.length - 1].timestamp;
+                } else {
+                    student.progress.lastAccess = new Date().toISOString();
+                }
+            }
 
-  function renderCharts(dist){
-    const ctxP=document.getElementById('progressChart').getContext('2d');
-    const ctxA=document.getElementById('activityChart').getContext('2d');
-    const labels=['0–25%','26–50%','51–75%','76–100%'];
-    const dataVals=[dist['0-25'],dist['26-50'],dist['51-75'],dist['76-100']];
-    new Chart(ctxP,{
-      type:'doughnut',
-      data:{labels:labels,datasets:[{data:dataVals,backgroundColor:['#dc2626','#f59e0b','#10b981','#065f46'],borderWidth:1,hoverOffset:8}]},
-      options:{plugins:{legend:{display:false},
-        tooltip:{callbacks:{label:(ctx)=>`${ctx.label}: ${ctx.parsed} estudiantes (${((ctx.parsed/(dataVals.reduce((a,b)=>a+b,0)||1))*100).toFixed(1)}%)`}}}}
-    });
-    const days={};for(let i=13;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days[d.toISOString().slice(0,10)]=0;}
-    (window.activities||[]).forEach(a=>{const k=new Date(a.timestamp).toISOString().slice(0,10);if(days[k]!==undefined)days[k]++;});
-    new Chart(ctxA,{type:'bar',data:{labels:Object.keys(days),datasets:[{label:'Usuarios activos',data:Object.values(days),backgroundColor:'#3b82f6'}]},
-      options:{scales:{y:{beginAtZero:true}},plugins:{legend:{display:false}}}});
-  }
+            // 5. Marcar evaluaciones como aprobadas/reprobadas
+            Object.values(modules).forEach(module => {
+                Object.values(module.evaluations || {}).forEach(evaluation => {
+                    if (typeof evaluation.passed === 'undefined') {
+                        if (typeof evaluation.score === 'number') {
+                            evaluation.passed = evaluation.score >= 60;
+                        } else if (Object.keys(evaluation).length >= 2) {
+                            evaluation.passed = true;
+                        } else {
+                            evaluation.passed = false;
+                        }
+                    }
+                });
+            });
 
-  init();
-})();
-</script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+            return student;
+        }
+
+        // ==========================================
+        // INICIALIZACIÓN
+        // ==========================================
+        
+        async function init() {
+            try {
+                console.log('🚀 Inicializando Dashboard DIADIFO...');
+                
+                // Esperar a que auth.js esté listo
+                await waitForAuthReady();
+                
+                // Proteger la página (solo instructores)
+                if (!protectPage('instructor')) {
+                    return;
+                }
+                
+                const user = getCurrentUser();
+                if (!user) {
+                    console.error('❌ No se pudo obtener el usuario actual');
+                    return;
+                }
+                
+                // Actualizar UI con nombre del instructor
+                document.getElementById('instructorName').textContent = user.fullName || user.username;
+                
+                // Event listeners
+                document.getElementById('logoutBtn').addEventListener('click', logout);
+                document.getElementById('refreshBtn').addEventListener('click', () => {
+                    showToast('Actualizando datos...', 'info');
+                    loadDashboardData();
+                });
+                
+                // Cargar datos del dashboard
+                await loadDashboardData();
+                
+                console.log('✅ Dashboard inicializado correctamente');
+            } catch (error) {
+                console.error('❌ Error en inicialización:', error);
+                showToast('Error al inicializar el dashboard', 'danger');
+            }
+        }
+
+        // ==========================================
+        // CARGAR DATOS DEL DASHBOARD
+        // ==========================================
+        
+        async function loadDashboardData() {
+            try {
+                console.log('📊 Cargando datos del dashboard...');
+
+                // Cargar estudiantes y evaluadores en paralelo
+                const [studentsResult, evaluatorsResult, activitiesResult] = await Promise.all([
+                    makeJSONPRequest('getAllStudents'),
+                    makeJSONPRequest('getAllEvaluators'),
+                    makeJSONPRequest('getActivities', { limit: 200 })
+                ]);
+
+                // Procesar estudiantes
+                if (studentsResult && studentsResult.success) {
+                    dashboardData.students = studentsResult.data.map(inferStudentData);
+                    console.log(`✅ ${dashboardData.students.length} estudiantes cargados`);
+                } else {
+                    console.warn('⚠️ No se pudieron cargar estudiantes');
+                    dashboardData.students = [];
+                }
+
+                // Procesar evaluadores
+                if (evaluatorsResult && evaluatorsResult.success) {
+                    dashboardData.evaluators = evaluatorsResult.data;
+                    console.log(`✅ ${dashboardData.evaluators.length} evaluadores cargados`);
+                } else {
+                    console.warn('⚠️ No se pudieron cargar evaluadores');
+                    dashboardData.evaluators = [];
+                }
+
+                // Procesar actividades
+                if (activitiesResult && activitiesResult.success) {
+                    dashboardData.activities = activitiesResult.data || [];
+                    console.log(`✅ ${dashboardData.activities.length} actividades cargadas`);
+                } else {
+                    dashboardData.activities = [];
+                }
+
+                // Cargar evaluaciones individuales
+                await loadEvaluations();
+
+                // Renderizar todo
+                renderDashboard();
+
+            } catch (error) {
+                console.error('❌ Error cargando datos:', error);
+                showToast('Error al cargar datos del dashboard', 'danger');
+            }
+        }
+
+        // ==========================================
+        // CARGAR EVALUACIONES
+        // ==========================================
+        
+        async function loadEvaluations() {
+            console.log('📝 Cargando evaluaciones...');
+            
+            dashboardData.evaluations = {};
+            
+            for (const student of dashboardData.students) {
+                const result = await makeJSONPRequest('getEvaluations', { 
+                    username: student.username 
+                });
+                
+                if (result && result.success && result.data) {
+                    dashboardData.evaluations[student.username] = result.data;
+                }
+            }
+            
+            console.log('✅ Evaluaciones cargadas');
+        }
+
+        // ==========================================
+        // VERIFICAR SI EVALUACIÓN ESTÁ APROBADA
+        // ==========================================
+        
+        function isEvaluationPassed(moduleEvals, lessonNum) {
+            if (!moduleEvals || !moduleEvals[lessonNum]) {
+                return false;
+            }
+            
+            const evaluation = moduleEvals[lessonNum];
+            
+            // Si tiene el campo passed, usarlo
+            if (typeof evaluation.passed === 'boolean') {
+                return evaluation.passed;
+            }
+            
+            // Si tiene score, verificar si es >= 60
+            if (typeof evaluation.score === 'number') {
+                return evaluation.score >= 60;
+            }
+            
+            // Si tiene al menos 2 campos (más que solo timestamp), considerar aprobada
+            return Object.keys(evaluation).length >= 2;
+        }
+
+        // ==========================================
+        // RENDERIZAR DASHBOARD COMPLETO
+        // ==========================================
+        
+        function renderDashboard() {
+            console.log('🎨 Renderizando dashboard...');
+            
+            updateMetrics();
+            updateStudentsTable();
+            updateEvaluatorsTable();
+            updateEvaluationsTable();
+            updateActivityLog();
+            renderCharts();
+            
+            showToast('Dashboard actualizado exitosamente', 'success');
+        }
+
+        // ==========================================
+        // ACTUALIZAR MÉTRICAS PRINCIPALES
+        // ==========================================
+        
+        function updateMetrics() {
+            const students = dashboardData.students;
+            const evaluators = dashboardData.evaluators;
+            
+            if (students.length === 0) {
+                document.getElementById('totalStudents').textContent = '0';
+                document.getElementById('avgProgress').textContent = '0%';
+                document.getElementById('completionRate').textContent = '0%';
+                document.getElementById('avgScore').textContent = '0';
+                document.getElementById('activeStudents').textContent = '0';
+                document.getElementById('studentsAtRisk').textContent = '0';
+                document.getElementById('totalEvaluations').textContent = '0';
+                return;
+            }
+
+            // Total de estudiantes y evaluadores
+            document.getElementById('totalStudents').textContent = students.length;
+            document.getElementById('totalEvaluators').textContent = evaluators.length;
+
+            // Progreso promedio
+            const totalProgress = students.reduce((sum, s) => sum + (s.progress.overallProgress || 0), 0);
+            const avgProgress = Math.round(totalProgress / students.length);
+            document.getElementById('avgProgress').textContent = avgProgress + '%';
+
+            // Tasa de finalización (estudiantes con 100% de progreso)
+            const completedStudents = students.filter(s => s.progress.overallProgress >= 100).length;
+            const completionRate = Math.round((completedStudents / students.length) * 100);
+            document.getElementById('completionRate').textContent = completionRate + '%';
+
+            // Nota promedio
+            const totalScore = students.reduce((sum, s) => sum + (s.avgScore || 0), 0);
+            const avgScore = students.length > 0 ? (totalScore / students.length).toFixed(1) : 0;
+            document.getElementById('avgScore').textContent = avgScore;
+
+            // Estudiantes activos en los últimos 7 días
+            const now = new Date();
+            const sevenDaysAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
+            const activeStudents = students.filter(s => {
+                const lastAccess = new Date(s.progress.lastAccess);
+                return lastAccess > sevenDaysAgo;
+            }).length;
+            document.getElementById('activeStudents').textContent = activeStudents;
+
+            // Estudiantes en riesgo (< 25% progreso)
+            const atRisk = students.filter(s => s.progress.overallProgress < 25).length;
+            document.getElementById('studentsAtRisk').textContent = atRisk;
+
+            // Total de evaluaciones aprobadas
+            let totalEvaluations = 0;
+            students.forEach(student => {
+                const evals = dashboardData.evaluations[student.username] || {};
+                
+                // Módulo 1: 3 lecciones
+                for (let l = 1; l <= 3; l++) {
+                    if (isEvaluationPassed(evals.module1, l)) totalEvaluations++;
+                }
+                // Módulo 2: 4 lecciones
+                for (let l = 1; l <= 4; l++) {
+                    if (isEvaluationPassed(evals.module2, l)) totalEvaluations++;
+                }
+                // Módulo 3: 3 lecciones
+                for (let l = 1; l <= 3; l++) {
+                    if (isEvaluationPassed(evals.module3, l)) totalEvaluations++;
+                }
+            });
+            document.getElementById('totalEvaluations').textContent = totalEvaluations;
+        }
+
+        // ==========================================
+        // ACTUALIZAR TABLA DE ESTUDIANTES
+        // ==========================================
+        
+        function updateStudentsTable() {
+            const tbody = document.getElementById('studentsTableBody');
+            tbody.innerHTML = '';
+
+            if (dashboardData.students.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center text-muted py-3">
+                            No hay estudiantes registrados
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            dashboardData.students.forEach(student => {
+                const progress = student.progress.overallProgress || 0;
+                const modules = student.progress.modules || {};
+                const completedModules = Object.values(modules).filter(m => m.completed).length;
+                
+                // Lecciones completadas por módulo
+                const m1Lessons = modules.module1?.completedLessons?.length || 0;
+                const m2Lessons = modules.module2?.completedLessons?.length || 0;
+                const m3Lessons = modules.module3?.completedLessons?.length || 0;
+                
+                const lastAccess = new Date(student.progress.lastAccess);
+                const lastAccessText = lastAccess.toLocaleDateString() + ' ' + lastAccess.toLocaleTimeString();
+                
+                // Determinar nivel de riesgo
+                const risk = progress < 25 ? 'high' : (progress < 50 ? 'medium' : 'low');
+                const riskText = risk === 'high' ? 'Alto' : (risk === 'medium' ? 'Medio' : 'Bajo');
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${student.fullName || student.username}</strong></td>
+                    <td><code class="small">${student.username}</code></td>
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="progress-bar-small">
+                                <div class="progress-fill-small" style="width: ${progress}%"></div>
+                            </div>
+                            <span class="small fw-semibold">${progress}%</span>
+                        </div>
+                    </td>
+                    <td class="text-center"><strong>${completedModules}</strong>/3</td>
+                    <td class="text-center small">
+                        M1: ${m1Lessons}/3 | M2: ${m2Lessons}/4 | M3: ${m3Lessons}/3
+                    </td>
+                    <td class="small">${lastAccessText}</td>
+                    <td class="text-center"><strong>${student.avgScore}</strong></td>
+                    <td><span class="risk-badge risk-${risk}">${riskText}</span></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // ==========================================
+        // ACTUALIZAR TABLA DE EVALUADORES
+        // ==========================================
+        
+        function updateEvaluatorsTable() {
+            const tbody = document.getElementById('evaluatorsTableBody');
+            tbody.innerHTML = '';
+
+            if (dashboardData.evaluators.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-3">
+                            No hay evaluadores registrados
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            dashboardData.evaluators.forEach(evaluator => {
+                const progress = evaluator.progress || {};
+                const overallProgress = progress.overallProgress || 0;
+                const completedModules = Object.values(progress.modules || {})
+                    .filter(m => m.completed).length;
+                
+                let lastAccessText = 'Nunca';
+                if (progress.lastAccess) {
+                    const lastAccess = new Date(progress.lastAccess);
+                    lastAccessText = lastAccess.toLocaleDateString() + ' ' + lastAccess.toLocaleTimeString();
+                }
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <strong>${evaluator.fullName}</strong> 
+                        <span class="badge bg-info ms-2">Evaluador</span>
+                    </td>
+                    <td><code class="small">${evaluator.username}</code></td>
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="progress-bar-small">
+                                <div class="progress-fill-small" style="width: ${overallProgress}%"></div>
+                            </div>
+                            <span class="small fw-semibold">${overallProgress}%</span>
+                        </div>
+                    </td>
+                    <td class="text-center"><strong>${completedModules}</strong>/3</td>
+                    <td class="small">${lastAccessText}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // ==========================================
+        // ACTUALIZAR TABLA DE EVALUACIONES
+        // ==========================================
+        
+        function updateEvaluationsTable() {
+            const tbody = document.getElementById('evaluationsTableBody');
+            tbody.innerHTML = '';
+
+            if (dashboardData.students.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="12" class="text-center text-muted py-3">
+                            No hay datos de evaluaciones
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            dashboardData.students.forEach(student => {
+                const evals = dashboardData.evaluations[student.username] || {};
+                
+                const checks = [];
+                
+                // Módulo 1 (3 lecciones)
+                for (let l = 1; l <= 3; l++) {
+                    checks.push(isEvaluationPassed(evals.module1, l));
+                }
+                
+                // Módulo 2 (4 lecciones)
+                for (let l = 1; l <= 4; l++) {
+                    checks.push(isEvaluationPassed(evals.module2, l));
+                }
+                
+                // Módulo 3 (3 lecciones)
+                for (let l = 1; l <= 3; l++) {
+                    checks.push(isEvaluationPassed(evals.module3, l));
+                }
+                
+                const total = checks.filter(Boolean).length;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${student.fullName}</strong></td>
+                    ${checks.map(passed => `
+                        <td class="text-center">
+                            <i class="bi bi-${passed ? 'check-circle-fill text-success' : 'circle text-muted'}"></i>
+                        </td>
+                    `).join('')}
+                    <td class="text-center"><strong>${total}</strong>/10</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // ==========================================
+        // ACTUALIZAR LOG DE ACTIVIDADES
+        // ==========================================
+        
+        function updateActivityLog() {
+            const log = document.getElementById('activityLog');
+            
+            if (dashboardData.activities.length === 0) {
+                log.innerHTML = `
+                    <div class="text-center py-4 text-muted">
+                        No hay actividades registradas
+                    </div>
+                `;
+                return;
+            }
+
+            log.innerHTML = dashboardData.activities.slice(0, 30).map(activity => {
+                const time = new Date(activity.timestamp).toLocaleString();
+                const actionText = getActivityDescription(activity);
+                
+                return `
+                    <div class="activity-item">
+                        <div class="flex-grow-1">
+                            <div class="activity-user">${activity.username}</div>
+                            <div class="activity-action">${actionText}</div>
+                        </div>
+                        <div class="activity-time">${time}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ==========================================
+        // OBTENER DESCRIPCIÓN DE ACTIVIDAD
+        // ==========================================
+        
+        function getActivityDescription(activity) {
+            const actions = {
+                'login': 'Inició sesión',
+                'logout': 'Cerró sesión',
+                'module_access': `Accedió al módulo ${activity.moduleId}`,
+                'lesson_view': `Vio lección ${activity.lessonId} (Módulo ${activity.moduleId})`,
+                'lesson_completed': `Completó lección ${activity.lessonId} (Módulo ${activity.moduleId})`,
+                'progress_update': `Actualizó progreso (Módulo ${activity.moduleId})`,
+                'module_completed': `Completó módulo ${activity.moduleId}`,
+                'dashboard_access': 'Accedió al dashboard',
+                'evaluation_submitted': `Envió evaluación (Lección ${activity.lessonId})`,
+                'test': 'Realizó prueba de conexión'
+            };
+            
+            return actions[activity.action] || activity.action;
+        }
+
+        // ==========================================
+        // RENDERIZAR GRÁFICOS CON CHART.JS
+        // ==========================================
+        
+        function renderCharts() {
+            renderProgressChart();
+            renderActivityChart();
+        }
+
+        function renderProgressChart() {
+            const canvas = document.getElementById('progressChart');
+            const ctx = canvas.getContext('2d');
+            
+            // Destruir gráfico anterior si existe
+            if (progressChart) {
+                progressChart.destroy();
+            }
+
+            // Calcular distribución de progreso
+            const distribution = { '0-25': 0, '26-50': 0, '51-75': 0, '76-100': 0 };
+            
+            dashboardData.students.forEach(student => {
+                const progress = student.progress.overallProgress || 0;
+                if (progress <= 25) distribution['0-25']++;
+                else if (progress <= 50) distribution['26-50']++;
+                else if (progress <= 75) distribution['51-75']++;
+                else distribution['76-100']++;
+            });
+
+            const labels = ['0-25%', '26-50%', '51-75%', '76-100%'];
+            const data = [
+                distribution['0-25'],
+                distribution['26-50'],
+                distribution['51-75'],
+                distribution['76-100']
+            ];
+            const total = data.reduce((a, b) => a + b, 0) || 1;
+
+            progressChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: [
+                            '#dc2626', // Rojo (riesgo)
+                            '#f59e0b', // Amarillo (medio)
+                            '#10b981', // Verde (avanzando)
+                            '#065f46'  // Verde oscuro (completado)
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff',
+                        hoverOffset: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.parsed;
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return `${label}: ${value} estudiantes (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderActivityChart() {
+            const canvas = document.getElementById('activityChart');
+            const ctx = canvas.getContext('2d');
+            
+            // Destruir gráfico anterior si existe
+            if (activityChart) {
+                activityChart.destroy();
+            }
+
+            // Crear objeto con últimos 14 días
+            const days = {};
+            for (let i = 13; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                const dateKey = date.toISOString().slice(0, 10);
+                days[dateKey] = 0;
+            }
+
+            // Contar actividades por día
+            dashboardData.activities.forEach(activity => {
+                const dateKey = new Date(activity.timestamp).toISOString().slice(0, 10);
+                if (days[dateKey] !== undefined) {
+                    days[dateKey]++;
+                }
+            });
+
+            activityChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(days).map(d => {
+                        const date = new Date(d);
+                        return `${date.getDate()}/${date.getMonth() + 1}`;
+                    }),
+                    datasets: [{
+                        label: 'Actividades',
+                        data: Object.values(days),
+                        backgroundColor: '#3b82f6',
+                        borderColor: '#2563eb',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.parsed.y} actividades`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ==========================================
+        // UTILIDADES UI
+        // ==========================================
+        
+        function showToast(message, type = 'info') {
+            const colors = {
+                success: '#10b981',
+                warning: '#f59e0b',
+                info: '#3b82f6',
+                danger: '#ef4444'
+            };
+
+            const icons = {
+                success: 'check-circle',
+                warning: 'exclamation-triangle',
+                info: 'info-circle',
+                danger: 'x-circle'
+            };
+
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${colors[type]};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                z-index: 10000;
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                animation: slideIn 0.3s ease;
+                font-weight: 500;
+            `;
+            
+            toast.innerHTML = `
+                <i class="bi bi-${icons[type]}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // ==========================================
+        // ANIMACIONES CSS
+        // ==========================================
+        
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    opacity: 0;
+                    transform: translateX(100px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+
+            @keyframes slideOut {
+                from {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+                to {
+                    opacity: 0;
+                    transform: translateX(100px);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // ==========================================
+        // INICIAR APLICACIÓN
+        // ==========================================
+        
+        init();
+    })();
+    </script>
 </body>
 </html>
