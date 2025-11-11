@@ -658,18 +658,29 @@
         // ==========================================
         
         function inferStudentData(student) {
+            console.log(`🔍 Infiriendo datos para: ${student.username}`, student);
+            
             // Asegurar que exista la estructura de progreso
             student.progress = student.progress || {};
             student.progress.modules = student.progress.modules || {};
             
             const modules = student.progress.modules;
+            
+            // Normalizar claves de módulos (pueden venir como '1', '2', '3' o como 1, 2, 3)
+            const normalizedModules = {};
+            Object.keys(modules).forEach(key => {
+                const numKey = parseInt(key);
+                normalizedModules[numKey] = modules[key];
+            });
+            student.progress.modules = normalizedModules;
 
             // 1. Calcular progreso general si no existe
-            if (!student.progress.overallProgress) {
-                const moduleProgresses = Object.values(modules).map(m => m.progress || 0);
+            if (!student.progress.overallProgress && typeof student.progress.overallProgress !== 'number') {
+                const moduleProgresses = Object.values(normalizedModules).map(m => m.progress || 0);
                 student.progress.overallProgress = moduleProgresses.length 
                     ? Math.round(moduleProgresses.reduce((a, b) => a + b, 0) / moduleProgresses.length)
                     : 0;
+                console.log(`  ↳ Progreso calculado: ${student.progress.overallProgress}%`);
             }
 
             // 2. Calcular nota promedio de evaluaciones
@@ -677,7 +688,7 @@
                 let totalScore = 0;
                 let evalCount = 0;
                 
-                Object.values(modules).forEach(module => {
+                Object.values(normalizedModules).forEach(module => {
                     Object.values(module.evaluations || {}).forEach(evaluation => {
                         if (typeof evaluation.score === 'number') {
                             totalScore += evaluation.score;
@@ -689,32 +700,40 @@
                 student.avgScore = evalCount > 0 
                     ? Math.round((totalScore / evalCount) * 10) / 10 
                     : 0;
+                console.log(`  ↳ Nota promedio: ${student.avgScore}`);
             }
 
             // 3. Estimar tiempo total basado en lecciones completadas
             if (!student.totalTime) {
                 let totalLessons = 0;
-                Object.values(modules).forEach(module => {
+                Object.values(normalizedModules).forEach(module => {
                     totalLessons += Object.keys(module.evaluations || {}).length;
                 });
                 // Estimar 8 horas por lección
                 student.totalTime = totalLessons * 8 * 60; // en minutos
             }
 
-            // 4. Inferir último acceso desde actividades
+            // 4. Inferir último acceso desde actividades o progress
             if (!student.progress.lastAccess) {
-                const studentActivities = (dashboardData.activities || [])
-                    .filter(a => a.username === student.username);
-                
-                if (studentActivities.length > 0) {
-                    student.progress.lastAccess = studentActivities[studentActivities.length - 1].timestamp;
+                // Intentar desde lastActivity en progress
+                if (student.progress.lastActivity) {
+                    student.progress.lastAccess = student.progress.lastActivity;
                 } else {
-                    student.progress.lastAccess = new Date().toISOString();
+                    // Si hay actividades cargadas, buscar la última del estudiante
+                    const studentActivities = (dashboardData.activities || [])
+                        .filter(a => a.username === student.username);
+                    
+                    if (studentActivities.length > 0) {
+                        student.progress.lastAccess = studentActivities[studentActivities.length - 1].timestamp;
+                    } else {
+                        // Usar la fecha actual como último recurso
+                        student.progress.lastAccess = new Date().toISOString();
+                    }
                 }
             }
 
             // 5. Marcar evaluaciones como aprobadas/reprobadas
-            Object.values(modules).forEach(module => {
+            Object.values(normalizedModules).forEach(module => {
                 Object.values(module.evaluations || {}).forEach(evaluation => {
                     if (typeof evaluation.passed === 'undefined') {
                         if (typeof evaluation.score === 'number') {
@@ -728,6 +747,7 @@
                 });
             });
 
+            console.log(`  ✅ Datos inferidos completados para ${student.username}`);
             return student;
         }
 
@@ -781,32 +801,32 @@
             try {
                 console.log('📊 Cargando datos del dashboard...');
 
-                // Cargar estudiantes y evaluadores en paralelo
-                const [studentsResult, evaluatorsResult, activitiesResult] = await Promise.all([
+                // Cargar todos los usuarios (estudiantes + evaluadores vienen juntos)
+                const [usersResult, activitiesResult] = await Promise.all([
                     makeJSONPRequest('getAllStudents'),
-                    makeJSONPRequest('getAllEvaluators'),
                     makeJSONPRequest('getActivities', { limit: 200 })
                 ]);
 
-                // Procesar estudiantes
-                if (studentsResult && studentsResult.success) {
-                    dashboardData.students = studentsResult.data.map(inferStudentData);
+                // Procesar usuarios y separarlos por rol
+                if (usersResult && usersResult.success) {
+                    const allUsers = usersResult.data || [];
+                    
+                    // Separar por rol (sin inferir todavía)
+                    dashboardData.students = allUsers
+                        .filter(user => user.role === 'estudiante');
+                    
+                    dashboardData.evaluators = allUsers
+                        .filter(user => user.role === 'evaluador');
+                    
                     console.log(`✅ ${dashboardData.students.length} estudiantes cargados`);
-                } else {
-                    console.warn('⚠️ No se pudieron cargar estudiantes');
-                    dashboardData.students = [];
-                }
-
-                // Procesar evaluadores
-                if (evaluatorsResult && evaluatorsResult.success) {
-                    dashboardData.evaluators = evaluatorsResult.data;
                     console.log(`✅ ${dashboardData.evaluators.length} evaluadores cargados`);
                 } else {
-                    console.warn('⚠️ No se pudieron cargar evaluadores');
+                    console.warn('⚠️ No se pudieron cargar usuarios');
+                    dashboardData.students = [];
                     dashboardData.evaluators = [];
                 }
 
-                // Procesar actividades
+                // Procesar actividades ANTES de inferir datos
                 if (activitiesResult && activitiesResult.success) {
                     dashboardData.activities = activitiesResult.data || [];
                     console.log(`✅ ${dashboardData.activities.length} actividades cargadas`);
@@ -814,8 +834,11 @@
                     dashboardData.activities = [];
                 }
 
-                // Cargar evaluaciones individuales
-                await loadEvaluations();
+                // AHORA SÍ inferir datos de estudiantes (ya tenemos actividades)
+                dashboardData.students = dashboardData.students.map(inferStudentData);
+
+                // Procesar evaluaciones desde student.progress.modules
+                processEvaluations();
 
                 // Renderizar todo
                 renderDashboard();
@@ -827,25 +850,56 @@
         }
 
         // ==========================================
-        // CARGAR EVALUACIONES
+        // PROCESAR EVALUACIONES DESDE PROGRESS
         // ==========================================
         
-        async function loadEvaluations() {
-            console.log('📝 Cargando evaluaciones...');
+        function processEvaluations() {
+            console.log('📝 Procesando evaluaciones desde progress...');
             
             dashboardData.evaluations = {};
             
-            for (const student of dashboardData.students) {
-                const result = await makeJSONPRequest('getEvaluations', { 
-                    username: student.username 
-                });
+            dashboardData.students.forEach(student => {
+                const evals = {
+                    module1: {},
+                    module2: {},
+                    module3: {}
+                };
                 
-                if (result && result.success && result.data) {
-                    dashboardData.evaluations[student.username] = result.data;
+                // Extraer evaluaciones desde student.progress.modules
+                if (student.progress && student.progress.modules) {
+                    const modules = student.progress.modules;
+                    
+                    // Intentar con claves numéricas y string
+                    if (modules[1] || modules['1']) {
+                        const mod1 = modules[1] || modules['1'];
+                        if (mod1 && mod1.evaluations) {
+                            evals.module1 = mod1.evaluations;
+                        }
+                    }
+                    if (modules[2] || modules['2']) {
+                        const mod2 = modules[2] || modules['2'];
+                        if (mod2 && mod2.evaluations) {
+                            evals.module2 = mod2.evaluations;
+                        }
+                    }
+                    if (modules[3] || modules['3']) {
+                        const mod3 = modules[3] || modules['3'];
+                        if (mod3 && mod3.evaluations) {
+                            evals.module3 = mod3.evaluations;
+                        }
+                    }
                 }
-            }
+                
+                dashboardData.evaluations[student.username] = evals;
+            });
             
-            console.log('✅ Evaluaciones cargadas');
+            console.log(`✅ Evaluaciones procesadas para ${Object.keys(dashboardData.evaluations).length} estudiantes`);
+            
+            // Log de ejemplo
+            if (Object.keys(dashboardData.evaluations).length > 0) {
+                const firstStudent = Object.keys(dashboardData.evaluations)[0];
+                console.log(`  📋 Ejemplo (${firstStudent}):`, dashboardData.evaluations[firstStudent]);
+            }
         }
 
         // ==========================================
@@ -878,7 +932,11 @@
         // ==========================================
         
         function renderDashboard() {
-            console.log('🎨 Renderizando dashboard...');
+            console.log('🎨 Renderizando dashboard completo...');
+            console.log(`  - ${dashboardData.students.length} estudiantes`);
+            console.log(`  - ${dashboardData.evaluators.length} evaluadores`);
+            console.log(`  - ${dashboardData.activities.length} actividades`);
+            console.log(`  - ${Object.keys(dashboardData.evaluations).length} sets de evaluaciones`);
             
             updateMetrics();
             updateStudentsTable();
@@ -887,6 +945,7 @@
             updateActivityLog();
             renderCharts();
             
+            console.log('✅ Dashboard renderizado exitosamente');
             showToast('Dashboard actualizado exitosamente', 'success');
         }
 
@@ -898,35 +957,40 @@
             const students = dashboardData.students;
             const evaluators = dashboardData.evaluators;
             
+            console.log(`📈 Actualizando métricas: ${students.length} estudiantes, ${evaluators.length} evaluadores`);
+            
+            // Total de estudiantes y evaluadores
+            document.getElementById('totalStudents').textContent = students.length;
+            document.getElementById('totalEvaluators').textContent = evaluators.length;
+            
             if (students.length === 0) {
-                document.getElementById('totalStudents').textContent = '0';
                 document.getElementById('avgProgress').textContent = '0%';
                 document.getElementById('completionRate').textContent = '0%';
                 document.getElementById('avgScore').textContent = '0';
                 document.getElementById('activeStudents').textContent = '0';
                 document.getElementById('studentsAtRisk').textContent = '0';
                 document.getElementById('totalEvaluations').textContent = '0';
+                console.log('⚠️ No hay estudiantes, métricas en 0');
                 return;
             }
-
-            // Total de estudiantes y evaluadores
-            document.getElementById('totalStudents').textContent = students.length;
-            document.getElementById('totalEvaluators').textContent = evaluators.length;
 
             // Progreso promedio
             const totalProgress = students.reduce((sum, s) => sum + (s.progress.overallProgress || 0), 0);
             const avgProgress = Math.round(totalProgress / students.length);
             document.getElementById('avgProgress').textContent = avgProgress + '%';
+            console.log(`📊 Progreso promedio: ${avgProgress}%`);
 
             // Tasa de finalización (estudiantes con 100% de progreso)
             const completedStudents = students.filter(s => s.progress.overallProgress >= 100).length;
             const completionRate = Math.round((completedStudents / students.length) * 100);
             document.getElementById('completionRate').textContent = completionRate + '%';
+            console.log(`✅ Tasa finalización: ${completionRate}% (${completedStudents}/${students.length})`);
 
             // Nota promedio
             const totalScore = students.reduce((sum, s) => sum + (s.avgScore || 0), 0);
             const avgScore = students.length > 0 ? (totalScore / students.length).toFixed(1) : 0;
             document.getElementById('avgScore').textContent = avgScore;
+            console.log(`📝 Nota promedio: ${avgScore}`);
 
             // Estudiantes activos en los últimos 7 días
             const now = new Date();
@@ -936,10 +1000,12 @@
                 return lastAccess > sevenDaysAgo;
             }).length;
             document.getElementById('activeStudents').textContent = activeStudents;
+            console.log(`🟢 Activos 7 días: ${activeStudents}`);
 
             // Estudiantes en riesgo (< 25% progreso)
             const atRisk = students.filter(s => s.progress.overallProgress < 25).length;
             document.getElementById('studentsAtRisk').textContent = atRisk;
+            console.log(`🔴 En riesgo: ${atRisk}`);
 
             // Total de evaluaciones aprobadas
             let totalEvaluations = 0;
@@ -960,6 +1026,7 @@
                 }
             });
             document.getElementById('totalEvaluations').textContent = totalEvaluations;
+            console.log(`📋 Total evaluaciones aprobadas: ${totalEvaluations}`);
         }
 
         // ==========================================
