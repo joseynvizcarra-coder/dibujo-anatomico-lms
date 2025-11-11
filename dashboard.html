@@ -485,7 +485,13 @@
             const t = document.createElement('div'); t.textContent = msg;
             t.style.cssText = `position:fixed;top:20px;right:20px;background:${colors[type]};color:white;padding:.8rem 1rem;border-radius:8px;z-index:10000`;
             document.body.appendChild(t); setTimeout(()=>t.remove(),2500);
+            
+                async function refreshDashboard() {
+            showToast('Actualizando dashboard...', 'info');
+            await loadDashboardData();
+            showToast('Dashboard actualizado', 'success');
         }
+}
 
         // init
         init();
