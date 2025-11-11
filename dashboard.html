@@ -420,10 +420,10 @@
                 <div class="stat-label">Tasa Finalización</div>
                 <div class="stat-sublabel">Módulos completos</div>
             </div>
-            <div class="stat-card warning">
-                <span class="stat-number" id="avgScore">-</span>
-                <div class="stat-label">Nota Promedio</div>
-                <div class="stat-sublabel">Evaluaciones</div>
+            <div class="stat-card">
+                <span class="stat-number" id="totalStudyTime">-</span>
+                <div class="stat-label">Horas de Estudio</div>
+                <div class="stat-sublabel">Total acumulado</div>
             </div>
             <div class="stat-card">
                 <span class="stat-number" id="activeStudents">-</span>
@@ -522,13 +522,12 @@
                                     <th>Módulos</th>
                                     <th>Lecciones por Módulo</th>
                                     <th>Último Acceso</th>
-                                    <th>Nota</th>
                                     <th>Riesgo</th>
                                 </tr>
                             </thead>
                             <tbody id="studentsTableBody">
                                 <tr>
-                                    <td colspan="8" class="text-center py-4">
+                                    <td colspan="7" class="text-center py-4">
                                         <div class="loading-spinner"></div>
                                         <p class="text-muted-custom">Cargando datos...</p>
                                     </td>
@@ -683,37 +682,26 @@
                 console.log(`  ↳ Progreso calculado: ${student.progress.overallProgress}%`);
             }
 
-            // 2. Calcular nota promedio de evaluaciones
-            if (!student.avgScore) {
-                let totalScore = 0;
-                let evalCount = 0;
-                
+            // 2. Estimar tiempo total basado en lecciones completadas y timeSpent
+            if (!student.totalTime) {
+                let totalTime = 0;
                 Object.values(normalizedModules).forEach(module => {
-                    Object.values(module.evaluations || {}).forEach(evaluation => {
-                        if (typeof evaluation.score === 'number') {
-                            totalScore += evaluation.score;
-                            evalCount++;
+                    totalTime += (module.timeSpent || 0);
+                });
+                // Si no hay timeSpent, estimar basado en lecciones (8 min por lección)
+                if (totalTime === 0) {
+                    let totalLessons = 0;
+                    Object.values(normalizedModules).forEach(module => {
+                        if (Array.isArray(module.completedLessons)) {
+                            totalLessons += module.completedLessons.length;
                         }
                     });
-                });
-                
-                student.avgScore = evalCount > 0 
-                    ? Math.round((totalScore / evalCount) * 10) / 10 
-                    : 0;
-                console.log(`  ↳ Nota promedio: ${student.avgScore}`);
+                    totalTime = totalLessons * 8; // 8 minutos por lección
+                }
+                student.totalTime = totalTime;
             }
 
-            // 3. Estimar tiempo total basado en lecciones completadas
-            if (!student.totalTime) {
-                let totalLessons = 0;
-                Object.values(normalizedModules).forEach(module => {
-                    totalLessons += Object.keys(module.evaluations || {}).length;
-                });
-                // Estimar 8 horas por lección
-                student.totalTime = totalLessons * 8 * 60; // en minutos
-            }
-
-            // 4. Inferir último acceso desde actividades o progress
+            // 3. Inferir último acceso desde actividades o progress
             if (!student.progress.lastAccess) {
                 // Intentar desde lastActivity en progress
                 if (student.progress.lastActivity) {
@@ -732,7 +720,7 @@
                 }
             }
 
-            // 5. Marcar evaluaciones como aprobadas/reprobadas
+            // 4. Marcar evaluaciones como aprobadas/reprobadas
             Object.values(normalizedModules).forEach(module => {
                 Object.values(module.evaluations || {}).forEach(evaluation => {
                     if (typeof evaluation.passed === 'undefined') {
@@ -966,7 +954,7 @@
             if (students.length === 0) {
                 document.getElementById('avgProgress').textContent = '0%';
                 document.getElementById('completionRate').textContent = '0%';
-                document.getElementById('avgScore').textContent = '0';
+                document.getElementById('totalStudyTime').textContent = '0';
                 document.getElementById('activeStudents').textContent = '0';
                 document.getElementById('studentsAtRisk').textContent = '0';
                 document.getElementById('totalEvaluations').textContent = '0';
@@ -986,11 +974,17 @@
             document.getElementById('completionRate').textContent = completionRate + '%';
             console.log(`✅ Tasa finalización: ${completionRate}% (${completedStudents}/${students.length})`);
 
-            // Nota promedio
-            const totalScore = students.reduce((sum, s) => sum + (s.avgScore || 0), 0);
-            const avgScore = students.length > 0 ? (totalScore / students.length).toFixed(1) : 0;
-            document.getElementById('avgScore').textContent = avgScore;
-            console.log(`📝 Nota promedio: ${avgScore}`);
+            // Tiempo total de estudio (en horas)
+            const totalMinutes = students.reduce((sum, s) => {
+                const modules = s.progress.modules || {};
+                const moduleTime = Object.values(modules).reduce((modSum, mod) => {
+                    return modSum + (mod.timeSpent || 0);
+                }, 0);
+                return sum + moduleTime;
+            }, 0);
+            const totalHours = Math.round(totalMinutes / 60);
+            document.getElementById('totalStudyTime').textContent = totalHours;
+            console.log(`⏱️ Tiempo total estudio: ${totalHours} horas (${totalMinutes} minutos)`);
 
             // Estudiantes activos en los últimos 7 días
             const now = new Date();
@@ -1040,7 +1034,7 @@
             if (dashboardData.students.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="8" class="text-center text-muted py-3">
+                        <td colspan="7" class="text-center text-muted py-3">
                             No hay estudiantes registrados
                         </td>
                     </tr>
@@ -1053,10 +1047,20 @@
                 const modules = student.progress.modules || {};
                 const completedModules = Object.values(modules).filter(m => m.completed).length;
                 
-                // Lecciones completadas por módulo
-                const m1Lessons = modules.module1?.completedLessons?.length || 0;
-                const m2Lessons = modules.module2?.completedLessons?.length || 0;
-                const m3Lessons = modules.module3?.completedLessons?.length || 0;
+                // Lecciones completadas por módulo (usando claves normalizadas)
+                const mod1 = modules[1] || modules['1'] || {};
+                const mod2 = modules[2] || modules['2'] || {};
+                const mod3 = modules[3] || modules['3'] || {};
+                
+                const m1Lessons = Array.isArray(mod1.completedLessons) ? mod1.completedLessons.length : 0;
+                const m2Lessons = Array.isArray(mod2.completedLessons) ? mod2.completedLessons.length : 0;
+                const m3Lessons = Array.isArray(mod3.completedLessons) ? mod3.completedLessons.length : 0;
+                
+                // Debug de lecciones
+                if (m1Lessons === 0 && m2Lessons === 0 && m3Lessons === 0 && progress > 0) {
+                    console.log(`⚠️ ${student.username}: tiene ${progress}% progreso pero 0 lecciones registradas`);
+                    console.log('  Módulos:', { mod1, mod2, mod3 });
+                }
                 
                 const lastAccess = new Date(student.progress.lastAccess);
                 const lastAccessText = lastAccess.toLocaleDateString() + ' ' + lastAccess.toLocaleTimeString();
@@ -1082,7 +1086,6 @@
                         M1: ${m1Lessons}/3 | M2: ${m2Lessons}/4 | M3: ${m3Lessons}/3
                     </td>
                     <td class="small">${lastAccessText}</td>
-                    <td class="text-center"><strong>${student.avgScore}</strong></td>
                     <td><span class="risk-badge risk-${risk}">${riskText}</span></td>
                 `;
                 tbody.appendChild(row);
