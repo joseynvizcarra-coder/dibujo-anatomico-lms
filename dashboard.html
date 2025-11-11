@@ -230,11 +230,6 @@
         .risk-medium { background: #fef3c7; color: #d97706; }
         .risk-low { background: #d1fae5; color: #059669; }
 
-        .chart-container {
-            height: 300px;
-            position: relative;
-        }
-
         .metric-row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -288,6 +283,7 @@
     </style>
 </head>
 <body>
+    <!-- ⚠️ IMPORTANTE: Este script debe cargarse ANTES que cualquier otro código -->
     <script src="auth.js"></script>
 
     <header class="header-uah">
@@ -413,6 +409,92 @@
                             </div>
                         </div>
                     </div>
+                `;
+            }).join('');
+        }
+
+        function getActivityDescription(activity) {
+            const actions = {
+                'login': 'Inició sesión',
+                'module_access': `Accedió al módulo ${activity.moduleId}`,
+                'lesson_view': `Vio lección ${activity.lessonId} (Módulo ${activity.moduleId})`,
+                'lesson_completed': `Completó lección ${activity.lessonId} (Módulo ${activity.moduleId})`,
+                'evaluation_submitted': `Envió evaluación (Lección ${activity.lessonId})`,
+                'module_completed': `Completó módulo ${activity.moduleId}`
+            };
+            return actions[activity.action] || activity.action;
+        }
+
+        // ✅ Refrescar dashboard
+        async function refreshDashboard() {
+            await loadDashboardData();
+            showToast('Dashboard actualizado', 'success');
+        }
+
+        // ✅ UI utilities
+        function showError(message) {
+            console.error('❌', message);
+            alert(message);
+        }
+
+        function showToast(message, type = 'info') {
+            const colors = {
+                success: '#10b981',
+                warning: '#f59e0b',
+                info: '#3b82f6',
+                danger: '#ef4444'
+            };
+
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${colors[type]};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+                font-weight: 500;
+            `;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+
+    <style>
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+        }
+    </style>
+</body>
+</html>
                 </div>
             </div>
         </div>
@@ -640,6 +722,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // ✅ Variables globales
         const TOTAL_MODULES = 3;
         
         let dashboardData = {
@@ -649,9 +732,16 @@
             evaluations: {}
         };
 
-        // Inicializar dashboard
+        // ✅ Inicializar dashboard
         document.addEventListener('DOMContentLoaded', async function() {
             console.log('🚀 Inicializando Dashboard Instructor...');
+            
+            // Verificar que auth.js esté cargado
+            if (typeof protectPage !== 'function') {
+                console.error('❌ auth.js no está cargado correctamente');
+                alert('Error: El sistema de autenticación no está disponible. Recarga la página.');
+                return;
+            }
             
             // Verificar autenticación
             if (!protectPage('instructor')) {
@@ -660,22 +750,25 @@
             
             const currentUser = getCurrentUser();
             if (!currentUser) {
+                console.error('❌ No hay usuario actual');
                 window.location.href = 'login.html';
                 return;
             }
             
+            console.log('✅ Usuario autenticado:', currentUser.username);
             document.getElementById('instructorName').textContent = currentUser.fullName || currentUser.username;
             
+            // Cargar datos del dashboard
             await loadDashboardData();
+            
+            // Registrar acceso
             await logUserActivity('dashboard_access', '', '');
         });
 
-        // Cargar todos los datos
+        // ✅ Cargar todos los datos
         async function loadDashboardData() {
             try {
-                showLoading(true);
-                
-                console.log('📊 Cargando datos desde Google Sheets...');
+                console.log('📊 Iniciando carga de datos...');
                 
                 // Cargar estudiantes
                 await loadStudentsData();
@@ -686,7 +779,7 @@
                 // Procesar evaluaciones
                 processEvaluations();
                 
-                // Actualizar todas las estadísticas
+                // Actualizar estadísticas
                 updateMainStats();
                 updatePedagogicalMetrics();
                 updateModuleStats();
@@ -696,22 +789,28 @@
                 
                 document.getElementById('lastUpdate').textContent = new Date().toLocaleString();
                 
-                showLoading(false);
                 console.log('✅ Dashboard cargado exitosamente');
                 
             } catch (error) {
                 console.error('❌ Error cargando dashboard:', error);
-                showError('Error cargando datos. Verifica tu conexión.');
-                showLoading(false);
+                showError('Error cargando datos. Verifica tu conexión: ' + error.message);
             }
         }
 
-        // Cargar estudiantes desde Google Sheets
+        // ✅ Cargar estudiantes desde Google Sheets
         async function loadStudentsData() {
             try {
-                const result = await makeJSONPRequest('getAllStudents');
+                console.log('👥 Cargando estudiantes desde Google Sheets...');
                 
-                if (result.success) {
+                // Verificar que makeJSONPRequest existe
+                if (typeof makeJSONPRequest !== 'function') {
+                    throw new Error('makeJSONPRequest no está disponible');
+                }
+                
+                const result = await makeJSONPRequest('getAllStudents');
+                console.log('📦 Respuesta de getAllStudents:', result);
+                
+                if (result.success && result.data) {
                     const allUsers = result.data;
                     
                     // Separar por rol
@@ -725,10 +824,11 @@
                     document.getElementById('studentsCount').textContent = dashboardData.students.length;
                     document.getElementById('evaluatorsCount').textContent = dashboardData.evaluators.length;
                     
+                    // Actualizar tablas
                     updateStudentsTable();
                     updateEvaluatorsTable();
                 } else {
-                    throw new Error(result.error || 'Error obteniendo datos');
+                    throw new Error(result.error || 'No se recibieron datos válidos');
                 }
             } catch (error) {
                 console.error('❌ Error cargando estudiantes:', error);
@@ -736,22 +836,27 @@
             }
         }
 
-        // Cargar actividades recientes
+        // ✅ Cargar actividades recientes
         async function loadRecentActivities() {
             try {
+                console.log('📋 Cargando actividades...');
                 const result = await makeJSONPRequest('getActivities', { limit: 30 });
                 
-                if (result.success) {
+                if (result.success && result.data) {
                     dashboardData.activities = result.data;
+                    console.log('✅ Actividades cargadas:', dashboardData.activities.length);
                     updateActivityLog();
+                } else {
+                    console.warn('⚠️ No se pudieron cargar actividades');
                 }
             } catch (error) {
                 console.error('❌ Error cargando actividades:', error);
             }
         }
 
-        // Procesar evaluaciones
+        // ✅ Procesar evaluaciones
         function processEvaluations() {
+            console.log('📝 Procesando evaluaciones...');
             const evaluations = {};
             
             dashboardData.students.forEach(student => {
@@ -777,9 +882,10 @@
             });
             
             dashboardData.evaluations = evaluations;
+            console.log('✅ Evaluaciones procesadas para', Object.keys(evaluations).length, 'estudiantes');
         }
 
-        // Actualizar estadísticas principales
+        // ✅ Actualizar estadísticas principales
         function updateMainStats() {
             const total = dashboardData.students.length;
             const active = dashboardData.students.filter(s => 
@@ -803,7 +909,7 @@
             document.getElementById('atRiskStudents').textContent = atRisk;
         }
 
-        // Actualizar métricas pedagógicas
+        // ✅ Actualizar métricas pedagógicas
         function updatePedagogicalMetrics() {
             const students = dashboardData.students;
             const total = students.length;
@@ -816,7 +922,7 @@
                 return;
             }
             
-            // Tasa de finalización (completaron todos los módulos)
+            // Tasa de finalización
             const completed = students.filter(s => 
                 s.progress?.overallProgress === 100
             ).length;
@@ -856,11 +962,11 @@
             });
             const evalPassRate = totalEvals > 0 ? Math.round((passedEvals / totalEvals) * 100) : 0;
             
-            // Tasa de retención (acceso reciente)
+            // Tasa de retención
             const recentDate = new Date();
             recentDate.setDate(recentDate.getDate() - 7);
             const recentActive = students.filter(s => 
-                s.progress?.lastAccess && new Date(s.progress.lastAccess) > recentDate
+                s.progress?.lastActivity && new Date(s.progress.lastActivity) > recentDate
             ).length;
             const retentionRate = Math.round((recentActive / total) * 100);
             
@@ -870,7 +976,7 @@
             document.getElementById('retentionRate').textContent = retentionRate + '%';
         }
 
-        // Verificar si evaluación fue aprobada
+        // ✅ Verificar si evaluación fue aprobada
         function isEvaluationPassed(moduleEvals, lessonNum) {
             if (!moduleEvals || typeof moduleEvals !== 'object') return false;
             const lessonEval = moduleEvals[lessonNum];
@@ -878,7 +984,7 @@
             return Object.keys(lessonEval).length >= 2;
         }
 
-        // Actualizar estadísticas por módulo
+        // ✅ Actualizar estadísticas por módulo
         function updateModuleStats() {
             const students = dashboardData.students;
             
@@ -925,7 +1031,7 @@
             }
         }
 
-        // Actualizar tabla de estudiantes
+        // ✅ Actualizar tabla de estudiantes
         function updateStudentsTable() {
             const tbody = document.getElementById('studentsTableBody');
             tbody.innerHTML = '';
@@ -954,13 +1060,13 @@
                 
                 let lastAccessText = 'Nunca';
                 let daysSinceAccess = 999;
-                if (progress.lastAccess) {
-                    const lastAccess = new Date(progress.lastAccess);
+                if (progress.lastActivity) {
+                    const lastAccess = new Date(progress.lastActivity);
                     lastAccessText = lastAccess.toLocaleDateString() + ' ' + lastAccess.toLocaleTimeString();
                     daysSinceAccess = Math.floor((Date.now() - lastAccess.getTime()) / (1000 * 60 * 60 * 24));
                 }
                 
-                // Determinar nivel de riesgo
+                // Nivel de riesgo
                 let riskClass = 'risk-low';
                 let riskText = 'Bajo';
                 if (overallProgress < 25 || daysSinceAccess > 7) {
@@ -992,7 +1098,7 @@
             });
         }
 
-        // Actualizar tabla de evaluadores
+        // ✅ Actualizar tabla de evaluadores
         function updateEvaluatorsTable() {
             const tbody = document.getElementById('evaluatorsTableBody');
             tbody.innerHTML = '';
@@ -1008,8 +1114,8 @@
                 const completedModules = Object.values(progress.modules || {}).filter(m => m.completed).length;
                 
                 let lastAccessText = 'Nunca';
-                if (progress.lastAccess) {
-                    const lastAccess = new Date(progress.lastAccess);
+                if (progress.lastActivity) {
+                    const lastAccess = new Date(progress.lastActivity);
                     lastAccessText = lastAccess.toLocaleDateString();
                 }
                 
@@ -1032,7 +1138,7 @@
             });
         }
 
-        // Actualizar tabla de evaluaciones
+        // ✅ Actualizar tabla de evaluaciones
         function updateEvaluationsTable() {
             const tbody = document.getElementById('evaluationsTableBody');
             tbody.innerHTML = '';
@@ -1075,7 +1181,7 @@
             });
         }
 
-        // Top 5 estudiantes
+        // ✅ Top 5 estudiantes
         function updateTopStudents() {
             const sorted = [...dashboardData.students].sort((a, b) => 
                 (b.progress?.overallProgress || 0) - (a.progress?.overallProgress || 0)
@@ -1096,7 +1202,7 @@
             });
         }
 
-        // Distribución de progreso
+        // ✅ Distribución de progreso
         function updateProgressDistribution() {
             const ranges = { '0-25': 0, '26-50': 0, '51-75': 0, '76-100': 0 };
             
@@ -1121,7 +1227,7 @@
             });
         }
 
-        // Log de actividades
+        // ✅ Log de actividades
         function updateActivityLog() {
             const log = document.getElementById('activityLog');
             
@@ -1142,93 +1248,3 @@
                         </div>
                         <div style="color: #6c757d; font-size: 0.8rem;">${time}</div>
                     </div>
-                `;
-            }).join('');
-        }
-
-        function getActivityDescription(activity) {
-            const actions = {
-                'login': 'Inició sesión',
-                'module_access': `Accedió al módulo ${activity.moduleId}`,
-                'lesson_view': `Vio lección ${activity.lessonId} (Módulo ${activity.moduleId})`,
-                'lesson_completed': `Completó lección ${activity.lessonId} (Módulo ${activity.moduleId})`,
-                'evaluation_submitted': `Envió evaluación (Lección ${activity.lessonId})`,
-                'module_completed': `Completó módulo ${activity.moduleId}`
-            };
-            return actions[activity.action] || activity.action;
-        }
-
-        // Refrescar dashboard
-        async function refreshDashboard() {
-            await loadDashboardData();
-            showToast('Dashboard actualizado', 'success');
-        }
-
-        // UI utilities
-        function showLoading(show) {
-            if (show) console.log('⏳ Cargando...');
-        }
-
-        function showError(message) {
-            console.error('❌', message);
-            alert(message);
-        }
-
-        function showToast(message, type = 'info') {
-            const colors = {
-                success: '#10b981',
-                warning: '#f59e0b',
-                info: '#3b82f6',
-                danger: '#ef4444'
-            };
-
-            const toast = document.createElement('div');
-            toast.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: ${colors[type]};
-                color: white;
-                padding: 1rem 1.5rem;
-                border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-                z-index: 10000;
-                animation: slideIn 0.3s ease;
-                font-weight: 500;
-            `;
-            toast.textContent = message;
-            
-            document.body.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-    </script>
-
-    <style>
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(100px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes slideOut {
-            from {
-                opacity: 1;
-                transform: translateX(0);
-            }
-            to {
-                opacity: 0;
-                transform: translateX(100px);
-            }
-        }
-    </style>
-</body>
-</html>
