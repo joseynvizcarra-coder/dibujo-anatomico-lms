@@ -480,18 +480,20 @@
 
         // Small UI helpers from auth.js are available (showToast used here)
         function showToast(msg, type='info'){
-            if (typeof window.showToast === 'function') return window.showToast(msg, type);
-            const colors = {success:'#10b981',info:'#3b82f6',warning:'#f59e0b',danger:'#ef4444'};
-            const t = document.createElement('div'); t.textContent = msg;
-            t.style.cssText = `position:fixed;top:20px;right:20px;background:${colors[type]};color:white;padding:.8rem 1rem;border-radius:8px;z-index:10000`;
-            document.body.appendChild(t); setTimeout(()=>t.remove(),2500);
-            
-                async function refreshDashboard() {
-            showToast('Actualizando dashboard...', 'info');
-            await loadDashboardData();
-            showToast('Dashboard actualizado', 'success');
-        }
+    if (typeof window.showToast === 'function') return window.showToast(msg, type);
+    const colors = {success:'#10b981',info:'#3b82f6',warning:'#f59e0b',danger:'#ef4444'};
+    const t = document.createElement('div'); t.textContent = msg;
+    t.style.cssText = `position:fixed;top:20px;right:20px;background:${colors[type]};color:white;padding:.8rem 1rem;border-radius:8px;z-index:10000`;
+    document.body.appendChild(t);
+    setTimeout(()=>t.remove(),2500);
 }
+
+async function refreshDashboard() {
+    showToast('Actualizando dashboard...', 'info');
+    await loadDashboardData();
+    showToast('Dashboard actualizado', 'success');
+}
+
 
         // init
         init();
