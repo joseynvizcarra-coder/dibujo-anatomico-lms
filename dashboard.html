@@ -383,6 +383,9 @@
                 </div>
                 <div class="text-end d-flex align-items-center gap-2">
                     <span id="instructorName" class="text-white me-2 d-none d-md-inline">Cargando...</span>
+                    <button id="exportBtn" class="btn-header" title="Exportar datos a Excel">
+                        <i class="bi bi-file-earmark-spreadsheet me-1"></i>Exportar Excel
+                    </button>
                     <button id="refreshBtn" class="btn-header">
                         <i class="bi bi-arrow-clockwise me-1"></i>Actualizar
                     </button>
@@ -614,6 +617,8 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- SheetJS para exportación a Excel -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
     
     <script>
     (async function() {
@@ -782,6 +787,7 @@
                     showToast('Actualizando datos...', 'info');
                     loadDashboardData();
                 });
+                document.getElementById('exportBtn').addEventListener('click', exportToExcel);
                 
                 // Cargar datos del dashboard
                 await loadDashboardData();
@@ -1528,6 +1534,247 @@
             }
         `;
         document.head.appendChild(style);
+
+        // ==========================================
+        // EXPORTAR A EXCEL
+        // ==========================================
+        
+        function exportToExcel() {
+            try {
+                console.log('📊 Generando archivo Excel...');
+                showToast('Generando Excel...', 'info');
+                
+                // Crear un nuevo libro de Excel
+                const wb = XLSX.utils.book_new();
+                
+                // ========== HOJA 1: RESUMEN GENERAL ==========
+                const summaryData = [
+                    ['DASHBOARD INSTRUCTOR - DIADIFO LMS UAH'],
+                    ['Reporte generado:', new Date().toLocaleString()],
+                    ['Instructor:', getCurrentUser().fullName || getCurrentUser().username],
+                    [''],
+                    ['MÉTRICAS GENERALES'],
+                    ['Total Estudiantes', dashboardData.students.length],
+                    ['Total Evaluadores', dashboardData.evaluators.length],
+                    ['Progreso Promedio', document.getElementById('avgProgress').textContent],
+                    ['Tasa Finalización', document.getElementById('completionRate').textContent],
+                    ['Horas de Estudio', document.getElementById('totalStudyTime').textContent],
+                    ['Activos 7 días', document.getElementById('activeStudents').textContent],
+                    ['En Riesgo', document.getElementById('studentsAtRisk').textContent],
+                    ['Evaluaciones Aprobadas', document.getElementById('totalEvaluations').textContent],
+                ];
+                
+                const ws_summary = XLSX.utils.aoa_to_sheet(summaryData);
+                
+                // Ajustar ancho de columnas
+                ws_summary['!cols'] = [
+                    { wch: 30 },
+                    { wch: 20 }
+                ];
+                
+                XLSX.utils.book_append_sheet(wb, ws_summary, 'Resumen');
+                
+                // ========== HOJA 2: ESTUDIANTES DETALLADO ==========
+                const studentsData = [
+                    ['Nombre Completo', 'Usuario', 'Progreso %', 'Módulos Completados', 
+                     'M1 Lecciones', 'M2 Lecciones', 'M3 Lecciones', 'Último Acceso', 'Estado']
+                ];
+                
+                dashboardData.students.forEach(student => {
+                    const progress = student.progress.overallProgress || 0;
+                    const modules = student.progress.modules || {};
+                    const completedModules = Object.values(modules).filter(m => m.completed).length;
+                    
+                    const mod1 = modules[1] || modules['1'] || {};
+                    const mod2 = modules[2] || modules['2'] || {};
+                    const mod3 = modules[3] || modules['3'] || {};
+                    
+                    const m1Lessons = Array.isArray(mod1.completedLessons) ? mod1.completedLessons.length : 0;
+                    const m2Lessons = Array.isArray(mod2.completedLessons) ? mod2.completedLessons.length : 0;
+                    const m3Lessons = Array.isArray(mod3.completedLessons) ? mod3.completedLessons.length : 0;
+                    
+                    let lastAccessText = 'Nunca';
+                    if (student.progress.lastAccess) {
+                        const lastAccess = new Date(student.progress.lastAccess);
+                        lastAccessText = lastAccess.toLocaleString();
+                    }
+                    
+                    let estado;
+                    if (!student.progress.lastAccess || progress === 0) {
+                        estado = 'Sin acceso';
+                    } else if (progress < 25) {
+                        estado = 'Riesgo Alto';
+                    } else if (progress < 50) {
+                        estado = 'Riesgo Medio';
+                    } else {
+                        estado = 'Riesgo Bajo';
+                    }
+                    
+                    studentsData.push([
+                        student.fullName || student.username,
+                        student.username,
+                        progress,
+                        `${completedModules}/3`,
+                        `${m1Lessons}/3`,
+                        `${m2Lessons}/4`,
+                        `${m3Lessons}/3`,
+                        lastAccessText,
+                        estado
+                    ]);
+                });
+                
+                const ws_students = XLSX.utils.aoa_to_sheet(studentsData);
+                
+                // Ajustar ancho de columnas
+                ws_students['!cols'] = [
+                    { wch: 25 }, // Nombre
+                    { wch: 15 }, // Usuario
+                    { wch: 12 }, // Progreso
+                    { wch: 18 }, // Módulos
+                    { wch: 13 }, // M1
+                    { wch: 13 }, // M2
+                    { wch: 13 }, // M3
+                    { wch: 20 }, // Último acceso
+                    { wch: 15 }  // Estado
+                ];
+                
+                XLSX.utils.book_append_sheet(wb, ws_students, 'Estudiantes');
+                
+                // ========== HOJA 3: EVALUADORES ==========
+                const evaluatorsData = [
+                    ['Nombre Completo', 'Usuario', 'Progreso %', 'Módulos Completados', 'Último Acceso']
+                ];
+                
+                dashboardData.evaluators.forEach(evaluator => {
+                    const progress = evaluator.progress || {};
+                    const overallProgress = progress.overallProgress || 0;
+                    const completedModules = Object.values(progress.modules || {})
+                        .filter(m => m.completed).length;
+                    
+                    let lastAccessText = 'Nunca';
+                    if (progress.lastAccess) {
+                        const lastAccess = new Date(progress.lastAccess);
+                        lastAccessText = lastAccess.toLocaleString();
+                    }
+                    
+                    evaluatorsData.push([
+                        evaluator.fullName,
+                        evaluator.username,
+                        overallProgress,
+                        `${completedModules}/3`,
+                        lastAccessText
+                    ]);
+                });
+                
+                const ws_evaluators = XLSX.utils.aoa_to_sheet(evaluatorsData);
+                
+                ws_evaluators['!cols'] = [
+                    { wch: 25 },
+                    { wch: 15 },
+                    { wch: 12 },
+                    { wch: 18 },
+                    { wch: 20 }
+                ];
+                
+                XLSX.utils.book_append_sheet(wb, ws_evaluators, 'Evaluadores');
+                
+                // ========== HOJA 4: MATRIZ DE EVALUACIONES ==========
+                const evalHeader = ['Estudiante'];
+                for (let m = 1; m <= 3; m++) {
+                    for (let l = 1; l <= 3; l++) {
+                        evalHeader.push(`M${m}L${l}`);
+                    }
+                }
+                if (evalHeader.length < 11) { // Módulo 2 tiene 4 lecciones
+                    evalHeader.splice(5, 0, 'M2L4');
+                }
+                evalHeader.push('Total');
+                
+                const evalData = [evalHeader];
+                
+                dashboardData.students.forEach(student => {
+                    const evals = dashboardData.evaluations[student.username] || {};
+                    const row = [student.fullName || student.username];
+                    
+                    // Módulo 1 (3 lecciones)
+                    for (let l = 1; l <= 3; l++) {
+                        row.push(isEvaluationPassed(evals.module1, l) ? '✓' : '✗');
+                    }
+                    
+                    // Módulo 2 (4 lecciones)
+                    for (let l = 1; l <= 4; l++) {
+                        row.push(isEvaluationPassed(evals.module2, l) ? '✓' : '✗');
+                    }
+                    
+                    // Módulo 3 (3 lecciones)
+                    for (let l = 1; l <= 3; l++) {
+                        row.push(isEvaluationPassed(evals.module3, l) ? '✓' : '✗');
+                    }
+                    
+                    // Total
+                    let total = 0;
+                    for (let l = 1; l <= 3; l++) if (isEvaluationPassed(evals.module1, l)) total++;
+                    for (let l = 1; l <= 4; l++) if (isEvaluationPassed(evals.module2, l)) total++;
+                    for (let l = 1; l <= 3; l++) if (isEvaluationPassed(evals.module3, l)) total++;
+                    
+                    row.push(`${total}/10`);
+                    evalData.push(row);
+                });
+                
+                const ws_eval = XLSX.utils.aoa_to_sheet(evalData);
+                
+                ws_eval['!cols'] = [
+                    { wch: 25 }, // Nombre
+                    ...Array(10).fill({ wch: 6 }), // Columnas de evaluación
+                    { wch: 8 }  // Total
+                ];
+                
+                XLSX.utils.book_append_sheet(wb, ws_eval, 'Evaluaciones');
+                
+                // ========== HOJA 5: ACTIVIDADES RECIENTES ==========
+                const activitiesData = [
+                    ['Usuario', 'Acción', 'Módulo', 'Lección', 'Fecha y Hora']
+                ];
+                
+                dashboardData.activities.slice(0, 100).forEach(activity => {
+                    const time = new Date(activity.timestamp).toLocaleString();
+                    const actionText = getActivityDescription(activity);
+                    
+                    activitiesData.push([
+                        activity.username,
+                        actionText,
+                        activity.moduleId || '-',
+                        activity.lessonId || '-',
+                        time
+                    ]);
+                });
+                
+                const ws_activities = XLSX.utils.aoa_to_sheet(activitiesData);
+                
+                ws_activities['!cols'] = [
+                    { wch: 15 },
+                    { wch: 40 },
+                    { wch: 10 },
+                    { wch: 10 },
+                    { wch: 20 }
+                ];
+                
+                XLSX.utils.book_append_sheet(wb, ws_activities, 'Actividades');
+                
+                // Generar el archivo
+                const fecha = new Date().toISOString().slice(0, 10);
+                const filename = `DIADIFO_Dashboard_${fecha}.xlsx`;
+                
+                XLSX.writeFile(wb, filename);
+                
+                console.log('✅ Excel generado:', filename);
+                showToast('Excel descargado exitosamente', 'success');
+                
+            } catch (error) {
+                console.error('❌ Error generando Excel:', error);
+                showToast('Error al generar Excel', 'danger');
+            }
+        }
 
         // ==========================================
         // INICIAR APLICACIÓN
