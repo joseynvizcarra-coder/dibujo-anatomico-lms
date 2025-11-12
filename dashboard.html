@@ -246,6 +246,7 @@
         .risk-high { background: #fee2e2; color: #dc2626; }
         .risk-medium { background: #fef3c7; color: #d97706; }
         .risk-low { background: #d1fae5; color: #059669; }
+        .risk-inactive { background: #e5e7eb; color: #6b7280; }
 
         /* Progress bars */
         .progress-bar-small {
@@ -454,7 +455,10 @@
                     </div>
                     <div class="mt-3 text-center">
                         <span class="legend-item">
-                            <span class="legend-color" style="background:#dc2626"></span>0-25% (Riesgo)
+                            <span class="legend-color" style="background:#6b7280"></span>Sin acceso (0%)
+                        </span>
+                        <span class="legend-item">
+                            <span class="legend-color" style="background:#dc2626"></span>1-25% (Riesgo)
                         </span>
                         <span class="legend-item">
                             <span class="legend-color" style="background:#f59e0b"></span>26-50% (Medio)
@@ -657,7 +661,15 @@
         // ==========================================
         
         function inferStudentData(student) {
-            console.log(`🔍 Infiriendo datos para: ${student.username}`, student);
+            const hasProgress = student.progress && Object.keys(student.progress).length > 0;
+            const hasLastAccess = student.progress?.lastAccess || student.progress?.lastActivity;
+            
+            console.log(`🔍 ${student.username}:`, {
+                tieneProgress: hasProgress,
+                tieneLastAccess: !!hasLastAccess,
+                lastAccess: hasLastAccess,
+                overallProgress: student.progress?.overallProgress
+            });
             
             // Asegurar que exista la estructura de progreso
             student.progress = student.progress || {};
@@ -701,7 +713,7 @@
                 student.totalTime = totalTime;
             }
 
-            // 3. Inferir último acceso desde actividades o progress
+            // 3. Inferir último acceso desde actividades o progress (NO INVENTAR)
             if (!student.progress.lastAccess) {
                 // Intentar desde lastActivity en progress
                 if (student.progress.lastActivity) {
@@ -714,8 +726,8 @@
                     if (studentActivities.length > 0) {
                         student.progress.lastAccess = studentActivities[studentActivities.length - 1].timestamp;
                     } else {
-                        // Usar la fecha actual como último recurso
-                        student.progress.lastAccess = new Date().toISOString();
+                        // ✅ NO INVENTAR - dejar como null si no hay datos reales
+                        student.progress.lastAccess = null;
                     }
                 }
             }
@@ -824,6 +836,16 @@
 
                 // AHORA SÍ inferir datos de estudiantes (ya tenemos actividades)
                 dashboardData.students = dashboardData.students.map(inferStudentData);
+                
+                // Resumen de datos reales vs inferidos
+                const withAccess = dashboardData.students.filter(s => s.progress.lastAccess).length;
+                const withProgress = dashboardData.students.filter(s => s.progress.overallProgress > 0).length;
+                const withoutData = dashboardData.students.filter(s => !s.progress.lastAccess && s.progress.overallProgress === 0).length;
+                
+                console.log('📊 RESUMEN DE ESTUDIANTES:');
+                console.log(`  ✅ Con acceso real: ${withAccess}/${dashboardData.students.length}`);
+                console.log(`  📈 Con progreso: ${withProgress}/${dashboardData.students.length}`);
+                console.log(`  ⚪ Sin datos (nunca han ingresado): ${withoutData}/${dashboardData.students.length}`);
 
                 // Procesar evaluaciones desde student.progress.modules
                 processEvaluations();
@@ -990,16 +1012,25 @@
             const now = new Date();
             const sevenDaysAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
             const activeStudents = students.filter(s => {
+                // Solo contar si tiene lastAccess válido
+                if (!s.progress.lastAccess) return false;
                 const lastAccess = new Date(s.progress.lastAccess);
                 return lastAccess > sevenDaysAgo;
             }).length;
             document.getElementById('activeStudents').textContent = activeStudents;
-            console.log(`🟢 Activos 7 días: ${activeStudents}`);
+            console.log(`🟢 Activos 7 días: ${activeStudents} (de ${students.length} estudiantes)`);
 
-            // Estudiantes en riesgo (< 25% progreso)
-            const atRisk = students.filter(s => s.progress.overallProgress < 25).length;
+            // Estudiantes en riesgo (< 25% progreso O nunca han ingresado)
+            const atRisk = students.filter(s => {
+                // En riesgo si tiene menos de 25% de progreso
+                return s.progress.overallProgress < 25;
+            }).length;
+            
+            // Estudiantes que nunca han ingresado
+            const neverAccessed = students.filter(s => !s.progress.lastAccess).length;
+            
             document.getElementById('studentsAtRisk').textContent = atRisk;
-            console.log(`🔴 En riesgo: ${atRisk}`);
+            console.log(`🔴 En riesgo: ${atRisk} (${neverAccessed} nunca han ingresado)`);
 
             // Total de evaluaciones aprobadas
             let totalEvaluations = 0;
@@ -1062,12 +1093,28 @@
                     console.log('  Módulos:', { mod1, mod2, mod3 });
                 }
                 
-                const lastAccess = new Date(student.progress.lastAccess);
-                const lastAccessText = lastAccess.toLocaleDateString() + ' ' + lastAccess.toLocaleTimeString();
+                // Último acceso - mostrar "Nunca" si es null
+                let lastAccessText = 'Nunca';
+                if (student.progress.lastAccess) {
+                    const lastAccess = new Date(student.progress.lastAccess);
+                    lastAccessText = lastAccess.toLocaleDateString() + ' ' + lastAccess.toLocaleTimeString();
+                }
                 
                 // Determinar nivel de riesgo
-                const risk = progress < 25 ? 'high' : (progress < 50 ? 'medium' : 'low');
-                const riskText = risk === 'high' ? 'Alto' : (risk === 'medium' ? 'Medio' : 'Bajo');
+                let risk, riskText;
+                if (!student.progress.lastAccess || progress === 0) {
+                    risk = 'inactive';
+                    riskText = 'Sin acceso';
+                } else if (progress < 25) {
+                    risk = 'high';
+                    riskText = 'Alto';
+                } else if (progress < 50) {
+                    risk = 'medium';
+                    riskText = 'Medio';
+                } else {
+                    risk = 'low';
+                    riskText = 'Bajo';
+                }
                 
                 const row = document.createElement('tr');
                 row.innerHTML = `
@@ -1271,20 +1318,22 @@
                 progressChart.destroy();
             }
 
-            // Calcular distribución de progreso
-            const distribution = { '0-25': 0, '26-50': 0, '51-75': 0, '76-100': 0 };
+            // Calcular distribución de progreso (incluyendo 0% = sin acceso)
+            const distribution = { '0': 0, '1-25': 0, '26-50': 0, '51-75': 0, '76-100': 0 };
             
             dashboardData.students.forEach(student => {
                 const progress = student.progress.overallProgress || 0;
-                if (progress <= 25) distribution['0-25']++;
+                if (progress === 0) distribution['0']++;
+                else if (progress <= 25) distribution['1-25']++;
                 else if (progress <= 50) distribution['26-50']++;
                 else if (progress <= 75) distribution['51-75']++;
                 else distribution['76-100']++;
             });
 
-            const labels = ['0-25%', '26-50%', '51-75%', '76-100%'];
+            const labels = ['Sin acceso', '1-25%', '26-50%', '51-75%', '76-100%'];
             const data = [
-                distribution['0-25'],
+                distribution['0'],
+                distribution['1-25'],
                 distribution['26-50'],
                 distribution['51-75'],
                 distribution['76-100']
@@ -1298,6 +1347,7 @@
                     datasets: [{
                         data: data,
                         backgroundColor: [
+                            '#6b7280', // Gris (sin acceso)
                             '#dc2626', // Rojo (riesgo)
                             '#f59e0b', // Amarillo (medio)
                             '#10b981', // Verde (avanzando)
