@@ -3100,7 +3100,10 @@
                 tempContainer.style.top = '0';
                 
                 const currentUser = getCurrentUser();
-                const userName = currentUser ? currentUser.name : 'Estudiante';
+                const userName = currentUser ? (currentUser.name || currentUser.username || 'Estudiante') : 'Estudiante';
+                
+                console.log('👤 Usuario actual:', currentUser);
+                console.log('📝 Nombre para PDF:', userName);
                 
                 tempContainer.innerHTML = `
                     <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #2c5f66;">
@@ -3421,7 +3424,8 @@
                 }
                 
                 // Guardar el PDF
-                const fileName = `Rubrica_ProyectoFinal_Modulo3_${userName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+                const safeUserName = (userName || 'Estudiante').replace(/\s+/g, '_');
+                const fileName = `Rubrica_ProyectoFinal_Modulo3_${safeUserName}_${new Date().toISOString().split('T')[0]}.pdf`;
                 console.log('💾 Guardando PDF:', fileName);
                 pdf.save(fileName);
                 
