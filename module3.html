@@ -8,6 +8,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
+    <!-- Librerías para exportar PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
     <style>
         /* ============================================
            SISTEMA DE DISEÑO MEJORADO - VARIABLES
@@ -2795,7 +2799,12 @@
 
                 <div class="card mb-4">
     <div class="card-header" style="background: var(--primary-dark); color: white;">
-        <h5 class="mb-0"><i class="bi bi-star me-2"></i>Rúbrica Analítica - Proyecto Final</h5>
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h5 class="mb-0"><i class="bi bi-star me-2"></i>Rúbrica Analítica - Proyecto Final</h5>
+            <button class="btn btn-light btn-sm" onclick="exportRubricToPDF()" title="Exportar rúbrica a PDF">
+                <i class="bi bi-file-earmark-pdf me-1"></i>Exportar PDF
+            </button>
+        </div>
     </div>
     <div class="card-body">
         <div class="alert alert-info">
@@ -3047,6 +3056,335 @@
                 openImageLightbox(imgSrc, imgAlt);
             }
         });
+
+        // ===== EXPORTAR RÚBRICA A PDF =====
+        window.exportRubricToPDF = async function() {
+            try {
+                showToast('Generando PDF...', 'info');
+                
+                // Crear contenedor temporal con toda la información de la rúbrica
+                const tempContainer = document.createElement('div');
+                tempContainer.style.padding = '20px';
+                tempContainer.style.backgroundColor = 'white';
+                tempContainer.style.width = '210mm';
+                tempContainer.style.position = 'absolute';
+                tempContainer.style.left = '-9999px';
+                
+                const currentUser = getCurrentUser();
+                const userName = currentUser ? currentUser.name : 'Estudiante';
+                
+                tempContainer.innerHTML = `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #2c5f66;">
+                        <!-- Encabezado -->
+                        <div style="text-align: center; margin-bottom: 20px; border-bottom: 3px solid #2c5f66; padding-bottom: 15px;">
+                            <h1 style="color: #2c5f66; margin: 0; font-size: 24px;">Universidad Alberto Hurtado</h1>
+                            <h2 style="color: #e8a2b8; margin: 5px 0; font-size: 20px;">Curso de Dibujo Anatómico</h2>
+                            <h3 style="color: #2c5f66; margin: 10px 0 0 0; font-size: 18px;">Módulo 3: Figura Completa e Integración</h3>
+                        </div>
+
+                        <!-- Información del estudiante -->
+                        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <p style="margin: 5px 0;"><strong>Estudiante:</strong> ${userName}</p>
+                            <p style="margin: 5px 0;"><strong>Fecha de descarga:</strong> ${new Date().toLocaleDateString('es-CL', { 
+                                weekday: 'long', 
+                                year: 'numeric', 
+                                month: 'long', 
+                                day: 'numeric' 
+                            })}</p>
+                        </div>
+
+                        <!-- Título de la rúbrica -->
+                        <div style="background-color: #2c5f66; color: white; padding: 12px; border-radius: 8px 8px 0 0; margin-top: 20px;">
+                            <h3 style="margin: 0; font-size: 18px;">⭐ Rúbrica Analítica - Proyecto Final</h3>
+                        </div>
+
+                        <!-- Información de evaluación -->
+                        <div style="background-color: #e3f2fd; padding: 15px; border: 2px solid #2196f3; border-radius: 0 0 8px 8px; margin-bottom: 20px;">
+                            <h4 style="color: #1976d2; margin-top: 0; font-size: 16px;"><strong>ℹ️ Información de Evaluación</strong></h4>
+                            <ul style="margin: 10px 0; padding-left: 20px; font-size: 13px; line-height: 1.8;">
+                                <li><strong>Formato:</strong> 1/4 mercurio (27.5 × 37.5 cm)</li>
+                                <li><strong>Técnica:</strong> Lápiz grafito</li>
+                                <li><strong>Tiempo:</strong> 2-3 horas presenciales</li>
+                                <li><strong>Modalidad:</strong> Presencial con supervisión docente</li>
+                                <li><strong>Puntaje total:</strong> 28 puntos</li>
+                                <li><strong>Puntaje mínimo aprobatorio:</strong> 17 puntos (60%)</li>
+                            </ul>
+                        </div>
+
+                        <!-- Tabla de rúbrica -->
+                        <table style="width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 20px;">
+                            <thead>
+                                <tr style="background: linear-gradient(135deg, #2c5f66, #3d7d87); color: white;">
+                                    <th style="border: 1px solid #ddd; padding: 10px; text-align: center; width: 18%;">Criterio</th>
+                                    <th style="border: 1px solid #ddd; padding: 10px; text-align: center;">Excelente (4)</th>
+                                    <th style="border: 1px solid #ddd; padding: 10px; text-align: center;">Bueno (3)</th>
+                                    <th style="border: 1px solid #ddd; padding: 10px; text-align: center;">Satisfactorio (2)</th>
+                                    <th style="border: 1px solid #ddd; padding: 10px; text-align: center;">Insuficiente (1)</th>
+                                    <th style="border: 1px solid #ddd; padding: 10px; text-align: center; width: 8%;">Puntos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Criterio 1 -->
+                                <tr>
+                                    <td style="border: 1px solid #ddd; padding: 8px; background-color: #f8f9fa;">
+                                        <strong>1. Gesto y Línea de Acción</strong><br>
+                                        <small style="color: #666;">Captura de movimiento y energía</small>
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Captura excepcional del gesto:</strong> La línea de acción es claramente visible atravesando la figura y transmite con contundencia la dirección y energía del movimiento.
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Captura competente del gesto:</strong> La línea de acción es reconocible y transmite apropiadamente la energía del movimiento.
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Captura básica del gesto:</strong> La línea de acción es identificable aunque puede ser tímida o poco evidente.
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Captura deficiente del gesto:</strong> No se identifica claramente la línea de acción. La figura aparece rígida o "muerta".
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f8f9fa;"><strong>4</strong></td>
+                                </tr>
+
+                                <!-- Criterio 2 -->
+                                <tr>
+                                    <td style="border: 1px solid #ddd; padding: 8px; background-color: #f8f9fa;">
+                                        <strong>2. Proporciones por Observación</strong><br>
+                                        <small style="color: #666;">Relaciones visuales entre partes</small>
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Observación excepcional:</strong> Las relaciones proporcionales entre todas las partes del cuerpo son consistentes, precisas y convincentes.
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Observación competente:</strong> Las relaciones proporcionales son en general correctas y creíbles.
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Observación básica:</strong> Las relaciones proporcionales presentan errores evidentes pero la figura es reconocible.
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Observación deficiente:</strong> Errores significativos que distorsionan gravemente la figura.
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f8f9fa;"><strong>4</strong></td>
+                                </tr>
+
+                                <!-- Criterio 3 -->
+                                <tr>
+                                    <td style="border: 1px solid #ddd; padding: 8px; background-color: #f8f9fa;">
+                                        <strong>3. Estructura Anatómica</strong><br>
+                                        <small style="color: #666;">Comprensión de masas y articulaciones</small>
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Comprensión excepcional:</strong> Las tres masas corporales están claramente diferenciadas como volúmenes tridimensionales sólidos.
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Comprensión competente:</strong> Las masas corporales son reconocibles como volúmenes diferenciados.
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Comprensión básica:</strong> Las masas corporales son reconocibles aunque poco diferenciadas volumétricamente.
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Comprensión deficiente:</strong> Las masas corporales están confundidas o no diferenciadas.
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f8f9fa;"><strong>4</strong></td>
+                                </tr>
+
+                                <!-- Criterio 4 -->
+                                <tr>
+                                    <td style="border: 1px solid #ddd; padding: 8px; background-color: #f8f9fa;">
+                                        <strong>4. Volumen y Sombreado</strong><br>
+                                        <small style="color: #666;">Construcción tridimensional</small>
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Volumetría excepcional:</strong> Los valores tonales están correctamente aplicados y generan convincente sensación de tridimensionalidad.
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Volumetría competente:</strong> Los valores tonales están apropiadamente aplicados en la mayoría de las áreas.
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Volumetría básica:</strong> Los valores tonales están presentes en las áreas principales aunque pueden ser inconsistentes.
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Volumetría deficiente:</strong> Los valores tonales están ausentes o incorrectamente aplicados.
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f8f9fa;"><strong>4</strong></td>
+                                </tr>
+
+                                <!-- Criterio 5 -->
+                                <tr>
+                                    <td style="border: 1px solid #ddd; padding: 8px; background-color: #f8f9fa;">
+                                        <strong>5. Integración Anatómica</strong><br>
+                                        <small style="color: #666;">Músculos y formas secundarias</small>
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Integración excepcional:</strong> Los grupos musculares superficiales están correctamente representados y modifican convincentemente el contorno.
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Integración competente:</strong> Los grupos musculares principales son reconocibles y contribuyen apropiadamente a la forma externa.
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Integración básica:</strong> Algunos grupos musculares son identificables. La integración cumple con requisitos mínimos.
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Integración deficiente:</strong> Los grupos musculares están ausentes o incorrectamente representados.
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f8f9fa;"><strong>4</strong></td>
+                                </tr>
+
+                                <!-- Criterio 6 -->
+                                <tr>
+                                    <td style="border: 1px solid #ddd; padding: 8px; background-color: #f8f9fa;">
+                                        <strong>6. Composición y Limpieza</strong><br>
+                                        <small style="color: #666;">Ubicación y calidad técnica</small>
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Presentación excepcional:</strong> La figura está ubicada con excelente criterio compositivo. Las líneas son decididas, controladas y limpias.
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Presentación competente:</strong> La figura está bien ubicada con apropiado uso del espacio. Las líneas son mayormente limpias.
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Presentación básica:</strong> La figura está ubicada aceptablemente. Las líneas presentan correcciones evidentes pero controladas.
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Presentación deficiente:</strong> La figura está mal ubicada. Las líneas son temblorosas o con borrado excesivo.
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f8f9fa;"><strong>4</strong></td>
+                                </tr>
+
+                                <!-- Criterio 7 -->
+                                <tr>
+                                    <td style="border: 1px solid #ddd; padding: 8px; background-color: #f8f9fa;">
+                                        <strong>7. Síntesis y Coherencia</strong><br>
+                                        <small style="color: #666;">Integración de aprendizajes</small>
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Síntesis excepcional:</strong> Demuestra integración sobresaliente de todos los aprendizajes del curso.
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Síntesis competente:</strong> Integra efectivamente los aprendizajes del curso con buena capacidad de síntesis.
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Síntesis básica:</strong> Integra parcialmente los aprendizajes con capacidad de síntesis limitada.
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; line-height: 1.6;">
+                                        <strong>Síntesis deficiente:</strong> No demuestra integración de aprendizajes del curso.
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f8f9fa;"><strong>4</strong></td>
+                                </tr>
+
+                                <!-- Total -->
+                                <tr style="background: linear-gradient(135deg, rgba(44,95,102,0.1), rgba(232,162,184,0.1)); font-weight: bold;">
+                                    <td colspan="5" style="border: 1px solid #ddd; padding: 10px; text-align: right; font-size: 14px;">
+                                        <strong>PUNTAJE TOTAL:</strong>
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 10px; text-align: center; font-size: 14px; background-color: #f8f9fa;">
+                                        <strong>28</strong>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Sistema de calificación -->
+                        <div style="background-color: #d4edda; border: 2px solid #28a745; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                            <h4 style="color: #155724; margin-top: 0; font-size: 16px;"><strong>🏆 Sistema de Calificación:</strong></h4>
+                            <ul style="margin: 10px 0; padding-left: 20px; font-size: 12px; line-height: 1.8;">
+                                <li><strong>25-28 puntos: EXCELENTE</strong> - Dominio sobresaliente con calidad profesional</li>
+                                <li><strong>21-24 puntos: BUENO</strong> - Dominio competente con resultados convincentes</li>
+                                <li><strong>17-20 puntos: SUFICIENTE (Mínimo Aprobatorio)</strong> - Dominio básico, requiere plan de mejora</li>
+                                <li><strong>Menos de 17 puntos: INSUFICIENTE</strong> - Requiere rehacer proyecto (10 días)</li>
+                            </ul>
+                        </div>
+
+                        <!-- Prohibiciones -->
+                        <div style="background-color: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                            <h4 style="color: #856404; margin-top: 0; font-size: 16px;"><strong>⚠️ Prohibiciones Estrictas:</strong></h4>
+                            <ul style="margin: 10px 0; padding-left: 20px; font-size: 12px; line-height: 1.8;">
+                                <li>❌ NO usar filtros digitales o tracing</li>
+                                <li>❌ NO copiar proyectos de otros estudiantes</li>
+                                <li>❌ NO usar cuadrícula de transferencia mecánica</li>
+                                <li>❌ NO agregar color (solo grafito permitido)</li>
+                            </ul>
+                        </div>
+
+                        <!-- Observaciones -->
+                        <div style="background-color: #e3f2fd; border: 2px solid #2196f3; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                            <h4 style="color: #1976d2; margin-top: 0; font-size: 16px;"><strong>✅ Observaciones Generales:</strong></h4>
+                            <ul style="margin: 10px 0; padding-left: 20px; font-size: 12px; line-height: 1.8;">
+                                <li>Se valorará la evidencia del proceso constructivo por capas</li>
+                                <li>Las líneas de construcción sutiles son bienvenidas y demuestran metodología</li>
+                                <li>La rúbrica se aplicará durante evaluación presencial con supervisión docente</li>
+                                <li>El proyecto debe evidenciar integración completa de aprendizajes del curso</li>
+                            </ul>
+                        </div>
+
+                        <!-- Footer -->
+                        <div style="margin-top: 30px; padding-top: 15px; border-top: 2px solid #2c5f66; text-align: center; font-size: 11px; color: #666;">
+                            <p style="margin: 5px 0;">© 2025 Universidad Alberto Hurtado - Curso de Dibujo Anatómico</p>
+                            <p style="margin: 5px 0;">Proyecto de Diplomado de Diseño Instruccional UCH - Diseñado por Joselyn Vizcarra</p>
+                            <p style="margin: 5px 0;">Documento generado desde DIADIFO LMS</p>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(tempContainer);
+                
+                // Usar html2canvas para convertir el HTML a imagen
+                const canvas = await html2canvas(tempContainer, {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#ffffff'
+                });
+                
+                document.body.removeChild(tempContainer);
+                
+                // Crear PDF con jsPDF
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+                
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = 210; // A4 width in mm
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                
+                let position = 0;
+                const pageHeight = 297; // A4 height in mm
+                
+                // Si la imagen es más alta que una página, dividir en múltiples páginas
+                if (imgHeight > pageHeight) {
+                    let heightLeft = imgHeight;
+                    
+                    while (heightLeft > 0) {
+                        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                        heightLeft -= pageHeight;
+                        
+                        if (heightLeft > 0) {
+                            position -= pageHeight;
+                            pdf.addPage();
+                        }
+                    }
+                } else {
+                    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                }
+                
+                // Guardar el PDF
+                const fileName = `Rubrica_ProyectoFinal_Modulo3_${userName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+                pdf.save(fileName);
+                
+                showToast('¡Rúbrica exportada exitosamente!', 'success');
+                
+                // Award points for using export feature
+                if (currentUser) {
+                    awardPoints(currentUser.username, 5, 'Exportó rúbrica a PDF');
+                }
+                
+            } catch (error) {
+                console.error('Error al exportar PDF:', error);
+                showToast('Error al generar PDF. Intenta nuevamente.', 'error');
+            }
+        };
     </script>
 
     <!-- ============================================
