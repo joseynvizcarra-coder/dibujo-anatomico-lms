@@ -3047,6 +3047,21 @@
 
         console.log('%c🎨 MÓDULO 3 CARGADO', 'color: #2c5f66; font-size: 16px; font-weight: bold;');
         console.log('%cMódulo 3 v4.2 - Sistema completo', 'color: #e8a2b8;');
+        
+        // Verificar que las librerías PDF estén cargadas
+        setTimeout(() => {
+            const html2canvasLoaded = typeof html2canvas !== 'undefined';
+            const jspdfLoaded = typeof window.jspdf !== 'undefined';
+            
+            console.log('📚 Estado de librerías PDF:');
+            console.log('  - html2canvas:', html2canvasLoaded ? '✅ Cargada' : '❌ NO cargada');
+            console.log('  - jsPDF:', jspdfLoaded ? '✅ Cargada' : '❌ NO cargada');
+            
+            if (!html2canvasLoaded || !jspdfLoaded) {
+                console.warn('⚠️ ADVERTENCIA: Algunas librerías PDF no están cargadas. La exportación puede fallar.');
+                console.warn('💡 Solución: Recarga la página con Ctrl+F5 o limpia la caché del navegador.');
+            }
+        }, 1000);
 
         // ===== HACER CLICABLES LAS IMÁGENES PEQUEÑAS =====
         document.addEventListener('click', function(e) {
@@ -3060,6 +3075,19 @@
         // ===== EXPORTAR RÚBRICA A PDF =====
         window.exportRubricToPDF = async function() {
             try {
+                // Validar que las librerías estén cargadas
+                if (typeof html2canvas === 'undefined') {
+                    showToast('Error: Librería html2canvas no cargada. Recarga la página.', 'error');
+                    console.error('html2canvas no está definido');
+                    return;
+                }
+                
+                if (typeof window.jspdf === 'undefined') {
+                    showToast('Error: Librería jsPDF no cargada. Recarga la página.', 'error');
+                    console.error('jsPDF no está definido');
+                    return;
+                }
+                
                 showToast('Generando PDF...', 'info');
                 
                 // Crear contenedor temporal con toda la información de la rúbrica
@@ -3069,6 +3097,7 @@
                 tempContainer.style.width = '210mm';
                 tempContainer.style.position = 'absolute';
                 tempContainer.style.left = '-9999px';
+                tempContainer.style.top = '0';
                 
                 const currentUser = getCurrentUser();
                 const userName = currentUser ? currentUser.name : 'Estudiante';
@@ -3327,27 +3356,44 @@
                 
                 document.body.appendChild(tempContainer);
                 
+                console.log('✅ Contenedor creado y agregado al DOM');
+                
                 // Usar html2canvas para convertir el HTML a imagen
+                console.log('📸 Generando imagen con html2canvas...');
                 const canvas = await html2canvas(tempContainer, {
                     scale: 2,
                     useCORS: true,
-                    logging: false,
-                    backgroundColor: '#ffffff'
+                    logging: true,
+                    backgroundColor: '#ffffff',
+                    windowWidth: 800,
+                    windowHeight: 1200
                 });
+                
+                console.log('✅ Canvas generado:', canvas.width, 'x', canvas.height);
                 
                 document.body.removeChild(tempContainer);
                 
                 // Crear PDF con jsPDF
+                console.log('📄 Creando PDF...');
                 const { jsPDF } = window.jspdf;
+                
+                if (!jsPDF) {
+                    throw new Error('jsPDF no está disponible en window.jspdf');
+                }
+                
                 const pdf = new jsPDF({
                     orientation: 'portrait',
                     unit: 'mm',
                     format: 'a4'
                 });
                 
+                console.log('✅ PDF inicializado');
+                
                 const imgData = canvas.toDataURL('image/png');
                 const imgWidth = 210; // A4 width in mm
                 const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                
+                console.log('📐 Dimensiones imagen:', imgWidth, 'x', imgHeight, 'mm');
                 
                 let position = 0;
                 const pageHeight = 297; // A4 height in mm
@@ -3355,22 +3401,28 @@
                 // Si la imagen es más alta que una página, dividir en múltiples páginas
                 if (imgHeight > pageHeight) {
                     let heightLeft = imgHeight;
+                    let pageNum = 1;
                     
                     while (heightLeft > 0) {
+                        console.log(`📄 Agregando página ${pageNum}...`);
                         pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
                         heightLeft -= pageHeight;
                         
                         if (heightLeft > 0) {
                             position -= pageHeight;
                             pdf.addPage();
+                            pageNum++;
                         }
                     }
+                    console.log(`✅ PDF generado con ${pageNum} página(s)`);
                 } else {
                     pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                    console.log('✅ PDF generado con 1 página');
                 }
                 
                 // Guardar el PDF
                 const fileName = `Rubrica_ProyectoFinal_Modulo3_${userName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+                console.log('💾 Guardando PDF:', fileName);
                 pdf.save(fileName);
                 
                 showToast('¡Rúbrica exportada exitosamente!', 'success');
@@ -3381,8 +3433,25 @@
                 }
                 
             } catch (error) {
-                console.error('Error al exportar PDF:', error);
-                showToast('Error al generar PDF. Intenta nuevamente.', 'error');
+                console.error('❌ ERROR al exportar PDF:', error);
+                console.error('Detalles del error:', {
+                    message: error.message,
+                    stack: error.stack,
+                    html2canvas: typeof html2canvas !== 'undefined' ? 'cargado' : 'NO CARGADO',
+                    jspdf: typeof window.jspdf !== 'undefined' ? 'cargado' : 'NO CARGADO'
+                });
+                
+                let errorMsg = 'Error al generar PDF. ';
+                
+                if (error.message.includes('html2canvas')) {
+                    errorMsg += 'Problema con html2canvas. ';
+                } else if (error.message.includes('jsPDF')) {
+                    errorMsg += 'Problema con jsPDF. ';
+                }
+                
+                errorMsg += 'Revisa la consola y recarga la página.';
+                
+                showToast(errorMsg, 'error');
             }
         };
     </script>
